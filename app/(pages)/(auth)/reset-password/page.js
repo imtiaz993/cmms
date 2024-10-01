@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Input } from "antd";
+import { toast } from "react-toastify";
 import { resetPassword } from "app/services/auth";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
@@ -28,6 +29,8 @@ const validationSchema = Yup.object().shape({
 const ResetPassword = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+
+  const router = useRouter();
 
   const [showPassword, setShowPassword] = useState({
     password: false,

@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Input } from "antd";
+import { toast } from "react-toastify";
 import { login } from "app/services/auth";
 import {
   EyeInvisibleOutlined,
@@ -22,16 +24,19 @@ const validationSchema = Yup.object().shape({
 });
 
 const Login = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (values, setSubmitting) => {
     const { status, data } = await login(values);
     setSubmitting(false);
     if (status === 200) {
-      if (data?.role === "supervisor") {
+      localStorage.setItem("user", data.data);
+      localStorage.setItem("token", data.token);
+      if (data?.data?.role === "supervisor") {
         router?.replace("/supervisor/dashboard");
       }
-      if (data?.role === "admin") {
+      if (data?.data?.role === "admin") {
         router?.replace("/admin/dashboard");
       }
       toast.success(data.message);

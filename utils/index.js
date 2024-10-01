@@ -1,6 +1,6 @@
 export const getToken = () => {
-  return JSON.parse(localStorage.getItem("user"))?.token;
+  return localStorage.getItem("token");
 };
 export const getUser = () => {
-  return JSON.parse(localStorage.getItem("user"))?.data;
+  return JSON.parse(localStorage.getItem("user"));
 };

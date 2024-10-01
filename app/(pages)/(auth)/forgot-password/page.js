@@ -3,6 +3,7 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Input } from "antd";
+import { toast } from "react-toastify";
 import { MailOutlined } from "@ant-design/icons";
 import { forgotPassword } from "app/services/auth";
 import Button from "@/components/common/Button";

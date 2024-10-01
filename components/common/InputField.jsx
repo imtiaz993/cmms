@@ -11,7 +11,7 @@ const InputField = ({
   readOnly,
 }) => {
   return (
-    <>
+    <div>
       <Field
         name={name}
         placeholder={placeholder}
@@ -27,7 +27,7 @@ const InputField = ({
         component="div"
         className="text-red-500 text-sm mt-1"
       />
-    </>
+    </div>
   );
 };
 
