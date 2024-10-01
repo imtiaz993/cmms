@@ -51,7 +51,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="bg-[#313131] p-10 rounded-[10px] text-white w-full">
+    <div className="bg-primary p-10 rounded-[10px] text-white w-full">
       <div className="flex justify-between mb-16">
         <div>
           <h1 className="text-2xl font-bold mb-5">
