@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Input } from "antd";
+import { resetPassword } from "app/services/auth";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
@@ -33,6 +34,21 @@ const ResetPassword = () => {
     confirmPassword: false,
   });
 
+  const handleSubmit = async (values, setSubmitting) => {
+    const { status, data } = await resetPassword({
+      ...values,
+      token: token,
+    });
+    setSubmitting(false);
+    if (status === 200) {
+      router.replace("/login");
+      toast.success(data.message);
+      resetForm();
+    } else {
+      toast.error(data.message);
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center items-center text-white min-h-screen w-11/12 mx-auto md:w-full max-w-[520px]">
       <h1 className="text-2xl md:text-3xl font-bold">Create a New Password</h1>
@@ -44,8 +60,7 @@ const ResetPassword = () => {
           initialValues={{ password: "", confirmPassword: "" }}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values, token);
-            // setSubmitting(false);
+            handleSubmit(values, setSubmitting);
           }}
         >
           {({ isSubmitting, handleSubmit }) => (

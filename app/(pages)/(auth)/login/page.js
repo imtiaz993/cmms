@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Input } from "antd";
+import { login } from "app/services/auth";
 import {
   EyeInvisibleOutlined,
   EyeOutlined,
@@ -22,6 +23,24 @@ const validationSchema = Yup.object().shape({
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleSubmit = async (values, setSubmitting) => {
+    const { status, data } = await login(values);
+    setSubmitting(false);
+    if (status === 200) {
+      if (data?.role === "supervisor") {
+        router?.replace("/supervisor/dashboard");
+      }
+      if (data?.role === "admin") {
+        router?.replace("/admin/dashboard");
+      }
+      toast.success(data.message);
+      resetForm();
+    } else {
+      toast.error(data.message);
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center items-center text-white min-h-screen w-11/12 mx-auto md:w-full max-w-[520px]">
       <h1 className="text-2xl md:text-3xl font-bold">Login</h1>
@@ -33,8 +52,7 @@ const Login = () => {
           initialValues={{ email: "", password: "" }}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
-            // setSubmitting(false);
+            handleSubmit(values, setSubmitting);
           }}
         >
           {({ isSubmitting, handleSubmit }) => (
