@@ -7,7 +7,14 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {},
+      colors: {
+        primary: "#313131",
+        secondary: "#23CDCD",
+        tertiary: "",
+        quaternary: "",
+        quinary: "",
+        senary: "",
+      },
       backgroundImage: {},
       boxShadow: {},
     },
