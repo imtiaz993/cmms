@@ -4,6 +4,7 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Input } from "antd";
 import { MailOutlined } from "@ant-design/icons";
+import { forgotPassword } from "app/services/auth";
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 
@@ -14,6 +15,17 @@ const validationSchema = Yup.object().shape({
 });
 
 const ForgotPassword = () => {
+  const handleSubmit = async (values, setSubmitting) => {
+    const { status, data } = await forgotPassword(values);
+    setSubmitting(false);
+    if (status === 200) {
+      toast.success(data.message);
+      resetForm();
+    } else {
+      toast.error(data.message);
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center items-center text-white min-h-screen w-11/12 mx-auto md:w-full max-w-[520px]">
       <h1 className="text-2xl md:text-3xl font-bold">Forgot Password</h1>
@@ -26,8 +38,7 @@ const ForgotPassword = () => {
           initialValues={{ email: "" }}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
-            // setSubmitting(false);
+            handleSubmit(values, setSubmitting);
           }}
         >
           {({ isSubmitting, handleSubmit }) => (
