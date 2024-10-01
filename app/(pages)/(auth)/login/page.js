@@ -87,12 +87,14 @@ const Login = () => {
                 }
                 className="mt-7"
               />
-              <Link
-                href="/forgot-password"
-                className="mt-4 text-sm font-medium text-white inline-flex justify-end"
-              >
-                Forgot Password?
-              </Link>
+              <div className="flex justify-end">
+                <Link
+                  href="/forgot-password"
+                  className="mt-4 text-sm font-medium text-white"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
               <Button
                 text="Login Now"
                 htmlType="submit"
