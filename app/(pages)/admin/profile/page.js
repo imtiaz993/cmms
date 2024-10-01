@@ -80,7 +80,7 @@ const Profile = () => {
       </div>
       <div>
         <Formik
-          initialValues={getUser()}
+          initialValues={typeof window === "undefined" ? getUser() : {}}
           validationSchema={isEdit ? validationSchema : {}}
           onSubmit={(values, { setSubmitting }) => {
             handleSubmit(values, setSubmitting);
