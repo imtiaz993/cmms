@@ -59,7 +59,7 @@ const Profile = () => {
           </h1>
           <p className="text-sm max-w-[500px]">
             Update your password here for enhanced security. Keep your account
-            safe by changing it whenever you feel it's necessary!
+            safe by changing it whenever you feel it&apos;s necessary!
           </p>
         </div>
       </div>
