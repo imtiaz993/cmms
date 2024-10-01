@@ -23,12 +23,7 @@ export default function Layout({ children }) {
     <>
       {(!user || !user.role) && (
         <>
-          <div>
-            <div className="flex">
-              <div></div>
-              <div>{children}</div>
-            </div>
-          </div>
+          <div>{children}</div>
         </>
       )}
     </>
