@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center text-white min-h-screen w-11/12 mx-auto md:w-full max-w-[520px]">
+    <div className="flex flex-col justify-center items-center text-white min-h-dvh w-11/12 mx-auto md:w-full max-w-[520px]">
       <h1 className="text-2xl md:text-3xl font-bold">Login</h1>
       <p className="mt-3 text-sm md:text-base">
         Welcome back! Please enter your details
@@ -89,7 +89,7 @@ const Login = () => {
               />
               <Link
                 href="/forgot-password"
-                className="mt-4 text-sm font-medium text-white flex justify-end"
+                className="mt-4 text-sm font-medium text-white inline-flex justify-end"
               >
                 Forgot Password?
               </Link>

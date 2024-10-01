@@ -50,7 +50,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center text-white min-h-screen w-11/12 mx-auto md:w-full max-w-[520px]">
+    <div className="flex flex-col justify-center items-center text-white min-h-dvh w-11/12 mx-auto md:w-full max-w-[520px]">
       <h1 className="text-2xl md:text-3xl font-bold">Create a New Password</h1>
       <p className="mt-3 text-sm md:text-base">
         Set a new secured password for your account.
