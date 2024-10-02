@@ -7,6 +7,7 @@ const Sidebar = () => {
 
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location");
+  const activeTab = searchParams.get("tab");
 
   const onSelect = (selectedKeys, info) => {
     console.log("selected", selectedKeys, info);
@@ -16,7 +17,9 @@ const Sidebar = () => {
     <div
       className="flex items-center p-1"
       onClick={() => {
-        router.push(`/admin/dashboard?tab=dashboard&location=${key}`);
+        router.push(
+          `/admin/dashboard?tab=${activeTab || "dashboard"}&location=${key}`
+        );
       }}
     >
       <Image
@@ -34,7 +37,9 @@ const Sidebar = () => {
     <div
       className="flex items-center p-1"
       onClick={() => {
-        router.push(`/admin/dashboard?tab=dashboard&location=${key}`);
+        router.push(
+          `/admin/dashboard?tab=${activeTab || "dashboard"}&location=${key}`
+        );
       }}
     >
       <Image
@@ -55,7 +60,9 @@ const Sidebar = () => {
           className="text-lg font-medium p-1"
           onClick={() => {
             router.push(
-              `/admin/dashboard?tab=dashboard&location=noram-drilling`
+              `/admin/dashboard?tab=${
+                activeTab || "dashboard"
+              }&location=noram-drilling`
             );
           }}
         >

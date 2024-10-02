@@ -12,7 +12,11 @@ const Tabs = () => {
   const activeLocation = searchParams.get("location");
 
   const onChange = (key) => {
-    router.push(`/admin/dashboard?tab=${key}&location=${activeLocation}`);
+    router.push(
+      `/admin/dashboard?tab=${key}&location=${
+        activeLocation || "noram-drilling"
+      }`
+    );
   };
 
   const tabs = [
