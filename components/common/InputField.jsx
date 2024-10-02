@@ -20,7 +20,7 @@ const InputField = ({
         prefix={prefix}
         className={className}
         readOnly={readOnly}
-        style={{ height: "48px", ...style }}
+        style={{ height: "44px", ...style }}
       />
       <ErrorMessage
         name={name}

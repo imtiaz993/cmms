@@ -47,36 +47,40 @@ const Profile = () => {
   };
 
   return (
-    <div className="bg-primary p-10 rounded-[10px] text-white w-full">
-      <div className="flex justify-between mb-16">
-        <div>
-          <h1 className="text-2xl font-bold mb-5">Personal Info</h1>
-          <p className="text-sm max-w-[500px]">
+    <div className="bg-primary p-5 md:p-10 rounded-[10px] text-white w-full">
+      <div className="mb-4 lg:mb-16">
+        <div className="md:flex justify-between items-baseline">
+          <h1 className="text-xl md:text-2xl font-bold mb-5">Personal Info</h1>
+          <p className="text-sm md:hidden md:max-w-[500px] mt-1">
             Keep your name, email, and phone number up to date for a smooth and
             personalized experience. Your details help us stay connected!
           </p>
+          {!isEdit && (
+            <div className="flex justify-end mt-4 md:mt-0">
+              <Button
+                onClick={() => {
+                  setIsEdit(true);
+                }}
+                text="Edit"
+                className="mr-4"
+                fullWidth={false}
+                prefix={<EditOutlined />}
+              />
+              <Button
+                text="Change Password"
+                onClick={() => {
+                  router.push("/admin/change-password");
+                }}
+                outlined
+                fullWidth={false}
+              />
+            </div>
+          )}
         </div>
-        {!isEdit && (
-          <div>
-            <Button
-              onClick={() => {
-                setIsEdit(true);
-              }}
-              text="Edit"
-              className="mr-4"
-              fullWidth={false}
-              prefix={<EditOutlined />}
-            />
-            <Button
-              text="Change Password"
-              onClick={() => {
-                router.push("/admin/change-password");
-              }}
-              outlined
-              fullWidth={false}
-            />
-          </div>
-        )}
+        <p className="text-sm hidden md:block md:max-w-[500px] mt-1">
+          Keep your name, email, and phone number up to date for a smooth and
+          personalized experience. Your details help us stay connected!
+        </p>
       </div>
       <div>
         <Formik
@@ -89,7 +93,7 @@ const Profile = () => {
           {({ isSubmitting, handleSubmit, setValues }) => (
             <Form
               onSubmit={handleSubmit}
-              className="grid lg:grid-cols-3 gap-5 lg:gap-y-0 lg:gap-x-12"
+              className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-y-0 xl:gap-x-12"
             >
               <label className="text-sm">
                 Full Name
@@ -125,7 +129,7 @@ const Profile = () => {
                 />
               </label>
               {isEdit && (
-                <div className="flex justify-center col-span-3 mt-10">
+                <div className="flex justify-center lg:col-span-3 mt-4 lg:mt-10">
                   <Button
                     htmlType="submit"
                     text="Update"

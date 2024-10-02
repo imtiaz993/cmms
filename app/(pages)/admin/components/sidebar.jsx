@@ -6,7 +6,7 @@ import { useState } from "react";
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   return (
-    <div className="bg-primary min-h-[calc(100dvh-16px-60px)] md:w-[300px] rounded-tr-xl p-5 text-white select-none">
+    <div className="bg-primary min-h-[calc(100dvh-16px-60px)] hidden lg:block lg:w-[300px] rounded-tr-xl p-5 text-white select-none">
       <div
         className="text-white text-xl mb-3"
         onClick={() => setCollapsed(!collapsed)}
