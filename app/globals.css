@@ -64,3 +64,21 @@ body {
 .reports-tabs .ant-tabs-tab:nth-child(3) {
   border-radius: 0px 6px 6px 0px !important;
 }
+
+.schdeule .ant-picker-panel{
+  background-color: #313131 !important;
+}
+
+@media screen and (max-width: 1280px) {
+  .schdeule .ant-picker-body {
+    overflow-x: auto !important;
+  }
+  .schdeule .ant-picker-date-panel table {
+    width: 1000px !important;
+  }
+}
+@media screen and (max-width: 768px) {
+  .schdeule .ant-picker-date-panel table {
+    width: 800px !important;
+  }
+}
