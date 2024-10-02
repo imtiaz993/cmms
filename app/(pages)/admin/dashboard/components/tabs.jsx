@@ -12,7 +12,7 @@ const Tabs = () => {
   const activeLocation = searchParams.get("location");
 
   const onChange = (key) => {
-    router.push(`/admin/dashboard?tab=${key}`);
+    router.push(`/admin/dashboard?tab=${key}&location=${activeLocation}`);
   };
 
   const tabs = [
