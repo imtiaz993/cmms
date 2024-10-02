@@ -9,6 +9,7 @@ const Tabs = () => {
 
   const searchParams = useSearchParams();
   const activeTab = searchParams.get("tab");
+  const activeLocation = searchParams.get("location");
 
   const onChange = (key) => {
     router.push(`/admin/dashboard?tab=${key}`);
@@ -18,7 +19,7 @@ const Tabs = () => {
     {
       key: "dashboard",
       label: "Dashboard",
-      children: <Dashboard />,
+      children: <Dashboard activeLocation={activeLocation} />,
     },
     {
       key: "assets",
@@ -62,15 +63,15 @@ const Tabs = () => {
     },
   ];
   return (
-    <AntTabs
-      defaultActiveKey={
-        tabs.find((i) => i.key === activeTab)?.key || "dashboard"
-      }
-      animated
-      items={tabs}
-      onChange={onChange}
-      className="select-none"
-    />
+    <div className="px-2">
+      <AntTabs
+        activeKey={tabs.find((i) => i.key === activeTab)?.key || "dashboard"}
+        animated
+        items={tabs}
+        onChange={onChange}
+        className="select-none"
+      />
+    </div>
   );
 };
 export default Tabs;
