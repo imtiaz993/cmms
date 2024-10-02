@@ -42,3 +42,11 @@ body {
   padding-left: 10px !important;
   padding-right: 10px !important;
 }
+.ant-drawer-content-wrapper {
+  width: 300px !important;
+}
+@media screen and (max-width: 640px) {
+  .ant-drawer-content-wrapper {
+    width: 100% !important;
+  }
+}

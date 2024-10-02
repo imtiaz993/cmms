@@ -58,15 +58,14 @@ const Appbar = ({ openSidebar, setOpenSidebar }) => {
             <DownOutlined style={{ fontSize: "10px" }} />
           </div>
         </Dropdown>
-        {!openSidebar && (
-          <div className="ml-2 lg:hidden">
-            <MenuOutlined
-              onClick={() => {
-                setOpenSidebar(true);
-              }}
-            />
-          </div>
-        )}
+        <div className="ml-2 lg:hidden">
+          <MenuOutlined
+            style={{ fontSize: "20px" }}
+            onClick={() => {
+              setOpenSidebar(true);
+            }}
+          />
+        </div>
       </div>
     </div>
   );
