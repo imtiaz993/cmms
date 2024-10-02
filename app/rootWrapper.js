@@ -11,7 +11,10 @@ export default function RootWrapper({ children }) {
       <ConfigProvider
         theme={{
           algorithm: theme.darkAlgorithm,
-          token: { colorBgBase: "#313131" },
+          token: {
+            colorBgBase: "#313131",
+            colorPrimary: "#23CDCD",
+          },
         }}
       >
         <AntdRegistry>{children}</AntdRegistry>
