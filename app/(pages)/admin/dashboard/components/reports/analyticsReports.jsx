@@ -47,6 +47,7 @@ const AnalyticsReports = () => {
         <List.Item
           actions={[
             <FileTextOutlined
+            key="file-text-icon"
               style={{ fontSize: "24px", cursor: "pointer" }}
             />,
           ]}
