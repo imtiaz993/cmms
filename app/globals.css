@@ -21,3 +21,18 @@ body {
   color: #ffffff;
   opacity: 0.6;
 }
+.custom-tree .ant-tree-treenode {
+  width: 100%;
+}
+
+.custom-tree .ant-tree-node-content-wrapper {
+  width: 100%;
+}
+
+.custom-tree .ant-tree-child-tree {
+  padding-left: 0 !important;
+}
+
+.custom-tree .ant-tree-treenode-selected .ant-tree-node-content-wrapper {
+  background-color: #212020 !important;
+}

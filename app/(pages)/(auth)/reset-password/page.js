@@ -27,10 +27,10 @@ const validationSchema = Yup.object().shape({
 });
 
 const ResetPassword = () => {
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-
-  const router = useRouter();
 
   const [showPassword, setShowPassword] = useState({
     password: false,

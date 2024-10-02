@@ -1,5 +1,13 @@
+"use client"
+
+import Tabs from "./components/tabs";
+
 const AdminDashboard = () => {
-  return <div className="text-secondary">AdminDashboard</div>;
+  return (
+    <div>
+      <Tabs />
+    </div>
+  );
 };
 
 export default AdminDashboard;
