@@ -185,7 +185,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 
   return (
     <div>
-      <div className="bg-primary min-h-[calc(100dvh-16px-60px)] hidden lg:block lg:w-[300px] rounded-tr-xl p-5  select-none">
+      <div className="bg-primary min-h-[calc(100dvh-16px-60px)] hidden lg:block lg:w-[300px] rounded-tr-xl p-5 select-none">
         <div>
           <Tree
             defaultExpandedKeys={[activeLocation || "noram-drilling"]}
