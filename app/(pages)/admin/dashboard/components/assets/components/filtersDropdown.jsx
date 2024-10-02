@@ -25,7 +25,7 @@ const AssetFilter = () => {
   };
 
   return (
-    <Menu style={{ padding: "16px" }}>
+    <div className="p-4 bg-primary rounded-md">
       <Formik
         initialValues={{
           assetNumber: "",
@@ -51,7 +51,7 @@ const AssetFilter = () => {
       >
         {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               <InputField name="assetNumber" placeholder="Asset #" />
               <InputField
                 name="assetDescription"
@@ -70,7 +70,7 @@ const AssetFilter = () => {
               <Select name="tier4" placeholder="Tier 4" />
               <Select name="tier5" placeholder="Tier 5" />
               <Select name="tier6" placeholder="Tier 6" />
-              <div className="col-span-3 flex gap-4">
+              <div className="sm:col-span-2 md:col-span-3 flex gap-4">
                 <Button
                   outlined
                   size="small"
@@ -90,7 +90,7 @@ const AssetFilter = () => {
           </Form>
         )}
       </Formik>
-    </Menu>
+    </div>
   );
 };
 

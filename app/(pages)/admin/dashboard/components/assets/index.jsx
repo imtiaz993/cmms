@@ -421,32 +421,28 @@ const Assets = () => {
           onChange={(e) => setSearchText(e.target.value)}
         />
         <Dropdown
-          overlay={<AssetFilter />}
+          dropdownRender={() => <AssetFilter />}
           trigger={["click"]}
-          open={filterVisible}
-          onOpenChange={setFilterVisible}
+          arrow
+          placement="bottomCenter"
         >
-          <Button onClick={() => setFilterVisible(!filterVisible)}>
-            Filter
-          </Button>
+          <Button>Filter</Button>
         </Dropdown>
         <Dropdown
-          overlay={menu}
+          dropdownRender={() => menu}
           trigger={["click"]}
-          open={visible}
-          onOpenChange={setVisible}
+          arrow
+          placement="bottomCenter"
         >
-          <Button onClick={() => setVisible(!visible)}>Column Settings</Button>
+          <Button>Column Settings</Button>
         </Dropdown>
         <Dropdown
-          overlay={exportMenu}
+          dropdownRender={() => exportMenu}
           trigger={["click"]}
-          open={exportVisible}
-          onOpenChange={setExportVisible}
+          arrow
+          placement="bottomCenter"
         >
-          <Button onClick={() => setExportVisible(!exportVisible)}>
-            Export
-          </Button>
+          <Button>Export</Button>
         </Dropdown>
         <Button type="primary" onClick={showAddAssetModal}>
           Add New Asset
