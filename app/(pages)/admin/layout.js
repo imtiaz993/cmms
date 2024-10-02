@@ -10,6 +10,7 @@ export default function Layout({ children }) {
   const router = useRouter();
   const [token, setToken] = useState();
   const [data, setData] = useState();
+  const [openSidebar, setOpenSidebar] = useState(false);
 
   // useEffect(() => {
   //   if (typeof window != "undefined") {
@@ -29,10 +30,10 @@ export default function Layout({ children }) {
     <>
       {/* {token && data && data.role === "admin" && ( */}
       <div>
-        <Appbar />
+        <Appbar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
         <div className="flex items-start mt-4">
-          <Sidebar />
-          <div className="w-full lg:w-[calc(100%-300px)] px-2 lg:px-8">
+          <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
+          <div className="w-full lg:w-[calc(100%-300px)] px-3 lg:px-8">
             {children}
           </div>
         </div>
