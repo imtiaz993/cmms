@@ -32,7 +32,9 @@ export default function Layout({ children }) {
         <Appbar />
         <div className="flex items-start mt-4">
           <Sidebar />
-          <div className="md:w-[calc(100%-300px)] px-8">{children}</div>
+          <div className="w-full lg:w-[calc(100%-300px)] px-2 lg:px-8">
+            {children}
+          </div>
         </div>
       </div>
       {/* )} */}

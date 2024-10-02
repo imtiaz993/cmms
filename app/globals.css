@@ -6,8 +6,18 @@
 
 * {
   font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+  color: white;
 }
 html,
 body {
   height: 100% !important;
+}
+.ant-input-outlined {
+  background-color: transparent !important;
+  border-color: white !important;
+}
+
+.ant-input-outlined input::placeholder {
+  color: #ffffff;
+  opacity: 0.6;
 }

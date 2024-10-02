@@ -24,7 +24,7 @@ const Button = ({
         background: outlined ? "transparent" : "#23CDCD",
         borderColor: outlined ? "#FFFFFF" : "#23CDCD",
         opacity: disabled ? "0.7" : "",
-        height: "48px",
+        height: "40px",
         fontSize: "16px",
         fontWeight: "500",
         ...style,

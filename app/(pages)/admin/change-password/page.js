@@ -51,10 +51,10 @@ const Profile = () => {
   };
 
   return (
-    <div className="bg-primary p-10 rounded-[10px] text-white w-full">
-      <div className="flex justify-between mb-16">
+    <div className="bg-primary p-5 md:p-10 rounded-[10px]  w-full">
+      <div className="flex justify-between mb-10 lg:mb-16">
         <div>
-          <h1 className="text-2xl font-bold mb-5">
+          <h1 className="text-xl md:text-2xl font-bold mb-5">
             Would you like to change your password
           </h1>
           <p className="text-sm max-w-[500px]">
@@ -78,7 +78,7 @@ const Profile = () => {
           {({ isSubmitting, handleSubmit, setValues }) => (
             <Form
               onSubmit={handleSubmit}
-              className="grid lg:grid-cols-3 gap-5 lg:gap-y-0 lg:gap-x-12"
+              className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-y-0 xl:gap-x-12"
             >
               <label className="text-sm">
                 Old Password
@@ -179,7 +179,7 @@ const Profile = () => {
                   }
                 />
               </label>
-              <div className="flex justify-center col-span-3 mt-10">
+              <div className="flex justify-center lg:col-span-3 mt-4 lg:mt-10">
                 <Button
                   htmlType="submit"
                   text="Update"
