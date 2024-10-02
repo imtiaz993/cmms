@@ -1,27 +1,25 @@
-import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { Tree } from "antd";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Drawer, Tree } from "antd";
 
-const Sidebar = () => {
+const Sidebar = ({ openSidebar, setOpenSidebar }) => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location");
   const activeTab = searchParams.get("tab");
 
-  const onSelect = (selectedKeys, info) => {
-    console.log("selected", selectedKeys, info);
+  const onSelect = (selectedKeys) => {
+    setOpenSidebar(false);
+    router.push(
+      `/admin/dashboard?tab=${activeTab || "dashboard"}&location=${
+        selectedKeys[0]
+      }`
+    );
   };
 
   const RigTitle = (title, key) => (
-    <div
-      className="flex items-center p-1"
-      onClick={() => {
-        router.push(
-          `/admin/dashboard?tab=${activeTab || "dashboard"}&location=${key}`
-        );
-      }}
-    >
+    <div className="flex items-center p-1">
       <Image
         src="/images/buildings.png"
         alt="Buildings"
@@ -34,14 +32,7 @@ const Sidebar = () => {
   );
 
   const SystemTitle = (title, key) => (
-    <div
-      className="flex items-center p-1"
-      onClick={() => {
-        router.push(
-          `/admin/dashboard?tab=${activeTab || "dashboard"}&location=${key}`
-        );
-      }}
-    >
+    <div className="flex items-center p-1">
       <Image
         src="/images/buildings.png"
         alt="Buildings"
@@ -55,20 +46,7 @@ const Sidebar = () => {
 
   const treeData = [
     {
-      title: (
-        <p
-          className="text-lg font-medium p-1"
-          onClick={() => {
-            router.push(
-              `/admin/dashboard?tab=${
-                activeTab || "dashboard"
-              }&location=noram-drilling`
-            );
-          }}
-        >
-          NORAM Drilling
-        </p>
-      ),
+      title: <p className="text-lg font-medium p-1">NORAM Drilling</p>,
       key: "noram-drilling",
       children: [
         {
@@ -206,17 +184,43 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="bg-primary min-h-[calc(100dvh-16px-60px)] hidden lg:block lg:w-[300px] rounded-tr-xl p-5  select-none">
-      <div>
-        <Tree
-          defaultExpandedKeys={[activeLocation || "noram-drilling"]}
-          defaultSelectedKeys={[activeLocation || "noram-drilling"]}
-          onSelect={onSelect}
-          treeData={treeData}
-          rootStyle={{ background: "transparent" }}
-          className="custom-tree"
-        />
+    <div>
+      <div className="bg-primary min-h-[calc(100dvh-16px-60px)] hidden lg:block lg:w-[300px] rounded-tr-xl p-5  select-none">
+        <div>
+          <Tree
+            defaultExpandedKeys={[activeLocation || "noram-drilling"]}
+            defaultSelectedKeys={[activeLocation || "noram-drilling"]}
+            onSelect={onSelect}
+            treeData={treeData}
+            rootStyle={{ background: "transparent" }}
+            className="custom-tree"
+          />
+        </div>
       </div>
+      <Drawer
+        title=""
+        placement={"left"}
+        closable={true}
+        onClose={() => {
+          setOpenSidebar(false);
+        }}
+        open={openSidebar}
+        key={"left"}
+        style={{ background: "#313131" }}
+      >
+        <div className="p-5 select-none">
+          <div>
+            <Tree
+              defaultExpandedKeys={[activeLocation || "noram-drilling"]}
+              defaultSelectedKeys={[activeLocation || "noram-drilling"]}
+              onSelect={onSelect}
+              treeData={treeData}
+              rootStyle={{ background: "transparent" }}
+              className="custom-tree"
+            />
+          </div>
+        </div>
+      </Drawer>
     </div>
   );
 };

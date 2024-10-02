@@ -1,9 +1,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Dropdown } from "antd";
-import { UserOutlined, DownOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  DownOutlined,
+  LogoutOutlined,
+  MenuOutlined,
+} from "@ant-design/icons";
 
-const Appbar = () => {
+const Appbar = ({ openSidebar, setOpenSidebar }) => {
   const router = useRouter();
   const dropdownItems = [
     {
@@ -37,21 +42,32 @@ const Appbar = () => {
   ];
 
   return (
-    <div className="bg-primary h-[60px] flex justify-between items-center px-5 ">
+    <div className="bg-primary h-[60px] flex justify-between items-center px-3 md:px-5 ">
       <Link href="/admin/dashboard">
         <h1 className="text-3xl font-bold">LOGO</h1>
       </Link>
-      <Dropdown
-        menu={{ items: dropdownItems }}
-        arrow
-        placement="bottomRight"
-        trigger="click"
-      >
-        <div className="cursor-pointer flex items-center select-none">
-          <p className="mr-1">Imtiaz Hussain</p>
-          <DownOutlined style={{ fontSize: "10px" }} />
-        </div>
-      </Dropdown>
+      <div className="flex items-center">
+        <Dropdown
+          menu={{ items: dropdownItems }}
+          arrow
+          placement="bottomRight"
+          trigger="click"
+        >
+          <div className="cursor-pointer flex items-center select-none">
+            <p className="mr-1">Imtiaz Hussain</p>
+            <DownOutlined style={{ fontSize: "10px" }} />
+          </div>
+        </Dropdown>
+        {!openSidebar && (
+          <div className="ml-2 lg:hidden">
+            <MenuOutlined
+              onClick={() => {
+                setOpenSidebar(true);
+              }}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
