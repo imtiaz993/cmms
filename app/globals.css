@@ -50,3 +50,17 @@ body {
     width: 100% !important;
   }
 }
+
+.reports-tabs .ant-tabs-nav::before {
+  border-bottom: none !important;
+}
+.reports-tabs .ant-tabs-tab {
+  border-radius: 0px !important;
+  margin-left: 0px !important;
+}
+.reports-tabs .ant-tabs-tab:nth-child(1) {
+  border-radius: 6px 0px 0px 6px !important;
+}
+.reports-tabs .ant-tabs-tab:nth-child(3) {
+  border-radius: 0px 6px 6px 0px !important;
+}
