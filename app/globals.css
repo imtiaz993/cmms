@@ -50,3 +50,35 @@ body {
     width: 100% !important;
   }
 }
+
+.reports-tabs .ant-tabs-nav::before {
+  border-bottom: none !important;
+}
+.reports-tabs .ant-tabs-tab {
+  border-radius: 0px !important;
+  margin-left: 0px !important;
+}
+.reports-tabs .ant-tabs-tab:nth-child(1) {
+  border-radius: 6px 0px 0px 6px !important;
+}
+.reports-tabs .ant-tabs-tab:nth-child(3) {
+  border-radius: 0px 6px 6px 0px !important;
+}
+
+.schdeule .ant-picker-panel{
+  background-color: #313131 !important;
+}
+
+@media screen and (max-width: 1280px) {
+  .schdeule .ant-picker-body {
+    overflow-x: auto !important;
+  }
+  .schdeule .ant-picker-date-panel table {
+    width: 1000px !important;
+  }
+}
+@media screen and (max-width: 768px) {
+  .schdeule .ant-picker-date-panel table {
+    width: 800px !important;
+  }
+}
