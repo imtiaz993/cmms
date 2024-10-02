@@ -4,6 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs as AntTabs } from "antd";
 import Dashboard from "./dashboard";
 import Assets from "./assets";
+import Reports from "./reports";
+import Schedule from "./schedule";
 
 const Tabs = () => {
   const router = useRouter();
@@ -44,7 +46,7 @@ const Tabs = () => {
     {
       key: "schedule",
       label: "Schedule",
-      children: "Content of Schedule",
+      children: <Schedule />,
     },
     {
       key: "readings",
@@ -59,7 +61,7 @@ const Tabs = () => {
     {
       key: "reports",
       label: "Reports",
-      children: "Content of Reports",
+      children: <Reports />,
     },
     {
       key: "material-transfer",
