@@ -2,7 +2,7 @@ import { Card } from "antd";
 
 const Dashboard = () => {
   return (
-    <div className="grid grid-cols-2 gap-8">
+    <div className="grid md:grid-cols-2 gap-6">
       <Card
         loading={false}
         title={
