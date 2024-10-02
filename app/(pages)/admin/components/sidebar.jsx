@@ -208,7 +208,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
         key={"left"}
         style={{ background: "#313131" }}
       >
-        <div className="p-5 select-none">
+        <div className="select-none">
           <div>
             <Tree
               defaultExpandedKeys={[activeLocation || "noram-drilling"]}
