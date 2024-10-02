@@ -36,7 +36,7 @@ const Appbar = () => {
   ];
 
   return (
-    <div className="bg-primary h-[60px] flex justify-between items-center px-5 text-white">
+    <div className="bg-primary h-[60px] flex justify-between items-center px-5 ">
       <h1 className="text-3xl font-bold">LOGO</h1>
       <Dropdown
         menu={{ items: dropdownItems }}

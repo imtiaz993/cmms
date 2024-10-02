@@ -19,8 +19,11 @@ const InputField = ({
         as={Input}
         prefix={prefix}
         className={className}
-        readOnly={readOnly}
-        style={{ height: "44px", ...style }}
+        disabled={readOnly}
+        style={{
+          height: "44px",
+          ...style,
+        }}
       />
       <ErrorMessage
         name={name}

@@ -47,7 +47,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="bg-primary p-5 md:p-10 rounded-[10px] text-white w-full">
+    <div className="bg-primary p-5 md:p-10 rounded-[10px]  w-full">
       <div className="mb-4 lg:mb-16">
         <div className="md:flex justify-between items-baseline">
           <h1 className="text-xl md:text-2xl font-bold mb-5">Personal Info</h1>
