@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs as AntTabs } from "antd";
+import Dashboard from "./dashboard";
 
 const Tabs = () => {
   const router = useRouter();
@@ -17,7 +18,7 @@ const Tabs = () => {
     {
       key: "dashboard",
       label: "Dashboard",
-      children: "Content of Dashboard",
+      children: <Dashboard />,
     },
     {
       key: "assets",
