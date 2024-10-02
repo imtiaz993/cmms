@@ -62,7 +62,7 @@ const AssetReports = () => {
   return (
     <List
       itemLayout=""
-      dataSource={reportsData}
+      dataSource={reportsData.map((i, index) => ({ ...i, key: index }))}
       renderItem={(item) => (
         <List.Item
           actions={[
