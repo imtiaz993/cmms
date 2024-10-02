@@ -36,3 +36,9 @@ body {
 .custom-tree .ant-tree-treenode-selected .ant-tree-node-content-wrapper {
   background-color: #212020 !important;
 }
+
+.ant-card-head,
+.ant-card-body {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}

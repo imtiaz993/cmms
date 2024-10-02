@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { Card } from "antd";
 
-const Dashboard = () => {
+const Dashboard = ({ activeLocation }) => {
   return (
     <div className="grid md:grid-cols-2 gap-6">
       <Card
@@ -12,9 +13,12 @@ const Dashboard = () => {
           </p>
         }
         extra={
-          <p className="cursor-pointer text-secondary text-xs md:text-sm">
+          <Link
+            href={`/admin/dashboard?tab=work-orders&location=${activeLocation}`}
+            className="cursor-pointer text-secondary text-xs md:text-sm"
+          >
             View All
-          </p>
+          </Link>
         }
       >
         <p>Card content</p>
@@ -28,9 +32,12 @@ const Dashboard = () => {
           </p>
         }
         extra={
-          <p className="cursor-pointer text-secondary text-xs md:text-sm">
+          <Link
+            href={`/admin/dashboard?tab=work-orders&location=${activeLocation}`}
+            className="cursor-pointer text-secondary text-xs md:text-sm"
+          >
             View All
-          </p>
+          </Link>
         }
       >
         <p>Card content</p>
@@ -61,9 +68,12 @@ const Dashboard = () => {
         loading={false}
         title={<p className="text-sm md:text-base">Projected Man Hours</p>}
         extra={
-          <p className="cursor-pointer text-secondary text-xs md:text-sm">
+          <Link
+            href={`/admin/dashboard?tab=schedule&location=${activeLocation}`}
+            className="cursor-pointer text-secondary text-xs md:text-sm"
+          >
             View Schdeule
-          </p>
+          </Link>
         }
       >
         <p>Card content</p>
