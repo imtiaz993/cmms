@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import {
   Checkbox,
-  Divider,
   Table,
   Button,
   Dropdown,
   Menu,
   Input,
-  Space,
   message,
   Modal,
   Steps,
@@ -25,63 +23,51 @@ const columns = [
   {
     title: "Asset",
     dataIndex: "name",
-    key: "1",
   },
   {
     title: "Cost Center",
     dataIndex: "costCenter",
-    key: "2",
   },
   {
     title: "Description",
     dataIndex: "description",
-    key: "3",
   },
   {
     title: "Serial No.",
     dataIndex: "serialNo",
-    key: "4",
   },
   {
     title: "OEM Serial No.",
     dataIndex: "oemSerialNo",
-    key: "5",
   },
   {
     title: "Alt ID No.",
     dataIndex: "altIdNo",
-    key: "6",
   },
   {
     title: "Criticality",
     dataIndex: "criticality",
-    key: "7",
   },
   {
     title: "Category",
     dataIndex: "category",
-    key: "8",
   },
   {
     title: "Status",
     dataIndex: "status",
-    key: "9",
   },
   {
     title: "Location",
     dataIndex: "location",
-    key: "10",
   },
   {
     title: "Company",
     dataIndex: "company",
-    key: "11",
   },
 ];
 
 const data = [
   {
-    key: "1",
     name: "John Brown",
     costCenter: "New York No. 1 Lake Park",
     description: "New Description",
@@ -95,7 +81,6 @@ const data = [
     company: "ABC Company",
   },
   {
-    key: "2",
     name: "Jim Green",
     costCenter: "London No. 1 Lake Park",
     description: "New Description",
@@ -109,7 +94,6 @@ const data = [
     company: "ABC Company",
   },
   {
-    key: "3",
     name: "Joe Black",
     costCenter: "Sidney No. 1 Lake Park",
     description: "New Description",
@@ -123,7 +107,6 @@ const data = [
     company: "ABC Company",
   },
   {
-    key: "4",
     name: "Jim Red",
     costCenter: "London No. 2 Lake Park",
     description: "New Description",
@@ -137,7 +120,6 @@ const data = [
     company: "ABC Company",
   },
   {
-    key: "5",
     name: "John Brown",
     costCenter: "New York No. 1 Lake Park",
     description: "New Description",
@@ -151,7 +133,6 @@ const data = [
     company: "ABC Company",
   },
   {
-    key: "6",
     name: "Jim Green",
     costCenter: "London No. 1 Lake Park",
     description: "New Description",
@@ -178,9 +159,10 @@ const Assets = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [form] = Form.useForm();
 
-  const options = columns.map(({ key, title }) => ({
+  const options = columns.map(({ key, title }, index) => ({
     label: title,
     value: key,
+    key: index,
   }));
 
   const handleMenuClick = (value) => {
@@ -431,10 +413,8 @@ const Assets = () => {
   ];
 
   return (
-    <div className="bg-primary rounded-xl p-5 pt-8 mb-10">
-      {/* <Divider> */}
+    <div className=" rounded-xl p-5 pt-8 mb-10">
       <div className="flex gap-3">
-        {" "}
         <Input
           placeholder="Search..."
           style={{ marginBottom: 16 }}

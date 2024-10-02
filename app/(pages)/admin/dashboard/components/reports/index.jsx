@@ -6,17 +6,14 @@ import AnalyticsReports from "./analyticsReports";
 const Reports = () => {
   const tabs = [
     {
-      key: "assets",
       label: "Assets",
       children: <AssetReports />,
     },
     {
-      key: "maintenance",
       label: "Maintenance",
       children: <MaintenanceReports />,
     },
     {
-      key: "analytics",
       label: "Analytics",
       children: <AnalyticsReports />,
     },
@@ -28,8 +25,8 @@ const Reports = () => {
         defaultActiveKey="assets"
         type="card"
         size={"small"}
-        items={tabs}
-        tabBarStyle={{ borderColor:"white" }}
+        items={tabs.map((i, index) => ({ ...i, key: index }))}
+        tabBarStyle={{ borderColor: "white" }}
         className="reports-tabs"
       />
     </div>

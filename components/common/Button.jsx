@@ -12,6 +12,7 @@ const Button = ({
   fullWidth = true,
   outlined = false,
   prefix,
+  size = "medium",
 }) => {
   return (
     <AntButton
@@ -24,8 +25,8 @@ const Button = ({
         background: outlined ? "transparent" : "#23CDCD",
         borderColor: outlined ? "#FFFFFF" : "#23CDCD",
         opacity: disabled ? "0.7" : "",
-        height: "40px",
-        fontSize: "16px",
+        height: size === "small" ? "32px" : "40px",
+        fontSize: size === "small" ? "14px" : "16px",
         fontWeight: "500",
         ...style,
       }}

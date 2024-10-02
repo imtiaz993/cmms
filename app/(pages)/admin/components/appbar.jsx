@@ -8,11 +8,10 @@ import {
   MenuOutlined,
 } from "@ant-design/icons";
 
-const Appbar = ({ openSidebar, setOpenSidebar }) => {
+const Appbar = ({ setOpenSidebar }) => {
   const router = useRouter();
   const dropdownItems = [
     {
-      key: "1",
       label: (
         <div
           onClick={() => {
@@ -25,7 +24,6 @@ const Appbar = ({ openSidebar, setOpenSidebar }) => {
       ),
     },
     {
-      key: "2",
       label: (
         <div
           onClick={() => {
@@ -48,7 +46,9 @@ const Appbar = ({ openSidebar, setOpenSidebar }) => {
       </Link>
       <div className="flex items-center">
         <Dropdown
-          menu={{ items: dropdownItems }}
+          menu={{
+            items: dropdownItems.map((i, index) => ({ ...i, key: index })),
+          }}
           arrow
           placement="bottomRight"
           trigger="click"
