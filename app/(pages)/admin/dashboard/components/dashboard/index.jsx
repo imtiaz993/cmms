@@ -6,31 +6,39 @@ const Dashboard = () => {
       <Card
         loading={false}
         title={
-          <p>
+          <p className="text-sm md:text-base">
             Unplanned Work Orders{" "}
             <sup className="text-xs font-normal">(Last 30 days)</sup>
           </p>
         }
-        extra={<p className="cursor-pointer text-secondary">View All</p>}
+        extra={
+          <p className="cursor-pointer text-secondary text-xs md:text-sm">
+            View All
+          </p>
+        }
       >
         <p>Card content</p>
       </Card>
       <Card
         loading={false}
         title={
-          <p>
+          <p className="text-sm md:text-base">
             Planned Work Orders{" "}
             <sup className="text-xs font-normal">(Last 30 days)</sup>
           </p>
         }
-        extra={<p className="cursor-pointer text-secondary">View All</p>}
+        extra={
+          <p className="cursor-pointer text-secondary text-xs md:text-sm">
+            View All
+          </p>
+        }
       >
         <p>Card content</p>
       </Card>
       <Card
         loading={false}
         title={
-          <p>
+          <p className="text-sm md:text-base">
             Unplanned Work Orders{" "}
             <sup className="text-xs font-normal">(Last 3 months)</sup>
           </p>
@@ -41,7 +49,7 @@ const Dashboard = () => {
       <Card
         loading={false}
         title={
-          <p>
+          <p className="text-sm md:text-base">
             Planned Work Orders{" "}
             <sup className="text-xs font-normal">(Last 3 months)</sup>
           </p>
@@ -51,12 +59,19 @@ const Dashboard = () => {
       </Card>
       <Card
         loading={false}
-        title={"Projected Man Hours"}
-        extra={<p className="cursor-pointer text-secondary">View Schdeule</p>}
+        title={<p className="text-sm md:text-base">Projected Man Hours</p>}
+        extra={
+          <p className="cursor-pointer text-secondary text-xs md:text-sm">
+            View Schdeule
+          </p>
+        }
       >
         <p>Card content</p>
       </Card>
-      <Card loading={false} title={"Asset Downtime"}>
+      <Card
+        loading={false}
+        title={<p className="text-sm md:text-base">Asset Downtime</p>}
+      >
         <p>Card content</p>
       </Card>
     </div>
