@@ -6,6 +6,8 @@ import Dashboard from "./dashboard";
 import Assets from "./assets";
 import Reports from "./reports";
 import Schedule from "./schedule";
+import Inventory from "./inventory";
+import WorkOrders from "./work-orders";
 
 const Tabs = () => {
   const router = useRouter();
@@ -36,12 +38,12 @@ const Tabs = () => {
     {
       key: "inventory",
       label: "Inventory",
-      children: "Content of Inventory",
+      children: <Inventory />,
     },
     {
       key: "work-orders",
       label: "Work Orders",
-      children: "Content of Work Orders",
+      children: <WorkOrders />,
     },
     {
       key: "schedule",
