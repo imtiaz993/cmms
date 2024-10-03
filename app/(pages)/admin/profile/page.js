@@ -4,8 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input } from "antd";
-import { toast } from "react-toastify";
+import { Input, message } from "antd";
 import { getUser } from "@/utils/index";
 import { updateProfile } from "app/services/user";
 import {
@@ -40,9 +39,9 @@ const Profile = () => {
     setSubmitting(false);
     if (status === 200) {
       localStorage.setItem("user", data);
-      toast.success(data.message);
+      message.success(data.message);
     } else {
-      toast.error(data.message);
+      message.error(data.message);
     }
   };
 
@@ -100,7 +99,6 @@ const Profile = () => {
                 <InputField
                   placeholder="Full Name"
                   name="name"
-                  as={Input}
                   className="mt-1"
                   readOnly={!isEdit}
                   prefix={<UserOutlined style={{ fontSize: "125%" }} />}
@@ -111,7 +109,6 @@ const Profile = () => {
                 <InputField
                   placeholder="Email"
                   name="email"
-                  as={Input}
                   className="mt-1"
                   readOnly={!isEdit}
                   prefix={<MailOutlined style={{ fontSize: "125%" }} />}
@@ -122,7 +119,6 @@ const Profile = () => {
                 <InputField
                   placeholder="Phone No."
                   name="phone"
-                  as={Input}
                   className="mt-1"
                   readOnly={!isEdit}
                   prefix={<PhoneOutlined style={{ fontSize: "125%" }} />}

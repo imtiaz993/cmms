@@ -1,7 +1,6 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Select, Menu } from "antd";
-import { toast } from "react-toastify";
+import { Select, message } from "antd";
 import { login } from "app/services/auth";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
@@ -17,15 +16,15 @@ const AssetFilter = () => {
     // const { status, data } = await login(values);
     // setSubmitting(false);
     // if (status === 200) {
-    //   toast.success(data?.message);
+    // message.success(data?.message);
     //   resetForm();
     // } else {
-    //   toast.error(data?.message);
+    //   message.error(data?.message);
     // }
   };
 
   return (
-    <div className="p-4 bg-primary rounded-md">
+    <div className="p-4 bg-tertiary rounded-md">
       <Formik
         initialValues={{
           assetNumber: "",

@@ -4,8 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input } from "antd";
-import { toast } from "react-toastify";
+import { Input, message } from "antd";
 import { updatePassword } from "app/services/user";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import InputField from "@/components/common/InputField";
@@ -44,9 +43,9 @@ const Profile = () => {
     setSubmitting(false);
     if (status === 200) {
       localStorage.setItem("user", data);
-      toast.success(data.message);
+      message.success(data.message);
     } else {
-      toast.error(data.message);
+      message.error(data.message);
     }
   };
 
@@ -86,7 +85,6 @@ const Profile = () => {
                   placeholder="Enter Old Password"
                   name="oldPassword"
                   type={showPassword.oldPassword ? "text" : "password"}
-                  as={Input}
                   className="mt-1"
                   prefix={
                     showPassword.oldPassword ? (
@@ -119,7 +117,6 @@ const Profile = () => {
                   placeholder="Enter New Password"
                   name="newPassword"
                   type={showPassword.newPassword ? "text" : "password"}
-                  as={Input}
                   className="mt-1"
                   prefix={
                     showPassword.newPassword ? (
@@ -152,7 +149,6 @@ const Profile = () => {
                   placeholder="Enter Confirm Password"
                   name="confirmPassword"
                   type={showPassword.confirmPassword ? "text" : "password"}
-                  as={Input}
                   className="mt-1"
                   prefix={
                     showPassword.confirmPassword ? (

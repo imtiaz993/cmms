@@ -5,8 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input } from "antd";
-import { toast } from "react-toastify";
+import { Input, message } from "antd";
 import { login } from "app/services/auth";
 import {
   EyeInvisibleOutlined,
@@ -39,10 +38,10 @@ const Login = () => {
       if (data?.data?.role === "admin") {
         router?.replace("/admin/dashboard");
       }
-      toast.success(data.message);
+      message.success(data.message);
       resetForm();
     } else {
-      toast.error(data.message);
+      message.error(data.message);
     }
   };
 
@@ -65,14 +64,12 @@ const Login = () => {
               <InputField
                 placeholder="Email"
                 name="email"
-                as={Input}
                 prefix={<MailOutlined style={{ fontSize: "125%" }} />}
               />
               <InputField
                 name="password"
                 placeholder="Password"
                 type={showPassword ? "text" : "password"}
-                as={Input}
                 prefix={
                   showPassword ? (
                     <EyeOutlined

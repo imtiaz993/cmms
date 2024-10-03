@@ -4,8 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input } from "antd";
-import { toast } from "react-toastify";
+import { Input, message } from "antd";
 import { resetPassword } from "app/services/auth";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
@@ -45,10 +44,10 @@ const ResetPassword = () => {
     setSubmitting(false);
     if (status === 200) {
       router.replace("/login");
-      toast.success(data.message);
+      message.success(data.message);
       resetForm();
     } else {
-      toast.error(data.message);
+      message.error(data.message);
     }
   };
 
@@ -72,7 +71,6 @@ const ResetPassword = () => {
                 name="password"
                 placeholder="Password"
                 type={showPassword.password ? "text" : "password"}
-                as={Input}
                 prefix={
                   showPassword.password ? (
                     <EyeOutlined
@@ -102,7 +100,6 @@ const ResetPassword = () => {
                 name="confirmPassword"
                 placeholder="Confirm Password"
                 type={showPassword.confirmPassword ? "text" : "password"}
-                as={Input}
                 prefix={
                   showPassword.confirmPassword ? (
                     <EyeOutlined
