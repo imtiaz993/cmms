@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input, message } from "antd";
+import { message } from "antd";
 import { getUser } from "@/utils/index";
 import { updateProfile } from "app/services/user";
 import {
