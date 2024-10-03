@@ -9,6 +9,7 @@ const InputField = ({
   className,
   style,
   readOnly,
+  maxLength,
 }) => {
   return (
     <div>
@@ -20,6 +21,7 @@ const InputField = ({
         prefix={prefix}
         className={className}
         disabled={readOnly}
+        maxLength={maxLength}
         style={{
           height: "44px",
           ...style,

@@ -2,8 +2,7 @@
 
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input } from "antd";
-import { toast } from "react-toastify";
+import { Input, message } from "antd";
 import { MailOutlined } from "@ant-design/icons";
 import { forgotPassword } from "app/services/auth";
 import Button from "@/components/common/Button";
@@ -20,10 +19,10 @@ const ForgotPassword = () => {
     const { status, data } = await forgotPassword(values);
     setSubmitting(false);
     if (status === 200) {
-      toast.success(data.message);
+      message.success(data.message);
       resetForm();
     } else {
-      toast.error(data.message);
+      message.error(data.message);
     }
   };
 
@@ -47,7 +46,6 @@ const ForgotPassword = () => {
               <InputField
                 placeholder="Email"
                 name="email"
-                as={Input}
                 prefix={<MailOutlined />}
               />
 

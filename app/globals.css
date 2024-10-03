@@ -12,6 +12,25 @@ html,
 body {
   height: 100% !important;
 }
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #313131;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #212020;
+  border-radius: 10px;
+  border: 1px solid #313131;
+}
+
+.ant-message-notice-content {
+  background-color: #4c4c4c !important;
+}
+
 .ant-input-outlined {
   background-color: transparent !important;
   border-color: white !important;
@@ -65,7 +84,7 @@ body {
   border-radius: 0px 6px 6px 0px !important;
 }
 
-.schdeule .ant-picker-panel{
+.schdeule .ant-picker-panel {
   background-color: #313131 !important;
 }
 
