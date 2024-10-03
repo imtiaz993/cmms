@@ -93,6 +93,49 @@ const AssetReports = () => {
         costCenter={false}
         fromToDate
       />
+      <ReportsPopup
+        visible={popup === "Asset Operational Status"}
+        setVisible={setPopup}
+        title="Generate Asset Operational Status Report"
+        dataOnly
+      />
+
+      <ReportsPopup
+        visible={popup === "Asset Physical Location"}
+        setVisible={setPopup}
+        title="Generate Asset Physical Location Report"
+        dataOnly
+      />
+
+      <ReportsPopup
+        visible={popup === "Asset Status Change"}
+        setVisible={setPopup}
+        title="Generate Asset Status Change Report"
+        assetNumber
+        fromToDate
+      />
+
+      {/* <ReportsPopup
+        visible={popup === "Asset Summary"}
+        setVisible={setPopup}
+        title="Generate Asset Summary Report"
+        dataOnly
+      /> */}
+
+      <ReportsPopup
+        visible={popup === "Total Cost of Ownership"}
+        setVisible={setPopup}
+        title="Generate Total Cost of Ownership Report"
+        assetNumber
+        includeChildAssets
+      />
+
+      <ReportsPopup
+        visible={popup === "Custom Attributes"}
+        setVisible={setPopup}
+        title="Generate Custom Attributes Report"
+        dataOnly
+      />
 
       <div className="bg-primary px-2">
         <List

@@ -12,6 +12,7 @@ const ReportsPopup = ({
   dataOnly,
   assetNumber,
   fromToDate,
+  includeChildAssets,
 }) => {
   return (
     <div>
@@ -53,8 +54,8 @@ const ReportsPopup = ({
               title={title}
             >
               <div>
-                <div className="mt-5 flex flex-col md:flex-row gap-4 w-full items-end md:items-center">
-                  {costCenter && (
+                {costCenter && (
+                  <div className="mt-4 flex flex-col md:flex-row gap-4 w-full items-end md:items-center">
                     <div className="w-full">
                       <InputField
                         name="costCenter"
@@ -62,56 +63,64 @@ const ReportsPopup = ({
                         maxLength={128}
                       />
                     </div>
-                  )}
-                  {parentAsset && (
-                    <div className="w-full">
-                      <InputField
-                        name="parentAsset"
-                        placeholder="Parent Asset"
-                        maxLength={128}
-                      />
-                    </div>
-                  )}
-                  {assetNumber && (
-                    <div className="w-full">
-                      <Field
-                        as={Select}
-                        name="assetNumber"
-                        placeholder="Asset Number"
-                        style={{
-                          height: "36px",
-                          width: "100%",
-                        }}
-                      />
-                    </div>
-                  )}
-                  {dataOnly && (
-                    <div className="md:w-1/3">
-                      <Field as={Checkbox} name="dataOnly">
-                        Data Only
-                      </Field>
-                    </div>
-                  )}
-                  {fromToDate && (
-                    <div className="flex flex-col md:flex-row gap-4 w-full">
-                      <Field
-                        as={DatePicker}
-                        name="fromDate"
-                        placeholder="From Date"
-                        className="w-full"
-                        style={{ height: "36px" }}
-                      />
-                      <Field
-                        as={DatePicker}
-                        name="fromDate"
-                        placeholder="From Date"
-                        className="w-full"
-                        style={{ height: "36px" }}
-                      />{" "}
-                    </div>
-                  )}
-                </div>
-                <div className="mt-5">
+
+                    {parentAsset && (
+                      <div className="w-full">
+                        <InputField
+                          name="parentAsset"
+                          placeholder="Parent Asset"
+                          maxLength={128}
+                        />
+                      </div>
+                    )}
+                    {assetNumber && (
+                      <div className="w-full">
+                        <Field
+                          as={Select}
+                          name="assetNumber"
+                          placeholder="Asset Number"
+                          style={{
+                            height: "36px",
+                            width: "100%",
+                          }}
+                        />
+                      </div>
+                    )}
+                    {dataOnly && (
+                      <div className="md:w-1/3">
+                        <Field as={Checkbox} name="dataOnly">
+                          Data Only
+                        </Field>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {fromToDate && (
+                  <div className="mt-4 flex flex-col md:flex-row gap-4 w-full">
+                    <Field
+                      as={DatePicker}
+                      name="fromDate"
+                      placeholder="From Date"
+                      className="w-full"
+                      style={{ height: "36px" }}
+                    />
+                    <Field
+                      as={DatePicker}
+                      name="fromDate"
+                      placeholder="From Date"
+                      className="w-full"
+                      style={{ height: "36px" }}
+                    />{" "}
+                  </div>
+                )}
+                {includeChildAssets && (
+                  <div className="mt-4">
+                    <Field as={Checkbox} name="childAssets">
+                      Include Child Assets
+                    </Field>
+                  </div>
+                )}
+                <div className="mt-4">
                   <p className="text-secondary mb-1">Export As</p>
                   <div role="group">
                     <label className="mr-4">
