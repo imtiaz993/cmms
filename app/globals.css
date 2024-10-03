@@ -56,6 +56,17 @@ body {
   background-color: #212020 !important;
 }
 
+.dashboard-tabs .ant-tabs-nav {
+  margin-left: 32px !important;
+  margin-right: 32px !important;
+}
+@media screen and (max-width: 1024px) {
+  .dashboard-tabs .ant-tabs-nav {
+    margin-left: 12px !important;
+    margin-right: 12px !important;
+  }
+}
+
 .ant-card-head,
 .ant-card-body {
   padding-left: 10px !important;
@@ -69,7 +80,9 @@ body {
     width: 100% !important;
   }
 }
-
+.reports-tabs .ant-tabs-nav {
+  margin: 0px !important;
+}
 .reports-tabs .ant-tabs-nav::before {
   border-bottom: none !important;
 }

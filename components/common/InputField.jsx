@@ -23,7 +23,7 @@ const InputField = ({
         disabled={readOnly}
         maxLength={maxLength}
         style={{
-          height: "44px",
+          height: "36px",
           ...style,
         }}
       />

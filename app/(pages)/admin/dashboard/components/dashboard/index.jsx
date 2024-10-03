@@ -3,7 +3,7 @@ import { Card } from "antd";
 
 const Dashboard = ({ activeLocation }) => {
   return (
-    <div className="grid md:grid-cols-2 gap-6">
+    <div className="grid md:grid-cols-2 gap-6 h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-8 pb-4 pt-3">
       <Card
         loading={false}
         title={

@@ -12,7 +12,6 @@ const Button = ({
   fullWidth = true,
   outlined = false,
   prefix,
-  size = "medium",
 }) => {
   return (
     <AntButton
@@ -22,11 +21,10 @@ const Button = ({
       onClick={onClick}
       className={`${fullWidth ? "w-full" : ""} ${className} `}
       style={{
-        background: outlined ? "transparent" : "#23CDCD",
-        borderColor: outlined ? "#FFFFFF" : "#23CDCD",
+        background: outlined ? "#4C4C4C" : "#23CDCD",
+        borderColor: outlined ? "#737373" : "#23CDCD",
         opacity: disabled ? "0.7" : "",
-        height: size === "small" ? "32px" : "40px",
-        fontSize: size === "small" ? "14px" : "16px",
+        height: "36px",
         fontWeight: "500",
         ...style,
       }}
