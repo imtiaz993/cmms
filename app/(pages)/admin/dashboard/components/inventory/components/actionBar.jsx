@@ -7,10 +7,10 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
-import AssetFilter from "./filtersDropdown";
+import InventoryFilter from "./filtersDropdown";
 
 const ActionBar = ({
-  showAddAssetModal,
+  showAddInventoryModal,
   columns,
   checkedList,
   setCheckedList,
@@ -40,7 +40,7 @@ const ActionBar = ({
       />
       <div className="grid grid-cols-2 sm:flex items-center gap-2 mt-4 md:mt-0">
         <Dropdown
-          dropdownRender={() => <AssetFilter />}
+          dropdownRender={() => <InventoryFilter />}
           trigger={["click"]}
           arrow
           placement="bottomCenter"
@@ -94,7 +94,7 @@ const ActionBar = ({
                   checked={showHierarchy}
                   onChange={(e) => setShowHierarchy(e.target.checked)}
                 >
-                  Show Asset Hierarchy
+                  Show Inventory Hierarchy
                 </Checkbox>
               </Menu.Item>
               <Menu.Item>
@@ -121,10 +121,10 @@ const ActionBar = ({
           />
         </Dropdown>
         <Button
-          text="Add New Asset"
-          onClick={showAddAssetModal}
+          text="Add New Inventory"
+          onClick={showAddInventoryModal}
           outlined
-          style={{ padding: "4px 24px" }}
+          style={{ padding: "4px 30px" }}
           prefix={<PlusOutlined />}
         />
       </div>

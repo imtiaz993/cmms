@@ -26,6 +26,7 @@ const Button = ({
         opacity: disabled ? "0.7" : "",
         height: "36px",
         fontWeight: "500",
+        minWidth: "80px",
         ...style,
       }}
     >

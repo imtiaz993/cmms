@@ -12,6 +12,7 @@ export default function RootWrapper({ children }) {
           token: {
             colorBgBase: "#313131",
             colorPrimary: "#23CDCD",
+            colorBgContainer: "#313131",
           },
         }}
       >

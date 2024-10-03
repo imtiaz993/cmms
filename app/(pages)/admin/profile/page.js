@@ -149,7 +149,6 @@ const Profile = () => {
                       fullWidth={false}
                       disabled={isSubmitting}
                       isLoading={isSubmitting}
-                      style={{ width: "80px" }}
                     />
                   </div>
                 )}

@@ -63,7 +63,7 @@ const AssetReports = () => {
   ];
 
   return (
-    <div className="mt-2 h-[calc(100dvh-210px)] overflow-auto bg-primary px-2">
+    <div className="px-3 mt-2 h-[calc(100dvh-210px)] overflow-auto lg:px-6">
       <ReportsPopup
         visible={popup === "Asset is Currently Down"}
         setVisible={setPopup}
@@ -94,26 +94,28 @@ const AssetReports = () => {
         fromToDate
       />
 
-      <List
-        itemLayout=""
-        dataSource={reportsData.map((i, index) => ({ ...i, key: index }))}
-        renderItem={(item) => (
-          <List.Item
-            actions={[
-              <FileTextOutlined
-                key="file-text-icon"
-                style={{ fontSize: "24px", cursor: "pointer" }}
-                onClick={() => setPopup(item.title)}
-              />,
-            ]}
-          >
-            <List.Item.Meta
-              title={<p className="text-white">{item.title}</p>}
-              description={item.description}
-            />
-          </List.Item>
-        )}
-      />
+      <div className="bg-primary px-2">
+        <List
+          itemLayout=""
+          dataSource={reportsData.map((i, index) => ({ ...i, key: index }))}
+          renderItem={(item) => (
+            <List.Item
+              actions={[
+                <FileTextOutlined
+                  key="file-text-icon"
+                  style={{ fontSize: "24px", cursor: "pointer" }}
+                  onClick={() => setPopup(item.title)}
+                />,
+              ]}
+            >
+              <List.Item.Meta
+                title={<p className="text-white">{item.title}</p>}
+                description={item.description}
+              />
+            </List.Item>
+          )}
+        />
+      </div>
     </div>
   );
 };

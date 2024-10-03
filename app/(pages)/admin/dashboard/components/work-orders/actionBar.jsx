@@ -7,10 +7,10 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
-import AssetFilter from "./filtersDropdown";
+import WOFilter from "./filtersDropdown";
 
 const ActionBar = ({
-  showAddAssetModal,
+  showAddWOModal,
   columns,
   checkedList,
   setCheckedList,
@@ -40,7 +40,7 @@ const ActionBar = ({
       />
       <div className="grid grid-cols-2 sm:flex items-center gap-2 mt-4 md:mt-0">
         <Dropdown
-          dropdownRender={() => <AssetFilter />}
+          dropdownRender={() => <WOFilter />}
           trigger={["click"]}
           arrow
           placement="bottomCenter"
@@ -86,43 +86,21 @@ const ActionBar = ({
             prefix={<SettingOutlined />}
           />
         </Dropdown>
-        <Dropdown
-          dropdownRender={() => (
-            <Menu style={{ background: "#4C4C4C" }}>
-              <Menu.Item>
-                <Checkbox
-                  checked={showHierarchy}
-                  onChange={(e) => setShowHierarchy(e.target.checked)}
-                >
-                  Show Asset Hierarchy
-                </Checkbox>
-              </Menu.Item>
-              <Menu.Item>
-                <Button
-                  onClick={() => {
-                    message.success(
-                      "Export initiated with hierarchy: " + showHierarchy
-                    );
-                  }}
-                  text="Export"
-                />
-              </Menu.Item>
-            </Menu>
-          )}
-          trigger={["click"]}
-          arrow
-          placement="bottomCenter"
-        >
-          <Button
-            text="Export"
-            outlined
-            style={{ padding: "4px 0px" }}
-            prefix={<ExportOutlined />}
-          />
-        </Dropdown>
+
         <Button
-          text="Add New Asset"
-          onClick={showAddAssetModal}
+          text="Export"
+          outlined
+          style={{ padding: "4px 0px" }}
+          onClick={() => {
+            message.success(
+              "Export initiated with hierarchy: " + showHierarchy
+            );
+          }}
+          prefix={<ExportOutlined />}
+        />
+        <Button
+          text="Add New WO"
+          onClick={showAddWOModal}
           outlined
           style={{ padding: "4px 24px" }}
           prefix={<PlusOutlined />}

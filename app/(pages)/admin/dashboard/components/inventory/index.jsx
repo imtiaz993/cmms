@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Table } from "antd";
 import ActionBar from "./components/actionBar";
-import CreateAssetPopup from "./components/createAssetPopup";
+import CreateInventoryPopup from "./components/createInventoryPopup";
 
 const columns = [
   {
-    title: "Asset",
+    title: "Inventory",
     dataIndex: "name",
   },
   {
@@ -133,36 +133,36 @@ const data = [
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const Assets = () => {
+const Inventory = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
-  const [addAssetVisible, setAddAssetVisible] = useState(false);
+  const [addInventoryVisible, setAddInventoryVisible] = useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
 
-  const showAddAssetModal = () => {
-    setAddAssetVisible(true);
+  const showAddInventoryModal = () => {
+    setAddInventoryVisible(true);
   };
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
-      {addAssetVisible && (
-        <CreateAssetPopup
-          addAssetVisible={addAssetVisible}
-          setAddAssetVisible={setAddAssetVisible}
+      {addInventoryVisible && (
+        <CreateInventoryPopup
+          addInventoryVisible={addInventoryVisible}
+          setAddInventoryVisible={setAddInventoryVisible}
         />
       )}
       <div>
         <ActionBar
-          showAddAssetModal={showAddAssetModal}
+          showAddInventoryModal={showAddInventoryModal}
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
         />
         <div className="flex gap-3 justify-end">
           <p className="text-secondary">
-            Total Assets: <span>{"(" + data.length + ")"}</span>
+            Total Inventory: <span>{"(" + data.length + ")"}</span>
           </p>
           <p className="text-secondary">
-            Parent Assets: <span>{"(" + data.length + ")"}</span>
+            Parent Inventory: <span>{"(" + data.length + ")"}</span>
           </p>
         </div>
         <Table
@@ -188,4 +188,4 @@ const Assets = () => {
   );
 };
 
-export default Assets;
+export default Inventory;
