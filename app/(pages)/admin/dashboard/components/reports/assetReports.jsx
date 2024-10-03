@@ -1,7 +1,10 @@
 import { List } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
+import ReportsPopup from "./popups/reportsPopup";
+import { useState } from "react";
 
 const AssetReports = () => {
+  const [popup, setPopup] = useState("");
   const reportsData = [
     {
       title: "Asset is Currently Down",
@@ -61,6 +64,36 @@ const AssetReports = () => {
 
   return (
     <div className="mt-2 h-[calc(100dvh-210px)] overflow-auto bg-primary px-2">
+      <ReportsPopup
+        visible={popup === "Asset is Currently Down"}
+        setVisible={setPopup}
+        title="Generate Asset is Currently Down Report"
+      />
+      <ReportsPopup
+        visible={popup === "Asset Class Assignment"}
+        setVisible={setPopup}
+        title="Generate Asset Class Assignment Report"
+      />
+      <ReportsPopup
+        visible={popup === "Asset Classes by Entity"}
+        setVisible={setPopup}
+        title="Generate Asset Classes by Entity Report"
+        dataOnly
+      />
+      <ReportsPopup
+        visible={popup === "Asset Details"}
+        setVisible={setPopup}
+        title="Generate Asset Details Report"
+        assetNumber
+      />
+      <ReportsPopup
+        visible={popup === "Newly Added Assets"}
+        setVisible={setPopup}
+        title="Generate Newly Added Assets Report"
+        costCenter={false}
+        fromToDate
+      />
+
       <List
         itemLayout=""
         dataSource={reportsData.map((i, index) => ({ ...i, key: index }))}
@@ -70,6 +103,7 @@ const AssetReports = () => {
               <FileTextOutlined
                 key="file-text-icon"
                 style={{ fontSize: "24px", cursor: "pointer" }}
+                onClick={() => setPopup(item.title)}
               />,
             ]}
           >
