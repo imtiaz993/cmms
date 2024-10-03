@@ -9,7 +9,7 @@ const validationSchema = Yup.object().shape({
   costCenter: Yup.string(),
 });
 
-const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
+const CreateInventoryPopup = ({ addInventoryVisible, setAddInventoryVisible }) => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const handleNext = () => {
@@ -63,9 +63,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
         <Form onSubmit={handleSubmit}>
           <Modal
             maskClosable={false}
-            title={<h1 className="text-lg md:text-2xl mb-5">Add New Asset</h1>}
-            open={addAssetVisible}
-            onCancel={() => setAddAssetVisible(false)}
+            title={<h1 className="text-lg md:text-2xl mb-5">Add New Inventory</h1>}
+            open={addInventoryVisible}
+            onCancel={() => setAddInventoryVisible(false)}
             footer={
               <div>
                 {currentStep > 0 && (
@@ -95,7 +95,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                     isLoading={isSubmitting}
                     disabled={isSubmitting}
                     size="small"
-                    text="Add Asset"
+                    text="Add Inventory"
                     fullWidth={false}
                   />
                 )}
@@ -122,7 +122,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                   />
                   <InputField
                     name="costCenter"
-                    placeholder="Parent Asset"
+                    placeholder="Parent Inventory"
                     maxLength={128}
                   />
                   <InputField
@@ -132,7 +132,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                   <InputField name="costCenter" placeholder="Subunit" />
                   <InputField
                     name="costCenter"
-                    placeholder="Asset Class"
+                    placeholder="Inventory Class"
                     maxLength={128}
                   />
                   <InputField
@@ -152,7 +152,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                   />
                   <InputField
                     name="costCenter"
-                    placeholder="Asset #"
+                    placeholder="Inventory #"
                     maxLength={128}
                   />
                   <InputField
@@ -235,4 +235,4 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
   );
 };
 
-export default CreateAssetPopup;
+export default CreateInventoryPopup;

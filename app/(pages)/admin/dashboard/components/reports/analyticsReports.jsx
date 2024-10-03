@@ -40,26 +40,28 @@ const AnalyticsReports = () => {
     },
   ];
   return (
-    <div className="mt-2 h-[calc(100dvh-210px)] overflow-auto bg-primary px-2">
-    <List
-      itemLayout=""
-      dataSource={reportsData.map((i, index) => ({ ...i, key: index }))}
-      renderItem={(item) => (
-        <List.Item
-          actions={[
-            <FileTextOutlined
-            key="file-text-icon"
-              style={{ fontSize: "24px", cursor: "pointer" }}
-            />,
-          ]}
-        >
-          <List.Item.Meta
-            title={<p className="text-white">{item.title}</p>}
-            description={item.description}
-          />
-        </List.Item>
-      )}
-    />
+    <div className="px-3 mt-2 h-[calc(100dvh-210px)] overflow-auto lg:px-6">
+      <div className="bg-primary px-2">
+        <List
+          itemLayout=""
+          dataSource={reportsData.map((i, index) => ({ ...i, key: index }))}
+          renderItem={(item) => (
+            <List.Item
+              actions={[
+                <FileTextOutlined
+                  key="file-text-icon"
+                  style={{ fontSize: "24px", cursor: "pointer" }}
+                />,
+              ]}
+            >
+              <List.Item.Meta
+                title={<p className="text-white">{item.title}</p>}
+                description={item.description}
+              />
+            </List.Item>
+          )}
+        />
+      </div>
     </div>
   );
 };

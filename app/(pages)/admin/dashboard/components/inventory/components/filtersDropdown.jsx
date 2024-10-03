@@ -6,10 +6,10 @@ import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 
 const validationSchema = Yup.object().shape({
-  assetNumber: Yup.string(),
+  inventoryNumber: Yup.string(),
 });
 
-const AssetFilter = () => {
+const InventoryFilter = () => {
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log(values);
 
@@ -27,8 +27,8 @@ const AssetFilter = () => {
     <div className="p-4 bg-tertiary rounded-md max-h-[400px] overflow-auto">
       <Formik
         initialValues={{
-          assetNumber: "",
-          assetDescription: "",
+          inventorytNumber: "",
+          inventoryDescription: "",
           altId: "",
           serialNumber: "",
           barcode: "",
@@ -51,10 +51,10 @@ const AssetFilter = () => {
         {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <InputField name="assetNumber" placeholder="Asset #" />
+              <InputField name="inventoryNumber" placeholder="Inventory #" />
               <InputField
-                name="assetDescription"
-                placeholder="Asset Description"
+                name="inventoryDescription"
+                placeholder="Inventory Description"
               />
               <InputField name="altId" placeholder="Alt ID #" />
               <InputField name="serialNumber" placeholder="Serial #" />
@@ -98,4 +98,4 @@ const AssetFilter = () => {
   );
 };
 
-export default AssetFilter;
+export default InventoryFilter;
