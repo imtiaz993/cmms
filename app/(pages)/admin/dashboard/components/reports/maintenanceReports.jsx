@@ -1,7 +1,10 @@
 import { List } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
+import ReportsPopup from "./popups/reportsPopup";
+import { useState } from "react";
 
 const MaintenanceReports = () => {
+  const [popup, setPopup] = useState(false);
   const reportsData = [
     {
       title: "Daily Readings",
@@ -104,6 +107,163 @@ const MaintenanceReports = () => {
   ];
   return (
     <div className="px-3 mt-2 h-[calc(100dvh-210px)] overflow-auto lg:px-6">
+      <ReportsPopup
+        visible={popup === "Daily Readings"}
+        setVisible={setPopup}
+        title="Generate Daily Readings Report"
+        physicalLocation
+        dataOnly
+      />
+
+      <ReportsPopup
+        visible={popup === "Downtime Summary"}
+        setVisible={setPopup}
+        title="Generate Downtime Summary Report"
+        physicalLocation
+        fromToDate
+        criticallyFactor
+        includeChildAssets
+      />
+
+      <ReportsPopup
+        visible={popup === "End of Month"}
+        setVisible={setPopup}
+        title="Generate End of Month Report"
+        date
+      />
+
+      <ReportsPopup
+        visible={popup === "Asset Downtime"}
+        setVisible={setPopup}
+        title="Generate Asset Downtime Report"
+        fromToDate
+        includeChildAssets
+      />
+
+      <ReportsPopup
+        visible={popup === "Maintenance Forecast by Craft"}
+        setVisible={setPopup}
+        title="Generate Maintenance Forecast by Craft Report"
+        fromToDate
+      />
+
+      <ReportsPopup
+        visible={popup === "Maintenance Forecast by Zone"}
+        setVisible={setPopup}
+        title="Generate Maintenance Forecast by Zone Report"
+        fromToDate
+      />
+
+      {/* <ReportsPopup
+        visible={popup === "Maintenance Procedures"}
+        setVisible={setPopup}
+        title="Generate Maintenance Procedures Report"
+        physicalLocation
+        dataOnly
+      /> */}
+
+      {/* <ReportsPopup
+        visible={popup === "Planned Maintenance Summary"}
+        setVisible={setPopup}
+        title="Generate Planned Maintenance Summary Report"
+        physicalLocation
+        dataOnly
+      /> */}
+
+      {/* <ReportsPopup
+        visible={popup === "Unplanned Maintenance Details"}
+        setVisible={setPopup}
+        title="Generate Unplanned Maintenance Details Report"
+        physicalLocation
+        dataOnly
+      /> */}
+
+      {/* <ReportsPopup
+        visible={popup === "Unplanned Maintenance Summary"}
+        setVisible={setPopup}
+        title="Generate Unplanned Maintenance Summary Report"
+        physicalLocation
+        dataOnly
+      /> */}
+
+      {/* <ReportsPopup
+        visible={popup === "Work Order Survey"}
+        setVisible={setPopup}
+        title="Generate Work Order Survey Report"
+        physicalLocation
+        dataOnly
+      /> */}
+
+      <ReportsPopup
+        visible={popup === "Work Orders Past Due"}
+        setVisible={setPopup}
+        title="Generate Work Order Past Due Report"
+        dataOnly
+      />
+
+      {/* <ReportsPopup
+        visible={popup === "Work Order Personnel Summary"}
+        setVisible={setPopup}
+        title="Generate Work Order Personnel Summary Report"
+        physicalLocation
+        dataOnly
+      /> */}
+
+      {/* <ReportsPopup
+        visible={popup === "Work Order Procedure"}
+        setVisible={setPopup}
+        title="Generate Work Order Procedure Report"
+        physicalLocation
+        dataOnly
+      /> */}
+
+      {/* <ReportsPopup
+        visible={popup === "Work Order Summary"}
+        setVisible={setPopup}
+        title="Generate Work Order Summary Report"
+        physicalLocation
+        dataOnly
+      /> */}
+
+      <ReportsPopup
+        visible={popup === "Work Orders With Delay Reasons"}
+        setVisible={setPopup}
+        title="Generate Work Orders With Delay Reasons Report"
+        dataOnly
+      />
+
+      {/* <ReportsPopup
+        visible={popup === "Maintenance Completion By Craft"}
+        setVisible={setPopup}
+        title="Generate Maintenance Completion By Craft Report"
+        physicalLocation
+        dataOnly
+      /> */}
+
+      <ReportsPopup
+        visible={popup === "MTBF MTTR"}
+        setVisible={setPopup}
+        title="Generate MTBF MTTR Report"
+        date
+        criticallyFactor
+      />
+
+      {/* <ReportsPopup
+        visible={popup === "Top Offenders"}
+        setVisible={setPopup}
+        title="Generate Top Offenders Report"
+        physicalLocation
+        dataOnly
+      /> */}
+
+      <ReportsPopup
+        visible={popup === "Planned WOs vs Unplanned WOs"}
+        setVisible={setPopup}
+        title="Generate Planned WOs vs Unplanned WOs Report"
+        criticallyFactor
+        fromToDate
+      />
+
       <div className="bg-primary px-2">
         <List
           itemLayout=""
@@ -114,6 +274,7 @@ const MaintenanceReports = () => {
                 <FileTextOutlined
                   key="file-text-icon"
                   style={{ fontSize: "24px", cursor: "pointer" }}
+                  onClick={() => setPopup(item.title)}
                 />,
               ]}
             >

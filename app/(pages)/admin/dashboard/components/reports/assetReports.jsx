@@ -134,7 +134,6 @@ const AssetReports = () => {
         visible={popup === "Custom Attributes"}
         setVisible={setPopup}
         title="Generate Custom Attributes Report"
-        dataOnly
       />
 
       <div className="bg-primary px-2">

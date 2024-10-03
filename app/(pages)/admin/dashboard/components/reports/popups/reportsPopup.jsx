@@ -8,11 +8,14 @@ const ReportsPopup = ({
   setVisible,
   title,
   costCenter = true,
-  parentAsset,
   dataOnly,
   assetNumber,
   fromToDate,
   includeChildAssets,
+  physicalLocation,
+  criticallyFactor,
+  date,
+  year,
 }) => {
   return (
     <div>
@@ -64,21 +67,37 @@ const ReportsPopup = ({
                       />
                     </div>
 
-                    {parentAsset && (
-                      <div className="w-full">
-                        <InputField
-                          name="parentAsset"
-                          placeholder="Parent Asset"
-                          maxLength={128}
-                        />
-                      </div>
-                    )}
                     {assetNumber && (
                       <div className="w-full">
                         <Field
                           as={Select}
                           name="assetNumber"
                           placeholder="Asset Number"
+                          style={{
+                            height: "36px",
+                            width: "100%",
+                          }}
+                        />
+                      </div>
+                    )}
+                    {date && (
+                      <div className="w-full">
+                        <Field
+                          as={DatePicker}
+                          name="date"
+                          placeholder="Date"
+                          className="w-full"
+                          style={{ height: "36px" }}
+                        />
+                      </div>
+                    )}
+
+                    {year && (
+                      <div className="w-full">
+                        <Field
+                          as={Select}
+                          name="year"
+                          placeholder="Year"
                           style={{
                             height: "36px",
                             width: "100%",
@@ -93,6 +112,19 @@ const ReportsPopup = ({
                         </Field>
                       </div>
                     )}
+                  </div>
+                )}
+                {physicalLocation && (
+                  <div className="mt-4 w-full">
+                    <Field
+                      as={Select}
+                      name="physicalLocation"
+                      placeholder="Physical Location"
+                      style={{
+                        height: "36px",
+                        width: "100%",
+                      }}
+                    />
                   </div>
                 )}
                 {fromToDate && (
@@ -113,13 +145,30 @@ const ReportsPopup = ({
                     />{" "}
                   </div>
                 )}
-                {includeChildAssets && (
-                  <div className="mt-4">
-                    <Field as={Checkbox} name="childAssets">
-                      Include Child Assets
-                    </Field>
-                  </div>
-                )}
+                <div className="mt-4 flex flex-col md:flex-row gap-4 w-full md:items-center">
+                  {criticallyFactor && (
+                    <div className="w-full">
+                      <Field
+                        as={Select}
+                        name="criticallyFactor"
+                        placeholder="Critically Factor"
+                        style={{
+                          height: "36px",
+                          width: "100%",
+                        }}
+                      >
+                        Critically Factor
+                      </Field>
+                    </div>
+                  )}
+                  {includeChildAssets && (
+                    <div className="w-full">
+                      <Field as={Checkbox} name="childAssets">
+                        Include Child Assets
+                      </Field>
+                    </div>
+                  )}
+                </div>
                 <div className="mt-4">
                   <p className="text-secondary mb-1">Export As</p>
                   <div role="group">
