@@ -2,7 +2,7 @@
 
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input, message } from "antd";
+import { message } from "antd";
 import { MailOutlined } from "@ant-design/icons";
 import { forgotPassword } from "app/services/auth";
 import Button from "@/components/common/Button";

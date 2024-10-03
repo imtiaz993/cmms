@@ -6,6 +6,7 @@ const Dashboard = ({ activeLocation }) => {
     <div className="grid md:grid-cols-2 gap-6 h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-8 pb-4 pt-3">
       <Card
         loading={false}
+        className="!bg-primary"
         title={
           <p className="text-sm md:text-base">
             Unplanned Work Orders{" "}
@@ -25,6 +26,7 @@ const Dashboard = ({ activeLocation }) => {
       </Card>
       <Card
         loading={false}
+        className="!bg-primary"
         title={
           <p className="text-sm md:text-base">
             Planned Work Orders{" "}
@@ -44,6 +46,7 @@ const Dashboard = ({ activeLocation }) => {
       </Card>
       <Card
         loading={false}
+        className="!bg-primary"
         title={
           <p className="text-sm md:text-base">
             Unplanned Work Orders{" "}
@@ -55,6 +58,7 @@ const Dashboard = ({ activeLocation }) => {
       </Card>
       <Card
         loading={false}
+        className="!bg-primary"
         title={
           <p className="text-sm md:text-base">
             Planned Work Orders{" "}
@@ -66,6 +70,7 @@ const Dashboard = ({ activeLocation }) => {
       </Card>
       <Card
         loading={false}
+        className="!bg-primary"
         title={<p className="text-sm md:text-base">Projected Man Hours</p>}
         extra={
           <Link
@@ -80,6 +85,7 @@ const Dashboard = ({ activeLocation }) => {
       </Card>
       <Card
         loading={false}
+        className="!bg-primary"
         title={<p className="text-sm md:text-base">Asset Downtime</p>}
       >
         <p>Card content</p>

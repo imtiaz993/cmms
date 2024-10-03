@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input, message } from "antd";
+import { message } from "antd";
 import { login } from "app/services/auth";
 import {
   EyeInvisibleOutlined,

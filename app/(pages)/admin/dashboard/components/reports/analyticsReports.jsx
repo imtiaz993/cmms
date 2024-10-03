@@ -40,6 +40,7 @@ const AnalyticsReports = () => {
     },
   ];
   return (
+    <div className="mt-2 h-[calc(100dvh-210px)] overflow-auto bg-primary px-2">
     <List
       itemLayout=""
       dataSource={reportsData.map((i, index) => ({ ...i, key: index }))}
@@ -59,6 +60,7 @@ const AnalyticsReports = () => {
         </List.Item>
       )}
     />
+    </div>
   );
 };
 export default AnalyticsReports;

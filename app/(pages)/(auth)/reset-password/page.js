@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input, message } from "antd";
+import { message } from "antd";
 import { resetPassword } from "app/services/auth";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
