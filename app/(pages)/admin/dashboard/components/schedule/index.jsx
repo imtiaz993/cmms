@@ -42,7 +42,7 @@ const Schedule = () => {
     return info.originNode;
   };
   return (
-    <div className="schdeule">
+    <div className="schdeule h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-8 pb-4">
       <Calendar cellRender={cellRender} className="!bg-[#212020]" />
     </div>
   );

@@ -64,12 +64,14 @@ const Login = () => {
               <InputField
                 placeholder="Email"
                 name="email"
+                style={{ height: "40px" }}
                 prefix={<MailOutlined style={{ fontSize: "125%" }} />}
               />
               <InputField
                 name="password"
                 placeholder="Password"
                 type={showPassword ? "text" : "password"}
+                style={{ height: "40px" }}
                 prefix={
                   showPassword ? (
                     <EyeOutlined
@@ -103,6 +105,7 @@ const Login = () => {
                 disabled={isSubmitting}
                 isLoading={isSubmitting}
                 className="mt-7"
+                style={{ height: "40px", fontSize: "16px" }}
               />
             </Form>
           )}

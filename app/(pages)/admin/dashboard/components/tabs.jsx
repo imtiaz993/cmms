@@ -70,7 +70,7 @@ const Tabs = () => {
     },
   ];
   return (
-    <div>
+    <div className="dashboard-tabs">
       <AntTabs
         activeKey={tabs.find((i) => i.key === activeTab)?.key || "dashboard"}
         animated

@@ -33,7 +33,7 @@ export default function Layout({ children }) {
         <Appbar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
         <div className="flex items-start mt-4">
           <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
-          <div className="w-full lg:w-[calc(100%-300px)] px-3 lg:px-8">
+          <div className="w-full lg:w-[calc(100%-300px)]">
             {children}
           </div>
         </div>

@@ -143,7 +143,7 @@ const Assets = () => {
   };
 
   return (
-    <>
+    <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-8 pb-4 pt-3">
       <CreateAssetPopup
         addAssetVisible={addAssetVisible}
         setAddAssetVisible={setAddAssetVisible}
@@ -175,7 +175,7 @@ const Assets = () => {
           }}
         />
       </div>
-    </>
+    </div>
   );
 };
 

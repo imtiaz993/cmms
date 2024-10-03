@@ -70,6 +70,7 @@ const ResetPassword = () => {
               <InputField
                 name="password"
                 placeholder="Password"
+                style={{ height: "40px" }}
                 type={showPassword.password ? "text" : "password"}
                 prefix={
                   showPassword.password ? (
@@ -99,6 +100,7 @@ const ResetPassword = () => {
               <InputField
                 name="confirmPassword"
                 placeholder="Confirm Password"
+                style={{ height: "40px" }}
                 type={showPassword.confirmPassword ? "text" : "password"}
                 prefix={
                   showPassword.confirmPassword ? (
@@ -132,6 +134,7 @@ const ResetPassword = () => {
                 disabled={isSubmitting}
                 isLoading={isSubmitting}
                 className="mt-7"
+                style={{ height: "40px", fontSize: "16px" }}
               />
             </Form>
           )}

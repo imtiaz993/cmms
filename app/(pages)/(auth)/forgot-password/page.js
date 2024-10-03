@@ -46,6 +46,7 @@ const ForgotPassword = () => {
               <InputField
                 placeholder="Email"
                 name="email"
+                style={{ height: "40px" }}
                 prefix={<MailOutlined />}
               />
 
@@ -55,6 +56,7 @@ const ForgotPassword = () => {
                 disabled={isSubmitting}
                 isLoading={isSubmitting}
                 className="mt-7"
+                style={{ height: "40px", fontSize: "16px" }}
               />
             </Form>
           )}
