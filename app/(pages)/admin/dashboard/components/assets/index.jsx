@@ -166,9 +166,18 @@ const Assets = () => {
           </p>
         </div>
         <Table
+          loading={false}
+          size={"large"}
+          scroll={{ x: 1100 }}
           columns={newColumns}
           dataSource={data}
-          pagination={{ pageSize: 5 }}
+          pagination={{
+            total: data.total,
+            current: 1,
+            pageSize: 10,
+            showSizeChanger: true,
+            onChange: () => {},
+          }}
           style={{
             marginTop: 16,
             overflow: "auto",
