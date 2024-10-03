@@ -15,7 +15,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const ForgotPassword = () => {
-  const handleSubmit = async (values, setSubmitting) => {
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
     const { status, data } = await forgotPassword(values);
     setSubmitting(false);
     if (status === 200) {
@@ -37,8 +37,8 @@ const ForgotPassword = () => {
         <Formik
           initialValues={{ email: "" }}
           validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values, setSubmitting);
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            handleSubmit(values, setSubmitting, resetForm);
           }}
         >
           {({ isSubmitting, handleSubmit }) => (

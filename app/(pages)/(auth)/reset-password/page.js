@@ -36,7 +36,7 @@ const ResetPassword = () => {
     confirmPassword: false,
   });
 
-  const handleSubmit = async (values, setSubmitting) => {
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
     const { status, data } = await resetPassword({
       ...values,
       token: token,
@@ -61,8 +61,8 @@ const ResetPassword = () => {
         <Formik
           initialValues={{ password: "", confirmPassword: "" }}
           validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values, setSubmitting);
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            handleSubmit(values, setSubmitting, resetForm);
           }}
         >
           {({ isSubmitting, handleSubmit }) => (

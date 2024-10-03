@@ -10,7 +10,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const AssetFilter = () => {
-  const handleSubmit = async (values, setSubmitting) => {
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log(values);
 
     // const { status, data } = await login(values);
@@ -24,7 +24,7 @@ const AssetFilter = () => {
   };
 
   return (
-    <div className="p-4 bg-tertiary rounded-md">
+    <div className="p-4 bg-tertiary rounded-md max-h-[400px] overflow-auto">
       <Formik
         initialValues={{
           assetNumber: "",
@@ -44,8 +44,8 @@ const AssetFilter = () => {
           tier6: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          handleSubmit(values, setSubmitting);
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          handleSubmit(values, setSubmitting, resetForm);
         }}
       >
         {({ isSubmitting, handleSubmit, resetForm }) => (

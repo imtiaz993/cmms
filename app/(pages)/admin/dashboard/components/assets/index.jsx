@@ -144,10 +144,12 @@ const Assets = () => {
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-8 pb-4 pt-3">
-      <CreateAssetPopup
-        addAssetVisible={addAssetVisible}
-        setAddAssetVisible={setAddAssetVisible}
-      />
+      {addAssetVisible && (
+        <CreateAssetPopup
+          addAssetVisible={addAssetVisible}
+          setAddAssetVisible={setAddAssetVisible}
+        />
+      )}
       <div>
         <ActionBar
           showAddAssetModal={showAddAssetModal}
@@ -157,12 +159,10 @@ const Assets = () => {
         />
         <div className="flex gap-3 justify-end">
           <p className="text-secondary">
-            Total Assets:{" "}
-            <span className="text-white">{"(" + data.length + ")"}</span>
+            Total Assets: <span>{"(" + data.length + ")"}</span>
           </p>
           <p className="text-secondary">
-            Parent Assets:{" "}
-            <span className="text-white">{"(" + data.length + ")"}</span>
+            Parent Assets: <span>{"(" + data.length + ")"}</span>
           </p>
         </div>
         <Table

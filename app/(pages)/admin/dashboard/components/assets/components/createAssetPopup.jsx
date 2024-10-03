@@ -20,7 +20,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
     setCurrentStep((prev) => prev - 1);
   };
 
-  const handleSubmit = async (values, setSubmitting) => {
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log(values);
     // const { status, data } = await login(values);
     // setSubmitting(false);
@@ -53,13 +53,13 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
         costCenter: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(values, { setSubmitting, resetForm }) => {
         console.log(values);
 
-        handleSubmit(values, setSubmitting);
+        handleSubmit(values, setSubmitting, resetForm);
       }}
     >
-      {({ isSubmitting, handleSubmit, resetForm }) => (
+      {({ isSubmitting, handleSubmit }) => (
         <Form onSubmit={handleSubmit}>
           <Modal
             maskClosable={false}
@@ -108,7 +108,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
               overflowX: "hidden",
             }}
           >
-            <div className="mb-10">
+            <div className="mb-5 md:mb-10">
               <Steps current={currentStep} items={steps} />
             </div>
 

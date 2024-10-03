@@ -26,7 +26,7 @@ const Login = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (values, setSubmitting) => {
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
     const { status, data } = await login(values);
     setSubmitting(false);
     if (status === 200) {
@@ -55,8 +55,8 @@ const Login = () => {
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values, setSubmitting);
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            handleSubmit(values, setSubmitting, resetForm);
           }}
         >
           {({ isSubmitting, handleSubmit }) => (
