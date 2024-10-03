@@ -1,7 +1,10 @@
 import { List } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
+import ReportsPopup from "./popups/reportsPopup";
+import { useState } from "react";
 
 const AssetReports = () => {
+  const [popup, setPopup] = useState("");
   const reportsData = [
     {
       title: "Asset is Currently Down",
@@ -61,6 +64,78 @@ const AssetReports = () => {
 
   return (
     <div className="px-3 mt-2 h-[calc(100dvh-210px)] overflow-auto lg:px-6">
+      <ReportsPopup
+        visible={popup === "Asset is Currently Down"}
+        setVisible={setPopup}
+        title="Generate Asset is Currently Down Report"
+      />
+      <ReportsPopup
+        visible={popup === "Asset Class Assignment"}
+        setVisible={setPopup}
+        title="Generate Asset Class Assignment Report"
+      />
+      <ReportsPopup
+        visible={popup === "Asset Classes by Entity"}
+        setVisible={setPopup}
+        title="Generate Asset Classes by Entity Report"
+        dataOnly
+      />
+      <ReportsPopup
+        visible={popup === "Asset Details"}
+        setVisible={setPopup}
+        title="Generate Asset Details Report"
+        assetNumber
+      />
+      <ReportsPopup
+        visible={popup === "Newly Added Assets"}
+        setVisible={setPopup}
+        title="Generate Newly Added Assets Report"
+        costCenter={false}
+        fromToDate
+      />
+      <ReportsPopup
+        visible={popup === "Asset Operational Status"}
+        setVisible={setPopup}
+        title="Generate Asset Operational Status Report"
+        dataOnly
+      />
+
+      <ReportsPopup
+        visible={popup === "Asset Physical Location"}
+        setVisible={setPopup}
+        title="Generate Asset Physical Location Report"
+        dataOnly
+      />
+
+      <ReportsPopup
+        visible={popup === "Asset Status Change"}
+        setVisible={setPopup}
+        title="Generate Asset Status Change Report"
+        assetNumber
+        fromToDate
+      />
+
+      {/* <ReportsPopup
+        visible={popup === "Asset Summary"}
+        setVisible={setPopup}
+        title="Generate Asset Summary Report"
+        dataOnly
+      /> */}
+
+      <ReportsPopup
+        visible={popup === "Total Cost of Ownership"}
+        setVisible={setPopup}
+        title="Generate Total Cost of Ownership Report"
+        assetNumber
+        includeChildAssets
+      />
+
+      <ReportsPopup
+        visible={popup === "Custom Attributes"}
+        setVisible={setPopup}
+        title="Generate Custom Attributes Report"
+      />
+
       <div className="bg-primary px-2">
         <List
           itemLayout=""
@@ -71,6 +146,7 @@ const AssetReports = () => {
                 <FileTextOutlined
                   key="file-text-icon"
                   style={{ fontSize: "24px", cursor: "pointer" }}
+                  onClick={() => setPopup(item.title)}
                 />,
               ]}
             >

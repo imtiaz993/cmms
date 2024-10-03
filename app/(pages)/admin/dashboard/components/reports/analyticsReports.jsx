@@ -1,7 +1,11 @@
 import { List } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import ReportsPopup from "./popups/reportsPopup";
 
 const AnalyticsReports = () => {
+  const [popup, setPopup] = useState(false);
+
   const reportsData = [
     {
       title: "Defect and Cost Analysis",
@@ -41,6 +45,57 @@ const AnalyticsReports = () => {
   ];
   return (
     <div className="px-3 mt-2 h-[calc(100dvh-210px)] overflow-auto lg:px-6">
+      <ReportsPopup
+        visible={popup === "Defect and Cost Analysis"}
+        setVisible={setPopup}
+        title="Generate Defect and Cost Analysis Report"
+        fromToDate
+        includeChildAssets
+      />
+
+      <ReportsPopup
+        visible={popup === "Asset Class Trend Summary"}
+        setVisible={setPopup}
+        title="Generate Asset Class Trend Summary Report"
+        year
+      />
+
+      <ReportsPopup
+        visible={popup === "Corrective Maintenance Measurables"}
+        setVisible={setPopup}
+        title="Generate Corrective Maintenance Measurables Report"
+        year
+      />
+
+      <ReportsPopup
+        visible={popup === "Maintenance Cost Breakdown"}
+        setVisible={setPopup}
+        title="Generate Maintenance Cost Breakdown Report"
+        fromToDate
+        includeChildAssets
+      />
+
+      <ReportsPopup
+        visible={popup === "Monthly Maintenance Cost Breakdown"}
+        setVisible={setPopup}
+        title="Generate Monthly Maintenance Cost Breakdown Report"
+        year
+      />
+
+      <ReportsPopup
+        visible={popup === "Maintenance and Reliability"}
+        setVisible={setPopup}
+        title="Generate Maintenance and Reliability Report"
+        fromToDate
+        includeChildAssets
+      />
+
+      <ReportsPopup
+        visible={popup === "Exponential Smoothing Forecast"}
+        setVisible={setPopup}
+        title="Generate Exponential Smoothing Forecast Report"
+      />
+
       <div className="bg-primary px-2">
         <List
           itemLayout=""
@@ -51,6 +106,7 @@ const AnalyticsReports = () => {
                 <FileTextOutlined
                   key="file-text-icon"
                   style={{ fontSize: "24px", cursor: "pointer" }}
+                  onClick={() => setPopup(item.title)}
                 />,
               ]}
             >
