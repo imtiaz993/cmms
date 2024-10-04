@@ -102,7 +102,9 @@ const ActionBar = ({
         />
         <div>
           <Button
-            text={`Create ${unplanned ? "Unplanned" : "Planned"} WO`}
+            text={`${
+              unplanned ? "Create Unplanned WO" : "Open Early Maintenance"
+            }`}
             onClick={showAddWOModal}
             outlined
             style={{ padding: "4px 24px" }}

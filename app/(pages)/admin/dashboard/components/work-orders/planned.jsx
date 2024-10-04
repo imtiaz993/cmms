@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Select, Table } from "antd";
 import { PrinterOutlined } from "@ant-design/icons";
-import CreateWOPopup from "./createWOPopup";
+import EarlyMaintenancePopup from "./earlyMaintenancePopup";
 import ActionBar from "./actionBar";
 
 const columns = [
@@ -136,9 +136,9 @@ const Planned = () => {
     <div className="h-[calc(100dvh-220px)] overflow-auto mt-4 px-3 lg:px-6">
       <div className="">
         {addWOVisible && (
-          <CreateWOPopup
-            addWOVisible={addWOVisible}
-            setAddWOVisible={setAddWOVisible}
+          <EarlyMaintenancePopup
+            visible={addWOVisible}
+            setVisible={setAddWOVisible}
           />
         )}
         <div>
@@ -178,8 +178,7 @@ const Planned = () => {
               </div>
             </div>
             <p className="text-secondary">
-              Total Planned Work Orders:{" "}
-              <span>{"(" + data.length + ")"}</span>
+              Total Planned Work Orders: <span>{"(" + data.length + ")"}</span>
             </p>
           </div>
           <Table
