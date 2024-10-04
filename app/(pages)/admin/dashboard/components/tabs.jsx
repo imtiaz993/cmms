@@ -1,13 +1,19 @@
 "use cient";
 
+import dynamic from "next/dynamic";
+
+const Dashboard = dynamic(() => import("./dashboard"), {
+  ssr: false,
+});
+
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs as AntTabs } from "antd";
-import Dashboard from "./dashboard";
 import Assets from "./assets";
 import Reports from "./reports";
 import Schedule from "./schedule";
 import Inventory from "./inventory";
 import WorkOrders from "./work-orders";
+import Documents from "./documents";
 
 const Tabs = () => {
   const router = useRouter();
@@ -48,7 +54,7 @@ const Tabs = () => {
     {
       key: "schedule",
       label: "Schedule",
-      children: <Schedule />,
+      children: "Content of Schedule",
     },
     {
       key: "readings",
@@ -58,7 +64,7 @@ const Tabs = () => {
     {
       key: "documents",
       label: "Documents",
-      children: "Content of Documents",
+      children: <Documents />,
     },
     {
       key: "reports",

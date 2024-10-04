@@ -27,6 +27,7 @@ const ReportsPopup = ({
         {({ values, isSubmitting }) => (
           <Form>
             <Modal
+              maskClosable={false}
               open={visible}
               onCancel={() => setVisible(false)}
               footer={
