@@ -8,6 +8,7 @@ import Reports from "./reports";
 import Schedule from "./schedule";
 import Inventory from "./inventory";
 import WorkOrders from "./work-orders";
+import Documents from "./documents";
 
 const Tabs = () => {
   const router = useRouter();
@@ -58,7 +59,7 @@ const Tabs = () => {
     {
       key: "documents",
       label: "Documents",
-      children: "Content of Documents",
+      children: <Documents />,
     },
     {
       key: "reports",

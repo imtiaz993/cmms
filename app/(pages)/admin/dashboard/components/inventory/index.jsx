@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateInventoryPopup from "./components/createInventoryPopup";
