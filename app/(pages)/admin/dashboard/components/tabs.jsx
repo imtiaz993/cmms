@@ -1,8 +1,13 @@
 "use cient";
 
+import dynamic from "next/dynamic";
+
+const Dashboard = dynamic(() => import("../dashboard"), {
+  ssr: false,
+});
+
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs as AntTabs } from "antd";
-import Dashboard from "./dashboard";
 import Assets from "./assets";
 import Reports from "./reports";
 import Schedule from "./schedule";
