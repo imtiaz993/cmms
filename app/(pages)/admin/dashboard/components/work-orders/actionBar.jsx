@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Checkbox, Dropdown, Input, Menu, message } from "antd";
+import { Checkbox, Dropdown, Input, Menu, message, Select } from "antd";
 import {
   ExportOutlined,
   FilterOutlined,
@@ -14,6 +14,7 @@ const ActionBar = ({
   columns,
   checkedList,
   setCheckedList,
+  unplanned,
 }) => {
   const [searchText, setSearchText] = useState("");
   const [showHierarchy, setShowHierarchy] = useState(false);
@@ -52,6 +53,7 @@ const ActionBar = ({
             prefix={<FilterOutlined />}
           />
         </Dropdown>
+
         <Dropdown
           dropdownRender={() => (
             <Menu style={{ background: "#4C4C4C" }}>
@@ -98,13 +100,15 @@ const ActionBar = ({
           }}
           prefix={<ExportOutlined />}
         />
-        <Button
-          text="Add New WO"
-          onClick={showAddWOModal}
-          outlined
-          style={{ padding: "4px 24px" }}
-          prefix={<PlusOutlined />}
-        />
+        <div>
+          <Button
+            text={`Create ${unplanned ? "Unplanned" : "Planned"} WO`}
+            onClick={showAddWOModal}
+            outlined
+            style={{ padding: "4px 24px" }}
+            prefix={<PlusOutlined />}
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Table } from "antd";
+import { Select, Table } from "antd";
 import { PrinterOutlined } from "@ant-design/icons";
 import CreateWOPopup from "./createWOPopup";
 import ActionBar from "./actionBar";
+import CreateUnplannedWOPopup from "./createUnplannedWOPopup";
 
 const columns = [
   {
@@ -136,9 +137,9 @@ const Unplanned = () => {
     <div className="h-[calc(100dvh-220px)] overflow-auto mt-4 px-3 lg:px-6">
       <div className="">
         {addWOVisible && (
-          <CreateWOPopup
-            addWOVisible={addWOVisible}
-            setAddWOVisible={setAddWOVisible}
+          <CreateUnplannedWOPopup
+            visible={addWOVisible}
+            setVisible={setAddWOVisible}
           />
         )}
         <div>
@@ -147,8 +148,37 @@ const Unplanned = () => {
             checkedList={checkedList}
             setCheckedList={setCheckedList}
             columns={columns}
+            unplanned
           />
-          <div className="flex justify-end">
+          <div className="sm:flex justify-between">
+            <div className="flex gap-3">
+              <div className="w-1/2 sm:min-w-40">
+                <Select
+                  name="status"
+                  placeholder="Status"
+                  style={{ height: "36px", width: "100%" }}
+                  options={[
+                    { label: "Open", value: "open" },
+                    { label: "Completed", value: "completed" },
+                    { label: "Cancelled", value: "cancelled" },
+                    { label: "All", value: "all" },
+                  ]}
+                />
+              </div>
+              <div className="w-1/2 sm:min-w-40">
+                <Select
+                  name="timeRange"
+                  placeholder="Time Range"
+                  style={{ height: "36px", width: "100%" }}
+                  options={[
+                    { label: "Last 30 Days", value: "last30Days" },
+                    { label: "Last 6 Months", value: "last6Months" },
+                    { label: "Last 12 Months", value: "last12Months" },
+                    { label: "All", value: "all" },
+                  ]}
+                />
+              </div>
+            </div>
             <p className="text-secondary">
               Total Unplanned Work Orders:{" "}
               <span>{"(" + data.length + ")"}</span>
