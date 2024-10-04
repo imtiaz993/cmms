@@ -22,8 +22,6 @@ const ReportsPopup = ({
       <Formik
         initialValues={{
           costCenter: "",
-          parentAsset: "",
-          fromType: "",
         }}
       >
         {({ values, isSubmitting }) => (
