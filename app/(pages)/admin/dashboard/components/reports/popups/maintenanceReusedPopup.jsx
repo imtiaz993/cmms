@@ -1,21 +1,16 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
-import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
+import { Checkbox, DatePicker, InputNumber, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 
-const ReportsPopup = ({
+const MaintenanceReusedPopup = ({
   visible,
   setVisible,
   title,
-  costCenter = true,
-  dataOnly,
-  assetNumber,
-  fromToDate,
-  includeChildAssets,
-  physicalLocation,
   criticallyFactor,
-  date,
-  year,
+  includeWO,
+  craft,
+  top,
 }) => {
   return (
     <div>
@@ -27,7 +22,6 @@ const ReportsPopup = ({
         {({ values, isSubmitting }) => (
           <Form>
             <Modal
-              maskClosable={false}
               open={visible}
               onCancel={() => setVisible(false)}
               footer={
@@ -56,78 +50,16 @@ const ReportsPopup = ({
               title={title}
             >
               <div>
-                {costCenter && (
-                  <div className="mt-4 flex flex-col md:flex-row gap-4 w-full items-end md:items-center">
-                    <div className="w-full">
-                      <InputField
-                        name="costCenter"
-                        placeholder="Cost Center"
-                        maxLength={128}
-                      />
-                    </div>
-
-                    {assetNumber && (
-                      <div className="w-full">
-                        <Field
-                          as={Select}
-                          name="assetNumber"
-                          placeholder="Asset Number"
-                          style={{
-                            height: "36px",
-                            width: "100%",
-                          }}
-                        />
-                      </div>
-                    )}
-                    {date && (
-                      <div className="w-full">
-                        <Field
-                          as={DatePicker}
-                          name="date"
-                          placeholder="Date"
-                          className="w-full"
-                          style={{ height: "36px" }}
-                        />
-                      </div>
-                    )}
-
-                    {year && (
-                      <div className="w-full">
-                        <Field
-                          as={Select}
-                          name="year"
-                          placeholder="Year"
-                          style={{
-                            height: "36px",
-                            width: "100%",
-                          }}
-                        />
-                      </div>
-                    )}
-                    {dataOnly && (
-                      <div className="md:w-1/3">
-                        <Field as={Checkbox} name="dataOnly">
-                          Data Only
-                        </Field>
-                      </div>
-                    )}
-                  </div>
-                )}
-                {physicalLocation && (
-                  <div className="mt-4 w-full">
-                    <Field
-                      as={Select}
-                      name="physicalLocation"
-                      placeholder="Physical Location"
-                      style={{
-                        height: "36px",
-                        width: "100%",
-                      }}
+                <div className="mt-4 grid grid-cols-2 gap-4 items-center">
+                  <div className="w-full">
+                    <InputField
+                      name="costCenter"
+                      placeholder="Cost Center"
+                      maxLength={128}
                     />
                   </div>
-                )}
-                {fromToDate && (
-                  <div className="mt-4 flex flex-col md:flex-row gap-4 w-full">
+
+                  <div className="w-full">
                     <Field
                       as={DatePicker}
                       name="fromDate"
@@ -135,16 +67,18 @@ const ReportsPopup = ({
                       className="w-full"
                       style={{ height: "36px" }}
                     />
+                  </div>
+
+                  <div className="w-full">
                     <Field
                       as={DatePicker}
                       name="fromDate"
                       placeholder="From Date"
                       className="w-full"
                       style={{ height: "36px" }}
-                    />{" "}
+                    />
                   </div>
-                )}
-                <div className="mt-4 flex flex-col md:flex-row gap-4 w-full md:items-center">
+
                   {criticallyFactor && (
                     <div className="w-full">
                       <Field
@@ -160,10 +94,32 @@ const ReportsPopup = ({
                       </Field>
                     </div>
                   )}
-                  {includeChildAssets && (
+                  {craft && (
                     <div className="w-full">
-                      <Field as={Checkbox} name="childAssets">
-                        Include Child Assets
+                      <Field
+                        as={Select}
+                        name="craft"
+                        placeholder="Craft"
+                        style={{ height: "36px", width: "100%" }}
+                      />
+                    </div>
+                  )}
+
+                  {top && (
+                    <div className="w-full">
+                      <Field
+                        as={InputNumber}
+                        name="top"
+                        placeholder="Top"
+                        style={{ height: "36px", width: "100%" }}
+                      />
+                    </div>
+                  )}
+
+                  {includeWO && (
+                    <div className="w-full">
+                      <Field as={Checkbox} name="includeWO">
+                        Include WO Breakdown
                       </Field>
                     </div>
                   )}
@@ -202,4 +158,4 @@ const ReportsPopup = ({
   );
 };
 
-export default ReportsPopup;
+export default MaintenanceReusedPopup;

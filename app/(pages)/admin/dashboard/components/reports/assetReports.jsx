@@ -2,6 +2,7 @@ import { List } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import ReportsPopup from "./popups/reportsPopup";
 import { useState } from "react";
+import AssetSummaryPopup from "./popups/assetSummaryPopup";
 
 const AssetReports = () => {
   const [popup, setPopup] = useState("");
@@ -115,12 +116,10 @@ const AssetReports = () => {
         fromToDate
       />
 
-      {/* <ReportsPopup
+      <AssetSummaryPopup
         visible={popup === "Asset Summary"}
         setVisible={setPopup}
-        title="Generate Asset Summary Report"
-        dataOnly
-      /> */}
+      />
 
       <ReportsPopup
         visible={popup === "Total Cost of Ownership"}
