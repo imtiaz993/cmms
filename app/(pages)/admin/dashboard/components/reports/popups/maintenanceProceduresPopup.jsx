@@ -3,7 +3,7 @@ import InputField from "@/components/common/InputField";
 import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 
-const AssetSummaryPopup = ({ visible, setVisible }) => {
+const MaintenanceProceduresPopup = ({ visible, setVisible }) => {
   return (
     <div>
       <Formik
@@ -39,59 +39,10 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                 </div>
               }
               // bodyStyle={{ height: "200px", overflowY: "auto", overflowX: "hidden" }} // Adjusted height
-              title="Generate Asset Summary Report"
+              title="Generate Maintenance Procedures Report"
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
-                  <div className="w-full">
-                    <InputField
-                      name="costCenter"
-                      placeholder="Cost Center"
-                      maxLength={128}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <InputField
-                      name="serialNumber"
-                      placeholder="Serial Number"
-                      maxLength={128}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Field
-                      as={Select}
-                      name="physicalLocation"
-                      placeholder="Physical Location"
-                      style={{ height: "36px", width: "100%" }}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Field
-                      as={Select}
-                      name="year"
-                      placeholder="Year"
-                      style={{ height: "36px", width: "100%" }}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Field
-                      as={Select}
-                      name="accountingDept"
-                      placeholder="Accounting Dept"
-                      style={{ height: "36px", width: "100%" }}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Field as={Checkbox} name="expandAssetClass">
-                      Expand Asset Class
-                    </Field>
-                  </div>
-
                   <div className="w-full">
                     <Field
                       as={Select}
@@ -111,7 +62,7 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                     />
                   </div>
 
-                  {Array.from({ length: 4 }).map((_, index) => (
+                  {Array.from({ length: 2 }).map((_, index) => (
                     <div key={index} className="w-full">
                       <Field
                         as={Select}
@@ -122,12 +73,6 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                       />
                     </div>
                   ))}
-
-                  <div className="w-full">
-                    <Field as={Checkbox} name="childAssets">
-                      Include Child Assets
-                    </Field>
-                  </div>
                 </div>
                 <div className="mt-4">
                   <p className="text-secondary mb-1">Export As</p>
@@ -163,4 +108,4 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
   );
 };
 
-export default AssetSummaryPopup;
+export default MaintenanceProceduresPopup;

@@ -2,6 +2,14 @@ import { List } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import ReportsPopup from "./popups/reportsPopup";
 import { useState } from "react";
+import MaintenanceProceduresPopup from "./popups/maintenanceProceduresPopup";
+import PlannedSummaryPopup from "./popups/plannedSummaryPopup";
+import UnplannedDetailsPopup from "./popups/unplannedDetailsPopup";
+import UnplannedSummaryPopup from "./popups/unplannedSummaryPopup";
+import MaintenanceReusedPopup from "./popups/maintenanceReusedPopup";
+import WOPersonnelSummaryPopup from "./popups/woPersonnelSummaryPopup";
+import WOProcedurePopup from "./popups/woProcedurePopup";
+import WOSummaryPopup from "./popups/woSummaryPopup";
 
 const MaintenanceReports = () => {
   const [popup, setPopup] = useState(false);
@@ -154,45 +162,32 @@ const MaintenanceReports = () => {
         fromToDate
       />
 
-      {/* <ReportsPopup
+      <MaintenanceProceduresPopup
         visible={popup === "Maintenance Procedures"}
         setVisible={setPopup}
-        title="Generate Maintenance Procedures Report"
-        physicalLocation
-        dataOnly
-      /> */}
+      />
 
-      {/* <ReportsPopup
+      <PlannedSummaryPopup
         visible={popup === "Planned Maintenance Summary"}
         setVisible={setPopup}
-        title="Generate Planned Maintenance Summary Report"
-        physicalLocation
-        dataOnly
-      /> */}
+      />
 
-      {/* <ReportsPopup
+      <UnplannedDetailsPopup
         visible={popup === "Unplanned Maintenance Details"}
         setVisible={setPopup}
-        title="Generate Unplanned Maintenance Details Report"
-        physicalLocation
-        dataOnly
-      /> */}
+      />
 
-      {/* <ReportsPopup
+      <UnplannedSummaryPopup
         visible={popup === "Unplanned Maintenance Summary"}
         setVisible={setPopup}
-        title="Generate Unplanned Maintenance Summary Report"
-        physicalLocation
-        dataOnly
-      /> */}
+      />
 
-      {/* <ReportsPopup
-        visible={popup === "Work Order Survey"}
+      <MaintenanceReusedPopup
+        visible={popup === "Unplanned Work Order Survey"}
         setVisible={setPopup}
-        title="Generate Work Order Survey Report"
-        physicalLocation
-        dataOnly
-      /> */}
+        title="Generate Unplanned Work Order Survey Report"
+        includeWO
+      />
 
       <ReportsPopup
         visible={popup === "Work Orders Past Due"}
@@ -201,29 +196,20 @@ const MaintenanceReports = () => {
         dataOnly
       />
 
-      {/* <ReportsPopup
+      <WOPersonnelSummaryPopup
         visible={popup === "Work Order Personnel Summary"}
         setVisible={setPopup}
-        title="Generate Work Order Personnel Summary Report"
-        physicalLocation
-        dataOnly
-      /> */}
+      />
 
-      {/* <ReportsPopup
+      <WOProcedurePopup
         visible={popup === "Work Order Procedure"}
         setVisible={setPopup}
-        title="Generate Work Order Procedure Report"
-        physicalLocation
-        dataOnly
-      /> */}
+      />
 
-      {/* <ReportsPopup
+      <WOSummaryPopup
         visible={popup === "Work Order Summary"}
         setVisible={setPopup}
-        title="Generate Work Order Summary Report"
-        physicalLocation
-        dataOnly
-      /> */}
+      />
 
       <ReportsPopup
         visible={popup === "Work Orders With Delay Reasons"}
@@ -232,13 +218,12 @@ const MaintenanceReports = () => {
         dataOnly
       />
 
-      {/* <ReportsPopup
+      <MaintenanceReusedPopup
         visible={popup === "Maintenance Completion By Craft"}
         setVisible={setPopup}
         title="Generate Maintenance Completion By Craft Report"
-        physicalLocation
-        dataOnly
-      /> */}
+        craft
+      />
 
       <ReportsPopup
         visible={popup === "MTBF MTTR"}
@@ -248,13 +233,13 @@ const MaintenanceReports = () => {
         criticallyFactor
       />
 
-      {/* <ReportsPopup
+      <MaintenanceReusedPopup
         visible={popup === "Top Offenders"}
         setVisible={setPopup}
         title="Generate Top Offenders Report"
-        physicalLocation
-        dataOnly
-      /> */}
+        criticallyFactor
+        top
+      />
 
       <ReportsPopup
         visible={popup === "Planned WOs vs Unplanned WOs"}

@@ -1,9 +1,17 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
-import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
+import { Checkbox, DatePicker, InputNumber, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 
-const AssetSummaryPopup = ({ visible, setVisible }) => {
+const MaintenanceReusedPopup = ({
+  visible,
+  setVisible,
+  title,
+  criticallyFactor,
+  includeWO,
+  craft,
+  top,
+}) => {
   return (
     <div>
       <Formik
@@ -39,10 +47,10 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                 </div>
               }
               // bodyStyle={{ height: "200px", overflowY: "auto", overflowX: "hidden" }} // Adjusted height
-              title="Generate Asset Summary Report"
+              title={title}
             >
               <div>
-                <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
+                <div className="mt-4 grid grid-cols-2 gap-4 items-center">
                   <div className="w-full">
                     <InputField
                       name="costCenter"
@@ -52,82 +60,69 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                   </div>
 
                   <div className="w-full">
-                    <InputField
-                      name="serialNumber"
-                      placeholder="Serial Number"
-                      maxLength={128}
-                    />
-                  </div>
-
-                  <div className="w-full">
                     <Field
-                      as={Select}
-                      name="physicalLocation"
-                      placeholder="Physical Location"
-                      style={{ height: "36px", width: "100%" }}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Field
-                      as={Select}
-                      name="year"
-                      placeholder="Year"
-                      style={{ height: "36px", width: "100%" }}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Field
-                      as={Select}
-                      name="accountingDept"
-                      placeholder="Accounting Dept"
-                      style={{ height: "36px", width: "100%" }}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Field as={Checkbox} name="expandAssetClass">
-                      Expand Asset Class
-                    </Field>
-                  </div>
-
-                  <div className="w-full">
-                    <Field
-                      as={Select}
-                      name="category"
-                      placeholder="Category"
-                      style={{ height: "36px", width: "100%" }}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Field
-                      as={Select}
-                      name="system"
-                      placeholder="System"
+                      as={DatePicker}
+                      name="fromDate"
+                      placeholder="From Date"
                       className="w-full"
-                      style={{ height: "36px", width: "100%" }}
+                      style={{ height: "36px" }}
                     />
                   </div>
 
-                  {Array.from({ length: 4 }).map((_, index) => (
-                    <div key={index} className="w-full">
+                  <div className="w-full">
+                    <Field
+                      as={DatePicker}
+                      name="fromDate"
+                      placeholder="From Date"
+                      className="w-full"
+                      style={{ height: "36px" }}
+                    />
+                  </div>
+
+                  {criticallyFactor && (
+                    <div className="w-full">
                       <Field
                         as={Select}
-                        name={`tier${index + 3}`}
-                        placeholder={`Tier ${index + 3}`}
-                        className="w-full"
+                        name="criticallyFactor"
+                        placeholder="Critically Factor"
+                        style={{
+                          height: "36px",
+                          width: "100%",
+                        }}
+                      >
+                        Critically Factor
+                      </Field>
+                    </div>
+                  )}
+                  {craft && (
+                    <div className="w-full">
+                      <Field
+                        as={Select}
+                        name="craft"
+                        placeholder="Craft"
                         style={{ height: "36px", width: "100%" }}
                       />
                     </div>
-                  ))}
+                  )}
 
-                  <div className="w-full">
-                    <Field as={Checkbox} name="childAssets">
-                      Include Child Assets
-                    </Field>
-                  </div>
+                  {top && (
+                    <div className="w-full">
+                      <Field
+                        as={InputNumber}
+                        name="top"
+                        placeholder="Top"
+                        style={{ height: "36px", width: "100%" }}
+                      />
+                    </div>
+                  )}
+
+                  {includeWO && (
+                    <div className="w-full">
+                      <Field as={Checkbox} name="includeWO">
+                        Include WO Breakdown
+                      </Field>
+                    </div>
+                  )}
                 </div>
                 <div className="mt-4">
                   <p className="text-secondary mb-1">Export As</p>
@@ -163,4 +158,4 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
   );
 };
 
-export default AssetSummaryPopup;
+export default MaintenanceReusedPopup;

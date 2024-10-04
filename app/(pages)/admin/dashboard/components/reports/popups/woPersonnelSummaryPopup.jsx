@@ -3,7 +3,7 @@ import InputField from "@/components/common/InputField";
 import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 
-const AssetSummaryPopup = ({ visible, setVisible }) => {
+const WOPersonnelSummaryPopup = ({ visible, setVisible }) => {
   return (
     <div>
       <Formik
@@ -39,11 +39,11 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                 </div>
               }
               // bodyStyle={{ height: "200px", overflowY: "auto", overflowX: "hidden" }} // Adjusted height
-              title="Generate Asset Summary Report"
+              title="Generate Work Order Personnel Summary Report"
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
-                  <div className="w-full">
+                  <div className="w-full col-span-2">
                     <InputField
                       name="costCenter"
                       placeholder="Cost Center"
@@ -52,18 +52,55 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                   </div>
 
                   <div className="w-full">
-                    <InputField
-                      name="serialNumber"
-                      placeholder="Serial Number"
-                      maxLength={128}
+                    <Field
+                      as={DatePicker}
+                      name="createdFrom"
+                      placeholder="Created Between From"
+                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
                     <Field
-                      as={Select}
-                      name="physicalLocation"
-                      placeholder="Physical Location"
+                      as={DatePicker}
+                      name="createdTo"
+                      placeholder="Created Between To"
+                      style={{ height: "36px", width: "100%" }}
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <Field
+                      as={DatePicker}
+                      name="closesdFrom"
+                      placeholder="Closed Between From"
+                      style={{ height: "36px", width: "100%" }}
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <Field
+                      as={DatePicker}
+                      name="closedTo"
+                      placeholder="Closed Between To"
+                      style={{ height: "36px", width: "100%" }}
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <Field
+                      as={DatePicker}
+                      name="createdFromMainHrs"
+                      placeholder="Main Hours Created Between From"
+                      style={{ height: "36px", width: "100%" }}
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <Field
+                      as={DatePicker}
+                      name="createdToMainHrs"
+                      placeholder="Main Hours Created Between To"
                       style={{ height: "36px", width: "100%" }}
                     />
                   </div>
@@ -71,8 +108,8 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                   <div className="w-full">
                     <Field
                       as={Select}
-                      name="year"
-                      placeholder="Year"
+                      name="assignedTo"
+                      placeholder="Assigned To"
                       style={{ height: "36px", width: "100%" }}
                     />
                   </div>
@@ -80,23 +117,8 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                   <div className="w-full">
                     <Field
                       as={Select}
-                      name="accountingDept"
-                      placeholder="Accounting Dept"
-                      style={{ height: "36px", width: "100%" }}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Field as={Checkbox} name="expandAssetClass">
-                      Expand Asset Class
-                    </Field>
-                  </div>
-
-                  <div className="w-full">
-                    <Field
-                      as={Select}
-                      name="category"
-                      placeholder="Category"
+                      name="status"
+                      placeholder="Status"
                       style={{ height: "36px", width: "100%" }}
                     />
                   </div>
@@ -104,28 +126,24 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                   <div className="w-full">
                     <Field
                       as={Select}
-                      name="system"
-                      placeholder="System"
-                      className="w-full"
+                      name="craft"
+                      placeholder="Craft"
                       style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
-                  {Array.from({ length: 4 }).map((_, index) => (
-                    <div key={index} className="w-full">
-                      <Field
-                        as={Select}
-                        name={`tier${index + 3}`}
-                        placeholder={`Tier ${index + 3}`}
-                        className="w-full"
-                        style={{ height: "36px", width: "100%" }}
-                      />
-                    </div>
-                  ))}
+                  <div className="w-full">
+                    <Field
+                      as={Select}
+                      name="priority"
+                      placeholder="Priority"
+                      style={{ height: "36px", width: "100%" }}
+                    />
+                  </div>
 
                   <div className="w-full">
-                    <Field as={Checkbox} name="childAssets">
-                      Include Child Assets
+                    <Field as={Checkbox} name="includeWO">
+                      Include WO Breakdown
                     </Field>
                   </div>
                 </div>
@@ -163,4 +181,4 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
   );
 };
 
-export default AssetSummaryPopup;
+export default WOPersonnelSummaryPopup;
