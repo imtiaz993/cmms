@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Checkbox, Input, Select, Tag } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
+import DownloadPopup from "./downloadPopup";
 
 const ActionBar = () => {
   const [searchText, setSearchText] = useState("");
+  const [downloadPopup, setDownloadPopup] = useState(false);
   const [selectedValues, setSelectedValues] = useState([]);
 
   const handleChange = (values) => {
@@ -13,6 +15,7 @@ const ActionBar = () => {
 
   return (
     <div className="md:flex items-center gap-3 mb-3">
+      <DownloadPopup visible={downloadPopup} setVisible={setDownloadPopup} />
       <Input
         placeholder="Search..."
         onChange={(e) => setSearchText(e.target.value)}
@@ -45,8 +48,8 @@ const ActionBar = () => {
           outlined
           style={{ padding: "4px 20px" }}
           prefix={<DownloadOutlined />}
+          onClick={() => setDownloadPopup(true)}
         />
-
       </div>
     </div>
   );
