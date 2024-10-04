@@ -48,7 +48,9 @@ const columns = [
   {
     title: "",
     dataIndex: "print",
-    render: () => <PrinterOutlined style={{ fontSize: "20px" }} />,
+    render: () => (
+      <PrinterOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+    ),
   },
 ];
 
