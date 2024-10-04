@@ -34,7 +34,9 @@ const columns = [
   {
     title: "",
     dataIndex: "download",
-    render: () => <DownloadOutlined style={{ fontSize: "20px" }} />,
+    render: () => (
+      <DownloadOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+    ),
   },
 ];
 
