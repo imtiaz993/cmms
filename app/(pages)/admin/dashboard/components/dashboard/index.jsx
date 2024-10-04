@@ -2,202 +2,204 @@ import Link from "next/link";
 import { Card } from "antd";
 import ReactApexChart from "react-apexcharts";
 
-const DonutChart = () => (
-  <ReactApexChart
-    series={[44, 20, 3]}
-    options={{
-      chart: {
-        width: 380,
-        type: "donut",
-      },
-      labels: ["Completed", "Open", "Past Due"],
-      colors: ["#009E60", "#40E0D0", "#FFC300"],
-      dataLabels: {
-        enabled: true,
-        formatter: function (_, opt) {
-          return opt.w.config.series[opt.seriesIndex];
+const DonutChart = () =>
+  typeof window !== "undefined" && (
+    <ReactApexChart
+      series={[44, 20, 3]}
+      options={{
+        chart: {
+          width: 380,
+          type: "donut",
         },
-      },
-      stroke: {
-        show: false,
-        width: 0,
-      },
-      legend: {
-        position: "right",
-        fontSize: "14px",
-        fontWeight: "400",
-        labels: {
-          colors: ["#fff", "#fff", "#fff"],
+        labels: ["Completed", "Open", "Past Due"],
+        colors: ["#009E60", "#40E0D0", "#FFC300"],
+        dataLabels: {
+          enabled: true,
+          formatter: function (_, opt) {
+            return opt.w.config.series[opt.seriesIndex];
+          },
         },
-        markers: {
-          offsetX: -5,
+        stroke: {
+          show: false,
+          width: 0,
         },
-        itemMargin: {
-          horizontal: 10,
-          vertical: 20,
+        legend: {
+          position: "right",
+          fontSize: "14px",
+          fontWeight: "400",
+          labels: {
+            colors: ["#fff", "#fff", "#fff"],
+          },
+          markers: {
+            offsetX: -5,
+          },
+          itemMargin: {
+            horizontal: 10,
+            vertical: 20,
+          },
         },
-      },
-      responsive: [
-        {
-          breakpoint: 1150,
-          options: {
-            chart: {
-              width: 320,
-            },
-            legend: {
-              position: "bottom",
-              itemMargin: {
-                horizontal: 10,
-                vertical: 10,
+        responsive: [
+          {
+            breakpoint: 1150,
+            options: {
+              chart: {
+                width: 320,
+              },
+              legend: {
+                position: "bottom",
+                itemMargin: {
+                  horizontal: 10,
+                  vertical: 10,
+                },
               },
             },
           },
-        },
-        {
-          breakpoint: 500,
-          options: {
-            chart: {
-              width: 300,
-            },
-            legend: {
-              fontSize: "12px",
-            },
-          },
-        },
-      ],
-    }}
-    type="donut"
-    width={380}
-  />
-);
-
-const ColumnChart = () => (
-  <ReactApexChart
-    series={[
-      {
-        name: "Created",
-        data: [76, 85, 101],
-      },
-      {
-        name: "Completed",
-        data: [44, 55, 57],
-      },
-    ]}
-    options={{
-      chart: {
-        type: "bar",
-        toolbar: {
-          show: false,
-        },
-      },
-      colors: ["#009E60", "#40E0D0"],
-      legend: {
-        fontSize: "14px",
-        fontWeight: "400",
-        labels: {
-          colors: ["#fff", "#fff", "#fff"],
-        },
-        markers: {
-          offsetX: -5,
-        },
-        itemMargin: {
-          horizontal: 10,
-          vertical: 10,
-        },
-      },
-      grid: {
-        show: false,
-      },
-
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: "50%",
-          endingShape: "rounded",
-        },
-      },
-      stroke: {
-        show: true,
-        width: 10,
-        colors: ["transparent"],
-      },
-      dataLabels: {
-        enabled: false,
-      },
-
-      xaxis: {
-        labels: {
-          style: {
-            colors: "#FFF",
-          },
-        },
-        categories: ["Feb", "Mar", "Apr"],
-        crosshairs: {
-          show: false,
-        },
-      },
-      yaxis: {
-        labels: {
-          style: {
-            colors: "#FFF",
-          },
-        },
-      },
-
-      tooltip: {
-        theme: "dark",
-      },
-      responsive: [
-        {
-          breakpoint: 1400,
-          options: {
-            chart: {
-              width: 400,
-            },
-            plotOptions: {
-              bar: {
-                columnWidth: "60%",
+          {
+            breakpoint: 500,
+            options: {
+              chart: {
+                width: 300,
+              },
+              legend: {
+                fontSize: "12px",
               },
             },
-            stroke: {
-              width: 5,
-            },
           },
+        ],
+      }}
+      type="donut"
+      width={380}
+    />
+  );
+
+const ColumnChart = () =>
+  typeof window !== "undefined" && (
+    <ReactApexChart
+      series={[
+        {
+          name: "Created",
+          data: [76, 85, 101],
         },
         {
-          breakpoint: 1150,
-          options: {
-            chart: {
-              width: 320,
+          name: "Completed",
+          data: [44, 55, 57],
+        },
+      ]}
+      options={{
+        chart: {
+          type: "bar",
+          toolbar: {
+            show: false,
+          },
+        },
+        colors: ["#009E60", "#40E0D0"],
+        legend: {
+          fontSize: "14px",
+          fontWeight: "400",
+          labels: {
+            colors: ["#fff", "#fff", "#fff"],
+          },
+          markers: {
+            offsetX: -5,
+          },
+          itemMargin: {
+            horizontal: 10,
+            vertical: 10,
+          },
+        },
+        grid: {
+          show: false,
+        },
+
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: "50%",
+            endingShape: "rounded",
+          },
+        },
+        stroke: {
+          show: true,
+          width: 10,
+          colors: ["transparent"],
+        },
+        dataLabels: {
+          enabled: false,
+        },
+
+        xaxis: {
+          labels: {
+            style: {
+              colors: "#FFF",
+            },
+          },
+          categories: ["Feb", "Mar", "Apr"],
+          crosshairs: {
+            show: false,
+          },
+        },
+        yaxis: {
+          labels: {
+            style: {
+              colors: "#FFF",
             },
           },
         },
-        {
-          breakpoint: 768,
-          options: {
-            chart: {
-              width: 370,
-            },
-            legend: {
-              fontSize: "12px",
+
+        tooltip: {
+          theme: "dark",
+        },
+        responsive: [
+          {
+            breakpoint: 1400,
+            options: {
+              chart: {
+                width: 400,
+              },
+              plotOptions: {
+                bar: {
+                  columnWidth: "60%",
+                },
+              },
+              stroke: {
+                width: 5,
+              },
             },
           },
-        },
-        {
-          breakpoint: 430,
-          options: {
-            chart: {
-              width: 300,
+          {
+            breakpoint: 1150,
+            options: {
+              chart: {
+                width: 320,
+              },
             },
           },
-        },
-      ],
-    }}
-    type="bar"
-    width={500}
-    height={350}
-  />
-);
+          {
+            breakpoint: 768,
+            options: {
+              chart: {
+                width: 370,
+              },
+              legend: {
+                fontSize: "12px",
+              },
+            },
+          },
+          {
+            breakpoint: 430,
+            options: {
+              chart: {
+                width: 300,
+              },
+            },
+          },
+        ],
+      }}
+      type="bar"
+      width={500}
+      height={350}
+    />
+  );
 
 const Dashboard = ({ activeLocation }) => {
   return (
