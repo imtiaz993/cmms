@@ -3,6 +3,7 @@ import { Select, Table } from "antd";
 import { PrinterOutlined } from "@ant-design/icons";
 import CreateWOPopup from "./createWOPopup";
 import ActionBar from "./actionBar";
+import CreateUnplannedWOPopup from "./createUnplannedWOPopup";
 
 const columns = [
   {
@@ -136,9 +137,9 @@ const Unplanned = () => {
     <div className="h-[calc(100dvh-220px)] overflow-auto mt-4 px-3 lg:px-6">
       <div className="">
         {addWOVisible && (
-          <CreateWOPopup
-            addWOVisible={addWOVisible}
-            setAddWOVisible={setAddWOVisible}
+          <CreateUnplannedWOPopup
+            visible={addWOVisible}
+            setVisible={setAddWOVisible}
           />
         )}
         <div>
@@ -147,6 +148,7 @@ const Unplanned = () => {
             checkedList={checkedList}
             setCheckedList={setCheckedList}
             columns={columns}
+            unplanned
           />
           <div className="sm:flex justify-between">
             <div className="flex gap-3">

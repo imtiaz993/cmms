@@ -14,6 +14,7 @@ const ActionBar = ({
   columns,
   checkedList,
   setCheckedList,
+  unplanned,
 }) => {
   const [searchText, setSearchText] = useState("");
   const [showHierarchy, setShowHierarchy] = useState(false);
@@ -52,7 +53,6 @@ const ActionBar = ({
             prefix={<FilterOutlined />}
           />
         </Dropdown>
-
 
         <Dropdown
           dropdownRender={() => (
@@ -100,14 +100,15 @@ const ActionBar = ({
           }}
           prefix={<ExportOutlined />}
         />
-
-        <Button
-          text="Add New WO"
-          onClick={showAddWOModal}
-          outlined
-          style={{ padding: "4px 24px" }}
-          prefix={<PlusOutlined />}
-        />
+        <div>
+          <Button
+            text={`Create ${unplanned ? "Unplanned" : "Planned"} WO`}
+            onClick={showAddWOModal}
+            outlined
+            style={{ padding: "4px 24px" }}
+            prefix={<PlusOutlined />}
+          />
+        </div>
       </div>
     </div>
   );
