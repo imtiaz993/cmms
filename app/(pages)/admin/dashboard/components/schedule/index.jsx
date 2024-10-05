@@ -1,6 +1,9 @@
 import { Badge, Calendar } from "antd";
+import { useState } from "react";
+import DailyBatchPopup from "./components/dailyBatchPopup";
 
 const Schedule = () => {
+  const [selectedDate, setSelectedDate] = useState("");
   const monthCellRender = (value) => {
     const num = value.month() === 8 ? 1394 : null;
 
@@ -11,6 +14,7 @@ const Schedule = () => {
       </div>
     ) : null;
   };
+
   const cellRender = (current, info) => {
     if (info.type === "date")
       return (
@@ -42,7 +46,15 @@ const Schedule = () => {
   };
   return (
     <div className="schdeule h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-8 pb-4">
-      <Calendar cellRender={cellRender} className="!bg-[#212020]" />
+      <DailyBatchPopup
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+      />
+      <Calendar
+        cellRender={cellRender}
+        className="!bg-[#212020]"
+        onSelect={(date) => setSelectedDate(date.format("YYYY-MM-DD"))}
+      />
     </div>
   );
 };
