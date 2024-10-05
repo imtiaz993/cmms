@@ -54,7 +54,7 @@ const Tabs = () => {
     {
       key: "schedule",
       label: "Schedule",
-      children: "Content of Schedule",
+      children: <Schedule />,
     },
     {
       key: "readings",
