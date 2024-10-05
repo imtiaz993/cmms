@@ -5,7 +5,7 @@ const Critical = () => {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      {Array.from({ length: 10 }).map((_, index) => (
+      {Array.from({ length: 10 }).map((key, index) => (
         <Card
           size="small"
           title={"11M1948377"}
@@ -15,6 +15,7 @@ const Critical = () => {
           headStyle={{
             backgroundColor: "#ff4d4f",
           }} // Adjust padding here
+          key={key}
         >
           <Text
             ellipsis={{

@@ -5,7 +5,7 @@ const Medium = () => {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      {Array.from({ length: 10 }).map((_, index) => (
+      {Array.from({ length: 10 }).map((key, index) => (
         <Card
           size="small"
           title={"11M1948377"}
@@ -15,6 +15,7 @@ const Medium = () => {
           headStyle={{
             backgroundColor: "#8c91bf",
           }} // Adjust padding here
+          key={key}
         >
           <Text
             ellipsis={{
