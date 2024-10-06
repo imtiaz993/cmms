@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card } from "antd";
+import { Card, Table } from "antd";
 import ReactApexChart from "react-apexcharts";
 
 const DonutChart = () => (
@@ -323,6 +323,118 @@ const BarChart = () => (
   />
 );
 
+const unplannedColumns = [
+  {
+    title: "Work Order #",
+    dataIndex: "workOrder",
+  },
+  {
+    title: "Days Open",
+    dataIndex: "daysOpen",
+  },
+  {
+    title: "Asset Number",
+    dataIndex: "assetNumber",
+  },
+  {
+    title: "Cost Center",
+    dataIndex: "costCenter",
+  },
+];
+
+const unplannedData = [
+  {
+    workOrder: "UWO016696000001",
+    daysOpen: "21",
+    assetNumber: "20-1384-13-07M",
+    costCenter: "Rig 27",
+  },
+
+  {
+    workOrder: "UWO016696000002",
+    daysOpen: "22",
+    assetNumber: "20-1384-13-07M",
+    costCenter: "Rig 27",
+  },
+
+  {
+    workOrder: "UWO016696000003",
+    daysOpen: "23",
+    assetNumber: "20-1384-13-07M",
+    costCenter: "Rig 27",
+  },
+
+  {
+    workOrder: "UWO016696000004",
+    daysOpen: "24",
+    assetNumber: "20-1384-13-07M",
+    costCenter: "Rig 27",
+  },
+
+  {
+    workOrder: "UWO016696000005",
+    daysOpen: "25",
+    assetNumber: "20-1384-13-07M",
+    costCenter: "Rig 27",
+  },
+];
+
+const plannedColumns = [
+  {
+    title: "Work Order #",
+    dataIndex: "workOrder",
+  },
+  {
+    title: "Asset #",
+    dataIndex: "assetNumber",
+  },
+  {
+    title: "Work Required",
+    dataIndex: "workRequired",
+  },
+  {
+    title: "Due Date",
+    dataIndex: "due",
+  },
+];
+
+const plannedData = [
+  {
+    workOrder: "PWO013940000220",
+    assetNumber: "Z013-01",
+    workRequired: "30 Day - Monthly",
+    due: "2022-09-21",
+  },
+
+  {
+    workOrder: "PWO013940000221",
+    assetNumber: "Z013-01",
+    workRequired: "30 Day - Monthly",
+    due: "2022-09-21",
+  },
+
+  {
+    workOrder: "PWO013940000222",
+    assetNumber: "Z013-01",
+    workRequired: "30 Day - Monthly",
+    due: "2022-09-21",
+  },
+
+  {
+    workOrder: "PWO013940000223",
+    assetNumber: "Z013-01",
+    workRequired: "30 Day - Monthly",
+    due: "2022-09-21",
+  },
+
+  {
+    workOrder: "PWO013940000224",
+    assetNumber: "Z013-01",
+    workRequired: "30 Day - Monthly",
+    due: "2022-09-21",
+  },
+];
+
 const Dashboard = ({ activeLocation }) => {
   return (
     <div className="flex flex-col gap-6 h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-8 pb-4 pt-3">
@@ -349,6 +461,22 @@ const Dashboard = ({ activeLocation }) => {
             <div className="flex justify-center">
               <DonutChart />
             </div>
+            <Table
+              loading={false}
+              size={"small"}
+              columns={unplannedColumns}
+              dataSource={unplannedData}
+              pagination={{
+                total: unplannedData.total,
+                current: 1,
+                pageSize: 5,
+                onChange: () => {},
+              }}
+              style={{
+                marginTop: 16,
+                overflow: "auto",
+              }}
+            />
           </div>
         </Card>
         <Card
@@ -373,6 +501,22 @@ const Dashboard = ({ activeLocation }) => {
             <div className="flex justify-center">
               <DonutChart />
             </div>
+            <Table
+              loading={false}
+              size={"small"}
+              columns={plannedColumns}
+              dataSource={plannedData}
+              pagination={{
+                total: plannedData.total,
+                current: 1,
+                pageSize: 5,
+                onChange: () => {},
+              }}
+              style={{
+                marginTop: 16,
+                overflow: "auto",
+              }}
+            />
           </div>
         </Card>
       </div>
