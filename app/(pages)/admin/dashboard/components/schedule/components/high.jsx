@@ -1,6 +1,7 @@
-import { WarningFilled } from "@ant-design/icons";
+import { CalendarFilled, WarningFilled } from "@ant-design/icons";
 import { Card, Checkbox, Typography } from "antd";
-const High = ({batchEdit}) => {
+
+const High = ({batchEdit , print, setBatchEditPopup}) => {
   const { Text } = Typography;
 
   return (
@@ -12,7 +13,16 @@ const High = ({batchEdit}) => {
           headStyle={{
             backgroundColor: "#c9b967",
           }}
-          extra={batchEdit && <Checkbox />}
+          extra={
+            batchEdit || print ? (
+              <Checkbox />
+            ) : (
+              <CalendarFilled
+                className="cursor-pointer"
+                onClick={() => setBatchEditPopup(true)}
+              />
+            )
+          }
           key={key}
         >
           <Text

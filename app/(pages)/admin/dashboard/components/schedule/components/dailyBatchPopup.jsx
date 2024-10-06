@@ -1,4 +1,4 @@
-import { Modal, Radio } from "antd";
+import { message, Modal, Radio } from "antd";
 import { useState } from "react";
 import Low from "./low";
 import Medium from "./medium";
@@ -6,10 +6,12 @@ import High from "./high";
 import Critical from "./critical";
 import Button from "@/components/common/Button";
 import { Form, Formik } from "formik";
+import ReschedulePopup from "./reschedulePopup";
 
 const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
   const [selectedTab, setSelectedTab] = useState("Critical"); // State to track the selected tab
   const [batchEdit, setBatchEdit] = useState(false);
+  const [reschedulePopup, setReschedulePopup] = useState(false);
   const [print, setPrint] = useState(false);
   const [selectedItems, setSelectedItems] = useState(new Set());
 
@@ -29,13 +31,37 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
   const renderContent = () => {
     switch (selectedTab) {
       case "Critical":
-        return <Critical batchEdit={batchEdit} print={print} />;
+        return (
+          <Critical
+            batchEdit={batchEdit}
+            print={print}
+            setBatchEditPopup={setReschedulePopup}
+          />
+        );
       case "High":
-        return <High batchEdit={batchEdit} print={print} />;
+        return (
+          <High
+            batchEdit={batchEdit}
+            print={print}
+            setBatchEditPopup={setReschedulePopup}
+          />
+        );
       case "Medium":
-        return <Medium batchEdit={batchEdit} print={print} />;
+        return (
+          <Medium
+            batchEdit={batchEdit}
+            print={print}
+            setBatchEditPopup={setReschedulePopup}
+          />
+        );
       case "Low":
-        return <Low batchEdit={batchEdit} print={print} />;
+        return (
+          <Low
+            batchEdit={batchEdit}
+            print={print}
+            setBatchEditPopup={setReschedulePopup}
+          />
+        );
       default:
         return null;
     }
@@ -43,6 +69,12 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
 
   return (
     <div>
+      <ReschedulePopup
+        visible={reschedulePopup}
+        setVisible={setReschedulePopup}
+        batchEdit={batchEdit}
+        setBatchEdit={setBatchEdit}
+      />
       <Formik initialValues={{}} onSubmit={(values) => console.log(values)}>
         {({ values, setFieldValue }) => (
           <Form>
@@ -111,6 +143,14 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
                       text={batchEdit ? "Reschedule" : print && "Print"}
                       fullWidth={false}
                       style={{ padding: "4px 10px" }}
+                      onClick={() => {
+                        if (batchEdit) {
+                          setReschedulePopup(true);
+                        } else {
+                          setPrint(!print);
+                          message.success("Printed successfully");
+                        }
+                      }}
                     />
                   </div>
                 )}
