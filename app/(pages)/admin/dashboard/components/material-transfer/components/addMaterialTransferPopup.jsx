@@ -143,8 +143,8 @@ const AddMaterialTransferPopup = ({
                   "msdsSheets",
                   "ppeRequired",
                   "requiresStorage",
-                ].map((caution) => (
-                  <div className="text-nowrap">
+                ].map((caution, index) => (
+                  <div className="text-nowrap" key={index}>
                     <Field
                       key={caution}
                       name={`cautions.${caution}`}
