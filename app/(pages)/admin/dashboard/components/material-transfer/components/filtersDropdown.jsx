@@ -1,6 +1,6 @@
-import { Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Select, message } from "antd";
+import { DatePicker, Select, message } from "antd";
 import { login } from "app/services/auth";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
@@ -27,21 +27,10 @@ const MaterialTransferFilter = () => {
     <div className="p-4 bg-tertiary rounded-md max-h-[400px] overflow-auto">
       <Formik
         initialValues={{
-          assetNumber: "",
-          assetDescription: "",
-          altId: "",
-          serialNumber: "",
-          barcode: "",
-          oemSerialNumber: "",
-          physicalLocation: "",
-          accountingDept: "",
-          status: "",
-          category: "",
-          system: "",
-          tier3: "",
-          tier4: "",
-          tier5: "",
-          tier6: "",
+          createdDateRange: "",
+          materialTranfser: "",
+          origination: "",
+          destination: "",
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -50,26 +39,21 @@ const MaterialTransferFilter = () => {
       >
         {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <InputField name="assetNumber" placeholder="Asset #" />
-              <InputField
-                name="assetDescription"
-                placeholder="Asset Description"
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Field
+                as={DatePicker}
+                name="createdDateRange"
+                placeholder="Created Date Range"
               />
-              <InputField name="altId" placeholder="Alt ID #" />
-              <InputField name="serialNumber" placeholder="Serial #" />
-              <InputField name="barcode" placeholder="Barcode" />
-              <InputField name="oemSerialNumber" placeholder="OEM Serial #" />
-              <Select name="oemSerialNumber" placeholder="Physical Location" />
-              <Select name="oemSerialNumber" placeholder="Accounting Dept." />
-              <Select name="status" placeholder="Status" />
-              <Select name="category" placeholder="Category" />
-              <Select name="system" placeholder="System" />
-              <Select name="tier3" placeholder="Tier 3" />
-              <Select name="tier4" placeholder="Tier 4" />
-              <Select name="tier5" placeholder="Tier 5" />
-              <Select name="tier6" placeholder="Tier 6" />
-              <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
+
+              <InputField
+                name="materialTranfser"
+                placeholder="Material Transfer"
+              />
+              <Select name="origination" placeholder="Origination" />
+              <Select name="destination" placeholder="Destination" />
+
+              <div className="sm:col-span-2 flex justify-end gap-4">
                 <div>
                   <Button
                     outlined

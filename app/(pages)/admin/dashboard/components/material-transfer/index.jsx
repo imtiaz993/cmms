@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Table } from "antd";
+import { message, Select, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
+import Button from "@/components/common/Button";
+import { ExportOutlined } from "@ant-design/icons";
 
 const columns = [
   {
@@ -100,7 +102,30 @@ const MaterialTransfer = () => {
           setCheckedList={setCheckedList}
           columns={columns}
         />
-        <div className="flex justify-end">
+        <div className="flex justify-between gap-2 items-center">
+          <div className="w-1/2 lg:w-1/4 flex gap-2">
+            <Select
+              name="status"
+              placeholder="Status"
+              style={{ height: "36px", width: "100%" }}
+              options={[
+                { label: "Open", value: "open" },
+                { label: "Completed", value: "completed" },
+                { label: "Cancelled", value: "cancelled" },
+                { label: "All", value: "all" },
+              ]}
+            />
+            <Button
+              text="Print"
+              outlined
+              style={{ padding: "4px 0px" }}
+              fullWidth={false}
+              prefix={<ExportOutlined />}
+              onClick={() => {
+                message.success("Printed Successfully");
+              }}
+            />
+          </div>
           <p className="text-secondary">
             Total Material Transfer: <span>{"(" + data.length + ")"}</span>
           </p>
