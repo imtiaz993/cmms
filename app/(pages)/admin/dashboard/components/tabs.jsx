@@ -14,6 +14,7 @@ import Schedule from "./schedule";
 import Inventory from "./inventory";
 import WorkOrders from "./work-orders";
 import Documents from "./documents";
+import MaterialTransfer from "./material-transfer";
 
 const Tabs = () => {
   const router = useRouter();
@@ -74,7 +75,7 @@ const Tabs = () => {
     {
       key: "material-transfer",
       label: "Material Transfer",
-      children: "Content of Material Transfer",
+      children: <MaterialTransfer />,
     },
   ];
   return (
