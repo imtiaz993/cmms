@@ -14,6 +14,7 @@ const DownloadPopup = ({ visible, setVisible }) => {
         {({ values, isSubmitting }) => (
           <Form>
             <Modal
+              maskClosable={false}
               open={visible}
               onCancel={() => setVisible(false)}
               title="Downloading 40 Documents"
