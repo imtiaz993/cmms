@@ -1,6 +1,6 @@
-import { WarningFilled } from "@ant-design/icons";
+import { CalendarFilled, WarningFilled } from "@ant-design/icons";
 import { Card, Checkbox, Typography } from "antd";
-const Critical = ({ batchEdit, print }) => {
+const Critical = ({ batchEdit, print, setBatchEditPopup }) => {
   const { Text } = Typography;
 
   return (
@@ -12,17 +12,29 @@ const Critical = ({ batchEdit, print }) => {
           headStyle={{
             backgroundColor: "#ff4d4f",
           }}
-          extra={(batchEdit || print) && <Checkbox />}
+          extra={
+            batchEdit || print ? (
+              <Checkbox />
+            ) : (
+              <CalendarFilled
+                className="cursor-pointer"
+                onClick={() => setBatchEditPopup(true)}
+              />
+            )
+          }
           key={index}
         >
           <Text
+            className="w-full"
             ellipsis={{
               tooltip: "AC Powered 1500 HP Oderco Drawworks installed",
             }}
           >
             AC Powered 1500 HP Oderco Drawworks installed dsalkdja d jalskdj lak
           </Text>
-          <Text ellipsis={{ tooltip: "I am ellipsis now!" }}>Floorhand</Text>
+          <Text className="w-full" ellipsis={{ tooltip: "I am ellipsis now!" }}>
+            Floorhand
+          </Text>
           <p className="flex justify-between">
             <Text
               className="w-full"
