@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { message, Select, Table } from "antd";
+import { message, Select, Table, Upload } from "antd";
 import ActionBar from "./components/actionBar";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 import Button from "@/components/common/Button";
 import { ExportOutlined } from "@ant-design/icons";
+import UploadLinkDocPopup from "./[slug]/uploadLinkDocPopup";
+import UploadDocPopup from "./[slug]/uploadDocPopup";
 
 const columns = [
   {
@@ -82,6 +84,8 @@ const MaterialTransfer = () => {
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const [uploadLinkDocVisible, setUploadLinkDocVisible] = useState(false);
+  const [uploadDocVisible, setUploadDocVisible] = useState(false);
 
   const showAddMaterialTransferModal = () => {
     setAddMaterialTransferVisible(true);
@@ -89,6 +93,14 @@ const MaterialTransfer = () => {
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
+      <UploadLinkDocPopup
+        visible={uploadLinkDocVisible}
+        setVisible={setUploadLinkDocVisible}
+      />
+      <UploadDocPopup
+        visible={uploadDocVisible}
+        setVisible={setUploadDocVisible}
+      />
       {addMaterialTransferVisible && (
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
@@ -122,7 +134,18 @@ const MaterialTransfer = () => {
               fullWidth={false}
               prefix={<ExportOutlined />}
               onClick={() => {
-                message.success("Printed Successfully");
+                // message.success("Printed Successfully");
+                setUploadLinkDocVisible(true);
+              }}
+            />
+            <Button
+              text="Upload Doc"
+              outlined
+              style={{ padding: "4px 0px" }}
+              fullWidth={false}
+              onClick={() => {
+                // message.success("Printed Successfully");
+                setUploadDocVisible(true);
               }}
             />
           </div>
