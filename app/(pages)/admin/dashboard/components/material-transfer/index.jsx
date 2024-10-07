@@ -6,6 +6,7 @@ import Button from "@/components/common/Button";
 import { ExportOutlined } from "@ant-design/icons";
 import UploadLinkDocPopup from "./[slug]/uploadLinkDocPopup";
 import UploadDocPopup from "./[slug]/uploadDocPopup";
+import ViewAssetsDetailsPopup from "./[slug]/viewAssetsDetailsPopup";
 
 const columns = [
   {
@@ -86,6 +87,7 @@ const MaterialTransfer = () => {
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
   const [uploadLinkDocVisible, setUploadLinkDocVisible] = useState(false);
   const [uploadDocVisible, setUploadDocVisible] = useState(false);
+  const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
 
   const showAddMaterialTransferModal = () => {
     setAddMaterialTransferVisible(true);
@@ -101,6 +103,10 @@ const MaterialTransfer = () => {
         visible={uploadDocVisible}
         setVisible={setUploadDocVisible}
       />
+      <ViewAssetsDetailsPopup
+        visible={assetDetailsPopup}
+        setVisible={setAssetDetailsPopup}
+      />
       {addMaterialTransferVisible && (
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
@@ -115,8 +121,8 @@ const MaterialTransfer = () => {
           columns={columns}
         />
         <div className="flex justify-between gap-2 items-center">
-          <div className="w-1/2 lg:w-1/4 flex gap-2">
-            <Select
+          <div className="w-1/2 lg:xw-1/4 flex gap-2">
+            {/* <Select
               name="status"
               placeholder="Status"
               style={{ height: "36px", width: "100%" }}
@@ -134,18 +140,31 @@ const MaterialTransfer = () => {
               fullWidth={false}
               prefix={<ExportOutlined />}
               onClick={() => {
-                // message.success("Printed Successfully");
+                message.success("Printed Successfully");
+              }}
+            /> */}
+            <Button
+              text="Upload Link Doc"
+              outlined
+              fullWidth={false}
+              onClick={() => {
                 setUploadLinkDocVisible(true);
               }}
             />
             <Button
               text="Upload Doc"
               outlined
-              style={{ padding: "4px 0px" }}
               fullWidth={false}
               onClick={() => {
-                // message.success("Printed Successfully");
                 setUploadDocVisible(true);
+              }}
+            />
+            <Button
+              text="Upload Doc"
+              outlined
+              fullWidth={false}
+              onClick={() => {
+                setAssetDetailsPopup(true);
               }}
             />
           </div>
