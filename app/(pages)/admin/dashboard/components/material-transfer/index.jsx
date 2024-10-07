@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { message, Select, Table } from "antd";
+import { message, Select, Table, Upload } from "antd";
 import ActionBar from "./components/actionBar";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 import Button from "@/components/common/Button";
 import { ExportOutlined } from "@ant-design/icons";
+import UploadLinkDocPopup from "./[slug]/uploadLinkDocPopup";
+import UploadDocPopup from "./[slug]/uploadDocPopup";
+import ViewAssetsDetailsPopup from "./[slug]/viewAssetsDetailsPopup";
 
 const columns = [
   {
@@ -82,6 +85,9 @@ const MaterialTransfer = () => {
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const [uploadLinkDocVisible, setUploadLinkDocVisible] = useState(false);
+  const [uploadDocVisible, setUploadDocVisible] = useState(false);
+  const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
 
   const showAddMaterialTransferModal = () => {
     setAddMaterialTransferVisible(true);
@@ -89,6 +95,18 @@ const MaterialTransfer = () => {
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
+      <UploadLinkDocPopup
+        visible={uploadLinkDocVisible}
+        setVisible={setUploadLinkDocVisible}
+      />
+      <UploadDocPopup
+        visible={uploadDocVisible}
+        setVisible={setUploadDocVisible}
+      />
+      <ViewAssetsDetailsPopup
+        visible={assetDetailsPopup}
+        setVisible={setAssetDetailsPopup}
+      />
       {addMaterialTransferVisible && (
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
@@ -103,8 +121,8 @@ const MaterialTransfer = () => {
           columns={columns}
         />
         <div className="flex justify-between gap-2 items-center">
-          <div className="w-1/2 lg:w-1/4 flex gap-2">
-            <Select
+          <div className="w-1/2 lg:xw-1/4 flex gap-2">
+            {/* <Select
               name="status"
               placeholder="Status"
               style={{ height: "36px", width: "100%" }}
@@ -123,6 +141,30 @@ const MaterialTransfer = () => {
               prefix={<ExportOutlined />}
               onClick={() => {
                 message.success("Printed Successfully");
+              }}
+            /> */}
+            <Button
+              text="Upload Link Doc"
+              outlined
+              fullWidth={false}
+              onClick={() => {
+                setUploadLinkDocVisible(true);
+              }}
+            />
+            <Button
+              text="Upload Doc"
+              outlined
+              fullWidth={false}
+              onClick={() => {
+                setUploadDocVisible(true);
+              }}
+            />
+            <Button
+              text="Upload Doc"
+              outlined
+              fullWidth={false}
+              onClick={() => {
+                setAssetDetailsPopup(true);
               }}
             />
           </div>
