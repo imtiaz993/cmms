@@ -4,6 +4,7 @@ import {
   ExportOutlined,
   FilterOutlined,
   PlusOutlined,
+  PrinterOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
@@ -86,6 +87,17 @@ const ActionBar = ({
             prefix={<SettingOutlined />}
           />
         </Dropdown>
+
+        <Button
+          text="Print"
+          outlined
+          style={{ padding: "4px 0px" }}
+          fullWidth={false}
+          prefix={<PrinterOutlined />}
+          onClick={() => {
+            message.success("Printed Successfully");
+          }}
+        />
 
         <Button
           text="Export"

@@ -60,7 +60,7 @@ const UnplannedSummaryPopup = ({ visible, setVisible }) => {
                     />
                   </div>
 
-                  <div className="w-full col-span-2">
+                  <div className="w-full md:col-span-2">
                     <Field
                       as={Select}
                       name="physicalLocation"

@@ -8,6 +8,20 @@
   font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
   color: white;
 }
+textarea {
+  color: white !important;
+  border: 1px solid #616161 !important;
+}
+textarea::placeholder {
+  color: #ffffff40 !important;
+}
+textarea:hover {
+  border: 1px solid #23cdcd !important;
+}
+textarea:focus {
+  border: 1px solid #23cdcd !important;
+}
+
 html,
 body {
   height: 100% !important;
