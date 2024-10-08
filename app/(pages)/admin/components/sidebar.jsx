@@ -1,6 +1,7 @@
+import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Drawer, Tree } from "antd";
+import { Drawer, Input, Tree } from "antd";
 
 const Sidebar = ({ openSidebar, setOpenSidebar }) => {
   const router = useRouter();
@@ -54,7 +55,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           key: "rig-21",
           children: [
             {
-              title: SystemTitle("System", "system"),
+              title: SystemTitle("Air System", "system"),
               key: "system 1",
             },
           ],
@@ -183,17 +184,95 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
     },
   ];
 
+  const [filteredTreeData, setFilteredTreeData] = useState(treeData);
+  const [expandedKeys, setExpandedKeys] = useState([]);
+
+  const extractText = (element) => {
+    // If it's a string, return as is
+    if (typeof element === "string") {
+      return element;
+    }
+
+    // If it's a JSX element, recursively extract text from children
+    if (React.isValidElement(element)) {
+      const children = element.props.children;
+      if (Array.isArray(children)) {
+        return children.map(extractText).join(" ");
+      }
+      return extractText(children);
+    }
+
+    return ""; // Return empty string for anything else
+  };
+
+  // Filter tree based on search value
+  const onSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    const expandedKeys = ["noram-drilling"]; // Always expand the root
+
+    const filterTree = (data) =>
+      data
+        .map((item) => {
+          const titleText = extractText(item.title).toLowerCase();
+          const titleMatch = titleText.includes(value);
+
+          if (item.children) {
+            const filteredChildren = filterTree(item.children);
+
+            // Case 1: Rig matches, but no systems match
+            if (titleMatch && filteredChildren.length === 0) {
+              expandedKeys.push(item.key); // Expand rig
+              return {
+                ...item,
+                children: item.children, // Show all systems
+              };
+            }
+
+            // Case 2: At least one system matches or the rig itself matches
+            if (filteredChildren.length > 0 || titleMatch) {
+              expandedKeys.push(item.key); // Expand rig
+              return {
+                ...item,
+                children:
+                  filteredChildren.length > 0
+                    ? filteredChildren
+                    : item.children, // Show matching systems, or all if none match
+              };
+            }
+          }
+
+          // Only include rigs or systems that match the search
+          return titleMatch ? { ...item } : null;
+        })
+        .filter((item) => item); // Remove null items
+
+    // Reset to original tree if no search value
+    if (!value) {
+      setFilteredTreeData(treeData);
+    } else {
+      setFilteredTreeData(filterTree(treeData));
+    }
+
+    setExpandedKeys(expandedKeys); // Set expanded nodes
+  };
+
   return (
-    <div>
-      <div className="bg-primary min-h-[calc(100dvh-16px-60px)] hidden lg:block lg:w-[300px] rounded-tr-xl p-5 select-none">
+    <div className="rounded-tr-xl bg-primary overflow-hidden">
+      <div className=" max-h-[calc(100dvh-16px-60px)] min-h-[calc(100dvh-16px-60px)] overflow-auto hidden lg:block lg:w-[300px] p-5 select-none">
+        <Input.Search
+          placeholder="Search Rigs/Systems"
+          onChange={onSearch}
+          style={{ marginBottom: 8, height: "36px" }}
+        />
         <div>
           <Tree
-            defaultExpandedKeys={[activeLocation || "noram-drilling"]}
+            expandedKeys={expandedKeys}
             defaultSelectedKeys={[activeLocation || "noram-drilling"]}
             onSelect={onSelect}
-            treeData={treeData}
+            treeData={filteredTreeData}
             rootStyle={{ background: "transparent" }}
             className="custom-tree"
+            onExpand={(keys) => setExpandedKeys(keys)}
           />
         </div>
       </div>
@@ -210,13 +289,19 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
       >
         <div className="select-none">
           <div>
+            <Input.Search
+              placeholder="Search Rigs/Systems"
+              onChange={onSearch}
+              style={{ marginBottom: 8, height: "36px" }}
+            />
             <Tree
-              defaultExpandedKeys={[activeLocation || "noram-drilling"]}
+              expandedKeys={expandedKeys}
               defaultSelectedKeys={[activeLocation || "noram-drilling"]}
               onSelect={onSelect}
-              treeData={treeData}
+              treeData={filteredTreeData}
               rootStyle={{ background: "transparent" }}
               className="custom-tree"
+              onExpand={(keys) => setExpandedKeys(keys)}
             />
           </div>
         </div>
