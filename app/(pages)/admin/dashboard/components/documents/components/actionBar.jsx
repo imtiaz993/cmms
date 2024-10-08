@@ -29,10 +29,13 @@ const ActionBar = () => {
             placeholder="Category"
             style={{ height: "36px", width: "100%" }}
             options={[
-              { label: "Last 30 Days", value: "last30Days" },
-              { label: "Last 6 Months", value: "last6Months" },
-              { label: "Last 12 Months", value: "last12Months" },
-              { label: "All", value: "all" },
+              { label: "Asset", value: "Asset" },
+              { label: "Asset Class", value: "assetClass" },
+              { label: "Procedure", value: "procedure" },
+              { label: "Work Order", value: "workOrder" },
+              { label: "Checklist", value: "checklist" },
+              { label: "Material Transfer", value: "materialTransfer" },
+              { label: "Cost", value: "Cost" },
             ]}
             value={selectedValues}
             onChange={handleChange}
