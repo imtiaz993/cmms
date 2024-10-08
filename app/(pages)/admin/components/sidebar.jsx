@@ -292,15 +292,16 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
             <Input.Search
               placeholder="Search Rigs/Systems"
               onChange={onSearch}
-              style={{ marginBottom: 8 }}
+              style={{ marginBottom: 8, height: "36px" }}
             />
             <Tree
-              defaultExpandedKeys={[activeLocation || "noram-drilling"]}
+              expandedKeys={expandedKeys}
               defaultSelectedKeys={[activeLocation || "noram-drilling"]}
               onSelect={onSelect}
               treeData={filteredTreeData}
               rootStyle={{ background: "transparent" }}
               className="custom-tree"
+              onExpand={(keys) => setExpandedKeys(keys)}
             />
           </div>
         </div>
