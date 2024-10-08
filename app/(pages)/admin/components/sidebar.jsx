@@ -185,7 +185,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
   ];
 
   const [filteredTreeData, setFilteredTreeData] = useState(treeData);
-  const [expandedKeys, setExpandedKeys] = useState([]);
+  const [expandedKeys, setExpandedKeys] = useState(["noram-drilling"]);
 
   const extractText = (element) => {
     // If it's a string, return as is
