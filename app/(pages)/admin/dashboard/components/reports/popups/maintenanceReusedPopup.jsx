@@ -51,7 +51,7 @@ const MaintenanceReusedPopup = ({
               title={title}
             >
               <div>
-                <div className="mt-4 grid grid-cols-2 gap-4 items-center">
+                <div className="mt-4 grid md:grid-cols-2 gap-4 items-center">
                   <div className="w-full">
                     <InputField
                       name="costCenter"

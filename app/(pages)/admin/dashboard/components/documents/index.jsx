@@ -118,6 +118,8 @@ const Documents = () => {
             current: 1,
             pageSize: 10,
             showSizeChanger: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`,
             onChange: () => {},
           }}
           style={{

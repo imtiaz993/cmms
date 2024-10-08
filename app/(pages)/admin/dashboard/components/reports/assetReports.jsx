@@ -1,4 +1,4 @@
-import { List } from "antd";
+import { Input, List } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import ReportsPopup from "./popups/reportsPopup";
 import { useState } from "react";
@@ -63,8 +63,26 @@ const AssetReports = () => {
     },
   ];
 
+  const [filteredData, setFilteredData] = useState(reportsData);
   return (
     <div className="px-3 mt-2 h-[calc(100dvh-210px)] overflow-auto lg:px-6">
+      <div className="sticky top-0 bg-[#212020] z-10 !h-12 flex justify-end">
+        <Input.Search
+          placeholder="Search Reports"
+          onChange={(e) => {
+            const value = e.target.value.toLowerCase();
+            setFilteredData(
+              reportsData.filter(
+                (i) =>
+                  i.title.toLowerCase().includes(value) ||
+                  i.description.toLowerCase().includes(value)
+              )
+            );
+          }}
+          style={{ height: "36px" }}
+           className="sm:!w-[300px] searchBar"
+        />
+      </div>
       <ReportsPopup
         visible={popup === "Asset is Currently Down"}
         setVisible={setPopup}
@@ -100,14 +118,12 @@ const AssetReports = () => {
         title="Generate Asset Operational Status Report"
         dataOnly
       />
-
       <ReportsPopup
         visible={popup === "Asset Physical Location"}
         setVisible={setPopup}
         title="Generate Asset Physical Location Report"
         dataOnly
       />
-
       <ReportsPopup
         visible={popup === "Asset Status Change"}
         setVisible={setPopup}
@@ -115,12 +131,10 @@ const AssetReports = () => {
         assetNumber
         fromToDate
       />
-
       <AssetSummaryPopup
         visible={popup === "Asset Summary"}
         setVisible={setPopup}
       />
-
       <ReportsPopup
         visible={popup === "Total Cost of Ownership"}
         setVisible={setPopup}
@@ -128,17 +142,15 @@ const AssetReports = () => {
         assetNumber
         includeChildAssets
       />
-
       <ReportsPopup
         visible={popup === "Custom Attributes"}
         setVisible={setPopup}
         title="Generate Custom Attributes Report"
       />
-
       <div className="bg-primary px-2">
         <List
           itemLayout=""
-          dataSource={reportsData.map((i, index) => ({ ...i, key: index }))}
+          dataSource={filteredData.map((i, index) => ({ ...i, key: index }))}
           renderItem={(item) => (
             <List.Item
               actions={[

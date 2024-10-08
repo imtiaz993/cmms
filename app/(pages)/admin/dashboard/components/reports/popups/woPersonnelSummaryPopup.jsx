@@ -44,7 +44,7 @@ const WOPersonnelSummaryPopup = ({ visible, setVisible }) => {
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
-                  <div className="w-full col-span-2">
+                  <div className="w-full md:col-span-2">
                     <InputField
                       name="costCenter"
                       placeholder="Cost Center"

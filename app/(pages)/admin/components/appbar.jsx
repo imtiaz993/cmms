@@ -58,7 +58,7 @@ const Appbar = ({ setOpenSidebar }) => {
             <DownOutlined style={{ fontSize: "10px" }} />
           </div>
         </Dropdown>
-        <div className="ml-2 lg:hidden">
+        <div className="ml-3 lg:hidden">
           <MenuOutlined
             style={{ fontSize: "20px" }}
             onClick={() => {

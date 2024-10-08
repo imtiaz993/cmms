@@ -3,7 +3,7 @@ import { message, Select, Table, Upload } from "antd";
 import ActionBar from "./components/actionBar";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 import Button from "@/components/common/Button";
-import { ExportOutlined } from "@ant-design/icons";
+import { PrinterOutlined } from "@ant-design/icons";
 import UploadLinkDocPopup from "./[slug]/uploadLinkDocPopup";
 import UploadDocPopup from "./[slug]/uploadDocPopup";
 import ViewAssetsDetailsPopup from "./[slug]/viewAssetsDetailsPopup";
@@ -32,6 +32,13 @@ const columns = [
   {
     title: "Transporter",
     dataIndex: "transporter",
+  },
+  {
+    title: "",
+    dataIndex: "download",
+    render: () => (
+      <PrinterOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+    ),
   },
 ];
 
@@ -122,27 +129,6 @@ const MaterialTransfer = () => {
         />
         <div className="flex justify-between gap-2 items-center">
           <div className="w-1/2 lg:xw-1/4 flex gap-2">
-            {/* <Select
-              name="status"
-              placeholder="Status"
-              style={{ height: "36px", width: "100%" }}
-              options={[
-                { label: "Open", value: "open" },
-                { label: "Completed", value: "completed" },
-                { label: "Cancelled", value: "cancelled" },
-                { label: "All", value: "all" },
-              ]}
-            />
-            <Button
-              text="Print"
-              outlined
-              style={{ padding: "4px 0px" }}
-              fullWidth={false}
-              prefix={<ExportOutlined />}
-              onClick={() => {
-                message.success("Printed Successfully");
-              }}
-            /> */}
             <Button
               text="Upload Link Doc"
               outlined
@@ -183,6 +169,8 @@ const MaterialTransfer = () => {
             current: 1,
             pageSize: 10,
             showSizeChanger: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`,
             onChange: () => {},
           }}
           style={{

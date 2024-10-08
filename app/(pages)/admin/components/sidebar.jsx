@@ -263,6 +263,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           placeholder="Search Rigs/Systems"
           onChange={onSearch}
           style={{ marginBottom: 8, height: "36px" }}
+          className="searchBar"
         />
         <div>
           <Tree
@@ -293,6 +294,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
               placeholder="Search Rigs/Systems"
               onChange={onSearch}
               style={{ marginBottom: 8, height: "36px" }}
+              className="searchBar"
             />
             <Tree
               expandedKeys={expandedKeys}

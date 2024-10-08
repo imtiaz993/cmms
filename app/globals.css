@@ -8,6 +8,20 @@
   font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
   color: white;
 }
+textarea {
+  color: white !important;
+  border: 1px solid #616161 !important;
+}
+textarea::placeholder {
+  color: #ffffff40 !important;
+}
+textarea:hover {
+  border: 1px solid #23cdcd !important;
+}
+textarea:focus {
+  border: 1px solid #23cdcd !important;
+}
+
 html,
 body {
   height: 100% !important;
@@ -25,6 +39,11 @@ body {
   background-color: #212020;
   border-radius: 10px;
   border: 1px solid #313131;
+}
+
+.searchBar button,
+.searchBar input {
+  height: 36px !important;
 }
 
 .ant-message-notice-content {

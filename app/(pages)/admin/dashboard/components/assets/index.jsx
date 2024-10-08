@@ -176,7 +176,6 @@ const Assets = () => {
             current: 1,
             pageSize: 10,
             showSizeChanger: true,
-            showTitle: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
             onChange: () => {},

@@ -32,13 +32,13 @@ const ActionBar = ({
   };
 
   return (
-    <div className="md:flex items-center gap-3 mb-3">
-      <Input
+    <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
+      <Input.Search
         placeholder="Search..."
         onChange={(e) => setSearchText(e.target.value)}
-        style={{ height: "36px" }}
+        className="sm:!w-[300px] searchBar"
       />
-      <div className="grid grid-cols-2 sm:flex items-center gap-2 mt-4 md:mt-0">
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
         <Dropdown
           dropdownRender={() => <AssetFilter />}
           trigger={["click"]}

@@ -33,13 +33,39 @@ const ActionBar = ({
   };
 
   return (
-    <div className="md:flex items-center gap-3 mb-3">
-      <Input
+    <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mb-3">
+      <Input.Search
         placeholder="Search..."
         onChange={(e) => setSearchText(e.target.value)}
-        style={{ height: "36px" }}
+        className="sm:!w-[300px] searchBar"
       />
-      <div className="grid grid-cols-2 sm:flex items-center gap-2 mt-4 md:mt-0">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:flex items-center gap-2">
+        <div className="sm:min-w-28 overflow-hidden">
+          <Select
+            name="status"
+            placeholder="Status"
+            style={{ height: "36px", width: "100%" }}
+            options={[
+              { label: "Open", value: "open" },
+              { label: "Completed", value: "completed" },
+              { label: "Cancelled", value: "cancelled" },
+              { label: "All", value: "all" },
+            ]}
+          />
+        </div>
+        <div className="sm:min-w-32 overflow-hidden">
+          <Select
+            name="timeRange"
+            placeholder="Time Range"
+            style={{ height: "36px", width: "100%" }}
+            options={[
+              { label: "Last 30 Days", value: "last30Days" },
+              { label: "Last 6 Months", value: "last6Months" },
+              { label: "Last 12 Months", value: "last12Months" },
+              { label: "All", value: "all" },
+            ]}
+          />
+        </div>
         <Dropdown
           dropdownRender={() => <WOFilter />}
           trigger={["click"]}
@@ -107,7 +133,7 @@ const ActionBar = ({
             }`}
             onClick={showAddWOModal}
             outlined
-            style={{ padding: "4px 24px" }}
+            style={{ padding: "4px 10px" }}
             prefix={<PlusOutlined />}
           />
         </div>

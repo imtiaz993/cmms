@@ -144,6 +144,8 @@ const ReschedulePopup = ({ visible, setVisible, batchEdit, setBatchEdit }) => {
                     current: 1,
                     pageSize: 5,
                     showSizeChanger: true,
+                    showTotal: (total, range) =>
+                      `${range[0]}-${range[1]} of ${total} items`,
                     onChange: () => {},
                   }}
                   style={{
