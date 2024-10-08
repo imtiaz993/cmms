@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card, Table } from "antd";
+import { Card, Segmented, Table } from "antd";
 import ReactApexChart from "react-apexcharts";
 
 const DonutChart = () => (
@@ -245,7 +245,7 @@ const BarChart = () => (
         categories: [
           "Motorman",
           "Floorman",
-          "MUD PUMP INSPECTOR",
+          "MUD PUMP INSP.",
           "Driller",
           "Rig Manager",
           "Tool Pusher",
@@ -466,14 +466,8 @@ const Dashboard = ({ activeLocation }) => {
               size={"small"}
               columns={unplannedColumns}
               dataSource={unplannedData}
-              pagination={{
-                total: unplannedData.total,
-                current: 1,
-                pageSize: 5,
-                onChange: () => {},
-              }}
+              pagination={false}
               style={{
-                marginTop: 16,
                 overflow: "auto",
               }}
             />
@@ -506,14 +500,8 @@ const Dashboard = ({ activeLocation }) => {
               size={"small"}
               columns={plannedColumns}
               dataSource={plannedData}
-              pagination={{
-                total: plannedData.total,
-                current: 1,
-                pageSize: 5,
-                onChange: () => {},
-              }}
+              pagination={false}
               style={{
-                marginTop: 16,
                 overflow: "auto",
               }}
             />
@@ -562,6 +550,16 @@ const Dashboard = ({ activeLocation }) => {
             </Link>
           }
         >
+          <div className="flex justify-center">
+            <Segmented
+              options={["30 Days", "60 Days", "90 Days"]}
+              defaultValue="30 Days"
+              className="!bg-[#212020]"
+              onChange={(value) => {
+                // TODO: Change chart data
+              }}
+            />
+          </div>
           <div className="flex justify-center">
             <BarChart />
           </div>
