@@ -2,68 +2,7 @@ import Button from "@/components/common/Button";
 import { ExportOutlined } from "@ant-design/icons";
 import { Badge, Modal, Table } from "antd";
 
-const columns = [
-  {
-    title: "Asset",
-    dataIndex: "asset",
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-  },
-  {
-    title: "Make",
-    dataIndex: "make",
-  },
-  {
-    title: "Model",
-    dataIndex: "modal",
-  },
-  {
-    title: "Serial Number",
-    dataIndex: "serialNumber",
-  },
-  {
-    title: "Condition",
-    dataIndex: "condition",
-  },
-  {
-    title: "Trans. Reason",
-    dataIndex: "transReason",
-  },
-];
-
-const data = [
-  {
-    asset: "RGE9214051001",
-    description: "HPU Motor 125HP",
-    make: "N/A",
-    modal: "N/A",
-    serialNumber: "RGE9214051001",
-    condition: "Like New",
-    transReason: "Not Selected",
-  },
-  {
-    asset: "RGE9214051001",
-    description: "HPU Motor 125HP",
-    make: "N/A",
-    modal: "N/A",
-    serialNumber: "RGE9214051001",
-    condition: "Like New",
-    transReason: "Not Selected",
-  },
-  {
-    asset: "RGE9214051001",
-    description: "HPU Motor 125HP",
-    make: "N/A",
-    modal: "N/A",
-    serialNumber: "RGE9214051001",
-    condition: "Like New",
-    transReason: "Not Selected",
-  },
-];
-
-const ViewAssetsDetailsPopup = ({ visible, setVisible }) => {
+const ViewAssetsDetailsPopup = ({ visible, setVisible, columns, data }) => {
   return (
     <div>
       <Modal
