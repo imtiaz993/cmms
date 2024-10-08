@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Checkbox, Dropdown, Input, Menu, message } from "antd";
+import { Checkbox, Dropdown, Input, Menu, message, Select } from "antd";
 import {
   ExportOutlined,
   FilterOutlined,
@@ -33,13 +33,26 @@ const ActionBar = ({
   };
 
   return (
-    <div className="md:flex items-center gap-3 mb-3">
-      <Input
+    <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mb-3">
+      <Input.Search
         placeholder="Search..."
         onChange={(e) => setSearchText(e.target.value)}
-        style={{ height: "36px" }}
+        className="sm:!w-[300px] searchBar"
       />
-      <div className="grid grid-cols-2 sm:flex items-center gap-2 mt-4 md:mt-0">
+      <div className="grid  md:flex sm:grid-cols-3 items-center gap-2">
+        <div className="sm:min-w-28 col-span-2 sm:col-span-1">
+          <Select
+            name="status"
+            placeholder="Status"
+            style={{ height: "36px", width: "100%" }}
+            options={[
+              { label: "Draft", value: "draft" },
+              { label: "In Progress", value: "progress" },
+              { label: "Approved", value: "approved" },
+              { label: "Declined", value: "declined" },
+            ]}
+          />
+        </div>
         <Dropdown
           dropdownRender={() => <MaterialTransferFilter />}
           trigger={["click"]}

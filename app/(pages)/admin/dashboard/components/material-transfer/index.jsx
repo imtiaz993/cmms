@@ -127,23 +127,6 @@ const MaterialTransfer = () => {
           setCheckedList={setCheckedList}
           columns={columns}
         />
-        <div className="sm:flex justify-between">
-          <div className="flex gap-3">
-            <div className="w-1/2 sm:min-w-40">
-              <Select
-                name="status"
-                placeholder="Status"
-                style={{ height: "36px", width: "100%" }}
-                options={[
-                  { label: "Draft", value: "draft" },
-                  { label: "In Progress", value: "progress" },
-                  { label: "Approved", value: "approved" },
-                  { label: "Declined", value: "declined" },
-                ]}
-              />
-            </div>
-          </div>
-        </div>
         <div className="flex justify-between gap-2 items-center">
           <div className="w-1/2 lg:xw-1/4 flex gap-2">
             <Button

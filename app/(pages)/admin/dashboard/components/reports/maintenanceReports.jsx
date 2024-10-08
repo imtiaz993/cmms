@@ -118,7 +118,7 @@ const MaintenanceReports = () => {
 
   return (
     <div className="px-3 mt-2 h-[calc(100dvh-210px)] overflow-auto lg:px-6">
-      <div className="sticky top-0 bg-[#212020] z-10 !h-10 flex justify-end">
+      <div className="sticky top-0 bg-[#212020] z-10 !h-12 flex justify-end">
         <Input.Search
           placeholder="Search Reports"
           onChange={(e) => {
@@ -132,7 +132,7 @@ const MaintenanceReports = () => {
             );
           }}
           style={{ height: "36px" }}
-          className="md:!w-[300px]"
+          className="sm:!w-[300px] searchBar"
         />
       </div>
       <ReportsPopup

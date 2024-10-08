@@ -150,35 +150,7 @@ const Unplanned = () => {
             columns={columns}
             unplanned
           />
-          <div className="sm:flex justify-between">
-            <div className="flex gap-3">
-              <div className="w-1/2 sm:min-w-40">
-                <Select
-                  name="status"
-                  placeholder="Status"
-                  style={{ height: "36px", width: "100%" }}
-                  options={[
-                    { label: "Open", value: "open" },
-                    { label: "Completed", value: "completed" },
-                    { label: "Cancelled", value: "cancelled" },
-                    { label: "All", value: "all" },
-                  ]}
-                />
-              </div>
-              <div className="w-1/2 sm:min-w-40">
-                <Select
-                  name="timeRange"
-                  placeholder="Time Range"
-                  style={{ height: "36px", width: "100%" }}
-                  options={[
-                    { label: "Last 30 Days", value: "last30Days" },
-                    { label: "Last 6 Months", value: "last6Months" },
-                    { label: "Last 12 Months", value: "last12Months" },
-                    { label: "All", value: "all" },
-                  ]}
-                />
-              </div>
-            </div>
+          <div className="flex justify-end">
             <p className="text-secondary">
               Total Unplanned Work Orders:{" "}
               <span>{"(" + data.length + ")"}</span>

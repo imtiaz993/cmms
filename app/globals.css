@@ -41,6 +41,11 @@ body {
   border: 1px solid #313131;
 }
 
+.searchBar button,
+.searchBar input {
+  height: 36px !important;
+}
+
 .ant-message-notice-content {
   background-color: #4c4c4c !important;
 }

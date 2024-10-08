@@ -9,12 +9,7 @@ import {
 import Button from "@/components/common/Button";
 import AssetFilter from "./filtersDropdown";
 
-const ActionBar = ({
-  columns,
-  checkedList,
-  setCheckedList,
-  unplanned,
-}) => {
+const ActionBar = ({ columns, checkedList, setCheckedList, unplanned }) => {
   const [searchText, setSearchText] = useState("");
   const [showHierarchy, setShowHierarchy] = useState(false);
 
@@ -32,13 +27,13 @@ const ActionBar = ({
   };
 
   return (
-    <div className="md:flex items-center gap-3 mb-3">
-      <Input
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-3">
+      <Input.Search
         placeholder="Search..."
         onChange={(e) => setSearchText(e.target.value)}
-        style={{ height: "36px" }}
+        className="sm:!w-[300px] searchBar"
       />
-      <div className="grid grid-cols-2 sm:flex items-center gap-2 mt-4 md:mt-0">
+      <div className="grid grid-cols-2 sm:flex items-center gap-2 sm:mt-0">
         <Dropdown
           dropdownRender={() => <AssetFilter />}
           trigger={["click"]}
