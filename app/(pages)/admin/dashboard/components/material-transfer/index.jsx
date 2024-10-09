@@ -8,30 +8,37 @@ const columns = [
   {
     title: "Material Transfer #",
     dataIndex: "materialTranfser",
+    key: "materialTranfser",
   },
   {
     title: "Creator",
     dataIndex: "creator",
+    key: "creator",
   },
   {
     title: "Created Date",
     dataIndex: "createdDate",
+    key: "createdDate",
   },
   {
     title: "Origination",
     dataIndex: "origination",
+    key: "origination",
   },
   {
     title: "Destination",
     dataIndex: "destination",
+    key: "destination",
   },
   {
     title: "Transporter",
     dataIndex: "transporter",
+    key: "transporter",
   },
   {
     title: "",
     dataIndex: "download",
+    key: "download",
     render: () => (
       <PrinterOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
     ),
