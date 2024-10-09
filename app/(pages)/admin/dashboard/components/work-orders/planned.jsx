@@ -3,6 +3,7 @@ import { Select, Table } from "antd";
 import { PrinterOutlined } from "@ant-design/icons";
 import EarlyMaintenancePopup from "./earlyMaintenancePopup";
 import ActionBar from "./actionBar";
+import { useRouter } from "next/navigation";
 
 const columns = [
   {
@@ -139,6 +140,7 @@ const Planned = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addWOVisible, setAddWOVisible] = useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const router = useRouter();
 
   console.log(checkedList);
 
@@ -167,6 +169,16 @@ const Planned = () => {
             </p>
           </div>
           <Table
+            rowClassName="cursor-pointer"
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: () => {
+                  router.push(
+                    `/admin/dashboard/components/work-orders/${record?.workOrder}`
+                  );
+                },
+              };
+            }}
             loading={false}
             size={"large"}
             scroll={{ x: 1100 }}

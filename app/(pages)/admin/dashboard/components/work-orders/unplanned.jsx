@@ -4,6 +4,7 @@ import { PrinterOutlined } from "@ant-design/icons";
 import EarlyMaintenancePopup from "./earlyMaintenancePopup";
 import ActionBar from "./actionBar";
 import CreateUnplannedWOPopup from "./createUnplannedWOPopup";
+import { useRouter } from "next/navigation";
 
 const columns = [
   {
@@ -140,6 +141,7 @@ const Unplanned = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addWOVisible, setAddWOVisible] = useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const router = useRouter();
 
   const showAddWOModal = () => {
     setAddWOVisible(true);
@@ -168,6 +170,16 @@ const Unplanned = () => {
             </p>
           </div>
           <Table
+            rowClassName="cursor-pointer"
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: () => {
+                  router.push(
+                    `/admin/dashboard/components/work-orders/${record?.workOrder}`
+                  );
+                },
+              };
+            }}
             loading={false}
             size={"large"}
             scroll={{ x: 1100 }}
