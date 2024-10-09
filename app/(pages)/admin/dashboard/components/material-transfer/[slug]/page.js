@@ -349,7 +349,10 @@ const MaterialTransferDetail = () => {
                       Manager on 02/12/2024 19:58 (GMT+5)
                     </p>
                     <span className="opacity-50">Comment:</span>
-                    <span className="font-italic"> "Ship to rig 21"</span>
+                    <span className="font-italic">
+                      {" "}
+                      &quot;Ship to rig 21&quot;
+                    </span>
                     <p>
                       <span className="opacity-50">Primary Approver:</span>{" "}
                       <strong>Zeba Avera</strong>
@@ -366,7 +369,7 @@ const MaterialTransferDetail = () => {
                       Midland Yard on 02/23/2024 18:42 (GMT+5)
                     </p>
                     <span className="opacity-50"> Comment:</span>{" "}
-                    <span className="font-italic">"AT RIG21"</span>
+                    <span className="font-italic">&quot;AT RIG21&quot;</span>
                     <p>
                       <span className="opacity-50">Primary Approver:</span>{" "}
                       <strong>Zeba Avera</strong>
