@@ -25,6 +25,7 @@ import ViewAssetsDetailsPopup from "./viewAssetsDetailsPopup";
 import { useState } from "react";
 import UploadLinkDocPopup from "./uploadLinkDocPopup";
 import UploadDocPopup from "./uploadDocPopup";
+import { useRouter } from "next/navigation";
 
 const columns = [
   {
@@ -91,8 +92,8 @@ const MaterialTransferDetail = () => {
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
   const [uploadLinkDocVisible, setUploadLinkDocVisible] = useState(false);
   const [uploadDocVisible, setUploadDocVisible] = useState(false);
+  const router = useRouter();
   const { Step } = Steps;
-  const { Text } = Typography;
 
   const tabs = [
     {
@@ -105,10 +106,10 @@ const MaterialTransferDetail = () => {
             columns={columns}
             data={data}
           />
-          <div className="flex gap-3 justify-end">
+          <div className="flex gap-3 justify-end mt-3 xl:mt-0">
             <Button
               type="primary"
-              // style={{ height: "36px", fontWeight: "500", minWidth: "80px" }}
+              className="!h-7 md:!h-9"
               onClick={() => setAssetDetailsPopup(true)}
               fullWidth={false}
               text="View Details"
@@ -116,7 +117,7 @@ const MaterialTransferDetail = () => {
 
             <Button
               type="primary"
-              // style={{ height: "36px", fontWeight: "500", minWidth: "80px" }}
+              className="!h-7 md:!h-9"
               onClick={() => {}}
               fullWidth={false}
               text="Add Assets"
@@ -124,8 +125,7 @@ const MaterialTransferDetail = () => {
             />
             <Button
               type="primary"
-              // style={{ height: "36px", fontWeight: "500", minWidth: "80px" }}
-
+              className="!h-7 md:!h-9"
               fullWidth={false}
               text="Export"
               onClick={() => message.info("Export will be available soon.")}
@@ -206,8 +206,8 @@ const MaterialTransferDetail = () => {
           />
         </div>
       </div>
-      <div className="flex gap-5">
-        <div className="w-3/5">
+      <div className="flex flex-col md:flex-row gap-5">
+        <div className="md:w-3/5">
           <Card
             loading={false}
             className="!bg-primary"
@@ -319,7 +319,7 @@ const MaterialTransferDetail = () => {
             </div>
           </Card>
         </div>
-        <div className="w-2/5">
+        <div className="md:w-2/5">
           <Card
             loading={false}
             title={<p>Workflow Status</p>}

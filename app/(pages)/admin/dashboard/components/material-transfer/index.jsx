@@ -3,11 +3,12 @@ import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 import { PrinterOutlined } from "@ant-design/icons";
+import { useRouter } from "next/navigation";
 
 const columns = [
   {
     title: "Material Transfer #",
-    dataIndex: "materialTranfser",
+    dataIndex: "materialTransfer",
   },
   {
     title: "Creator",
@@ -40,7 +41,7 @@ const columns = [
 
 const data = [
   {
-    materialTranfser: "MT16696000003",
+    materialTransfer: "MT16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -48,7 +49,7 @@ const data = [
     transporter: "Rig 27",
   },
   {
-    materialTranfser: "MT16696000003",
+    materialTransfer: "MT16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -56,7 +57,7 @@ const data = [
     transporter: "Rig 27",
   },
   {
-    materialTranfser: "MT16696000003",
+    materialTransfer: "MT16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -64,7 +65,7 @@ const data = [
     transporter: "Rig 27",
   },
   {
-    materialTranfser: "MT16696000003",
+    materialTransfer: "MT16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -72,7 +73,7 @@ const data = [
     transporter: "Rig 27",
   },
   {
-    materialTranfser: "MT16696000003",
+    materialTransfer: "MT16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -88,6 +89,7 @@ const MaterialTransfer = () => {
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const router = useRouter();
 
   const showAddMaterialTransferModal = () => {
     setAddMaterialTransferVisible(true);
@@ -112,6 +114,17 @@ const MaterialTransfer = () => {
           Total Material Transfer: <span>{"(" + data.length + ")"}</span>
         </p>
         <Table
+          rowClassName="cursor-pointer"
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: () => {
+                console.log("record", record);
+                router.push(
+                  `/admin/dashboard/components/material-transfer/${record?.materialTransfer}`
+                );
+              },
+            };
+          }}
           loading={false}
           size={"large"}
           scroll={{ x: 1100 }}
