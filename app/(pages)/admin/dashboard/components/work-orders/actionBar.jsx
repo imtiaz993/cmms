@@ -19,7 +19,7 @@ const ActionBar = ({
   const [searchText, setSearchText] = useState("");
   const [showHierarchy, setShowHierarchy] = useState(false);
 
-  const options = columns.map(({ key, title }, index) => ({
+  const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
     value: key,
     key: index,

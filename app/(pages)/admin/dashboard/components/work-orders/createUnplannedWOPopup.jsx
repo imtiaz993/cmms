@@ -116,7 +116,7 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
                     ]}
                   />
                 </div>
-                <div className="w-full col-span-3">
+                <div className="w-full md:col-span-3">
                   <Field
                     as={TextArea}
                     name="problem"

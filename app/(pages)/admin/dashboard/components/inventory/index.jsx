@@ -7,46 +7,57 @@ const columns = [
   {
     title: "Inventory",
     dataIndex: "name",
+    key: "name",
   },
   {
     title: "Cost Center",
     dataIndex: "costCenter",
+    key: "costCenter",
   },
   {
     title: "Description",
     dataIndex: "description",
+    key: "description",
   },
   {
     title: "Serial No.",
     dataIndex: "serialNo",
+    key: "serialNo",
   },
   {
     title: "OEM Serial No.",
     dataIndex: "oemSerialNo",
+    key: "oemSerialNo",
   },
   {
     title: "Alt ID No.",
     dataIndex: "altIdNo",
+    key: "altIdNo",
   },
   {
     title: "Criticality",
     dataIndex: "criticality",
+    key: "criticality",
   },
   {
     title: "Category",
     dataIndex: "category",
+    key: "category",
   },
   {
     title: "Status",
     dataIndex: "status",
+    key: "status",
   },
   {
     title: "Location",
     dataIndex: "location",
+    key: "location",
   },
   {
     title: "Company",
     dataIndex: "company",
+    key: "company",
   },
 ];
 

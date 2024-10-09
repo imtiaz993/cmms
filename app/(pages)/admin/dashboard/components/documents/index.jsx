@@ -6,34 +6,42 @@ const columns = [
   {
     title: "Document Name",
     dataIndex: "name",
+    key: "name",
   },
   {
     title: "Category",
     dataIndex: "category",
+    key: "category",
   },
   {
     title: "Parent",
     dataIndex: "parent",
+    key: "parent",
   },
   {
     title: "Document Type",
     dataIndex: "docType",
+    key: "docType",
   },
   {
     title: "Uploaded By",
     dataIndex: "uploadedBy",
+    key: "uploadedBy",
   },
   {
     title: "Uploaded Date",
     dataIndex: "uploadedDate",
+    key: "uploadedDate",
   },
   {
     title: "Comments",
     dataIndex: "comments",
+    key: "comments",
   },
   {
     title: "",
     dataIndex: "download",
+    key: "download",
     render: () => (
       <DownloadOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
     ),
