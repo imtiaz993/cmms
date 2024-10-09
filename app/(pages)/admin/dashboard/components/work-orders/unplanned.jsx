@@ -10,46 +10,57 @@ const columns = [
   {
     title: "Work Order #",
     dataIndex: "workOrder",
+    key: "workOrder",
   },
   {
     title: "Work Required",
     dataIndex: "workRequired",
+    key: "workRequired",
   },
   {
     title: "Priority",
     dataIndex: "priority",
+    key: "priority",
   },
   {
     title: "Created Date",
     dataIndex: "created",
+    key: "created",
   },
   {
     title: "Due Date",
     dataIndex: "due",
+    key: "due",
   },
   {
     title: "Status",
     dataIndex: "status",
+    key: "status",
   },
   {
     title: "Cost Center",
     dataIndex: "costCenter",
+    key: "costCenter",
   },
   {
     title: "Cost",
     dataIndex: "cost",
+    key: "cost",
   },
   {
     title: "Asset #",
     dataIndex: "asset",
+    key: "asset",
   },
   {
     title: "Asset Description",
     dataIndex: "assetDescription",
+    key: "assetDescription",
   },
   {
     title: "",
     dataIndex: "print",
+    key: "print",
     render: () => (
       <PrinterOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
     ),

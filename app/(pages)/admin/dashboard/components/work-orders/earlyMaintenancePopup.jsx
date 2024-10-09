@@ -14,25 +14,32 @@ const columns = [
   {
     title: "Asset",
     dataIndex: "asset",
+    key: "asset",
   },
   {
     title: "Event Type",
     dataIndex: "eventType",
+    key: "eventType",
   },
   {
     title: "Frequency",
     dataIndex: "frequency",
+    key: "frequency",
   },
   {
     title: "Next Scheduled Date",
     dataIndex: "nextScheduledDate",
+    key: "nextScheduledDate",
   },
   {
     title: "",
     dataIndex: "Action",
+    key: "Action",
     render: (_, record) => (
       <Space size="middle">
-        <a className="text-secondary hover:text-opacity-50 hover:text-secondary">Open Today</a>
+        <a className="text-secondary hover:text-opacity-50 hover:text-secondary">
+          Open Today
+        </a>
       </Space>
     ),
   },

@@ -15,18 +15,22 @@ const columns = [
   {
     title: "Asset",
     dataIndex: "asset",
+    key: "asset",
   },
   {
     title: "Description",
     dataIndex: "description",
+    key: "description",
   },
   {
     title: "Required Work",
     dataIndex: "requiredWork",
+    key: "requiredWork",
   },
   {
     title: "Scheduled Date",
     dataIndex: "scheduledDate",
+    key: "scheduledDate",
   },
 ];
 

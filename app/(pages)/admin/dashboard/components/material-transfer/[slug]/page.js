@@ -31,30 +31,37 @@ const columns = [
   {
     title: "Asset",
     dataIndex: "asset",
+    key: "asset",
   },
   {
     title: "Description",
     dataIndex: "description",
+    key: "description",
   },
   {
     title: "Make",
     dataIndex: "make",
+    key: "make",
   },
   {
     title: "Model",
     dataIndex: "modal",
+    key: "modal",
   },
   {
     title: "Serial Number",
     dataIndex: "serialNumber",
+    key: "serialNumber",
   },
   {
     title: "Condition",
     dataIndex: "condition",
+    key: "condition",
   },
   {
     title: "Trans. Reason",
     dataIndex: "transReason",
+    key: "transReason",
   },
 ];
 

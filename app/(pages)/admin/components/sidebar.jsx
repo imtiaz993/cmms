@@ -7,16 +7,35 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const activeLocation = searchParams.get("location");
+  const activeLocation = searchParams.get("location") || "noram-drilling";
   const activeTab = searchParams.get("tab");
+  const [selectedKeys, setSelectedKeys] = useState([activeLocation]);
 
-  const onSelect = (selectedKeys) => {
-    setOpenSidebar(false);
-    router.push(
-      `/admin/dashboard?tab=${activeTab || "dashboard"}&location=${
-        selectedKeys[0]
-      }`
-    );
+  const findPath = (tree, key, path = []) => {
+    for (const node of tree) {
+      const currentPath = [...path, node.key];
+      if (node.key === key) {
+        return currentPath;
+      }
+      if (node.children) {
+        const result = findPath(node.children, key, currentPath);
+        if (result) {
+          return result;
+        }
+      }
+    }
+    return null;
+  };
+  const onSelect = (selectedKeys, info) => {
+    if (info.selectedNodes.length === 1) {
+      setSelectedKeys(selectedKeys);
+      setOpenSidebar(false);
+      router.push(
+        `/admin/dashboard?tab=${activeTab || "dashboard"}&location=${
+          selectedKeys[0]
+        }`
+      );
+    }
   };
 
   const RigTitle = (title, key) => (
@@ -183,9 +202,10 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
       ],
     },
   ];
-
   const [filteredTreeData, setFilteredTreeData] = useState(treeData);
-  const [expandedKeys, setExpandedKeys] = useState(["noram-drilling"]);
+  const [expandedKeys, setExpandedKeys] = useState(
+    findPath(treeData, activeLocation)
+  );
 
   const extractText = (element) => {
     // If it's a string, return as is
@@ -256,6 +276,8 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
     setExpandedKeys(expandedKeys); // Set expanded nodes
   };
 
+  console.log(expandedKeys);
+
   return (
     <div className="rounded-tr-xl bg-primary overflow-hidden">
       <div className=" max-h-[calc(100dvh-16px-60px)] min-h-[calc(100dvh-16px-60px)] overflow-auto hidden lg:block lg:w-[300px] p-5 select-none">
@@ -268,7 +290,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
         <div>
           <Tree
             expandedKeys={expandedKeys}
-            defaultSelectedKeys={[activeLocation || "noram-drilling"]}
+            selectedKeys={selectedKeys}
             onSelect={onSelect}
             treeData={filteredTreeData}
             rootStyle={{ background: "transparent" }}
@@ -298,7 +320,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
             />
             <Tree
               expandedKeys={expandedKeys}
-              defaultSelectedKeys={[activeLocation || "noram-drilling"]}
+              selectedKeys={selectedKeys}
               onSelect={onSelect}
               treeData={filteredTreeData}
               rootStyle={{ background: "transparent" }}
