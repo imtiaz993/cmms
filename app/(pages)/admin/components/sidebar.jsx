@@ -9,14 +9,20 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location");
   const activeTab = searchParams.get("tab");
+  const [selectedKeys, setSelectedKeys] = useState([
+    activeLocation || "noram-drilling",
+  ]);
 
-  const onSelect = (selectedKeys) => {
-    setOpenSidebar(false);
-    router.push(
-      `/admin/dashboard?tab=${activeTab || "dashboard"}&location=${
-        selectedKeys[0]
-      }`
-    );
+  const onSelect = (selectedKeys, info) => {
+    if (info.selectedNodes.length === 1) {
+      setSelectedKeys(selectedKeys);
+      setOpenSidebar(false);
+      router.push(
+        `/admin/dashboard?tab=${activeTab || "dashboard"}&location=${
+          selectedKeys[0]
+        }`
+      );
+    }
   };
 
   const RigTitle = (title, key) => (
@@ -268,7 +274,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
         <div>
           <Tree
             expandedKeys={expandedKeys}
-            defaultSelectedKeys={[activeLocation || "noram-drilling"]}
+            selectedKeys={selectedKeys}
             onSelect={onSelect}
             treeData={filteredTreeData}
             rootStyle={{ background: "transparent" }}
@@ -298,7 +304,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
             />
             <Tree
               expandedKeys={expandedKeys}
-              defaultSelectedKeys={[activeLocation || "noram-drilling"]}
+              selectedKeys={selectedKeys}
               onSelect={onSelect}
               treeData={filteredTreeData}
               rootStyle={{ background: "transparent" }}
