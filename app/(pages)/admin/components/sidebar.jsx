@@ -7,12 +7,25 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const activeLocation = searchParams.get("location");
+  const activeLocation = searchParams.get("location") || "noram-drilling";
   const activeTab = searchParams.get("tab");
-  const [selectedKeys, setSelectedKeys] = useState([
-    activeLocation || "noram-drilling",
-  ]);
+  const [selectedKeys, setSelectedKeys] = useState([activeLocation]);
 
+  const findPath = (tree, key, path = []) => {
+    for (const node of tree) {
+      const currentPath = [...path, node.key];
+      if (node.key === key) {
+        return currentPath;
+      }
+      if (node.children) {
+        const result = findPath(node.children, key, currentPath);
+        if (result) {
+          return result;
+        }
+      }
+    }
+    return null;
+  };
   const onSelect = (selectedKeys, info) => {
     if (info.selectedNodes.length === 1) {
       setSelectedKeys(selectedKeys);
@@ -189,9 +202,10 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
       ],
     },
   ];
-
   const [filteredTreeData, setFilteredTreeData] = useState(treeData);
-  const [expandedKeys, setExpandedKeys] = useState(["noram-drilling"]);
+  const [expandedKeys, setExpandedKeys] = useState(
+    findPath(treeData, activeLocation)
+  );
 
   const extractText = (element) => {
     // If it's a string, return as is
@@ -261,6 +275,8 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 
     setExpandedKeys(expandedKeys); // Set expanded nodes
   };
+
+  console.log(expandedKeys);
 
   return (
     <div className="rounded-tr-xl bg-primary overflow-hidden">
