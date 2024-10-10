@@ -3,6 +3,8 @@ import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import {
   ArrowLeftOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
   ExclamationCircleOutlined,
   FolderFilled,
   MailOutlined,
@@ -13,7 +15,10 @@ import {
 import {
   Badge,
   Card,
+  Checkbox,
   Collapse,
+  Dropdown,
+  Menu,
   message,
   Select,
   Tooltip,
@@ -23,12 +28,40 @@ import TextArea from "antd/es/input/TextArea";
 import { Field, Form, Formik } from "formik";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import AddManHoursPopup from "./components/addManHoursPopup";
+import AddCostPopup from "./components/addCostPopup";
+import AddDelayReasonPopup from "./components/addDelayReasonPopup";
+import AddPartPopup from "../../inventory/components/addPartPopup";
+import UploadLinkDocPopup from "../../material-transfer/[slug]/uploadLinkDocPopup";
+import UploadDocPopup from "../../material-transfer/[slug]/uploadDocPopup";
 
 const WorkOrdersDetail = () => {
   const router = useRouter();
-  const { Text } = Typography;
+  const [popup, setPopup] = useState();
+  const [batchEdit, setBatchEdit] = useState(false);
+  const [createUnplannedWO, setCreateUnplannedWO] = useState(false);
+
   return (
     <div className="p-7 overflow-auto h-[calc(100dvh-77px)]">
+      <AddManHoursPopup
+        visible={popup === "addManHours"}
+        setVisible={setPopup}
+      />
+      <AddCostPopup visible={popup === "addCost"} setVisible={setPopup} />
+      <AddDelayReasonPopup
+        visible={popup === "addDelayReason"}
+        setVisible={setPopup}
+      />
+      <AddPartPopup visible={popup === "addPart"} setVisible={setPopup} />
+      <UploadLinkDocPopup
+        visible={popup === "uploadLinkDocument"}
+        setVisible={setPopup}
+      />
+      <UploadDocPopup
+        visible={popup === "uploadDocument"}
+        setVisible={setPopup}
+      />
       <div className="flex justify-between gap-3 mb-5">
         <Button
           prefix={<ArrowLeftOutlined />}
@@ -42,6 +75,7 @@ const WorkOrdersDetail = () => {
             prefix={<MailOutlined />}
             fullWidth={false}
             onClick={() => message.info("Email will be available soon.")}
+            outlined
           />
 
           <Button
@@ -50,6 +84,21 @@ const WorkOrdersDetail = () => {
             fullWidth={false}
             className="ml-3"
             onClick={() => message.info("Print will be available soon.")}
+            outlined
+          />
+
+          <Button
+            text="Cancel Work Order"
+            prefix={<CloseCircleOutlined />}
+            fullWidth={false}
+            className="ml-3"
+            outlined
+          />
+          <Button
+            text="Complete"
+            prefix={<CheckCircleOutlined />}
+            fullWidth={false}
+            className="ml-3"
           />
         </div>
       </div>
@@ -268,23 +317,82 @@ const WorkOrdersDetail = () => {
                         text="Batch Edit"
                         fullWidth={false}
                         outlined
+                        onClick={() => {
+                          setBatchEdit(!batchEdit);
+                          setCreateUnplannedWO(false);
+                        }}
                         style={{ padding: "4px 10px" }}
                       />
                       <Button
                         text={"Create Unplanned WO"}
                         // onClick={showAddWOModal}
                         outlined
+                        onClick={() => {
+                          setCreateUnplannedWO(!createUnplannedWO);
+                          setBatchEdit(false);
+                        }}
                         style={{ padding: "4px 10px" }}
                         prefix={<PlusOutlined />}
                       />
                     </div>
                   }
                 >
+                  {(batchEdit || createUnplannedWO) && (
+                    <div className="flex justify-between items-center mb-4">
+                      <div>0 selected</div>
+                      <div className="flex gap-3">
+                        {batchEdit && (
+                          <Select
+                            placeholder="Set Status To"
+                            style={{ height: "36px", width: "100%" }}
+                            options={[
+                              { label: "Completed", value: "completed" },
+                              { label: "N/A", value: "na" },
+                              { label: "Open", value: "open" },
+                              { label: "Unable", value: "unable" },
+                            ]}
+                          />
+                        )}
+                        <Button
+                          text={
+                            batchEdit
+                              ? "Apply"
+                              : createUnplannedWO && "Create Unplanned WO"
+                          }
+                          fullWidth={false}
+                          style={{ padding: "4px 10px" }}
+                          onClick={() => {
+                            if (batchEdit) {
+                              message.success("Edited successfully");
+                            } else {
+                              message.success(
+                                "Created Unplanned WO successfully"
+                              );
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
                   <div className="flex">
-                    <p className="w-3/4">Procedure Lines</p>
+                    <p className="w-3/4">
+                      {(batchEdit || createUnplannedWO) && <Checkbox />}{" "}
+                      Procedure Lines
+                    </p>
                     <p className="w-1/4">Feedback & Status</p>
                   </div>
-                  <Card loading={false} style={{ marginTop: 12 }}>
+                  <Card
+                    loading={false}
+                    style={
+                      batchEdit || createUnplannedWO
+                        ? { marginTop: 12, paddingTop: 12 }
+                        : { marginTop: 12 }
+                    }
+                    className="relative"
+                  >
+                    {(batchEdit || createUnplannedWO) && (
+                      <Checkbox className="absolute top-1" />
+                    )}
                     <div className="flex gap-3">
                       <div className="w-3/4 flex">
                         <div>
@@ -320,7 +428,17 @@ const WorkOrdersDetail = () => {
                     </div>
                   </Card>
 
-                  <Card loading={false} style={{ marginTop: 12 }}>
+                  <Card
+                    loading={false}
+                    style={
+                      batchEdit || createUnplannedWO
+                        ? { marginTop: 12, paddingTop: 12 }
+                        : { marginTop: 12 }
+                    }
+                  >
+                    {(batchEdit || createUnplannedWO) && (
+                      <Checkbox className="absolute top-1" />
+                    )}
                     <div className="flex gap-3">
                       <div className="w-3/4 flex">
                         <div>
@@ -401,11 +519,12 @@ const WorkOrdersDetail = () => {
                     <>
                       <Button text="View Details" fullWidth={false} outlined />
                       <Button
-                        text="Add Readings"
+                        text="Add Man Hours"
                         fullWidth={false}
                         outlined
                         className="ml-2"
                         prefix={<PlusOutlined />}
+                        onClick={() => setPopup("addManHours")}
                       />
                     </>
                   }
@@ -431,6 +550,7 @@ const WorkOrdersDetail = () => {
                         fullWidth={false}
                         outlined
                         className="ml-2"
+                        onClick={() => setPopup("addCost")}
                         prefix={<PlusOutlined />}
                       />
                     </>
@@ -446,17 +566,18 @@ const WorkOrdersDetail = () => {
                   loading={false}
                   title={
                     <p>
-                      Daily reasons <Badge count={1} />
+                      Delay reasons <Badge count={1} />
                     </p>
                   }
                   extra={
                     <>
                       <Button text="View Details" fullWidth={false} outlined />
                       <Button
-                        text="Add Daily Reasons"
+                        text="Add Delay Reasons"
                         fullWidth={false}
                         outlined
                         className="ml-2"
+                        onClick={() => setPopup("addDelayReason")}
                         prefix={<PlusOutlined />}
                       />
                     </>
@@ -483,6 +604,7 @@ const WorkOrdersDetail = () => {
                         fullWidth={false}
                         outlined
                         className="ml-2"
+                        onClick={() => setPopup("addPart")}
                         prefix={<PlusOutlined />}
                       />
                     </>
@@ -504,13 +626,46 @@ const WorkOrdersDetail = () => {
                   extra={
                     <>
                       <Button text="View Details" fullWidth={false} outlined />
-                      <Button
-                        text="Upload"
-                        fullWidth={false}
-                        outlined
-                        className="ml-2"
-                        prefix={<PlusOutlined />}
-                      />
+                      <Dropdown
+                        dropdownRender={() => (
+                          <Menu style={{ background: "#4C4C4C" }}>
+                            <Menu.ItemGroup title={null}>
+                              <Menu.Item
+                                key={0}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                                onClick={() => setPopup("uploadDocument")}
+                              >
+                                Upload Document
+                              </Menu.Item>
+                              <Menu.Item
+                                key={1}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                                onClick={() => setPopup("uploadLinkDocument")}
+                              >
+                                Link Document
+                              </Menu.Item>
+                            </Menu.ItemGroup>
+                          </Menu>
+                        )}
+                        trigger={["click"]}
+                        arrow
+                        // placement="bottomCenter"
+                      >
+                        <Button
+                          outlined
+                          size="small"
+                          text="Upload"
+                          fullWidth={false}
+                          className="ml-2"
+                          prefix={<PlusOutlined />}
+                        />
+                      </Dropdown>
                     </>
                   }
                   style={{ marginTop: "20px" }}
@@ -530,13 +685,47 @@ const WorkOrdersDetail = () => {
                   extra={
                     <>
                       <Button text="View Details" fullWidth={false} outlined />
-                      <Button
-                        text="Upload"
-                        fullWidth={false}
-                        outlined
-                        className="ml-2"
-                        prefix={<PlusOutlined />}
-                      />
+
+                      <Dropdown
+                        dropdownRender={() => (
+                          <Menu style={{ background: "#4C4C4C" }}>
+                            <Menu.ItemGroup title={null}>
+                              <Menu.Item
+                                key={0}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                                onClick={() => setPopup("uploadDocument")}
+                              >
+                                Upload Document
+                              </Menu.Item>
+                              <Menu.Item
+                                key={1}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                                onClick={() => setPopup("uploadLinkDocument")}
+                              >
+                                Link Document
+                              </Menu.Item>
+                            </Menu.ItemGroup>
+                          </Menu>
+                        )}
+                        trigger={["click"]}
+                        arrow
+                        // placement="bottomCenter"
+                      >
+                        <Button
+                          outlined
+                          size="small"
+                          text="Upload"
+                          fullWidth={false}
+                          className="ml-2"
+                          prefix={<PlusOutlined />}
+                        />
+                      </Dropdown>
                     </>
                   }
                   style={{ marginTop: "20px" }}
