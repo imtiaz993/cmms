@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateAssetPopup from "./components/createAssetPopup";
+import { useRouter } from "next/navigation";
 
 const columns = [
   {
@@ -148,6 +149,7 @@ const Assets = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const router = useRouter();
 
   const showAddAssetModal = () => {
     setAddAssetVisible(true);
@@ -177,6 +179,12 @@ const Assets = () => {
           </p>
         </div>
         <Table
+          rowClassName="cursor-pointer"
+          onRow={(record) => ({
+            onClick: () => {
+              router.push(`/admin/dashboard/components/assets/${record?.name}`);
+            },
+          })}
           loading={false}
           size={"large"}
           scroll={{ x: 1100 }}
