@@ -151,7 +151,7 @@ const MaintenanceTab = () => {
             </p>
             <p>
               <span className="opacity-50 mr-2">
-                Original Manufacturer's Date
+                Original Manufacturer&apos;s Date
               </span>
               <span>-</span>
             </p>
