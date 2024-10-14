@@ -558,11 +558,17 @@ const TotalOpenWorkOrdersCard = () => {
 
 const Dashboard = () => {
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="p-5">
       <WorkOrderCard />
-      <CostCard />
-      <MaintenanceCard />
-      <TotalOpenWorkOrdersCard />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div>
+          <TotalOpenWorkOrdersCard />
+        </div>
+        <div>
+          <CostCard />
+          <MaintenanceCard />
+        </div>
+      </div>
     </div>
   );
 };
