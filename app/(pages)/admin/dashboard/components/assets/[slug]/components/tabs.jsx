@@ -8,6 +8,7 @@ import MaterialTransfer from "./material-transfer";
 import Dashboard from "./dashboard";
 import MaintainanceSchedule from "./maintainance-schedule";
 import HistoryAssetDetail from "./history";
+import Readings from "./readings/page";
 
 const Tabs = () => {
   const router = useRouter();
@@ -53,7 +54,7 @@ const Tabs = () => {
     {
       key: "readings",
       label: "Readings",
-      children: "Content of Readings",
+      children: <Readings />,
     },
     {
       key: "material-transfer",
