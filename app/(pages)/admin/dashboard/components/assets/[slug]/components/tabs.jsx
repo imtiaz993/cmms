@@ -6,6 +6,8 @@ import WorkOrders from "./work-orders";
 import Documents from "./documents";
 import MaterialTransfer from "./material-transfer";
 import Dashboard from "./dashboard";
+import MaintainanceSchedule from "./maintainance-schedule";
+import HistoryAssetDetail from "./history";
 
 const Tabs = () => {
   const router = useRouter();
@@ -31,12 +33,12 @@ const Tabs = () => {
     {
       key: "maintenance-schedule",
       label: "Maintenance Schedule",
-      children: "<Schedule />",
+      children: <MaintainanceSchedule />,
     },
     {
       key: "history",
       label: "History",
-      children: "Content of History",
+      children: <HistoryAssetDetail />,
     },
     {
       key: "cost",

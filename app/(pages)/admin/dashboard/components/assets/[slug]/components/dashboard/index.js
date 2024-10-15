@@ -1,7 +1,5 @@
 import {
   Card,
-  Row,
-  Col,
   Tooltip,
   Collapse,
   Badge,
