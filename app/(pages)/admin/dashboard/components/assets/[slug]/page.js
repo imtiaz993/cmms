@@ -9,8 +9,10 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import { message } from "antd";
+import { useRouter } from "next/navigation";
 
 const AssetDetail = () => {
+  const router = useRouter();
   return (
     <div className="overflow-auto h-[calc(100dvh-77px)]">
       <div className="mx-3 lg:mx-8 mt-3 flex justify-between gap-3 mb-5">
