@@ -15,40 +15,40 @@ const AssetDetail = () => {
   const router = useRouter();
   return (
     <div className="overflow-auto h-[calc(100dvh-77px)]">
-      <div className="mx-3 lg:mx-8 mt-3 flex justify-between gap-3 mb-5">
-        <Button
-          prefix={<ArrowLeftOutlined />}
-          onClick={() =>
-            router.push("/admin/dashboard?tab=assets&location=noram-drilling")
-          }
-          fullWidth={false}
-          outlined
-        />
-        <div className="">
+      <div className="relative text-right mx-3 lg:mx-8 mt-3 grid md:block grid-cols-2 gap-3 mb-5">
+        <div className="static md:absolute left-0">
           <Button
-            text="Delete"
-            prefix={<DeleteOutlined />}
+            prefix={<ArrowLeftOutlined />}
+            onClick={() =>
+              router.push("/admin/dashboard?tab=assets&location=noram-drilling")
+            }
             fullWidth={false}
-            onClick={() => message.info("Asset Delete will be available soon.")}
             outlined
-          />
-
-          <Button
-            text="Create UWO"
-            prefix={<PlusOutlined />}
-            fullWidth={false}
-            className="ml-3"
-            onClick={() => message.info("Create UWO  will be available soon.")}
-            outlined
-          />
-
-          <Button
-            text="Edit Asset"
-            prefix={<EditOutlined />}
-            fullWidth={false}
-            className="ml-3"
+            className="w-full md:w-auto"
           />
         </div>
+        <Button
+          text="Delete"
+          prefix={<DeleteOutlined />}
+          fullWidth={false}
+          onClick={() => message.info("Asset Delete will be available soon.")}
+          outlined
+        />
+        <Button
+          text="Create UWO"
+          prefix={<PlusOutlined />}
+          fullWidth={false}
+          className="md:ml-3"
+          onClick={() => message.info("Create UWO  will be available soon.")}
+          outlined
+        />
+
+        <Button
+          text="Edit Asset"
+          prefix={<EditOutlined />}
+          fullWidth={false}
+          className="md:ml-3"
+        />
       </div>
       <Tabs />
     </div>

@@ -7,14 +7,14 @@ import AddCostPopup from "./components/addCostPopup";
 // Main Card Component
 const MainCard = () => (
   <Card>
-    <div className="grid grid-cols-2 mb-6">
+    <div className="grid sm:grid-cols-2 gap-4 mb-6">
       <div>
-        <h2 className="text-lg font-semibold">Maintenance Costs la...</h2>
+        <h2 className="md:text-lg font-semibold">Maintenance Costs la...</h2>
         <p className="text-2xl font-bold">0 USD</p>
         <p>Compare to 0 previous 12 months</p>
       </div>
       <div>
-        <h2 className="text-lg font-semibold">Total Cost of Owners...</h2>
+        <h2 className="md:text-lg font-semibold">Total Cost of Owners...</h2>
         <p className="text-2xl font-bold">0 USD</p>
         <p>Since September 9, 1999</p>
       </div>
@@ -29,16 +29,21 @@ const DirectCostsCard = () => {
     <>
       <AddCostPopup visible={costPopup} setVisible={setCostPopup} />
       <Card
-        title="Direct Costs"
+        title={<h2 className="text-wrap">Direct Costs</h2>}
         size="medium"
         extra={
           <div>
-            <Button fullWidth={false} outlined text="View Details" />
+            <Button
+              fullWidth={false}
+              outlined
+              text="View Details"
+              className=" !text-xs sm:!text-sm"
+            />
             <Button
               fullWidth={false}
               text="Add Cost"
               prefix={<PlusOutlined />}
-              className="ml-3"
+              className="ml-2 md:ml-3 !text-xs sm:!text-sm"
               onClick={() => setCostPopup(true)}
             />
           </div>
@@ -101,14 +106,19 @@ const LaborCostsCard = () => (
 
 // Main layout
 const CardLayout = () => (
-  <div className="flex flex-col md:flex-row gap-4 p-7">
-    <div className="w-1/2 flex flex-col gap-4">
+  <div className="flex flex-col md:flex-row md:gap-4 p-7">
+    <div className="w-full flex flex-col gap-4">
       <MainCard />
+      <div className="block md:hidden">
+        <DirectCostsCard />
+      </div>
       <MaintenanceCostsCard />
       <ContractCostsCard />
     </div>
-    <div className="w-1/2 flex flex-col gap-4">
-      <DirectCostsCard />
+    <div className="w-full flex flex-col gap-4 mt-4 md:mt-0">
+      <div className="hidden md:block">
+        <DirectCostsCard />
+      </div>
       <InventoryCostsCard />
       <LaborCostsCard />
     </div>

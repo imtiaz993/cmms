@@ -39,7 +39,7 @@ const ActionBar = ({
         onChange={(e) => setSearchText(e.target.value)}
         className="sm:!w-[300px] searchBar"
       />
-      <div className="grid  md:flex sm:grid-cols-3 items-center gap-2">
+      <div className="grid md:flex sm:grid-cols-3 items-center gap-2">
         <div className="sm:min-w-28 col-span-2 sm:col-span-1">
           <Select
             name="status"
@@ -129,6 +129,7 @@ const ActionBar = ({
           outlined
           style={{ padding: "4px 35px" }}
           prefix={<PlusOutlined />}
+          className="col-span-2 sm:col-span-1"
         />
       </div>
     </div>
