@@ -34,7 +34,7 @@ const ActionBar = () => {
           className="sm:!w-[300px] searchBar"
         />
         <div className="grid grid-cols-2 sm:flex items-center gap-2">
-          <div className="sm:min-w-44 overflow-hidden">
+          <div className="sm:min-w-44 overflow-hidden col-span-2">
             <Select
               mode="multiple"
               name="category"

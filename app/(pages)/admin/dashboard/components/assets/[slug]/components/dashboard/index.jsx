@@ -22,10 +22,11 @@ import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
 import { Children } from "react";
 
+// Work Order Card Tabs
 const AssetInfoTab = () => {
   return (
     <div className="mt-5">
-      <div>
+      <div className="flex sm:block">
         <Select
           placeholder="Select a New Asset Class"
           options={[
@@ -35,18 +36,19 @@ const AssetInfoTab = () => {
             },
           ]}
           style={{ height: "36px" }}
+          className="w-1/2 sm:w-auto"
         />
         <Button
           text="Change Asset Class"
           fullWidth={false}
           outlined
-          className="ml-3"
+          className="ml-3 !text-xs md:!text-sm w-1/2 sm:w-auto"
         />
       </div>
       {/* Main Container */}
-      <div className="flex justify-between p-4">
+      <div className="flex flex-col sm:flex-row gap-3 justify-between p-4">
         {/* Left Column */}
-        <div className="w-1/2 mr-5">
+        <div className="w-full mr-5">
           <div>
             <p className="font-bold text-lg">Summary</p>
 
@@ -66,7 +68,7 @@ const AssetInfoTab = () => {
         </div>
 
         {/* Right Column */}
-        <div className="w-1/2">
+        <div className="w-full">
           {/* Details Section */}
           <div>
             <p className="font-bold text-lg">Details</p>
@@ -126,9 +128,9 @@ const MaintenanceTab = () => {
   return (
     <div>
       {/* Main Container */}
-      <div className="flex justify-between p-4">
+      <div className="flex flex-col sm:flex-row gap-3 justify-between p-4">
         {/* Left Column */}
-        <div className="w-1/2 mr-5">
+        <div className="w-full mr-5">
           <div>
             <p className="font-bold text-lg">Status Info</p>
 
@@ -140,7 +142,7 @@ const MaintenanceTab = () => {
         </div>
 
         {/* Right Column */}
-        <div className="w-1/2">
+        <div className="w-full">
           <div>
             <p className="font-bold text-lg">Information</p>
             <p>
@@ -164,9 +166,9 @@ const CustomAttributesTab = () => {
   return (
     <div>
       {/* Main Container */}
-      <div className="flex justify-between p-4">
+      <div className="flex flex-col sm:flex-row gap-3 justify-between p-4">
         {/* Left Column */}
-        <div className="w-1/2 mr-5">
+        <div className="w-full mr-5">
           <div>
             {/* Equipment Info Section */}
             <p className="font-bold text-lg">Equipment Info</p>
@@ -203,7 +205,7 @@ const CustomAttributesTab = () => {
         </div>
 
         {/* Right Column */}
-        <div className="w-1/2">
+        <div className="w-full">
           {/* General Information Section */}
           <div>
             <p className="font-bold text-lg">General Information</p>
@@ -267,7 +269,7 @@ const WorkOrderCard = () => {
       loading={false}
       className="!bg-primary"
       title={
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 text-sm md:text-base">
           <div className="relative flex">
             <span className="px-2 py-1 bg-secondary rounded-full">
               <FolderFilled />{" "}
@@ -279,14 +281,10 @@ const WorkOrderCard = () => {
             </Tooltip>
           </div>
           04233889RY <p className="text-xs font-normal">(Rig Hpu) </p>
-          {/* <Tooltip title="Created By System on September 9, 1999">
-            {" "}
-            <ExclamationCircleOutlined />
-          </Tooltip> */}
         </div>
       }
       extra={
-        <p>
+        <p className="text-xs md:text-base">
           <span className="opacity-50 mr-2">Criticality: </span>
           High <WarningFilled />
         </p>
@@ -442,7 +440,7 @@ const MaintenanceCard = () => {
 
   return (
     <Card
-      title="Maintenance Schedule"
+      title={<h2 className="text-wrap">Maintenance Schedule</h2>}
       extra={
         <Button
           text="View Maintenance Schedule"
@@ -452,6 +450,7 @@ const MaintenanceCard = () => {
               "/admin/dashboard/components/assets/John%20Brown?tab=maintenance-schedule"
             )
           }
+          className="!text-xs md:!text-sm"
           outlined
         />
       }
@@ -500,12 +499,27 @@ const TotalOpenWorkOrdersCard = () => {
               <div className="text-xl">10</div>
               <div className="">Open</div>
             </div>
-            <div className="grid grid-cols-3 gap-4">
-              <Statistic value={0} title="Under 24 hrs" />
+            <div className="flex gap-2 md:gap-4">
+              <Statistic
+                value={0}
+                title={
+                  <p className="text-xs md:text-sm opacity-70">Under 24 hrs</p>
+                }
+              />
 
-              <Statistic value={0} title="24-48 hrs" />
+              <Statistic
+                value={0}
+                title={
+                  <p className="text-xs md:text-sm opacity-70"> 24-48 hrs </p>
+                }
+              />
 
-              <Statistic value={0} title="Over 48 hrs" />
+              <Statistic
+                value={0}
+                title={
+                  <p className="text-xs md:text-sm opacity-70">Over 48 hrs</p>
+                }
+              />
             </div>
           </div>
         </div>
@@ -520,12 +534,30 @@ const TotalOpenWorkOrdersCard = () => {
               <div className="text-xl">10</div>
               <div className="">Open</div>
             </div>
-            <div className="grid grid-cols-3 gap-4">
-              <Statistic value={1} title="Past Due" />
+            <div className="flex gap-2 md:gap-4">
+              <Statistic
+                value={1}
+                title={
+                  <p className="text-xs md:text-sm opacity-70">Past Due</p>
+                }
+              />
 
-              <Statistic value={0} title="Completed" />
+              <Statistic
+                value={0}
+                title={
+                  <p className="text-xs md:text-sm opacity-70"> Completed </p>
+                }
+              />
 
-              <Statistic value={0} suffix="%" title="Completion Rate" />
+              <Statistic
+                value={0}
+                suffix="%"
+                title={
+                  <p className="text-xs md:text-sm opacity-70">
+                    Completion Rate
+                  </p>
+                }
+              />
             </div>
           </div>
         </div>
@@ -540,7 +572,7 @@ const TotalOpenWorkOrdersCard = () => {
               <div className="text-xl">10</div>
               <div className="">Open</div>
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="flex gap-2 md:gap-4">
               <Statistic value={0} title="Under 24 hrs" />
 
               <Statistic value={0} title="24-48 hrs" />
