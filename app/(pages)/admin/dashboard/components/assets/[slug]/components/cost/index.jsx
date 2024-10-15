@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "antd";
 import Button from "@/components/common/Button";
 import { PlusOutlined } from "@ant-design/icons";
+import AddCostPopup from "./components/addCostPopup";
 
 // Main Card Component
 const MainCard = () => (
@@ -22,26 +23,33 @@ const MainCard = () => (
 );
 
 // Direct Costs Card Component
-const DirectCostsCard = () => (
-  <Card
-    title="Direct Costs"
-    size="medium"
-    extra={
-      <div>
-        <Button fullWidth={false} outlined text="View Details" />
-        <Button
-          fullWidth={false}
-          text="Add Cost"
-          prefix={<PlusOutlined />}
-          className="ml-3"
-        />
-      </div>
-    }
-  >
-    <p className="text-xl">0.00 USD</p>
-    <p className="text-center">No direct costs found</p>
-  </Card>
-);
+const DirectCostsCard = () => {
+  const [costPopup, setCostPopup] = useState(false);
+  return (
+    <>
+      <AddCostPopup visible={costPopup} setVisible={setCostPopup} />
+      <Card
+        title="Direct Costs"
+        size="medium"
+        extra={
+          <div>
+            <Button fullWidth={false} outlined text="View Details" />
+            <Button
+              fullWidth={false}
+              text="Add Cost"
+              prefix={<PlusOutlined />}
+              className="ml-3"
+              onClick={() => setCostPopup(true)}
+            />
+          </div>
+        }
+      >
+        <p className="text-xl">0.00 USD</p>
+        <p className="text-center">No direct costs found</p>
+      </Card>
+    </>
+  );
+};
 
 // Maintenance Costs Card Component
 const MaintenanceCostsCard = () => (
