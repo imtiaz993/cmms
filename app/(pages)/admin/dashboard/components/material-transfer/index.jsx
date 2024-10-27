@@ -7,9 +7,14 @@ import { useRouter } from "next/navigation";
 
 const columns = [
   {
-    title: "Material Transfer #",
-    dataIndex: "materialTransfer",
-    key: "materialTransfer",
+    title: "Asset Description",
+    dataIndex: "assetDesc",
+    key: "assetDesc",
+  },
+  {
+    title: "Asset Serial #",
+    dataIndex: "assetSerial",
+    key: "assetSerial",
   },
   {
     title: "Creator",
@@ -37,6 +42,11 @@ const columns = [
     key: "transporter",
   },
   {
+    title: "Material Transfer #",
+    dataIndex: "materialTransfer",
+    key: "materialTransfer",
+  },
+  {
     title: "",
     dataIndex: "download",
     key: "download",
@@ -48,6 +58,8 @@ const columns = [
 
 const data = [
   {
+    assetDesc: "AC Powered 1500 HP O...",
+    assetSerial: "21-001",
     materialTransfer: "MT16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
@@ -56,6 +68,8 @@ const data = [
     transporter: "Rig 27",
   },
   {
+    assetDesc: "AC Powered 1500 HP O...",
+    assetSerial: "21-001",
     materialTransfer: "MT16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
@@ -64,6 +78,8 @@ const data = [
     transporter: "Rig 27",
   },
   {
+    assetDesc: "AC Powered 1500 HP O...",
+    assetSerial: "21-001",
     materialTransfer: "MT16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
@@ -72,6 +88,8 @@ const data = [
     transporter: "Rig 27",
   },
   {
+    assetDesc: "AC Powered 1500 HP O...",
+    assetSerial: "21-001",
     materialTransfer: "MT16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
@@ -80,6 +98,8 @@ const data = [
     transporter: "Rig 27",
   },
   {
+    assetDesc: "AC Powered 1500 HP O...",
+    assetSerial: "21-001",
     materialTransfer: "MT16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
