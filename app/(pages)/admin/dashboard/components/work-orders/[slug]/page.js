@@ -160,18 +160,26 @@ const WorkOrdersDetail = () => {
                   style={{ marginTop: "20px" }}
                 >
                   <div className="grid md:grid-cols-3 mx-2 gap-3">
-                    <Field as={Select} name="taskTo" placeholder="Task To" />
                     <Field
                       as={Select}
                       name="companyDoingWork"
                       placeholder="Company Doing Work"
+                      options={[
+                        {
+                          value: "noRam",
+                          label: "No Ram",
+                        },
+                        {
+                          value: "thirdParty",
+                          label: "Third Party",
+                        },
+                      ]}
+                      style={{ height: "36px" }}
                     />
                     <InputField
                       name="personDoingWork"
                       placeholder="Person Doing Work"
                     />
-                    <InputField name="poNo" placeholder="PO #" />
-                    <InputField name="jsa" placeholder="JSA" />
                   </div>
                   <p className="opacity-50 mr-2 mt-3">Comments</p>
                   <p>No Comments</p>
@@ -216,75 +224,14 @@ const WorkOrdersDetail = () => {
                               <span className="opacity-50 mr-2">System </span>
                               <span>Catwalk</span>
                             </p>
-                            <p>
-                              <span className="opacity-50 mr-2">Tier 3 </span>
-                              <span>CANRIG</span>
-                            </p>
-                            <p>
-                              <span className="opacity-50 mr-2">Tier 4 </span>
-                              <span>PC3000-26-360</span>
-                            </p>
-                            <p>
-                              <span className="opacity-50 mr-2">Tier 5 </span>
-                              <span>-</span>
-                            </p>
-                            <p>
-                              <span className="opacity-50 mr-2">Tier 6 </span>
-                              <span>-</span>
-                            </p>
                           </div>
                         </div>
 
                         {/* Right Column */}
                         <div className="w-1/2">
-                          {/* Equipment Info Section */}
-                          <div>
-                            <p className="font-bold text-lg">Equipment Info</p>
-                            <p>
-                              <span className="opacity-50 mr-2">
-                                Manufacturer{" "}
-                              </span>
-                              <span>-</span>
-                            </p>
-
-                            <p>
-                              {" "}
-                              <span className="opacity-50 mr-2">Model </span>
-                              <span>-</span>
-                            </p>
-                          </div>
-
                           {/* Equipment Information Section */}
                           <p className="font-bold text-lg mt-4">
                             Equipment Information
-                          </p>
-                          <p>
-                            <span className="opacity-50 mr-2">
-                              Model Number
-                            </span>{" "}
-                            <span>-</span>
-                          </p>
-
-                          <p>
-                            <span className="opacity-50 mr-2">Make </span>{" "}
-                            <span>-</span>
-                          </p>
-
-                          <p>
-                            <span className="opacity-50 mr-2">Model #</span>{" "}
-                            <span>-</span>
-                          </p>
-
-                          <p>
-                            <span className="opacity-50 mr-2">
-                              Model Number
-                            </span>{" "}
-                            <span>-</span>
-                          </p>
-
-                          {/* Manufacture Information */}
-                          <p className="font-bold text-lg mt-4">
-                            Manufacture Information
                           </p>
                           <p>
                             <span className="opacity-50 mr-2">
@@ -294,8 +241,22 @@ const WorkOrdersDetail = () => {
                           </p>
 
                           <p>
-                            <span className="opacity-50 mr-2">Model</span>{" "}
+                            <span className="opacity-50 mr-2">Make </span>{" "}
+                            <span>-</span>
+                          </p>
+
+                          <p>
+                            <span className="opacity-50 mr-2">Part #</span>{" "}
+                            <span>-</span>
+                          </p>
+                          <p>
+                            <span className="opacity-50 mr-2">Model #</span>{" "}
                             <span>PC3000-26-360</span>
+                          </p>
+
+                          <p>
+                            <span className="opacity-50 mr-2">Serial #</span>{" "}
+                            <span>-</span>
                           </p>
                         </div>
                       </div>
