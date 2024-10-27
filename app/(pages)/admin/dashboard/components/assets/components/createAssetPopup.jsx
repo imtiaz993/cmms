@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { message, Modal, Select, Steps } from "antd";
+import { message, Modal, Select } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
+import TextArea from "antd/es/input/TextArea";
 
 const validationSchema = Yup.object().shape({
   costCenter: Yup.string(),
@@ -32,20 +33,20 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
     // }
   };
 
-  const steps = [
-    {
-      title: "Summary",
-    },
-    {
-      title: "Details",
-    },
-    {
-      title: "Maintenance",
-    },
-    {
-      title: "Maintenance Status",
-    },
-  ];
+  // const steps = [
+  //   {
+  //     title: "Summary",
+  //   },
+  //   {
+  //     title: "Details",
+  //   },
+  //   {
+  //     title: "Maintenance",
+  //   },
+  //   {
+  //     title: "Maintenance Status",
+  //   },
+  // ];
 
   return (
     <Formik
@@ -68,37 +69,15 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
             onCancel={() => setAddAssetVisible(false)}
             footer={
               <div>
-                {currentStep > 0 && (
-                  <Button
-                    className="mr-2"
-                    onClick={handlePrev}
-                    outlined
-                    size="small"
-                    text="Previous"
-                    fullWidth={false}
-                    disabled={isSubmitting}
-                  />
-                )}
-                {currentStep < steps.length - 1 && (
-                  <Button
-                    className="mr-2"
-                    onClick={handleNext}
-                    size="small"
-                    text="Next"
-                    fullWidth={false}
-                  />
-                )}
-                {currentStep === steps.length - 1 && (
-                  <Button
-                    className="mr-2"
-                    htmlType="submit"
-                    isLoading={isSubmitting}
-                    disabled={isSubmitting}
-                    size="small"
-                    text="Add Asset"
-                    fullWidth={false}
-                  />
-                )}
+                <Button
+                  className="mr-2"
+                  htmlType="submit"
+                  isLoading={isSubmitting}
+                  disabled={isSubmitting}
+                  size="small"
+                  text="Add Asset"
+                  fullWidth={false}
+                />
               </div>
             }
             width={1000}
@@ -108,125 +87,105 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
               overflowX: "hidden",
             }}
           >
-            <div className="mb-5 md:mb-10">
-              <Steps current={currentStep} items={steps} />
-            </div>
-
             <div>
-              {currentStep === 0 && (
-                <div className="grid md:grid-cols-3 gap-4">
-                  <InputField
-                    name="costCenter"
-                    placeholder="Cost Center"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="costCenter"
-                    placeholder="Parent Asset"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="costCenter"
-                    placeholder="Accounting Dept."
-                  />
-                  <InputField name="costCenter" placeholder="Subunit" />
-                  <InputField
-                    name="costCenter"
-                    placeholder="Asset Class"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="costCenter"
-                    placeholder="Alternative ID #"
-                    maxLength={128}
-                  />
-                </div>
-              )}
+              <div className="grid md:grid-cols-3 gap-4">
+                <InputField
+                  name="costCenter"
+                  placeholder="Physical Location"
+                  maxLength={128}
+                />
+                <InputField
+                  name="costCenter"
+                  placeholder="Parent Asset"
+                  maxLength={128}
+                />
+                <InputField name="costCenter" placeholder="Accounting Dept." />
+                <InputField name="costCenter" placeholder="Subunit" />
+                <InputField
+                  name="costCenter"
+                  placeholder="Asset Class"
+                  maxLength={128}
+                />
+                <InputField
+                  name="costCenter"
+                  placeholder="Alternative ID #"
+                  maxLength={128}
+                />
 
-              {currentStep === 1 && (
-                <div className="grid md:grid-cols-3 gap-4">
-                  <InputField
+                <InputField
+                  name="costCenter"
+                  placeholder="Physical Location"
+                  maxLength={128}
+                />
+                <InputField
+                  name="costCenter"
+                  placeholder="Asset #"
+                  maxLength={128}
+                />
+                <InputField
+                  name="costCenter"
+                  placeholder="RFID/Barcode"
+                  maxLength={128}
+                />
+                <InputField
+                  name="costCenter"
+                  placeholder="Installed Date"
+                  maxLength={128}
+                />
+                <InputField
+                  name="costCenter"
+                  placeholder="Serial #"
+                  maxLength={128}
+                />
+                <InputField
+                  name="costCenter"
+                  placeholder="OEM Serial #"
+                  maxLength={50}
+                />
+                <InputField
+                  name="costCenter"
+                  placeholder="Estimated Life (months)"
+                  maxLength={128}
+                />
+                <InputField
+                  name="costCenter"
+                  placeholder="Downtime Cost Per Hour"
+                  maxLength={128}
+                />
+                <Select placeholder="Unit" />
+                <div className="md:col-span-3">
+                  <Field
+                    as={TextArea}
                     name="costCenter"
-                    placeholder="Physical Location"
-                    maxLength={128}
+                    placeholder="Description"
+                    maxLength={150}
                   />
-                  <InputField
-                    name="costCenter"
-                    placeholder="Asset #"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="costCenter"
-                    placeholder="RFID/Barcode"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="costCenter"
-                    placeholder="Installed Date"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="costCenter"
-                    placeholder="Serial #"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="costCenter"
-                    placeholder="OEM Serial #"
-                    maxLength={50}
-                  />
-                  <InputField
-                    name="costCenter"
-                    placeholder="Estimated Life (months)"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="costCenter"
-                    placeholder="Downtime Cost Per Hour"
-                    maxLength={128}
-                  />
-                  <Select placeholder="Unit" />
-                  <div className="md:col-span-3">
-                    <InputField
-                      name="costCenter"
-                      placeholder="Description"
-                      maxLength={150}
-                    />
-                    <div className="text-right">0/150</div>
-                  </div>
-                  <div className="md:col-span-3">
-                    <InputField
-                      name="costCenter"
-                      placeholder="Spec Details"
-                      maxLength={500}
-                    />
-                    <div className="text-right">0/500</div>
-                  </div>
-                </div>
-              )}
+                  <div className="text-right">0/150</div>
 
-              {currentStep === 2 && (
-                <div className="grid md:grid-cols-3 gap-4">
-                  <Select placeholder="Criticality" />
-                  <InputField
-                    placeholder="Original Mfr. Date (MM/DD/YYYY)"
-                    maxLength={10}
+                  <Field
+                    as={TextArea}
                     name="costCenter"
+                    placeholder="Spec Details"
+                    maxLength={500}
                   />
-                  <Select placeholder="Condition" />
+                  <div className="text-right">0/500</div>
                 </div>
-              )}
 
-              {currentStep === 3 && (
-                <div className="grid md:grid-cols-3 gap-4">
-                  <Select placeholder="Maint. Status" />
-                  <InputField
-                    name="costCenter"
-                    placeholder="Maint. Start Date (MM/DD/YYYY)"
-                    maxLength={10}
-                  />
-                </div>
-              )}
+                <Select placeholder="Criticality" />
+                <InputField
+                  placeholder="Original Mfr. Date (MM/DD/YYYY)"
+                  maxLength={10}
+                  name="costCenter"
+                />
+                <Select placeholder="Condition" />
+
+                <Select placeholder="Maint. Status" />
+                <InputField
+                  name="costCenter"
+                  placeholder="Maint. Start Date (MM/DD/YYYY)"
+                  maxLength={10}
+                />
+              </div>
             </div>
           </Modal>
         </Form>
