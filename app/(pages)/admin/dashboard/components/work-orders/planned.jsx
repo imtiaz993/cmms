@@ -7,6 +7,16 @@ import { useRouter } from "next/navigation";
 
 const columns = [
   {
+    title: "Asset #",
+    dataIndex: "asset",
+    key: "asset",
+  },
+  {
+    title: "Asset Description",
+    dataIndex: "assetDescription",
+    key: "assetDescription",
+  },
+  {
     title: "Work Order #",
     dataIndex: "workOrder",
     key: "workOrder",
@@ -45,16 +55,6 @@ const columns = [
     title: "Cost",
     dataIndex: "cost",
     key: "cost",
-  },
-  {
-    title: "Asset #",
-    dataIndex: "asset",
-    key: "asset",
-  },
-  {
-    title: "Asset Description",
-    dataIndex: "assetDescription",
-    key: "assetDescription",
   },
   {
     title: "",
