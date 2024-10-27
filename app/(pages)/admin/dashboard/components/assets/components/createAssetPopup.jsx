@@ -100,21 +100,15 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                   maxLength={128}
                 />
                 <InputField name="costCenter" placeholder="Accounting Dept." />
-                <InputField name="costCenter" placeholder="Subunit" />
                 <InputField
                   name="costCenter"
-                  placeholder="Asset Class"
+                  placeholder="Parent Asset"
                   maxLength={128}
                 />
+                <InputField name="costCenter" placeholder="Child Asset" />
                 <InputField
                   name="costCenter"
-                  placeholder="Alternative ID #"
-                  maxLength={128}
-                />
-
-                <InputField
-                  name="costCenter"
-                  placeholder="Physical Location"
+                  placeholder="Make, Model, Part #"
                   maxLength={128}
                 />
                 <InputField
@@ -124,35 +118,14 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                 />
                 <InputField
                   name="costCenter"
-                  placeholder="RFID/Barcode"
-                  maxLength={128}
-                />
-                <InputField
-                  name="costCenter"
-                  placeholder="Installed Date"
-                  maxLength={128}
-                />
-                <InputField
-                  name="costCenter"
                   placeholder="Serial #"
                   maxLength={128}
                 />
                 <InputField
                   name="costCenter"
-                  placeholder="OEM Serial #"
-                  maxLength={50}
-                />
-                <InputField
-                  name="costCenter"
-                  placeholder="Estimated Life (months)"
+                  placeholder="RFID/Barcode"
                   maxLength={128}
                 />
-                <InputField
-                  name="costCenter"
-                  placeholder="Downtime Cost Per Hour"
-                  maxLength={128}
-                />
-                <Select placeholder="Unit" />
                 <div className="md:col-span-3">
                   <Field
                     as={TextArea}
@@ -169,22 +142,34 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                     maxLength={500}
                   />
                   <div className="text-right">0/500</div>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <InputField
+                      name="costCenter"
+                      placeholder="Installed Date"
+                      maxLength={128}
+                    />
+                    <InputField
+                      name="costCenter"
+                      placeholder="Suppliers"
+                      maxLength={128}
+                    />
+
+                    <Select placeholder="Criticality" />
+                    <InputField
+                      placeholder="Original Mfr. Date (MM/DD/YYYY)"
+                      maxLength={10}
+                      name="costCenter"
+                    />
+                    <Select placeholder="Condition" />
+
+                    <Select placeholder="Maint. Status" />
+                    <InputField
+                      name="costCenter"
+                      placeholder="Maint. Start Date (MM/DD/YYYY)"
+                      maxLength={10}
+                    />
+                  </div>
                 </div>
-
-                <Select placeholder="Criticality" />
-                <InputField
-                  placeholder="Original Mfr. Date (MM/DD/YYYY)"
-                  maxLength={10}
-                  name="costCenter"
-                />
-                <Select placeholder="Condition" />
-
-                <Select placeholder="Maint. Status" />
-                <InputField
-                  name="costCenter"
-                  placeholder="Maint. Start Date (MM/DD/YYYY)"
-                  maxLength={10}
-                />
               </div>
             </div>
           </Modal>
