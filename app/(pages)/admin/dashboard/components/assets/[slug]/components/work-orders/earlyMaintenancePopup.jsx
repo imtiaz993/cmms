@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Checkbox, Dropdown, Menu, message, Modal, Space, Table } from "antd";
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import { SettingOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import CreatePlannedWOPopup from "./createPlannedWOPopup";
 
 const validationSchema = Yup.object().shape({
   costCenter: Yup.string(),
@@ -80,6 +81,7 @@ const defaultCheckedList = columns.map((item) => item.key);
 
 const EarlyMaintenancePopup = ({ visible, setVisible }) => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
+  const [createPlannedWOPopup, setCreatePlannedWOPopup] = useState(false);
 
   const options = columns.map(({ key, title }, index) => ({
     label: title,
@@ -108,6 +110,10 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
     >
       {({ isSubmitting, handleSubmit }) => (
         <Form onSubmit={handleSubmit}>
+          <CreatePlannedWOPopup
+            visible={createPlannedWOPopup}
+            setVisible={setCreatePlannedWOPopup}
+          />
           <Modal
             maskClosable={false}
             title={
@@ -201,6 +207,11 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
                 loading={false}
                 size={"large"}
                 // scroll={{ x: 1100 }}
+                onRow={(row) => ({
+                  onClick: () => setCreatePlannedWOPopup(true),
+                  style: { cursor: "pointer" },
+                })}
+
                 columns={columns}
                 dataSource={data}
                 pagination={{

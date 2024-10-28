@@ -6,19 +6,56 @@ import TextArea from "antd/es/input/TextArea";
 import Button from "@/components/common/Button";
 
 const validationSchema = Yup.object().shape({
-  costCenter: Yup.string(),
+  issueIdentification: Yup.string().required("Required"),
+  date: Yup.date().required("Required"),
+  time: Yup.string().required("Required"),
+  problemDescription: Yup.string().required("Required"),
+  location: Yup.string().required("Required"),
+  affectedEquipment: Yup.string().required("Required"),
+  immediateConcerns: Yup.string(),
+  initialAssessment: Yup.string(),
+  priorityLevel: Yup.string().required("Required"),
+  assignedTechnician: Yup.string(),
+  estimatedCompletionTime: Yup.string(),
+  requiredTools: Yup.string(),
+  statusUpdates: Yup.string(),
+  checkIn1: Yup.string(),
+  checkIn2: Yup.string(),
+  checkIn3: Yup.string(),
+  repairActions: Yup.string(),
+  partsReplaced: Yup.string(),
+  finalStatus: Yup.string(),
+  summary: Yup.string(),
 });
 
 const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
   return (
     <Formik
       initialValues={{
-        costCenter: "",
+        issueIdentification: "",
+        date: null,
+        time: null,
+        problemDescription: "",
+        location: "",
+        affectedEquipment: "",
+        immediateConcerns: "",
+        initialAssessment: "",
+        priorityLevel: "",
+        assignedTechnician: "",
+        estimatedCompletionTime: "",
+        requiredTools: "",
+        statusUpdates: "",
+        checkIn1: "",
+        checkIn2: "",
+        checkIn3: "",
+        repairActions: "",
+        partsReplaced: "",
+        finalStatus: "",
+        summary: "",
       }}
       validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting, resetForm }) => {
         console.log(values);
-
         handleSubmit(values, setSubmitting, resetForm);
       }}
     >
@@ -44,7 +81,6 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
                   fullWidth={false}
                   disabled={isSubmitting}
                 />
-
                 <Button
                   className=""
                   onClick={() => setVisible(false)}
@@ -56,75 +92,89 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
               </div>
             }
             width={1000}
-            // bodyStyle={{
-            //   height: "400px",
-            //   overflowY: "auto",
-            //   overflowX: "hidden",
-            // }}
           >
-            <div>
-              <div className="mt-4 grid md:grid-cols-3 gap-4 w-full items-end md:items-center">
-                <div className="w-full">
-                  <Field
-                    as={DatePicker}
-                    name="createdDate"
-                    placeholder="Created Date"
-                    style={{ height: "36px", width: "100%" }}
-                  />
-                </div>
-                <div className="w-full">
-                  <Field
-                    as={TimePicker}
-                    name="time"
-                    placeholder="Time"
-                    style={{ height: "36px", width: "100%" }}
-                  />
-                </div>
-
-                <div className="w-full">
-                  <Field
-                    as={Select}
-                    name="priority"
-                    placeholder="Priority"
-                    style={{ height: "36px", width: "100%" }}
-                  />
-                </div>
-
-                <div className="w-full">
-                  <InputField
-                    name="costCenter"
-                    placeholder="Cost Center"
-                    maxLength={128}
-                  />
-                </div>
-                <div className="w-full">
-                  <InputField
-                    name="assetNumber"
-                    placeholder="Asset Number"
-                    maxLength={128}
-                  />
-                </div>
-                <div className="w-full">
-                  <Field
-                    as={Select}
-                    name="assetDown"
-                    placeholder="Asset Down?"
-                    style={{ height: "36px", width: "100%" }}
-                    options={[
-                      { label: "Yes", value: "Yes" },
-                      { label: "No", value: "No" },
-                    ]}
-                  />
-                </div>
-                <div className="w-full md:col-span-3">
-                  <Field
-                    as={TextArea}
-                    name="problem"
-                    placeholder="Problem"
-                    style={{ height: "80px", width: "100%" }}
-                  />
-                </div>
-              </div>
+            <div className="mt-4 grid md:grid-cols-3 gap-4 w-full items-end md:items-center">
+              <InputField
+                name="issueIdentification"
+                placeholder="Issue Identification"
+              />
+              <Field
+                as={DatePicker}
+                name="date"
+                placeholder="Date"
+                style={{ height: "36px", width: "100%" }}
+              />
+              <Field
+                as={TimePicker}
+                name="time"
+                placeholder="Time"
+                style={{ height: "36px", width: "100%" }}
+              />
+              <Field
+                as={TextArea}
+                name="problemDescription"
+                placeholder="Problem Description"
+                style={{ height: "80px", width: "100%" }}
+                className="col-span-3"
+              />
+              <InputField name="location" placeholder="Location" />
+              <InputField
+                name="affectedEquipment"
+                placeholder="Affected Equipment"
+              />
+              <InputField
+                name="immediateConcerns"
+                placeholder="Immediate Concerns"
+              />
+              <InputField
+                name="initialAssessment"
+                placeholder="Initial Assessment"
+              />
+              <Select
+                name="priorityLevel"
+                placeholder="Priority Level"
+                style={{ height: "36px", width: "100%" }}
+                options={[
+                  { label: "High", value: "High" },
+                  { label: "Medium", value: "Medium" },
+                  { label: "Low", value: "Low" },
+                ]}
+              />
+              <InputField
+                name="assignedTechnician"
+                placeholder="Technician Assignment"
+              />
+              <InputField
+                name="estimatedCompletionTime"
+                placeholder="Estimated Completion Time"
+              />
+              <InputField
+                name="requiredTools"
+                placeholder="Required Tools/Parts"
+              />
+              <Field
+                as={TextArea}
+                name="statusUpdates"
+                placeholder="Status Updates"
+                style={{ height: "80px", width: "100%" }}
+                className="col-span-3"
+              />
+              <InputField name="checkIn1" placeholder="Check-In 1" />
+              <InputField name="checkIn2" placeholder="Check-In 2" />
+              <InputField name="checkIn3" placeholder="Check-In 3" />
+              <InputField
+                name="repairActions"
+                placeholder="Repair Actions Taken"
+              />
+              <InputField name="partsReplaced" placeholder="Parts Replaced" />
+              <InputField name="finalStatus" placeholder="Final Status" />
+              <Field
+                as={TextArea}
+                name="summary"
+                placeholder="Summary"
+                style={{ height: "80px", width: "100%" }}
+                className="col-span-3"
+              />
             </div>
           </Modal>
         </Form>
