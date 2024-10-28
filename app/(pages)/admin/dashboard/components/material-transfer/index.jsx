@@ -2,59 +2,9 @@ import { useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
-import { PrinterOutlined } from "@ant-design/icons";
+import { EyeFilled, PrinterOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-
-const columns = [
-  {
-    title: "Asset Description",
-    dataIndex: "assetDesc",
-    key: "assetDesc",
-  },
-  {
-    title: "Asset Serial #",
-    dataIndex: "assetSerial",
-    key: "assetSerial",
-  },
-  {
-    title: "Creator",
-    dataIndex: "creator",
-    key: "creator",
-  },
-  {
-    title: "Created Date",
-    dataIndex: "createdDate",
-    key: "createdDate",
-  },
-  {
-    title: "Origination",
-    dataIndex: "origination",
-    key: "origination",
-  },
-  {
-    title: "Destination",
-    dataIndex: "destination",
-    key: "destination",
-  },
-  {
-    title: "Transporter",
-    dataIndex: "transporter",
-    key: "transporter",
-  },
-  {
-    title: "Material Transfer #",
-    dataIndex: "materialTransfer",
-    key: "materialTransfer",
-  },
-  {
-    title: "",
-    dataIndex: "download",
-    key: "download",
-    render: () => (
-      <PrinterOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
-    ),
-  },
-];
+import PreviewPopup from "../previewPopup";
 
 const data = [
   {
@@ -109,9 +59,65 @@ const data = [
   },
 ];
 
-const defaultCheckedList = columns.map((item) => item.key);
-
 const MaterialTransfer = () => {
+  const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
+  const columns = [
+    {
+      title: "Asset Description",
+      dataIndex: "assetDesc",
+      key: "assetDesc",
+    },
+    {
+      title: "Asset Serial #",
+      dataIndex: "assetSerial",
+      key: "assetSerial",
+    },
+    {
+      title: "Creator",
+      dataIndex: "creator",
+      key: "creator",
+    },
+    {
+      title: "Created Date",
+      dataIndex: "createdDate",
+      key: "createdDate",
+    },
+    {
+      title: "Origination",
+      dataIndex: "origination",
+      key: "origination",
+    },
+    {
+      title: "Destination",
+      dataIndex: "destination",
+      key: "destination",
+    },
+    {
+      title: "Transporter",
+      dataIndex: "transporter",
+      key: "transporter",
+    },
+    {
+      title: "Material Transfer #",
+      dataIndex: "materialTransfer",
+      key: "materialTransfer",
+    },
+    {
+      title: "",
+      dataIndex: "download",
+      key: "download",
+      render: () => (
+        <EyeFilled
+          onClick={(e) => {
+            e.stopPropagation();
+            setPreviewPopupVisible(true);
+          }}
+          style={{ fontSize: "20px", cursor: "pointer" }}
+        />
+      ),
+    },
+  ];
+  const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
@@ -124,6 +130,10 @@ const MaterialTransfer = () => {
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
+      <PreviewPopup
+        visible={previewPopupVisible}
+        setVisible={setPreviewPopupVisible}
+      />
       {addMaterialTransferVisible && (
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}

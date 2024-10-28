@@ -1,70 +1,10 @@
 import { useState } from "react";
 import { Select, Table } from "antd";
-import { PrinterOutlined } from "@ant-design/icons";
+import { EyeFilled, PrinterOutlined } from "@ant-design/icons";
 import EarlyMaintenancePopup from "./earlyMaintenancePopup";
 import ActionBar from "./actionBar";
 import { useRouter } from "next/navigation";
-
-const columns = [
-  {
-    title: "Asset #",
-    dataIndex: "asset",
-    key: "asset",
-  },
-  {
-    title: "Asset Description",
-    dataIndex: "assetDescription",
-    key: "assetDescription",
-  },
-  {
-    title: "Work Order #",
-    dataIndex: "workOrder",
-    key: "workOrder",
-  },
-  {
-    title: "Work Required",
-    dataIndex: "workRequired",
-    key: "workRequired",
-  },
-  {
-    title: "Priority",
-    dataIndex: "priority",
-    key: "priority",
-  },
-  {
-    title: "Created Date",
-    dataIndex: "created",
-    key: "created",
-  },
-  {
-    title: "Due Date",
-    dataIndex: "due",
-    key: "due",
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
-    key: "status",
-  },
-  {
-    title: "Cost Center",
-    dataIndex: "costCenter",
-    key: "costCenter",
-  },
-  {
-    title: "Cost",
-    dataIndex: "cost",
-    key: "cost",
-  },
-  {
-    title: "",
-    dataIndex: "print",
-    key: "print",
-    render: () => (
-      <PrinterOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
-    ),
-  },
-];
+import PreviewPopup from "../previewPopup";
 
 const data = [
   {
@@ -134,9 +74,75 @@ const data = [
   },
 ];
 
-const defaultCheckedList = columns.map((item) => item.key);
-
 const Planned = () => {
+  const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
+  const columns = [
+    {
+      title: "Asset #",
+      dataIndex: "asset",
+      key: "asset",
+    },
+    {
+      title: "Asset Description",
+      dataIndex: "assetDescription",
+      key: "assetDescription",
+    },
+    {
+      title: "Work Order #",
+      dataIndex: "workOrder",
+      key: "workOrder",
+    },
+    {
+      title: "Work Required",
+      dataIndex: "workRequired",
+      key: "workRequired",
+    },
+    {
+      title: "Priority",
+      dataIndex: "priority",
+      key: "priority",
+    },
+    {
+      title: "Created Date",
+      dataIndex: "created",
+      key: "created",
+    },
+    {
+      title: "Due Date",
+      dataIndex: "due",
+      key: "due",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+    },
+    {
+      title: "Cost Center",
+      dataIndex: "costCenter",
+      key: "costCenter",
+    },
+    {
+      title: "Cost",
+      dataIndex: "cost",
+      key: "cost",
+    },
+    {
+      title: "",
+      dataIndex: "print",
+      key: "print",
+      render: () => (
+        <EyeFilled
+          onClick={(e) => {
+            e.stopPropagation();
+            setPreviewPopupVisible(true);
+          }}
+          style={{ fontSize: "20px", cursor: "pointer" }}
+        />
+      ),
+    },
+  ];
+  const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addWOVisible, setAddWOVisible] = useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
@@ -150,6 +156,10 @@ const Planned = () => {
   return (
     <div className="h-[calc(100dvh-220px)] overflow-auto mt-4 px-3 lg:px-6">
       <div className="">
+        <PreviewPopup
+          visible={previewPopupVisible}
+          setVisible={setPreviewPopupVisible}
+        />
         {addWOVisible && (
           <EarlyMaintenancePopup
             visible={addWOVisible}
