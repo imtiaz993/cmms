@@ -325,113 +325,113 @@ const BarChart = () => (
 
 const unplannedColumns = [
   {
-    title: "Work Order #",
-    dataIndex: "workOrder",
+    title: "Asset Desc.",
+    dataIndex: "assetDesc",
   },
   {
-    title: "Days Open",
-    dataIndex: "daysOpen",
+    title: "Asset #",
+    dataIndex: "assetNo",
   },
   {
-    title: "Asset Number",
-    dataIndex: "assetNumber",
+    title: "Date Performed",
+    dataIndex: "datePerformed",
   },
   {
-    title: "Cost Center",
-    dataIndex: "costCenter",
+    title: "performed by",
+    dataIndex: "performedBy",
   },
 ];
 
 const unplannedData = [
   {
-    workOrder: "UWO016696000001",
-    daysOpen: "21",
-    assetNumber: "20-1384-13-07M",
-    costCenter: "Rig 27",
+    assetDesc: "UWO016696000001",
+    assetNo: "20-1384-13-07M",
+    datePerformed: "Feb 22, 2022",
+    performedBy: "John Doe",
   },
 
   {
-    workOrder: "UWO016696000002",
-    daysOpen: "22",
-    assetNumber: "20-1384-13-07M",
-    costCenter: "Rig 27",
+    assetDesc: "UWO016696000002",
+    assetNo: "20-1384-13-07M",
+    datePerformed: "Feb 23, 2022",
+    performedBy: "John Doe",
   },
 
   {
-    workOrder: "UWO016696000003",
-    daysOpen: "23",
-    assetNumber: "20-1384-13-07M",
-    costCenter: "Rig 27",
+    assetDesc: "UWO016696000003",
+    assetNo: "20-1384-13-07M",
+    datePerformed: "Feb 24, 2022",
+    performedBy: "John Doe",
   },
 
   {
-    workOrder: "UWO016696000004",
-    daysOpen: "24",
-    assetNumber: "20-1384-13-07M",
-    costCenter: "Rig 27",
+    assetDesc: "UWO016696000004",
+    assetNo: "20-1384-13-07M",
+    datePerformed: "Feb 25, 2022",
+    performedBy: "John Doe",
   },
 
   {
-    workOrder: "UWO016696000005",
-    daysOpen: "25",
-    assetNumber: "20-1384-13-07M",
-    costCenter: "Rig 27",
+    assetDesc: "UWO016696000005",
+    assetNo: "20-1384-13-07M",
+    datePerformed: "Feb 26, 2022",
+    performedBy: "John Doe",
   },
 ];
 
 const plannedColumns = [
   {
-    title: "Work Order #",
-    dataIndex: "workOrder",
+    title: "Asset Desc.",
+    dataIndex: "assetDesc",
   },
   {
     title: "Asset #",
-    dataIndex: "assetNumber",
+    dataIndex: "assetNo",
   },
   {
-    title: "Work Required",
-    dataIndex: "workRequired",
+    title: "Date Performed",
+    dataIndex: "datePerformed",
   },
   {
-    title: "Due Date",
-    dataIndex: "due",
+    title: "performed by",
+    dataIndex: "performedBy",
   },
 ];
 
 const plannedData = [
   {
-    workOrder: "PWO013940000220",
-    assetNumber: "Z013-01",
-    workRequired: "30 Day - Monthly",
-    due: "2022-09-21",
+    assetDesc: "PWO013940000220",
+    assetNo: "Z013-01",
+    datePerformed: "2022-09-21",
+    performedBy: "John Doe",
   },
 
   {
-    workOrder: "PWO013940000221",
-    assetNumber: "Z013-01",
-    workRequired: "30 Day - Monthly",
-    due: "2022-09-21",
+    assetDesc: "PWO013940000221",
+    assetNo: "Z013-01",
+    datePerformed: "2022-09-21",
+    performedBy: "John Doe",
   },
 
   {
-    workOrder: "PWO013940000222",
-    assetNumber: "Z013-01",
-    workRequired: "30 Day - Monthly",
-    due: "2022-09-21",
+    assetDesc: "PWO013940000222",
+    assetNo: "Z013-01",
+    datePerformed: "2022-09-22",
+    performedBy: "John Doe",
   },
 
   {
-    workOrder: "PWO013940000223",
-    assetNumber: "Z013-01",
-    workRequired: "30 Day - Monthly",
-    due: "2022-09-21",
+    assetDesc: "PWO013940000223",
+    assetNo: "Z013-01",
+    datePerformed: "2022-09-23",
+    performedBy: "John Doe",
   },
 
   {
-    workOrder: "PWO013940000224",
-    assetNumber: "Z013-01",
-    workRequired: "30 Day - Monthly",
-    due: "2022-09-21",
+    assetDesc: "PWO013940000224",
+    assetNo: "Z013-01",
+    datePerformed: "2022-09-24",
+    performedBy: "John Doe",
   },
 ];
 

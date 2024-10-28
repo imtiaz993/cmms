@@ -180,8 +180,8 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           ],
         },
         {
-          title: RigTitle("Third Party Repair", "third-party-repair"),
-          key: "third-party-repair",
+          title: RigTitle("Third Party", "third-party"),
+          key: "third-party",
           children: [
             {
               title: SystemTitle("System", "system"),

@@ -15,6 +15,7 @@ import Inventory from "./inventory";
 import WorkOrders from "./work-orders";
 import Documents from "./documents";
 import MaterialTransfer from "./material-transfer";
+import Readings from "./readings";
 
 const Tabs = () => {
   const router = useRouter();
@@ -60,7 +61,7 @@ const Tabs = () => {
     {
       key: "readings",
       label: "Readings",
-      children: "Content of Readings",
+      children: <Readings />,
     },
     {
       key: "documents",

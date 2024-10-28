@@ -14,14 +14,23 @@ const High = ({ batchEdit, print, setBatchEditPopup }) => {
           }}
           extra={
             batchEdit || print ? (
-              <Checkbox />
+              <Checkbox onClick={(e) => e.stopPropagation()} />
             ) : (
               <CalendarFilled
                 className="cursor-pointer"
-                onClick={() => setBatchEditPopup(true)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setBatchEditPopup(true);
+                }}
               />
             )
           }
+          onClick={() =>
+            router.push(
+              "/admin/dashboard/components/work-orders/PWO013942000998"
+            )
+          }
+          className="cursor-pointer"
           key={key}
         >
           <Text

@@ -1,7 +1,9 @@
 import { CalendarFilled, WarningFilled } from "@ant-design/icons";
 import { Card, Checkbox, Typography } from "antd";
+import { useRouter } from "next/navigation";
 const Critical = ({ batchEdit, print, setBatchEditPopup }) => {
   const { Text } = Typography;
+  const router = useRouter();
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -14,14 +16,23 @@ const Critical = ({ batchEdit, print, setBatchEditPopup }) => {
           }}
           extra={
             batchEdit || print ? (
-              <Checkbox />
+              <Checkbox onClick={(e) => e.stopPropagation()} />
             ) : (
               <CalendarFilled
                 className="cursor-pointer"
-                onClick={() => setBatchEditPopup(true)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setBatchEditPopup(true);
+                }}
               />
             )
           }
+          onClick={() =>
+            router.push(
+              "/admin/dashboard/components/work-orders/PWO013942000998"
+            )
+          }
+          className="cursor-pointer"
           key={index}
         >
           <Text
