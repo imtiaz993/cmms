@@ -89,15 +89,27 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
           >
             <div>
               <div className="grid md:grid-cols-3 gap-4">
-                <InputField
+                <Select
                   name="costCenter"
-                  placeholder="Physical Location"
+                  placeholder="Physical Location (Rig)"
                   maxLength={128}
+                  style={{ height: "36px" }}
+                  options={[
+                    { value: "Rig 21", label: "Rig 21" },
+                    { value: "Rig 22", label: "Rig 22" },
+                    { value: "Rig 23", label: "Rig 23" },
+                  ]}
                 />
-                <InputField
+                <Select
                   name="costCenter"
-                  placeholder="Parent Asset"
+                  placeholder="Main System"
                   maxLength={128}
+                  style={{ height: "36px" }}
+                  options={[
+                    { value: "airSystems", label: "Air Systems" },
+                    { value: "BOPSystems", label: "BOP Systems" },
+                    { value: "drillingSystems", label: "Drilling Systems" },
+                  ]}
                 />
                 <InputField name="costCenter" placeholder="Accounting Dept." />
                 <InputField
