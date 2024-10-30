@@ -162,7 +162,7 @@ const AssetReports = () => {
               ]}
             >
               <List.Item.Meta
-                title={<p className="text-white">{item.title}</p>}
+                title={<p>{item.title}</p>}
                 description={item.description}
               />
             </List.Item>
