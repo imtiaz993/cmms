@@ -21,8 +21,8 @@ const Button = ({
       onClick={onClick}
       className={`${fullWidth ? "w-full" : ""} ${className} `}
       style={{
-        background: outlined ? "#4C4C4C" : "#23CDCD",
-        borderColor: outlined ? "#737373" : "#23CDCD",
+        background: outlined ? "#4C4C4C" : "#F0BF60",
+        borderColor: outlined ? "#737373" : "#F0BF60",
         opacity: disabled ? "0.7" : "",
         height: "36px",
         fontWeight: "500",
@@ -33,7 +33,7 @@ const Button = ({
       {isLoading ? (
         <Spin
           spinning={true}
-          indicator={<LoadingOutlined spin style={{ color: "white" }} />}
+          indicator={<LoadingOutlined spin />}
         />
       ) : (
         <div className="flex items-center">

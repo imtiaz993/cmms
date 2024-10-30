@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
         />
       </head>
-      <body className="bg-[#212020] min-h-dvh">
+      <body className="bg-[#f3f3f3] min-h-dvh">
         <RootWrapper>{children}</RootWrapper>
       </body>
     </html>

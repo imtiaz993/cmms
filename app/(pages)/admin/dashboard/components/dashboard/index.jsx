@@ -27,7 +27,7 @@ const DonutChart = () => (
         fontSize: "14px",
         fontWeight: "400",
         labels: {
-          colors: ["#fff", "#fff", "#fff"],
+          colors: ["#000", "#000", "#000"],
         },
         markers: {
           offsetX: -5,
@@ -95,7 +95,7 @@ const ColumnChart = () => (
         fontSize: "14px",
         fontWeight: "400",
         labels: {
-          colors: ["#fff", "#fff", "#fff"],
+          colors: ["#000", "#000", "#000"],
         },
         markers: {
           offsetX: -5,
@@ -128,7 +128,7 @@ const ColumnChart = () => (
       xaxis: {
         labels: {
           style: {
-            colors: "#FFF",
+            colors: "#000",
           },
         },
         categories: ["Feb", "Mar", "Apr"],
@@ -139,7 +139,7 @@ const ColumnChart = () => (
       yaxis: {
         labels: {
           style: {
-            colors: "#FFF",
+            colors: "#000",
           },
         },
       },
@@ -239,7 +239,7 @@ const BarChart = () => (
       xaxis: {
         labels: {
           style: {
-            colors: "#FFF",
+            colors: "#000",
           },
         },
         categories: [
@@ -256,7 +256,7 @@ const BarChart = () => (
       yaxis: {
         labels: {
           style: {
-            colors: "#FFF",
+            colors: "#000",
           },
         },
       },

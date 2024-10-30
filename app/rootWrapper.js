@@ -8,11 +8,8 @@ export default function RootWrapper({ children }) {
     <div>
       <ConfigProvider
         theme={{
-          algorithm: theme.darkAlgorithm,
           token: {
-            colorBgBase: "#313131",
-            colorPrimary: "#23CDCD",
-            colorBgContainer: "#313131",
+            colorPrimary: "#F0BF60",
           },
         }}
       >
