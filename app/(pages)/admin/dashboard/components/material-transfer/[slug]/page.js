@@ -223,7 +223,7 @@ const MaterialTransferDetail = () => {
                 <span className="px-2 py-1 bg-secondary rounded-full">
                   <FolderFilled />
                 </span>
-                MT14687000001 <p className="text-xs font-normal">(Approved)</p>
+                TRF14687000001 <p className="text-xs font-normal">(Approved)</p>
               </div>
             }
 

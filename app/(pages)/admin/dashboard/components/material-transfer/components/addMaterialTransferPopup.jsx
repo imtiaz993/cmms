@@ -99,7 +99,7 @@ const AddMaterialTransferPopup = ({
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
               <InputField
                 name="origination"
-                placeholder="Origination"
+                placeholder="Origin"
                 maxLength={128}
               />
 
@@ -111,7 +111,7 @@ const AddMaterialTransferPopup = ({
 
               <InputField
                 name="materialTranfserType"
-                placeholder="Material Transfer Type"
+                placeholder="Transfer Type"
                 maxLength={128}
               />
 
@@ -134,32 +134,7 @@ const AddMaterialTransferPopup = ({
               placeholder="Comments"
               className="!h-28 !mt-3"
             />
-            <div className="mt-5">
-              <strong> Cautions</strong>
-              <div className="mt-3 sm:flex">
-                {[
-                  "hazardous",
-                  "nonHazardous",
-                  "msdsSheets",
-                  "ppeRequired",
-                  "requiresStorage",
-                ].map((caution, index) => (
-                  <div className="text-nowrap" key={index}>
-                    <Field
-                      key={caution}
-                      name={`cautions.${caution}`}
-                      as={Checkbox}
-                      onChange={(e) =>
-                        setFieldValue(`cautions.${caution}`, e.target.checked)
-                      }
-                    >
-                      {caution.charAt(0).toUpperCase() +
-                        caution.slice(1).replace(/([A-Z])/g, " $1")}
-                    </Field>
-                  </div>
-                ))}
-              </div>
-            </div>
+
             <div>
               <p className="mt-5">
                 <strong>Assets</strong>
@@ -169,7 +144,6 @@ const AddMaterialTransferPopup = ({
                   text="Add Assets"
                   fullWidth={false}
                   outlined
-                  disabled
                 />
               </p>
               <div className="text-center my-3">

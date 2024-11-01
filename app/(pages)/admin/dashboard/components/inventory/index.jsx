@@ -148,9 +148,16 @@ const Inventory = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addInventoryVisible, setAddInventoryVisible] = useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const showAddInventoryModal = () => {
     setAddInventoryVisible(true);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (selectedKeys) => {
+      setSelectedRowKeys(selectedKeys);
+    },
   };
 
   return (
@@ -167,6 +174,7 @@ const Inventory = () => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
+          selectedRowKeys={selectedRowKeys}
         />
         <div className="flex gap-3 justify-end">
           <p className="text-secondary">
@@ -179,9 +187,10 @@ const Inventory = () => {
         <Table
           loading={false}
           size={"large"}
-          scroll={{ x: 1100 }}
+          scroll={{ x: 1400 }}
           columns={newColumns}
-          dataSource={data}
+          rowSelection={rowSelection}
+          dataSource={data.map((i, index) => ({ ...i, key: index }))}
           pagination={{
             total: data.total,
             current: 1,
