@@ -5,6 +5,8 @@ import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
+import AddAssetPopupMT from "@/components/addAssetPopupInMT";
+import { useState } from "react";
 
 const validationSchema = Yup.object().shape({
   costCenter: Yup.string(),
@@ -14,6 +16,7 @@ const AddMaterialTransferPopup = ({
   addMaterialTransferVisible,
   setAddMaterialTransferVisible,
 }) => {
+  const [addAssetPopup, setAddAssetPopup] = useState(false);
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log(values);
     // const { status, data } = await login(values);
@@ -47,6 +50,10 @@ const AddMaterialTransferPopup = ({
     >
       {({ isSubmitting, handleSubmit, setFieldValue }) => (
         <Form onSubmit={handleSubmit}>
+          <AddAssetPopupMT
+            visible={addAssetPopup}
+            setVisible={setAddAssetPopup}
+          />
           <Modal
             maskClosable={false}
             title={
@@ -144,6 +151,7 @@ const AddMaterialTransferPopup = ({
                   text="Add Assets"
                   fullWidth={false}
                   outlined
+                  onClick={() => setAddAssetPopup(true)}
                 />
               </p>
               <div className="text-center my-3">

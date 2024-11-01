@@ -26,6 +26,7 @@ import { useState } from "react";
 import UploadLinkDocPopup from "./uploadLinkDocPopup";
 import UploadDocPopup from "./uploadDocPopup";
 import { useRouter } from "next/navigation";
+import AddAssetPopupMT from "@/components/addAssetPopupInMT";
 
 const columns = [
   {
@@ -99,6 +100,7 @@ const MaterialTransferDetail = () => {
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
   const [uploadLinkDocVisible, setUploadLinkDocVisible] = useState(false);
   const [uploadDocVisible, setUploadDocVisible] = useState(false);
+  const [addAssetPopup, setAddAssetPopup] = useState(false);
   const router = useRouter();
   const { Step } = Steps;
 
@@ -113,6 +115,10 @@ const MaterialTransferDetail = () => {
             columns={columns}
             data={data}
           />
+          <AddAssetPopupMT
+            visible={addAssetPopup}
+            setVisible={setAddAssetPopup}
+          />
           <div className="flex gap-3 justify-end mt-3 xl:mt-0">
             <Button
               type="primary"
@@ -125,10 +131,9 @@ const MaterialTransferDetail = () => {
             <Button
               type="primary"
               className="!h-7 md:!h-9"
-              onClick={() => {}}
               fullWidth={false}
               text="Add Assets"
-              disabled
+              onClick={() => setAddAssetPopup(true)}
             />
             <Button
               type="primary"
