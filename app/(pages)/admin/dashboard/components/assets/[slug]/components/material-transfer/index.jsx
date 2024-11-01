@@ -8,7 +8,7 @@ import PreviewPopup from "../../../../previewPopup";
 
 const data = [
   {
-    materialTransfer: "MT16696000003",
+    materialTransfer: "TRF16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -16,7 +16,7 @@ const data = [
     transporter: "Rig 27",
   },
   {
-    materialTransfer: "MT16696000003",
+    materialTransfer: "TRF16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -24,7 +24,7 @@ const data = [
     transporter: "Rig 27",
   },
   {
-    materialTransfer: "MT16696000003",
+    materialTransfer: "TRF16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -32,7 +32,7 @@ const data = [
     transporter: "Rig 27",
   },
   {
-    materialTransfer: "MT16696000003",
+    materialTransfer: "TRF16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -40,7 +40,7 @@ const data = [
     transporter: "Rig 27",
   },
   {
-    materialTransfer: "MT16696000003",
+    materialTransfer: "TRF16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",

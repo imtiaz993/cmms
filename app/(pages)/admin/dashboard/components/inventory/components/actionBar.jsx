@@ -8,15 +8,19 @@ import {
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import InventoryFilter from "./filtersDropdown";
+import AddMaterialTransferPopup from "../../material-transfer/components/addMaterialTransferPopup";
 
 const ActionBar = ({
   showAddInventoryModal,
   columns,
   checkedList,
   setCheckedList,
+  selectedRowKeys,
 }) => {
   const [searchText, setSearchText] = useState("");
   const [showHierarchy, setShowHierarchy] = useState(false);
+  const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
+    useState(false);
 
   const options = columns.map(({ key, title }, index) => ({
     label: title,
@@ -33,12 +37,30 @@ const ActionBar = ({
 
   return (
     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
+      {addMaterialTransferVisible && (
+        <AddMaterialTransferPopup
+          addMaterialTransferVisible={addMaterialTransferVisible}
+          setAddMaterialTransferVisible={setAddMaterialTransferVisible}
+        />
+      )}
       <Input.Search
         placeholder="Search..."
         onChange={(e) => setSearchText(e.target.value)}
         className="sm:!w-[300px] searchBar"
       />
       <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
+        {selectedRowKeys.length > 0 && (
+          <Button
+            text="New Material Transfer"
+            onClick={() => {
+              setAddMaterialTransferVisible(true);
+            }}
+            outlined
+            style={{ padding: "4px 35px" }}
+            prefix={<PlusOutlined />}
+            className="col-span-2 sm:col-span-1"
+          />
+        )}
         <Dropdown
           dropdownRender={() => <InventoryFilter />}
           trigger={["click"]}

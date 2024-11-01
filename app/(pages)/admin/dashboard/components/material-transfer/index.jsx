@@ -10,7 +10,7 @@ const data = [
   {
     assetDesc: "AC Powered 1500 HP O...",
     assetSerial: "21-001",
-    materialTransfer: "MT16696000003",
+    materialTransfer: "TRF16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -20,7 +20,7 @@ const data = [
   {
     assetDesc: "AC Powered 1500 HP O...",
     assetSerial: "21-001",
-    materialTransfer: "MT16696000003",
+    materialTransfer: "TRF16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -30,7 +30,7 @@ const data = [
   {
     assetDesc: "AC Powered 1500 HP O...",
     assetSerial: "21-001",
-    materialTransfer: "MT16696000003",
+    materialTransfer: "TRF16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -40,7 +40,7 @@ const data = [
   {
     assetDesc: "AC Powered 1500 HP O...",
     assetSerial: "21-001",
-    materialTransfer: "MT16696000003",
+    materialTransfer: "TRF16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",
@@ -50,7 +50,7 @@ const data = [
   {
     assetDesc: "AC Powered 1500 HP O...",
     assetSerial: "21-001",
-    materialTransfer: "MT16696000003",
+    materialTransfer: "TRF16696000003",
     creator: "Manager, Rig 27",
     createdDate: "April 10, 2024",
     origination: "Rig 27",

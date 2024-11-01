@@ -100,6 +100,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                     { value: "Rig 23", label: "Rig 23" },
                   ]}
                 />
+
                 <Select
                   name="costCenter"
                   placeholder="Main System"
@@ -111,6 +112,11 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                     { value: "drillingSystems", label: "Drilling Systems" },
                   ]}
                 />
+                <InputField
+                  name="costCenter"
+                  placeholder="RFID/Barcode"
+                  maxLength={128}
+                />
                 <InputField name="costCenter" placeholder="Accounting Dept." />
                 <InputField
                   name="costCenter"
@@ -118,11 +124,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                   maxLength={128}
                 />
                 <InputField name="costCenter" placeholder="Child Asset" />
-                <InputField
-                  name="costCenter"
-                  placeholder="Make, Model, Part #"
-                  maxLength={128}
-                />
+
                 <InputField
                   name="costCenter"
                   placeholder="Asset #"
@@ -135,9 +137,10 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                 />
                 <InputField
                   name="costCenter"
-                  placeholder="RFID/Barcode"
+                  placeholder="Make, Model, Part #"
                   maxLength={128}
                 />
+
                 <div className="md:col-span-3">
                   <Field
                     as={TextArea}

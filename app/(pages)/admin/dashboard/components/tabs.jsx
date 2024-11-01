@@ -35,7 +35,7 @@ const Tabs = () => {
   const tabs = [
     {
       key: "dashboard",
-      label: "Dashboard",
+      label: "Control Panel",
       children: <Dashboard activeLocation={activeLocation} />,
     },
     {

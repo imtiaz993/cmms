@@ -7,6 +7,7 @@ import {
   CloseCircleOutlined,
   ExclamationCircleOutlined,
   FolderFilled,
+  LoginOutlined,
   MailOutlined,
   PlusOutlined,
   PrinterFilled,
@@ -17,9 +18,11 @@ import {
   Card,
   Checkbox,
   Collapse,
+  DatePicker,
   Dropdown,
   Menu,
   message,
+  Radio,
   Select,
   Tooltip,
   Typography,
@@ -95,6 +98,12 @@ const WorkOrdersDetail = () => {
             outlined
           />
           <Button
+            text="Start"
+            prefix={<LoginOutlined />}
+            fullWidth={false}
+            className="ml-3"
+          />
+          <Button
             text="Complete"
             prefix={<CheckCircleOutlined />}
             fullWidth={false}
@@ -115,7 +124,7 @@ const WorkOrdersDetail = () => {
                       <span className="px-2 py-1 bg-secondary rounded-full">
                         <FolderFilled />
                       </span>
-                      MT14687000001{" "}
+                      TRF14687000001{" "}
                       <p className="text-xs font-normal">(Open) </p>
                       <Tooltip title="Created By System on October 9, 2024 at 10:00 AM GMT-7">
                         {" "}
@@ -266,37 +275,80 @@ const WorkOrdersDetail = () => {
                 <Card
                   loading={false}
                   className="!bg-primary"
+                  style={{ marginTop: 20 }}
+                >
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <Select
+                      name="costCenter"
+                      placeholder="Rig #"
+                      maxLength={128}
+                      style={{ height: "36px" }}
+                      options={[
+                        { value: "Rig 21", label: "Rig 21" },
+                        { value: "Rig 22", label: "Rig 22" },
+                        { value: "Rig 23", label: "Rig 23" },
+                      ]}
+                    />
+                    <InputField
+                      name="costCenter"
+                      placeholder="Parent Asset"
+                      maxLength={128}
+                    />
+                    <DatePicker name="createdDateRange" placeholder="Date" />
+                    <Select
+                      name="costCenter"
+                      placeholder="Supervisor"
+                      maxLength={128}
+                      style={{ height: "36px" }}
+                      options={[
+                        { value: "Supervisor 1", label: "Supervisor 1" },
+                        { value: "Supervisor 2", label: "Supervisor 2" },
+                        { value: "Supervisor 3", label: "Supervisor 3" },
+                      ]}
+                    />
+                    <Select
+                      name="costCenter"
+                      placeholder="Inspected By"
+                      maxLength={128}
+                      style={{ height: "36px" }}
+                      options={[
+                        { value: "Person 1", label: "Person 1" },
+                        { value: "Person 2", label: "Person 2" },
+                        { value: "Person 3", label: "Person 3" },
+                      ]}
+                    />
+                    <div className="col-span-2">
+                      <p className="mb-1">Recurring:</p>
+                      <div role="group">
+                        <label className="mr-4">
+                          <Radio value="pdf" className="mr-2" />
+                          Daily
+                        </label>
+                        <label className="mr-4">
+                          <Radio value="csv" className="mr-2" />
+                          Weekly
+                        </label>
+                        <label className="mr-4">
+                          <Radio value="csv" className="mr-2" />
+                          Monthly
+                        </label>
+                        <label className="mr-4">
+                          <Radio value="csv" className="mr-2" />
+                          Yearly
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+                <Card
+                  loading={false}
+                  className="!bg-primary"
                   title={
                     <div>
                       Procedures Lines <Badge count={5} />
                     </div>
                   }
                   style={{ marginTop: 20 }}
-                  extra={
-                    <div className="flex gap-2">
-                      <Button
-                        text="Batch Edit"
-                        fullWidth={false}
-                        outlined
-                        onClick={() => {
-                          setBatchEdit(!batchEdit);
-                          setCreateUnplannedWO(false);
-                        }}
-                        style={{ padding: "4px 10px" }}
-                      />
-                      <Button
-                        text={"Create Unplanned WO"}
-                        // onClick={showAddWOModal}
-                        outlined
-                        onClick={() => {
-                          setCreateUnplannedWO(!createUnplannedWO);
-                          setBatchEdit(false);
-                        }}
-                        style={{ padding: "4px 10px" }}
-                        prefix={<PlusOutlined />}
-                      />
-                    </div>
-                  }
                 >
                   {(batchEdit || createUnplannedWO) && (
                     <div className="flex justify-between items-center mb-4">
@@ -338,7 +390,7 @@ const WorkOrdersDetail = () => {
                   <div className="flex">
                     <p className="w-3/4">
                       {(batchEdit || createUnplannedWO) && <Checkbox />}{" "}
-                      Procedure Lines
+                      Inspection/Tasks
                     </p>
                     <p className="w-1/4">Feedback & Status</p>
                   </div>
@@ -351,88 +403,24 @@ const WorkOrdersDetail = () => {
                     }
                     className="relative"
                   >
-                    {(batchEdit || createUnplannedWO) && (
-                      <Checkbox className="absolute top-1" />
-                    )}
-                    <div className="flex gap-3">
-                      <div className="w-3/4 flex">
-                        <div>
-                          <div className="h-7 w-7 flex items-center justify-center rounded-full border border-secondary text-secondary mr-2">
-                            1
-                          </div>
-                        </div>
-                        <p>
-                          1. Use a multi purpose lithium complex grease that
-                          complies with N.L.G.I. Classification No. 1 or No. 2
-                          to grease each grease zerk on the lift arm shaft
-                        </p>
-                      </div>
-                      <div className="w-1/4">
-                        <p>
-                          No feedback available or applicable for this
-                          procedure.
-                        </p>
-                        <div className="mt-3 overflow-hidden">
-                          <Select
-                            name="status"
-                            placeholder="Status"
-                            style={{ height: "36px", width: "100%" }}
-                            options={[
-                              { label: "Completed", value: "completed" },
-                              { label: "N/A", value: "na" },
-                              { label: "Open", value: "open" },
-                              { label: "Unable", value: "unable" },
-                            ]}
-                          />
-                        </div>
+                    <div className="col-span-2 grid grid-cols-12">
+                      <p className="mb-1 col-span-8">
+                        Safety training documented and posted in a central
+                        location:
+                      </p>
+                      <div role="group" className="col-span-4">
+                        <Checkbox>YES</Checkbox>
+                        <Checkbox>No</Checkbox>
+                        <Checkbox>N/A</Checkbox>
                       </div>
                     </div>
-                  </Card>
-
-                  <Card
-                    loading={false}
-                    style={
-                      batchEdit || createUnplannedWO
-                        ? { marginTop: 12, paddingTop: 12 }
-                        : { marginTop: 12 }
-                    }
-                  >
-                    {(batchEdit || createUnplannedWO) && (
-                      <Checkbox className="absolute top-1" />
-                    )}
-                    <div className="flex gap-3">
-                      <div className="w-3/4 flex">
-                        <div>
-                          <div className="h-7 w-7 flex items-center justify-center rounded-full border border-secondary text-secondary mr-2">
-                            1
-                          </div>
-                        </div>
-                        <p>
-                          1. Use a multi purpose lithium complex grease that
-                          complies with N.L.G.I. Classification No. 1 or No. 2
-                          to grease each grease zerk on the lift arm shaft
-                        </p>
-                      </div>
-                      <div className="w-1/4">
-                        <p>
-                          No feedback available or applicable for this
-                          procedure.
-                        </p>
-                        <div className="mt-3 overflow-hidden">
-                          <Select
-                            name="status"
-                            placeholder="Status"
-                            style={{ height: "36px", width: "100%" }}
-                            options={[
-                              { label: "Completed", value: "completed" },
-                              { label: "N/A", value: "na" },
-                              { label: "Open", value: "open" },
-                              { label: "Unable", value: "unable" },
-                            ]}
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    <p className="opacity-50 mr-2 mt-3">Comments</p>
+                    <Field
+                      as={TextArea}
+                      name="comment"
+                      placeholder="Add Comment"
+                      className="!mt-3"
+                    />
                   </Card>
                 </Card>
               </div>
@@ -527,33 +515,6 @@ const WorkOrdersDetail = () => {
                   loading={false}
                   title={
                     <p>
-                      Delay reasons <Badge count={1} />
-                    </p>
-                  }
-                  extra={
-                    <>
-                      <Button text="View Details" fullWidth={false} outlined />
-                      <Button
-                        text="Add Delay Reasons"
-                        fullWidth={false}
-                        outlined
-                        className="ml-2"
-                        onClick={() => setPopup("addDelayReason")}
-                        prefix={<PlusOutlined />}
-                      />
-                    </>
-                  }
-                  style={{ marginTop: "20px" }}
-                >
-                  <p className="text-center">
-                    <ExclamationCircleOutlined /> No data to display.
-                  </p>
-                </Card>
-
-                <Card
-                  loading={false}
-                  title={
-                    <p>
                       Parts Required <Badge count={1} />
                     </p>
                   }
@@ -587,66 +548,6 @@ const WorkOrdersDetail = () => {
                   extra={
                     <>
                       <Button text="View Details" fullWidth={false} outlined />
-                      <Dropdown
-                        dropdownRender={() => (
-                          <Menu style={{ background: "#4C4C4C" }}>
-                            <Menu.ItemGroup title={null}>
-                              <Menu.Item
-                                key={0}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                                onClick={() => setPopup("uploadDocument")}
-                              >
-                                Upload Document
-                              </Menu.Item>
-                              <Menu.Item
-                                key={1}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                                onClick={() => setPopup("uploadLinkDocument")}
-                              >
-                                Link Document
-                              </Menu.Item>
-                            </Menu.ItemGroup>
-                          </Menu>
-                        )}
-                        trigger={["click"]}
-                        arrow
-                        // placement="bottomCenter"
-                      >
-                        <Button
-                          outlined
-                          size="small"
-                          text="Upload"
-                          fullWidth={false}
-                          className="ml-2"
-                          prefix={<PlusOutlined />}
-                        />
-                      </Dropdown>
-                    </>
-                  }
-                  style={{ marginTop: "20px" }}
-                >
-                  <p className="text-center">
-                    <ExclamationCircleOutlined /> No data to display.
-                  </p>
-                </Card>
-
-                <Card
-                  loading={false}
-                  title={
-                    <p>
-                      Realted Documents <Badge count={1} />
-                    </p>
-                  }
-                  extra={
-                    <>
-                      <Button text="View Details" fullWidth={false} outlined />
-
                       <Dropdown
                         dropdownRender={() => (
                           <Menu style={{ background: "#4C4C4C" }}>

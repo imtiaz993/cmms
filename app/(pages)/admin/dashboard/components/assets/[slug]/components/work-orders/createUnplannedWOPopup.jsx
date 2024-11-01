@@ -10,7 +10,7 @@ const validationSchema = Yup.object().shape({
   date: Yup.date().required("Required"),
   time: Yup.string().required("Required"),
   problemDescription: Yup.string().required("Required"),
-  location: Yup.string().required("Required"),
+  assetNum: Yup.string().required("Required"),
   affectedEquipment: Yup.string().required("Required"),
   immediateConcerns: Yup.string(),
   initialAssessment: Yup.string(),
@@ -36,7 +36,7 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
         date: null,
         time: null,
         problemDescription: "",
-        location: "",
+        assetNum: "",
         affectedEquipment: "",
         immediateConcerns: "",
         initialAssessment: "",
@@ -117,7 +117,7 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
                 style={{ height: "80px", width: "100%" }}
                 className="col-span-3"
               />
-              <InputField name="location" placeholder="Location" />
+              <InputField name="assetNum" placeholder="Asset #" />
               <InputField
                 name="affectedEquipment"
                 placeholder="Affected Equipment"
