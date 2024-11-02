@@ -90,7 +90,6 @@ const Schedule = () => {
       />
       <Calendar
         cellRender={cellRender}
-        className="!bg-[#212020]"
         onSelect={(date) => setSelectedDate(date.format("YYYY-MM-DD"))}
       />
     </div>

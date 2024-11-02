@@ -50,7 +50,7 @@ const ActionBar = ({ columns, checkedList, setCheckedList, unplanned }) => {
 
         {/* <Dropdown
           dropdownRender={() => (
-            <Menu style={{ background: "#4C4C4C" }}>
+            <Menu>
               <Menu.ItemGroup title="Select Columns">
                 {options.map((option) => (
                   <Menu.Item

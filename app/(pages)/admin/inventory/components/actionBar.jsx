@@ -76,7 +76,7 @@ const ActionBar = ({
         </Dropdown>
         <Dropdown
           dropdownRender={() => (
-            <Menu style={{ background: "#4C4C4C" }}>
+            <Menu>
               <Menu.ItemGroup title="Select Columns">
                 {options.map((option) => (
                   <Menu.Item
@@ -110,7 +110,7 @@ const ActionBar = ({
         </Dropdown>
         <Dropdown
           dropdownRender={() => (
-            <Menu style={{ background: "#4C4C4C" }}>
+            <Menu>
               <Menu.Item>
                 <Checkbox
                   checked={showHierarchy}

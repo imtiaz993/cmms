@@ -21,8 +21,8 @@ const Button = ({
       onClick={onClick}
       className={`${fullWidth ? "w-full" : ""} ${className} `}
       style={{
-        background: outlined ? "#4C4C4C" : "#F0BF60",
-        borderColor: outlined ? "#737373" : "#F0BF60",
+        background: outlined ? "" : "#F0BF60",
+        borderColor: outlined ? "" : "#F0BF60",
         opacity: disabled ? "0.7" : "",
         height: "36px",
         fontWeight: "500",

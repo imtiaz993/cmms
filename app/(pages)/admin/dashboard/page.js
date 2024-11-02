@@ -189,7 +189,6 @@ const Dashboard = () => {
             <Segmented
               options={["30 Days", "60 Days", "90 Days"]}
               defaultValue="30 Days"
-              className="!bg-[#212020]"
               onChange={(value) => {
                 // TODO: Change chart data
               }}

@@ -44,11 +44,9 @@ body {
 }
 
 .ant-message-notice-content {
-  background-color: #4c4c4c !important;
 }
 
 .ant-input-outlined {
-  background-color: #313131 !important;
 }
 
 .ant-input-outlined input::placeholder {
@@ -56,10 +54,8 @@ body {
 }
 
 .ant-modal-content {
-  background-color: #313131 !important;
 }
 .ant-modal-title {
-  background-color: #313131 !important;
 }
 
 .custom-tree .ant-tree-treenode {
@@ -75,7 +71,6 @@ body {
 }
 
 .custom-tree .ant-tree-treenode-selected .ant-tree-node-content-wrapper {
-  background-color: #212020 !important;
 }
 
 .dashboard-tabs .ant-tabs-nav {
@@ -133,7 +128,6 @@ body {
 .asset-tabs .ant-tabs-tab {
   border-radius: 0px !important;
   margin-left: 0px !important;
-  border-bottom: 1px solid #616161 !important;
 }
 
 .reports-tabs .ant-tabs-tab:nth-child(1),
@@ -156,7 +150,6 @@ body {
 }
 
 .schdeule .ant-picker-panel {
-  background-color: #313131 !important;
 }
 
 @media screen and (max-width: 1280px) {

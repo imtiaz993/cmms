@@ -29,7 +29,7 @@ const ActionBar = ({ columns, checkedList, setCheckedList }) => {
       <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
         <Dropdown
           dropdownRender={() => (
-            <Menu style={{ background: "#4C4C4C" }}>
+            <Menu>
               <Menu.ItemGroup title="Select Columns">
                 {options.map((option) => (
                   <Menu.Item

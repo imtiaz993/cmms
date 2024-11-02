@@ -550,7 +550,7 @@ const WorkOrdersDetail = () => {
                       <Button text="View Details" fullWidth={false} outlined />
                       <Dropdown
                         dropdownRender={() => (
-                          <Menu style={{ background: "#4C4C4C" }}>
+                          <Menu>
                             <Menu.ItemGroup title={null}>
                               <Menu.Item
                                 key={0}

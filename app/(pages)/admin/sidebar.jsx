@@ -58,7 +58,6 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
         }}
         open={openSidebar}
         key={"left"}
-        style={{ background: "#313131" }}
       >
         <div className="select-none">
           <Menu

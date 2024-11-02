@@ -410,7 +410,7 @@ const MaterialTransferDetail = () => {
                   />
                   <Dropdown
                     dropdownRender={() => (
-                      <Menu style={{ background: "#4C4C4C" }}>
+                      <Menu>
                         <Menu.ItemGroup title={null}>
                           <Menu.Item
                             key={0}
