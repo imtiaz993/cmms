@@ -3,8 +3,8 @@
 import { act, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getToken, getUser } from "@/utils/index";
-import Appbar from "./components/appbar";
-import Sidebar from "./components/sidebar";
+import Appbar from "./appbar";
+import Sidebar from "./sidebar";
 import { Select } from "antd";
 
 export default function Layout({ children }) {
