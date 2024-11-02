@@ -1,8 +1,9 @@
 "use client";
 import { Tabs } from "antd";
-import AssetReports from "./assetReports";
-import MaintenanceReports from "./maintenanceReports";
-import AnalyticsReports from "./analyticsReports";
+import AssetReports from "./components/assetReports";
+import MaintenanceReports from "./components/maintenanceReports";
+import AnalyticsReports from "./components/analyticsReports";
+import Readings from "./components/reading";
 
 const Reports = () => {
   const tabs = [
@@ -17,6 +18,10 @@ const Reports = () => {
     {
       label: "Analytics",
       children: <AnalyticsReports />,
+    },
+    {
+      label: "Readings",
+      children: <Readings />,
     },
   ];
   return (

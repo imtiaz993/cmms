@@ -23,8 +23,8 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
     { key: "assets", icon: <AppstoreOutlined />, label: "Assets" },
     { key: "inventory", icon: <DatabaseOutlined />, label: "Inventory" },
     { key: "work-orders", icon: <ToolOutlined />, label: "Work Orders" },
-    { key: "schedule", icon: <ScheduleOutlined />, label: "Schedule" },
-    { key: "readings", icon: <ContainerOutlined />, label: "Readings" },
+    // { key: "schedule", icon: <ScheduleOutlined />, label: "Schedule" },
+    // { key: "readings", icon: <ContainerOutlined />, label: "Readings" },
     { key: "documents", icon: <FileTextOutlined />, label: "Documents" },
     { key: "reports", icon: <BarChartOutlined />, label: "Reports" },
     {

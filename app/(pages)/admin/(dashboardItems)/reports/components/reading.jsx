@@ -1,6 +1,4 @@
-"use client";
 import { Table } from "antd";
-import ActionBar from "./components/actionBar";
 
 const columns = [
   {
@@ -74,7 +72,6 @@ const Readings = () => {
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
       <div>
-        <ActionBar />
         <div className="flex justify-end">
           <p className="text-secondary">
             Total Readings: <span>{"(" + data.length + ")"}</span>

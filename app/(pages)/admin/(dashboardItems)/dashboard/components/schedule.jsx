@@ -1,8 +1,8 @@
 "use client";
 import { Badge, Calendar } from "antd";
 import { useState } from "react";
-import DailyBatchPopup from "./components/dailyBatchPopup";
-import ActionBar from "./components/actionBar";
+import DailyBatchPopup from "./scheduleComponents/dailyBatchPopup";
+import ActionBar from "./scheduleComponents/actionBar";
 
 const filters = [
   {
@@ -78,12 +78,12 @@ const Schedule = () => {
     return info.originNode;
   };
   return (
-    <div className="schdeule h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4">
-      <ActionBar
+    <div className="schdeule ">
+      {/* <ActionBar
         checkedList={checkedList}
         setCheckedList={setCheckedList}
         columns={filters}
-      />
+      /> */}
       <DailyBatchPopup
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
