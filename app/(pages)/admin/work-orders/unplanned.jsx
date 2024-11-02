@@ -3,8 +3,9 @@ import { Select, Table } from "antd";
 import { EyeFilled, PrinterOutlined } from "@ant-design/icons";
 import EarlyMaintenancePopup from "./earlyMaintenancePopup";
 import ActionBar from "./actionBar";
+import CreateUnplannedWOPopup from "./createUnplannedWOPopup";
 import { useRouter } from "next/navigation";
-import PreviewPopup from "../../../../previewPopup";
+import PreviewPopup from "../../../../components/previewPopup";
 
 const data = [
   {
@@ -74,9 +75,19 @@ const data = [
   },
 ];
 
-const Planned = () => {
+const Unplanned = () => {
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
   const columns = [
+    {
+      title: "Asset #",
+      dataIndex: "asset",
+      key: "asset",
+    },
+    {
+      title: "Asset Description",
+      dataIndex: "assetDescription",
+      key: "assetDescription",
+    },
     {
       title: "Work Order #",
       dataIndex: "workOrder",
@@ -118,16 +129,6 @@ const Planned = () => {
       key: "cost",
     },
     {
-      title: "Asset #",
-      dataIndex: "asset",
-      key: "asset",
-    },
-    {
-      title: "Asset Description",
-      dataIndex: "assetDescription",
-      key: "assetDescription",
-    },
-    {
       title: "",
       dataIndex: "print",
       key: "print",
@@ -148,8 +149,6 @@ const Planned = () => {
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
   const router = useRouter();
 
-  console.log(checkedList);
-
   const showAddWOModal = () => {
     setAddWOVisible(true);
   };
@@ -161,7 +160,7 @@ const Planned = () => {
           setVisible={setPreviewPopupVisible}
         />
         {addWOVisible && (
-          <EarlyMaintenancePopup
+          <CreateUnplannedWOPopup
             visible={addWOVisible}
             setVisible={setAddWOVisible}
           />
@@ -172,10 +171,12 @@ const Planned = () => {
             checkedList={checkedList}
             setCheckedList={setCheckedList}
             columns={columns}
+            unplanned
           />
           <div className="flex justify-end">
             <p className="text-secondary">
-              Total Planned Work Orders: <span>{"(" + data.length + ")"}</span>
+              Total Unplanned Work Orders:{" "}
+              <span>{"(" + data.length + ")"}</span>
             </p>
           </div>
           <Table
@@ -214,4 +215,4 @@ const Planned = () => {
   );
 };
 
-export default Planned;
+export default Unplanned;

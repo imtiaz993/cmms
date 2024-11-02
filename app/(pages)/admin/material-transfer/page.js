@@ -5,7 +5,7 @@ import ActionBar from "./components/actionBar";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 import { EyeFilled, PrinterOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import PreviewPopup from "../previewPopup";
+import PreviewPopup from "../../../../components/previewPopup";
 
 const data = [
   {

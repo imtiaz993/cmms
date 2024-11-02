@@ -3,9 +3,8 @@ import { Select, Table } from "antd";
 import { EyeFilled, PrinterOutlined } from "@ant-design/icons";
 import EarlyMaintenancePopup from "./earlyMaintenancePopup";
 import ActionBar from "./actionBar";
-import CreateUnplannedWOPopup from "./createUnplannedWOPopup";
 import { useRouter } from "next/navigation";
-import PreviewPopup from "../previewPopup";
+import PreviewPopup from "../../../../components/previewPopup";
 
 const data = [
   {
@@ -75,7 +74,7 @@ const data = [
   },
 ];
 
-const Unplanned = () => {
+const Planned = () => {
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
   const columns = [
     {
@@ -149,6 +148,8 @@ const Unplanned = () => {
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
   const router = useRouter();
 
+  console.log(checkedList);
+
   const showAddWOModal = () => {
     setAddWOVisible(true);
   };
@@ -160,7 +161,7 @@ const Unplanned = () => {
           setVisible={setPreviewPopupVisible}
         />
         {addWOVisible && (
-          <CreateUnplannedWOPopup
+          <EarlyMaintenancePopup
             visible={addWOVisible}
             setVisible={setAddWOVisible}
           />
@@ -171,12 +172,10 @@ const Unplanned = () => {
             checkedList={checkedList}
             setCheckedList={setCheckedList}
             columns={columns}
-            unplanned
           />
           <div className="flex justify-end">
             <p className="text-secondary">
-              Total Unplanned Work Orders:{" "}
-              <span>{"(" + data.length + ")"}</span>
+              Total Planned Work Orders: <span>{"(" + data.length + ")"}</span>
             </p>
           </div>
           <Table
@@ -215,4 +214,4 @@ const Unplanned = () => {
   );
 };
 
-export default Unplanned;
+export default Planned;

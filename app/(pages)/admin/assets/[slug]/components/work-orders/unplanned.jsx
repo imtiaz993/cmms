@@ -5,7 +5,7 @@ import EarlyMaintenancePopup from "./earlyMaintenancePopup";
 import ActionBar from "./actionBar";
 import CreateUnplannedWOPopup from "./createUnplannedWOPopup";
 import { useRouter } from "next/navigation";
-import PreviewPopup from "../../../../previewPopup";
+import PreviewPopup from "../../../../../../../components/previewPopup";
 
 const data = [
   {

@@ -4,7 +4,7 @@ import { EyeFilled, PrinterOutlined } from "@ant-design/icons";
 import EarlyMaintenancePopup from "./earlyMaintenancePopup";
 import ActionBar from "./actionBar";
 import { useRouter } from "next/navigation";
-import PreviewPopup from "../previewPopup";
+import PreviewPopup from "../../../../../../../components/previewPopup";
 
 const data = [
   {
@@ -78,16 +78,6 @@ const Planned = () => {
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
   const columns = [
     {
-      title: "Asset #",
-      dataIndex: "asset",
-      key: "asset",
-    },
-    {
-      title: "Asset Description",
-      dataIndex: "assetDescription",
-      key: "assetDescription",
-    },
-    {
       title: "Work Order #",
       dataIndex: "workOrder",
       key: "workOrder",
@@ -126,6 +116,16 @@ const Planned = () => {
       title: "Cost",
       dataIndex: "cost",
       key: "cost",
+    },
+    {
+      title: "Asset #",
+      dataIndex: "asset",
+      key: "asset",
+    },
+    {
+      title: "Asset Description",
+      dataIndex: "assetDescription",
+      key: "assetDescription",
     },
     {
       title: "",
