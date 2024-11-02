@@ -35,6 +35,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
   ];
 
   const onClick = ({ key }) => {
+    setOpenSidebar(false);
     router.push(`/admin/${key}${params}`);
   };
 
