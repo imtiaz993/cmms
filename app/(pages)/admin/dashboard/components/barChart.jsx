@@ -32,7 +32,7 @@ const BarChart = () => (
       xaxis: {
         labels: {
           style: {
-            colors: "#000",
+            colors: "var(--text-color)",
           },
         },
         categories: [
@@ -49,7 +49,7 @@ const BarChart = () => (
       yaxis: {
         labels: {
           style: {
-            colors: "#000",
+            colors: "var(--text-color)",
           },
         },
       },

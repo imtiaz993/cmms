@@ -185,7 +185,7 @@ const MaterialTransferDetail = () => {
   ];
 
   return (
-    <div className="p-7 overflow-auto h-[calc(100dvh-77px)]">
+    <div className="p-7 overflow-auto h-[calc(100dvh-130px)]">
       <UploadLinkDocPopup
         visible={uploadLinkDocVisible}
         setVisible={setUploadLinkDocVisible}

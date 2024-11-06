@@ -1,6 +1,6 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
-import { DatePicker, Modal, Select, TimePicker } from "antd";
+import { DatePicker, Input, Modal, Select, TimePicker } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { Field, Form, Formik } from "formik";
 
@@ -83,14 +83,14 @@ const AddManHoursPopup = ({ visible, setVisible }) => {
                       name="clockIn"
                       placeholder="Clock In"
                       className="w-full"
-                      style={{height: "36px"}}
+                      style={{ height: "36px" }}
                     />
                     <Field
                       as={TimePicker}
                       name="clockInTime"
                       placeholder="Time"
                       className="w-full"
-                      style={{height: "36px"}}
+                      style={{ height: "36px" }}
                     />
                   </div>
                 )}
@@ -101,14 +101,14 @@ const AddManHoursPopup = ({ visible, setVisible }) => {
                       name="clockOut"
                       placeholder="Clock Out"
                       className="w-full"
-                      style={{height: "36px"}}
+                      style={{ height: "36px" }}
                     />
                     <Field
                       as={TimePicker}
                       name="clockOutTime"
                       placeholder="Time"
                       className="w-full"
-                      style={{height: "36px"}}
+                      style={{ height: "36px" }}
                     />
                   </div>
                 )}
@@ -130,10 +130,10 @@ const AddManHoursPopup = ({ visible, setVisible }) => {
                   style={{ height: "36px" }}
                 />
                 <Field
-                  as={TextArea}
+                  as={Input.TextArea}
                   name="comment"
                   placeholder="Comment"
-                  className="md:col-span-3"
+                  className="md:col-span-3 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                 />
               </div>
             </Modal>

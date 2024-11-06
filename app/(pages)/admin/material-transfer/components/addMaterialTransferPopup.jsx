@@ -1,6 +1,6 @@
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Checkbox, message, Modal } from "antd";
+import { Checkbox, Input, message, Modal } from "antd";
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
@@ -136,10 +136,10 @@ const AddMaterialTransferPopup = ({
             </div>
 
             <Field
-              as={TextArea}
+              as={Input.TextArea}
               name="comments"
               placeholder="Comments"
-              className="!h-28 !mt-3"
+              className="!h-28 !mt-3 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
             />
 
             <div>
@@ -176,10 +176,10 @@ const AddMaterialTransferPopup = ({
               </div>
             </div>
             <Field
-              as={TextArea}
+              as={Input.TextArea}
               name="misc"
               placeholder="Misc"
-              className="!h-28 !mt-3"
+              className="!h-28 !mt-3 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
             />
           </Modal>
         </Form>

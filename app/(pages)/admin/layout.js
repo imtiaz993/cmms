@@ -6,6 +6,7 @@ import { getToken, getUser } from "@/utils/index";
 import Appbar from "./appbar";
 import Sidebar from "./sidebar";
 import { Select } from "antd";
+import { ConfigProvider, theme, Button, Card } from "antd";
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -17,6 +18,20 @@ export default function Layout({ children }) {
   const currentPage = pathname.split("/")[2] || "dashboard";
   const activeLocation = searchParams.get("location") || "rig-21";
   const activeSystem = searchParams.get("system") || "air-system";
+
+  //dark mode
+  const { defaultAlgorithm, darkAlgorithm } = theme;
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add("dark-mode");
+      document.documentElement.classList.toggle("dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDarkMode]);
 
   // useEffect(() => {
   //   if (typeof window != "undefined") {
@@ -35,51 +50,61 @@ export default function Layout({ children }) {
   return (
     <>
       {/* {token && data && data.role === "admin" && ( */}
-      <div>
-        <Appbar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
-        <div className="flex items-start mt-4">
-          <Sidebar
-            openSidebar={openSidebar}
+      <ConfigProvider
+        theme={{
+          algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
+        }}
+      >
+        <div>
+          <Appbar
             setOpenSidebar={setOpenSidebar}
-            params={`?location=${activeLocation}&system=${activeSystem}`}
+            isDarkMode={isDarkMode}
+            setIsDarkMode={setIsDarkMode}
           />
-          <div className="w-full lg:w-[calc(100%-300px)]">
-            <div className="px-6 flex gap-3 mb-4">
-              <Select
-                value={activeLocation}
-                onChange={(value) =>
-                  router.push(
-                    `/admin/${currentPage}?location=${value}&system=${activeSystem}`
-                  )
-                }
-                options={[
-                  { value: "rig-21", label: "Rig 21" },
-                  { value: "rig-22", label: "Rig 22" },
-                  { value: "rig-23", label: "Rig 23" },
-                ]}
-                placeholder="Select Parent Location"
-                className="w-full sm:w-40"
-              />
-              <Select
-                value={activeSystem}
-                onChange={(value) =>
-                  router.push(
-                    `/admin/${currentPage}?location=${activeLocation}&system=${value}`
-                  )
-                }
-                options={[
-                  { value: "air-system", label: "Air System" },
-                  { value: "hydraulic-system", label: "Hydraulic System" },
-                  { value: "electrical-system", label: "Electrical System" },
-                ]}
-                placeholder="Select Child Location"
-                className="w-full sm:w-40"
-              />
+          <div className="flex items-start mt-4">
+            <Sidebar
+              openSidebar={openSidebar}
+              setOpenSidebar={setOpenSidebar}
+              params={`?location=${activeLocation}&system=${activeSystem}`}
+            />
+            <div className="w-full lg:w-[calc(100%-300px)]">
+              <div className="px-6 flex gap-3 mb-4">
+                <Select
+                  value={activeLocation}
+                  onChange={(value) =>
+                    router.push(
+                      `/admin/${currentPage}?location=${value}&system=${activeSystem}`
+                    )
+                  }
+                  options={[
+                    { value: "rig-21", label: "Rig 21" },
+                    { value: "rig-22", label: "Rig 22" },
+                    { value: "rig-23", label: "Rig 23" },
+                  ]}
+                  placeholder="Select Parent Location"
+                  className="w-full sm:w-40"
+                />
+                <Select
+                  value={activeSystem}
+                  onChange={(value) =>
+                    router.push(
+                      `/admin/${currentPage}?location=${activeLocation}&system=${value}`
+                    )
+                  }
+                  options={[
+                    { value: "air-system", label: "Air System" },
+                    { value: "hydraulic-system", label: "Hydraulic System" },
+                    { value: "electrical-system", label: "Electrical System" },
+                  ]}
+                  placeholder="Select Child Location"
+                  className="w-full sm:w-40"
+                />
+              </div>
+              {children}
             </div>
-            {children}
           </div>
         </div>
-      </div>
+      </ConfigProvider>
       {/* )} */}
     </>
   );

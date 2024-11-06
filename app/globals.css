@@ -20,11 +20,33 @@ textarea:focus {
   border: 1px solid #f0bf60 !important;
 }
 
+:root {
+  --background-color: #f3f3f3;
+  --background-secondary-color: #ffffff;
+  --text-color: #000000;
+}
+
+.dark-mode {
+  --background-color: #000000; /* #141414; */
+  --background-secondary-color: #141414;
+  --text-color: #ffffff;
+}
+
 html,
 body {
   height: 100% !important;
+  background-color: var(--background-color);
 }
-
+label,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-color);
+}
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -47,6 +69,14 @@ body {
 }
 
 .ant-input-outlined {
+}
+
+.ant-input-textarea {
+  border-color: #d9d9d9 !important;
+}
+
+.ant-input-textarea::placeholder {
+  color: #d9d9d9 !important;
 }
 
 .ant-input-outlined input::placeholder {
@@ -88,6 +118,8 @@ body {
 .ant-card-body {
   padding-left: 10px !important;
   padding-right: 10px !important;
+  background-color: var(--background-secondary-color) !important;
+  border-color: var(--text-color) !important;
 }
 .ant-drawer-content-wrapper {
   width: 300px !important;
