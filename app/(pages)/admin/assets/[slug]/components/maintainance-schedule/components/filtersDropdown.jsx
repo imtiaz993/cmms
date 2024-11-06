@@ -23,7 +23,13 @@ const MaintenanceScheduleFilter = () => {
   };
 
   return (
-    <div className="p-4 bg-tertiary rounded-md max-h-[400px] overflow-auto">
+    <div
+      className="p-4 bg-primary rounded-md max-h-[400px] overflow-auto"
+      style={{
+        boxShadow:
+          "0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)",
+      }}
+    >
       <Formik
         initialValues={{
           createdDateRange: "",

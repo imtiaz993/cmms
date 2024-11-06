@@ -20,6 +20,7 @@ import {
   Collapse,
   DatePicker,
   Dropdown,
+  Input,
   Menu,
   message,
   Radio,
@@ -46,7 +47,7 @@ const WorkOrdersDetail = () => {
   const [createUnplannedWO, setCreateUnplannedWO] = useState(false);
 
   return (
-    <div className="p-7 overflow-auto h-[calc(100dvh-77px)]">
+    <div className="p-7 overflow-auto h-[calc(100dvh-130px)]">
       <AddManHoursPopup
         visible={popup === "addManHours"}
         setVisible={setPopup}
@@ -193,10 +194,10 @@ const WorkOrdersDetail = () => {
                   <p className="opacity-50 mr-2 mt-3">Comments</p>
                   <p>No Comments</p>
                   <Field
-                    as={TextArea}
+                    as={Input.TextArea}
                     name="comment"
                     placeholder="Add Comment"
-                    className="!mt-3"
+                    className="!mt-3 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                   />
                   <Collapse style={{ marginTop: "20px" }}>
                     <Collapse.Panel header="View More Details" key="1">
@@ -416,10 +417,10 @@ const WorkOrdersDetail = () => {
                     </div>
                     <p className="opacity-50 mr-2 mt-3">Comments</p>
                     <Field
-                      as={TextArea}
+                      as={Input.TextArea}
                       name="comment"
                       placeholder="Add Comment"
-                      className="!mt-3"
+                      className="!mt-3 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                     />
                   </Card>
                 </Card>

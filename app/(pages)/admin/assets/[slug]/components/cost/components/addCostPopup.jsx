@@ -1,6 +1,6 @@
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { DatePicker, Modal, Select, TimePicker } from "antd";
+import { DatePicker, Input, Modal, Select, TimePicker } from "antd";
 import InputField from "@/components/common/InputField";
 import TextArea from "antd/es/input/TextArea";
 import Button from "@/components/common/Button";
@@ -125,10 +125,11 @@ const AddCostPopup = ({ visible, setVisible }) => {
                 </div>
                 <div className="w-full md:col-span-3">
                   <Field
-                    as={TextArea}
+                    as={Input.TextArea}
                     name="description"
                     placeholder="Description"
                     style={{ height: "80px", width: "100%" }}
+                    className="!border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                   />
                 </div>
               </div>

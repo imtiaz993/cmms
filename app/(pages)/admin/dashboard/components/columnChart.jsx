@@ -93,7 +93,7 @@ const ColumnChart = () => (
         fontSize: "14px",
         fontWeight: "400",
         labels: {
-          colors: ["#000", "#000", "#000"],
+          colors: ["var(--text-color)", "var(--text-color)", "var(--text-color)"],
         },
         markers: {
           offsetX: -5,
@@ -126,7 +126,7 @@ const ColumnChart = () => (
       xaxis: {
         labels: {
           style: {
-            colors: "#000",
+            colors: "var(--text-color)",
           },
         },
         categories: ["Feb", "Mar", "Apr"],
@@ -137,7 +137,7 @@ const ColumnChart = () => (
       yaxis: {
         labels: {
           style: {
-            colors: "#000",
+            colors: "var(--text-color)",
           },
         },
       },

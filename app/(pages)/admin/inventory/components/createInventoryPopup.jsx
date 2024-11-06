@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { DatePicker, message, Modal, Select, Steps } from "antd";
+import { DatePicker, Input, message, Modal, Select, Steps } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import TextArea from "antd/es/input/TextArea";
@@ -120,18 +120,20 @@ const CreateInventoryPopup = ({
                 />
                 <div className="md:col-span-3">
                   <Field
-                    as={TextArea}
+                    as={Input.TextArea}
                     name="description"
                     placeholder="Description"
                     maxLength={150}
+                    className="!border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                   />
                   <div className="text-right">0/150</div>
 
                   <Field
-                    as={TextArea}
+                    as={Input.TextArea}
                     name="specDetails"
                     placeholder="Spec Details"
                     maxLength={500}
+                    className="!border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                   />
                   <div className="text-right">0/500</div>
                   <div className="grid md:grid-cols-3 gap-4">
