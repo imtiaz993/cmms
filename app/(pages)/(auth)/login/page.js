@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import BarcodeScanner from "./BarcodeScanner";
+import BarcodeScanner from "app/BarcodeScanner";
 
 const App = () => {
   const [barcode, setBarcode] = useState("");
