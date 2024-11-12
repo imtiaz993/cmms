@@ -1,29 +1,24 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import BarcodeScanner from "app/BarcodeScanner";
 
 const App = () => {
   const [barcode, setBarcode] = useState("");
-  const audioRef = useRef(null);
 
   const handleDetected = (code) => {
     setBarcode(code);
+  };
 
-    // Play the beep sound
-    if (audioRef.current) {
-      audioRef.current.play();
-    }
+  const handleError = (error) => {
+    console.error(error);
   };
 
   return (
     <div>
       <h1>Barcode Scanner</h1>
-      <BarcodeScanner onDetected={handleDetected} />
+      <BarcodeScanner onScan={handleDetected} onError={handleError} />
       {barcode && <p>Detected Barcode: {barcode}</p>}
-
-      {/* Beep sound */}
-      <audio ref={audioRef} src="/beep.mp3" />
     </div>
   );
 };
