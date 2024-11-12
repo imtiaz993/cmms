@@ -1,53 +1,28 @@
-import React, { useState } from 'react';
-import BarcodeScannerComponent from "react-qr-barcode-scanner";
+import React, { useEffect, useRef, useState } from 'react';
+import { BrowserMultiFormatReader } from '@zxing/browser';
 
-const BarcodeScanner = ({ onDetected }) => {
-  const [barcode, setBarcode] = useState("");
-  const [error, setError] = useState("");
-  const audioRef = React.useRef(null);
-  const isDetected = React.useRef(false);
+const ZXingScanner = ({ onScan, onError }) => {
+  const videoRef = useRef(null);
 
-  const handleScan = (err, result) => {
-    if (err) {
-      setError("Error accessing camera. Please check permissions.");
-      console.error("Camera error:", err);
-      return;
-    }
+  useEffect(() => {
+    const codeReader = new BrowserMultiFormatReader();
 
-    if (result && !isDetected.current) {
-      // Handle detection only once per scan to prevent rapid repeats
-      isDetected.current = true;
-      const detectedCode = result.text;
-      setBarcode(detectedCode);
-      onDetected(detectedCode);
-
-      // Play beep sound
-      if (audioRef.current) {
-        audioRef.current.play();
+    codeReader.decodeFromVideoDevice(null, videoRef.current, (result, error) => {
+      if (result) {
+        onScan(result.getText());
       }
+      if (error) {
+        onError && onError(error);
+      }
+    });
 
-      // Reset detection flag after 2 seconds
-      setTimeout(() => {
-        isDetected.current = false;
-      }, 2000); // Cooldown time
-    }
-  };
+  }, [onScan, onError]);
 
   return (
     <div>
-      <h1>Barcode Scanner</h1>
-      <BarcodeScannerComponent
-        width={500}
-        height={500}
-        onUpdate={handleScan}
-      />
-      {barcode && <p>Detected Barcode: {barcode}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {/* Beep sound */}
-      <audio ref={audioRef} src="/beep.mp3" preload="auto" />
+      <video ref={videoRef} style={{ width: '100%', height: 'auto' }} />
     </div>
   );
 };
 
-export default BarcodeScanner;
+export default ZXingScanner;
