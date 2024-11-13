@@ -20,7 +20,7 @@ const ZXingScanner = ({ onScan, onError }) => {
 
   return (
     <div>
-      <video ref={videoRef} style={{ width: '100%', height: 'auto' }} />
+      <video ref={videoRef} style={{ width: '100%', height: '90dvh' }} />
     </div>
   );
 };
