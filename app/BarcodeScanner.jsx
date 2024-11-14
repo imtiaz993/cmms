@@ -21,6 +21,7 @@ const ZXingScanner = ({ onScan, onError }) => {
 
   return (
     <div>
+      <h1 onClick={()=>{onScan("!@#",beepSound);}}>TEST</h1>
       <video ref={videoRef} style={{ width: '100%', height: '90dvh' }} />
     </div>
   );
