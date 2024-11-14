@@ -9,6 +9,7 @@ const ZXingScanner = ({ onScan, onError }) => {
     const codeReader = new BrowserMultiFormatReader();
 
     codeReader.decodeFromVideoDevice(null, videoRef.current, (result, error) => {
+      beepSound.current.load();
       if (result) {
       onScan(result.getText(),beepSound.current);
       }
@@ -19,10 +20,6 @@ const ZXingScanner = ({ onScan, onError }) => {
 
   }, [onScan, onError]);
 
-
-  useEffect(()=>{
-    beepSound.current.load();
-  },[beepSound])
 
 
   return (
