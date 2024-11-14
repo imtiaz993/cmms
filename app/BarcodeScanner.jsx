@@ -3,13 +3,14 @@ import { BrowserMultiFormatReader } from '@zxing/browser';
 
 const ZXingScanner = ({ onScan, onError }) => {
   const videoRef = useRef(null);
+  const beepSound = new Audio("/beep.mp3");
 
   useEffect(() => {
     const codeReader = new BrowserMultiFormatReader();
 
     codeReader.decodeFromVideoDevice(null, videoRef.current, (result, error) => {
       if (result) {
-        onScan(result.getText());
+        onScan(result.getText(),beepSound);
       }
       if (error) {
         onError && onError(error);

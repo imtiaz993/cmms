@@ -1,14 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import BarcodeScanner from "app/BarcodeScanner";
 import axios from "axios";
+
+const BarcodeScanner = dynamic(() => import("app/BarcodeScanner"), {
+  ssr: false,
+});
 
 const App = () => {
   const [barcode, setBarcode] = useState("");
-  const beepSound = new Audio("/beep.mp3");
 
-  const handleDetected = async (code) => {
+  const handleDetected = async (code, beepSound) => {
     setBarcode(code);
     beepSound.play();
     try {
@@ -20,7 +22,6 @@ const App = () => {
         },
       });
       console.log(response);
-      
     } catch (error) {
       console.error("Error fetching product data:", error);
     }
