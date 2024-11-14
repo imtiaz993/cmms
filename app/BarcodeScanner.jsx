@@ -30,7 +30,7 @@ const ZXingScanner = ({ onScan, onError }) => {
     <div
       id="beepInitializer"
       onClick={() => {
-        beepSound.current.load();
+        beepSound.current.play();
       }}
     >
       <video ref={videoRef} style={{ width: "100%", height: "90dvh" }} />
