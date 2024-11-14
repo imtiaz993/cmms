@@ -3,7 +3,7 @@ import { BrowserMultiFormatReader } from "@zxing/browser";
 
 const ZXingScanner = ({ onScan, onError }) => {
   const videoRef = useRef(null);
-  const beepSound = useRef(new Audio("/beep.mp3"));
+  const beepSound = new Audio("/beep.mp3");
 
   useEffect(() => {
     const codeReader = new BrowserMultiFormatReader();
@@ -13,7 +13,7 @@ const ZXingScanner = ({ onScan, onError }) => {
       videoRef.current,
       (result, error) => {
         if (result) {
-          onScan(result.getText(), beepSound.current);
+          onScan(result.getText(), beepSound);
         }
         if (error) {
           onError && onError(error);
@@ -22,17 +22,15 @@ const ZXingScanner = ({ onScan, onError }) => {
     );
   }, [onScan, onError]);
 
-  useEffect(() => {
-    document.getElementById("beepInitializer").click();
-  }, []);
-
   return (
-    <div
-      id="beepInitializer"
-      onClick={() => {
-        beepSound.current.play();
-      }}
-    >
+    <div>
+      <button
+        onClick={() => {
+          onScan("850033937077", beepSound);
+        }}
+      >
+        TEST
+      </button>
       <video ref={videoRef} style={{ width: "100%", height: "90dvh" }} />
     </div>
   );
