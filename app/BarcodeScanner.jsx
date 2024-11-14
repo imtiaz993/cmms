@@ -23,15 +23,8 @@ const ZXingScanner = ({ onScan, onError }) => {
   }, [onScan, onError]);
 
   return (
-    <div>
-      <button
-        onClick={() => {
-          onScan("850033937077", beepSound);
-        }}
-      >
-        TEST
-      </button>
-      <video ref={videoRef} style={{ width: "100%", height: "90dvh" }} />
+    <div className="border-2 border-white">
+      <video ref={videoRef} style={{ width: "100%", height: "100%" }} />
     </div>
   );
 };
