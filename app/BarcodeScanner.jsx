@@ -22,7 +22,7 @@ const ZXingScanner = ({ onScan, onError }) => {
 
   useEffect(()=>{
     beepSound.current.load();
-  },[])
+  },[beepSound])
 
 
   return (
