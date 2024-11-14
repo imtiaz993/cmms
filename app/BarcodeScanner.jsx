@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { BrowserMultiFormatReader } from '@zxing/browser';
+import React, { useEffect, useRef } from "react";
+import { BrowserMultiFormatReader } from "@zxing/browser";
 
 const ZXingScanner = ({ onScan, onError }) => {
   const videoRef = useRef(null);
@@ -8,23 +8,32 @@ const ZXingScanner = ({ onScan, onError }) => {
   useEffect(() => {
     const codeReader = new BrowserMultiFormatReader();
 
-    codeReader.decodeFromVideoDevice(null, videoRef.current, (result, error) => {
-      beepSound.current.load();
-      if (result) {
-      onScan(result.getText(),beepSound.current);
+    codeReader.decodeFromVideoDevice(
+      null,
+      videoRef.current,
+      (result, error) => {
+        if (result) {
+          onScan(result.getText(), beepSound.current);
+        }
+        if (error) {
+          onError && onError(error);
+        }
       }
-      if (error) {
-        onError && onError(error);
-      }
-    });
-
+    );
   }, [onScan, onError]);
 
-
+  useEffect(() => {
+    document.getElementById("beepInitializer").click();
+  }, []);
 
   return (
-    <div>
-      <video ref={videoRef} style={{ width: '100%', height: '90dvh' }} />
+    <div
+      id="beepInitializer"
+      onClick={() => {
+        beepSound.current.load();
+      }}
+    >
+      <video ref={videoRef} style={{ width: "100%", height: "90dvh" }} />
     </div>
   );
 };
