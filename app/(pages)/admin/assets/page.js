@@ -7,99 +7,25 @@ import { useRouter } from "next/navigation";
 
 // Common column structure
 const baseColumns = [
-  {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
-  },
+  { title: "Description", dataIndex: "description", key: "description" },
   {
     title: "Physical Location",
     dataIndex: "physicalLocation",
     key: "physicalLocation",
   },
-  {
-    title: "Serial #",
-    dataIndex: "serialNo",
-    key: "serialNo",
-  },
-  {
-    title: "Asset #",
-    dataIndex: "assetNo",
-    key: "assetNo",
-  },
-  {
-    title: "Part #",
-    dataIndex: "partNo",
-    key: "partNo",
-  },
-  {
-    title: "Make",
-    dataIndex: "make",
-    key: "make",
-  },
-  {
-    title: "Model",
-    dataIndex: "model",
-    key: "model",
-  },
-  {
-    title: "Category",
-    dataIndex: "category",
-    key: "category",
-  },
-  {
-    title: "Criticality",
-    dataIndex: "criticality",
-    key: "criticality",
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
-    key: "status",
-  },
-  {
-    title: "Installed Date",
-    dataIndex: "installedDate",
-    key: "installedDate",
-  },
-  {
-    title: "Company",
-    dataIndex: "company",
-    key: "company",
-  },
+  { title: "Serial #", dataIndex: "serialNo", key: "serialNo" },
+  { title: "Asset #", dataIndex: "assetNo", key: "assetNo" },
+  { title: "Part #", dataIndex: "partNo", key: "partNo" },
+  { title: "Make", dataIndex: "make", key: "make" },
+  { title: "Model", dataIndex: "model", key: "model" },
+  { title: "Category", dataIndex: "category", key: "category" },
+  { title: "Criticality", dataIndex: "criticality", key: "criticality" },
+  { title: "Status", dataIndex: "status", key: "status" },
+  { title: "Installed Date", dataIndex: "installedDate", key: "installedDate" },
+  { title: "Company", dataIndex: "company", key: "company" },
 ];
 
-// Main columns
-const columns = [
-  {
-    title: "Main System",
-    dataIndex: "mainSystem",
-    key: "mainSystem",
-  },
-  ...baseColumns, // Spread the common columns here
-];
-
-// Nested Parent columns (with slight customization)
-const nestedParentColumns = [
-  {
-    title: "Parent Asset",
-    dataIndex: "parentAsset",
-    key: "parentAsset",
-  },
-  ...baseColumns, // Spread the common columns here
-];
-
-// Nested Child columns (with slight customization)
-const nestedChildColumns = [
-  {
-    title: "Child Asset",
-    dataIndex: "childAsset",
-    key: "childAsset",
-  },
-  ...baseColumns, // Spread the common columns here
-];
-
-// Updated data with a unique id for each asset
+// Data with unique keys
 const data = [
   {
     key: "johnBrown",
@@ -140,32 +66,6 @@ const data = [
     installedDate: "12/12/2022",
     company: "ABC Company",
   },
-  {
-    key: "johnRed",
-    mainSystem: "Jim Red",
-    description: "New Description",
-    physicalLocation: "London No. 1 Lake Park",
-    serialNo: 912,
-    assetNo: 5342,
-    partNo: 345,
-    criticality: "Critical",
-    status: "Active",
-    installedDate: "12/12/2022",
-    company: "ABC Company",
-  },
-  {
-    key: "joeBlack",
-    mainSystem: "Joe Black",
-    description: "New Description",
-    physicalLocation: "Sidney No. 1 Lake Park",
-    serialNo: 912,
-    assetNo: 5342,
-    partNo: 345,
-    criticality: "Critical",
-    status: "Active",
-    installedDate: "12/12/2022",
-    company: "ABC Company",
-  },
 ];
 
 const defaultCheckedList = [
@@ -183,9 +83,24 @@ const defaultCheckedList = [
 const Assets = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
-  const [expandedRowKeys, setExpandedRowKeys] = useState([]); // Track expanded row keys
-  const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
   const router = useRouter();
+
+  // Filter columns dynamically based on checkedList
+  const mainColumns = [
+    { title: "Main System", dataIndex: "mainSystem", key: "mainSystem" },
+    ...baseColumns.filter((col) => checkedList.includes(col.key)),
+  ];
+
+  const parentColumns = [
+    { title: "Parent Asset", dataIndex: "parentAsset", key: "parentAsset" },
+    ...baseColumns.filter((col) => checkedList.includes(col.key)),
+  ];
+
+  const childColumns = [
+    { title: "Child Asset", dataIndex: "childAsset", key: "childAsset" },
+    ...baseColumns.filter((col) => checkedList.includes(col.key)),
+  ];
 
   const showAddAssetModal = () => {
     setAddAssetVisible(true);
@@ -194,25 +109,21 @@ const Assets = () => {
   // Render expanded row content
   const expandedRowRender = (record) => (
     <Table
-      columns={nestedParentColumns}
-      dataSource={[record]}
+      columns={parentColumns}
+      dataSource={[record]} // Single parent data for nested table
       pagination={false}
       size="small"
-      rowKey="key" // Use unique key for each row
+      rowKey="key"
       expandable={{
-        expandedRowRender: (parentRecord) => {
-          // Render child table inside the expanded row
-          return (
-            <Table
-              columns={nestedChildColumns}
-              dataSource={[parentRecord]} // Accessing child data from "children"
-              pagination={false}
-              size="small"
-              rowKey="key"
-            />
-          );
-          
-        },
+        expandedRowRender: (parentRecord) => (
+          <Table
+            columns={childColumns}
+            dataSource={[parentRecord]} // Single child data for further nesting
+            pagination={false}
+            size="small"
+            rowKey="key"
+          />
+        ),
       }}
     />
   );
@@ -220,10 +131,9 @@ const Assets = () => {
   // Handle row expand/collapse
   const handleRowExpand = (expanded, record) => {
     const newExpandedRowKeys = expanded
-      ? [...expandedRowKeys, record.key] // Add to expanded keys
-      : expandedRowKeys.filter((key) => key !== record.key); // Remove from expanded keys
-
-    setExpandedRowKeys(newExpandedRowKeys); // Update the expanded row keys state
+      ? [...expandedRowKeys, record.key]
+      : expandedRowKeys.filter((key) => key !== record.key);
+    setExpandedRowKeys(newExpandedRowKeys);
   };
 
   return (
@@ -234,54 +144,45 @@ const Assets = () => {
           setAddAssetVisible={setAddAssetVisible}
         />
       )}
-      <div>
-        <ActionBar
-          showAddAssetModal={showAddAssetModal}
-          checkedList={checkedList}
-          setCheckedList={setCheckedList}
-          columns={columns}
-        />
-        <div className="flex gap-3 justify-end">
-          <p className="text-secondary">
-            Total Assets: <span>{"(" + data.length + ")"}</span>
-          </p>
-          <p className="text-secondary">
-            Parent Assets: <span>{"(" + data.length + ")"}</span>
-          </p>
-        </div>
-        <Table
-          rowClassName="cursor-pointer"
-          onRow={(record) => ({
-            onClick: () => {
-              router.push(`/admin/assets/${record?.name}`);
-            },
-          })}
-          loading={false}
-          size={"large"}
-          scroll={{ x: 1100 }}
-          columns={newColumns}
-          dataSource={data}
-          pagination={{
-            total: data.length,
-            current: 1,
-            pageSize: 10,
-            showSizeChanger: true,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} items`,
-            onChange: () => {},
-          }}
-          style={{
-            marginTop: 16,
-            overflow: "auto",
-          }}
-          rowKey="key" // Set rowKey to unique 'id' for accurate tracking
-          expandable={{
-            expandedRowRender, // Show expanded row content
-            expandedRowKeys, // Control which rows are expanded
-            onExpand: handleRowExpand, // Handle expand/collapse toggle
-          }}
-        />
+      <ActionBar
+        showAddAssetModal={showAddAssetModal}
+        checkedList={checkedList}
+        setCheckedList={setCheckedList}
+        columns={baseColumns}
+      />
+      <div className="flex gap-3 justify-end">
+        <p className="text-secondary">
+          Total Assets: <span>{`(${data.length})`}</span>
+        </p>
+        <p className="text-secondary">
+          Parent Assets: <span>{`(${data.length})`}</span>
+        </p>
       </div>
+      <Table
+        rowClassName="cursor-pointer"
+        onRow={(record) => ({
+          onClick: () => router.push(`/admin/assets/${record.key}`),
+        })}
+        loading={false}
+        size="large"
+        scroll={{ x: 1100 }}
+        columns={mainColumns}
+        dataSource={data}
+        pagination={{
+          total: data.length,
+          pageSize: 10,
+          showSizeChanger: true,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} items`,
+        }}
+        style={{ marginTop: 16 }}
+        rowKey="key"
+        expandable={{
+          expandedRowRender,
+          expandedRowKeys,
+          onExpand: handleRowExpand,
+        }}
+      />
     </div>
   );
 };
