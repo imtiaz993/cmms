@@ -5,12 +5,8 @@ import ActionBar from "./components/actionBar";
 import CreateAssetPopup from "./components/createAssetPopup";
 import { useRouter } from "next/navigation";
 
-const columns = [
-  {
-    title: "Main System",
-    dataIndex: "mainSystem",
-    key: "mainSystem",
-  },
+// Common column structure
+const baseColumns = [
   {
     title: "Description",
     dataIndex: "description",
@@ -71,6 +67,36 @@ const columns = [
     dataIndex: "company",
     key: "company",
   },
+];
+
+// Main columns
+const columns = [
+  {
+    title: "Main System",
+    dataIndex: "mainSystem",
+    key: "mainSystem",
+  },
+  ...baseColumns, // Spread the common columns here
+];
+
+// Nested Parent columns (with slight customization)
+const nestedParentColumns = [
+  {
+    title: "Parent Asset",
+    dataIndex: "parentAsset",
+    key: "parentAsset",
+  },
+  ...baseColumns, // Spread the common columns here
+];
+
+// Nested Child columns (with slight customization)
+const nestedChildColumns = [
+  {
+    title: "Child Asset",
+    dataIndex: "childAsset",
+    key: "childAsset",
+  },
+  ...baseColumns, // Spread the common columns here
 ];
 
 // Updated data with a unique id for each asset
@@ -168,11 +194,26 @@ const Assets = () => {
   // Render expanded row content
   const expandedRowRender = (record) => (
     <Table
-      columns={newColumns}
+      columns={nestedParentColumns}
       dataSource={[record]}
       pagination={false}
       size="small"
       rowKey="key" // Use unique key for each row
+      expandable={{
+        expandedRowRender: (parentRecord) => {
+          // Render child table inside the expanded row
+          return (
+            <Table
+              columns={nestedChildColumns}
+              dataSource={[parentRecord]} // Accessing child data from "children"
+              pagination={false}
+              size="small"
+              rowKey="key"
+            />
+          );
+          
+        },
+      }}
     />
   );
 
