@@ -58,8 +58,10 @@ const columns = [
   },
 ];
 
+// Updated data with a unique id for each asset
 const data = [
   {
+    key: "johnBrown",
     name: "John Brown",
     physicalLocation: "New York No. 1 Lake Park",
     description: "New Description",
@@ -72,6 +74,7 @@ const data = [
     company: "ABC Company",
   },
   {
+    key: "jimGreen",
     name: "Jim Green",
     description: "New Description",
     physicalLocation: "London No. 1 Lake Park",
@@ -84,6 +87,7 @@ const data = [
     company: "ABC Company",
   },
   {
+    key: "joeBlack",
     name: "Joe Black",
     description: "New Description",
     physicalLocation: "Sidney No. 1 Lake Park",
@@ -96,6 +100,7 @@ const data = [
     company: "ABC Company",
   },
   {
+    key: "johnRed",
     name: "Jim Red",
     description: "New Description",
     physicalLocation: "London No. 1 Lake Park",
@@ -108,6 +113,7 @@ const data = [
     company: "ABC Company",
   },
   {
+    key: "joeBlack",
     name: "Joe Black",
     description: "New Description",
     physicalLocation: "Sidney No. 1 Lake Park",
@@ -126,11 +132,32 @@ const defaultCheckedList = columns.map((item) => item.key);
 const Assets = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
+  const [expandedRowKeys, setExpandedRowKeys] = useState([]); // Track expanded row keys
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
   const router = useRouter();
 
   const showAddAssetModal = () => {
     setAddAssetVisible(true);
+  };
+
+  // Render expanded row content
+  const expandedRowRender = (record) => (
+    <Table
+      columns={newColumns}
+      dataSource={[record]}
+      pagination={false}
+      size="small"
+      rowKey="key" // Use unique key for each row
+    />
+  );
+
+  // Handle row expand/collapse
+  const handleRowExpand = (expanded, record) => {
+    const newExpandedRowKeys = expanded
+      ? [...expandedRowKeys, record.key] // Add to expanded keys
+      : expandedRowKeys.filter((key) => key !== record.key); // Remove from expanded keys
+
+    setExpandedRowKeys(newExpandedRowKeys); // Update the expanded row keys state
   };
 
   return (
@@ -169,7 +196,7 @@ const Assets = () => {
           columns={newColumns}
           dataSource={data}
           pagination={{
-            total: data.total,
+            total: data.length,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,
@@ -180,6 +207,12 @@ const Assets = () => {
           style={{
             marginTop: 16,
             overflow: "auto",
+          }}
+          rowKey="key" // Set rowKey to unique 'id' for accurate tracking
+          expandable={{
+            expandedRowRender, // Show expanded row content
+            expandedRowKeys, // Control which rows are expanded
+            onExpand: handleRowExpand, // Handle expand/collapse toggle
           }}
         />
       </div>
