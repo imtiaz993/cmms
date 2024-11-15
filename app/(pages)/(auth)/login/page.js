@@ -13,7 +13,7 @@ const App = () => {
   const [isInputTabOpen, setIsInputTabOpen] = useState(false);
   const [inputBarcode, setInputBarcode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [productFetched, setProductFetched] = useState("")
+  const [productFetched, setProductFetched] = useState("");
 
   const handleInputSubmit = () => {
     if (!inputBarcode) {
@@ -23,7 +23,7 @@ const App = () => {
     setErrorMessage(""); // Clear any previous error
     handleDetected(inputBarcode);
     setIsInputTabOpen(false);
-    setErrorMessage("")
+    setErrorMessage("");
     setInputBarcode("");
   };
 
@@ -49,23 +49,22 @@ const App = () => {
     }
   };
 
-  const handleError = () => { };
+  const handleError = () => {};
 
   console.log(productFetched);
-
 
   return (
     <div className="bg-[rgba(0,0,0,0.9)]">
       <div className="min-h-dvh flex flex-col justify-between w-11/12 mx-auto">
         <div></div>
         <div>
-          <h1 className="text-center text-lg font-medium text-white mb-10">
+          <h1 className="text-center text-lg font-medium text-white my-10">
             Point at code to scan
           </h1>
           <BarcodeScanner onScan={handleDetected} onError={handleError} />
           <p>{productFetched?.name}</p>
         </div>
-        <div className="pb-10">
+        <div className="pt-10 pb-16">
           <button
             onClick={() => {
               handleDetected("850033937077");
@@ -76,7 +75,10 @@ const App = () => {
           </button>
           <button
             className="w-full rounded-full bg-blue-600 text-white font-medium py-3"
-            onClick={() => { setIsInputTabOpen(!isInputTabOpen); setErrorMessage("") }}
+            onClick={() => {
+              setIsInputTabOpen(!isInputTabOpen);
+              setErrorMessage("");
+            }}
           >
             Type Code Instead
           </button>
@@ -96,7 +98,10 @@ const App = () => {
               </p>
               <p
                 className="mb-10 text-2xl text-white cursor-pointer"
-                onClick={() => { setIsInputTabOpen(false); setErrorMessage("") }}
+                onClick={() => {
+                  setIsInputTabOpen(false);
+                  setErrorMessage("");
+                }}
               >
                 &#10006;
               </p>
@@ -108,7 +113,13 @@ const App = () => {
               placeholder="Enter barcode"
               className="w-full p-3 rounded mb-2"
             />
-            <p className={`text-red-500 text-sm min-h-5 ${errorMessage ? "visible" : "invisible"}`}>{errorMessage}</p>
+            <p
+              className={`text-red-500 text-sm min-h-5 ${
+                errorMessage ? "visible" : "invisible"
+              }`}
+            >
+              {errorMessage}
+            </p>
             <button
               onClick={handleInputSubmit}
               className="w-full rounded-full bg-blue-600 text-white font-medium py-3 mt-2"
