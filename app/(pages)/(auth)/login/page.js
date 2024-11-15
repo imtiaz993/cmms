@@ -28,7 +28,7 @@ const App = () => {
   };
 
   const handleDetected = async (code, beepSound) => {
-    if (code !== barcode) {
+    if (code != barcode) {
       setBarcode(code);
       if (beepSound) {
         beepSound.play();
