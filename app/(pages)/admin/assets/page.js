@@ -7,9 +7,9 @@ import { useRouter } from "next/navigation";
 
 const columns = [
   {
-    title: "Asset",
-    dataIndex: "name",
-    key: "name",
+    title: "Main System",
+    dataIndex: "mainSystem",
+    key: "mainSystem",
   },
   {
     title: "Description",
@@ -37,6 +37,21 @@ const columns = [
     key: "partNo",
   },
   {
+    title: "Make",
+    dataIndex: "make",
+    key: "make",
+  },
+  {
+    title: "Model",
+    dataIndex: "model",
+    key: "model",
+  },
+  {
+    title: "Category",
+    dataIndex: "category",
+    key: "category",
+  },
+  {
     title: "Criticality",
     dataIndex: "criticality",
     key: "criticality",
@@ -62,7 +77,7 @@ const columns = [
 const data = [
   {
     key: "johnBrown",
-    name: "John Brown",
+    mainSystem: "John Brown",
     physicalLocation: "New York No. 1 Lake Park",
     description: "New Description",
     serialNo: 912,
@@ -75,7 +90,7 @@ const data = [
   },
   {
     key: "jimGreen",
-    name: "Jim Green",
+    mainSystem: "Jim Green",
     description: "New Description",
     physicalLocation: "London No. 1 Lake Park",
     serialNo: 912,
@@ -88,7 +103,7 @@ const data = [
   },
   {
     key: "joeBlack",
-    name: "Joe Black",
+    mainSystem: "Joe Black",
     description: "New Description",
     physicalLocation: "Sidney No. 1 Lake Park",
     serialNo: 912,
@@ -101,7 +116,7 @@ const data = [
   },
   {
     key: "johnRed",
-    name: "Jim Red",
+    mainSystem: "Jim Red",
     description: "New Description",
     physicalLocation: "London No. 1 Lake Park",
     serialNo: 912,
@@ -114,7 +129,7 @@ const data = [
   },
   {
     key: "joeBlack",
-    name: "Joe Black",
+    mainSystem: "Joe Black",
     description: "New Description",
     physicalLocation: "Sidney No. 1 Lake Park",
     serialNo: 912,
@@ -127,7 +142,17 @@ const data = [
   },
 ];
 
-const defaultCheckedList = columns.map((item) => item.key);
+const defaultCheckedList = [
+  "mainSystem",
+  "physicalLocation",
+  "assetNo",
+  "make",
+  "model",
+  "category",
+  "criticality",
+  "status",
+  "installedDate",
+];
 
 const Assets = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
