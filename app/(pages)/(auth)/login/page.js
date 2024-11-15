@@ -1,136 +1,118 @@
 "use client";
 
-import React, { useState } from "react";
-import axios from "axios";
-import dynamic from "next/dynamic";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Form, Formik } from "formik";
+import * as Yup from "yup";
+import { message } from "antd";
+import { login } from "app/services/auth";
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  MailOutlined,
+} from "@ant-design/icons";
+import Button from "@/components/common/Button";
+import InputField from "@/components/common/InputField";
 
-const BarcodeScanner = dynamic(() => import("app/BarcodeScanner"), {
-  ssr: false,
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string().required("Password is required"),
 });
 
-const App = () => {
-  const [barcode, setBarcode] = useState("");
-  const [isInputTabOpen, setIsInputTabOpen] = useState(false);
-  const [inputBarcode, setInputBarcode] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [productFetched, setProductFetched] = useState("");
+const Login = () => {
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleInputSubmit = () => {
-    if (!inputBarcode) {
-      setErrorMessage("Barcode cannot be empty");
-      return;
-    }
-    setErrorMessage(""); // Clear any previous error
-    handleDetected(inputBarcode);
-    setIsInputTabOpen(false);
-    setErrorMessage("");
-    setInputBarcode("");
-  };
-
-  const handleDetected = async (code, beepSound) => {
-    if (code != barcode) {
-      setBarcode(code);
-      if (beepSound) {
-        beepSound.play();
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
+    const { status, data } = await login(values);
+    setSubmitting(false);
+    if (status === 200) {
+      localStorage.setItem("user", data.data);
+      localStorage.setItem("token", data.token);
+      if (data?.data?.role === "supervisor") {
+        router?.replace("/supervisor/dashboard");
       }
-      try {
-        const response = await axios.get(`https://34.102.44.108:8000/`, {
-          params: {
-            action: "getProductByBarcode",
-            barcode: code,
-            store_id: 111,
-            access_token: "AIzaSyAAlqEYx2CDm5ck_64dc5b7371872a01b653",
-          },
-        });
-        setProductFetched(response);
-      } catch (error) {
-        console.error("Error fetching product:", error);
+      if (data?.data?.role === "admin") {
+        router?.replace("/admin/dashboard");
       }
+      message.success(data.message);
+      resetForm();
+    } else {
+      message.error(data.message);
     }
   };
-
-  const handleError = () => {};
-
-  console.log(productFetched);
 
   return (
-    <div className="bg-[rgba(0,0,0,0.9)]">
-      <div className="min-h-dvh flex flex-col justify-between w-11/12 mx-auto">
-        <div></div>
-        <div>
-          <h1 className="text-center text-lg font-medium text-white my-10">
-            Point at code to scan
-          </h1>
-          <BarcodeScanner onScan={handleDetected} onError={handleError} />
-          <p>{productFetched?.name}</p>
-        </div>
-        <div className="pt-10 pb-16">
-          <button
-            onClick={() => {
-              handleDetected("850033937077");
-            }}
-            className="w-full rounded-full bg-gray-300 text-black font-medium py-3 mb-5"
-          >
-            TEST 850033937077
-          </button>
-          <button
-            className="w-full rounded-full bg-blue-600 text-white font-medium py-3"
-            onClick={() => {
-              setIsInputTabOpen(!isInputTabOpen);
-              setErrorMessage("");
-            }}
-          >
-            Type Code Instead
-          </button>
-          {barcode && (
-            <p className="text-center text-white mt-5">
-              Detected Barcode: {barcode}
-            </p>
+    <div className="flex flex-col justify-center items-center min-h-dvh w-11/12 mx-auto md:w-full max-w-[520px]">
+      <h1 className="text-2xl md:text-3xl font-bold">Login</h1>
+      <p className="mt-3 text-sm md:text-base">
+        Welcome back! Please enter your details
+      </p>
+      <div className="mt-10 w-full">
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={validationSchema}
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            handleSubmit(values, setSubmitting, resetForm);
+          }}
+        >
+          {({ isSubmitting, handleSubmit }) => (
+            <Form onSubmit={handleSubmit}>
+              <InputField
+                placeholder="Email"
+                name="email"
+                style={{ height: "40px" }}
+                prefix={<MailOutlined style={{ fontSize: "125%" }} />}
+              />
+              <InputField
+                name="password"
+                placeholder="Password"
+                type={showPassword ? "text" : "password"}
+                style={{ height: "40px" }}
+                prefix={
+                  showPassword ? (
+                    <EyeOutlined
+                      style={{ fontSize: "125%" }}
+                      onClick={() => {
+                        setShowPassword((prev) => !prev);
+                      }}
+                    />
+                  ) : (
+                    <EyeInvisibleOutlined
+                      style={{ fontSize: "125%" }}
+                      onClick={() => {
+                        setShowPassword((prev) => !prev);
+                      }}
+                    />
+                  )
+                }
+                className="mt-7"
+              />
+              <div className="flex justify-end">
+                <Link
+                  href="/forgot-password"
+                  className="mt-4 text-sm font-medium "
+                >
+                  Forgot Password?
+                </Link>
+              </div>
+              <Button
+                text="Login Now"
+                htmlType="submit"
+                disabled={isSubmitting}
+                isLoading={isSubmitting}
+                className="mt-7"
+                style={{ height: "40px", fontSize: "16px" }}
+              />
+            </Form>
           )}
-        </div>
+        </Formik>
       </div>
-      {isInputTabOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-gray-950 border border-white px-5 pt-5 pb-10 rounded-xl w-11/12 sm:w-1/2 lg:w-1/3 transform transition-all">
-            <div className="flex justify-between">
-              <p className="text-white text-lg font-semibold">
-                Enter Barcode Manually
-              </p>
-              <p
-                className="mb-10 text-2xl text-white cursor-pointer"
-                onClick={() => {
-                  setIsInputTabOpen(false);
-                  setErrorMessage("");
-                }}
-              >
-                &#10006;
-              </p>
-            </div>
-            <input
-              type="number"
-              value={inputBarcode}
-              onChange={(e) => setInputBarcode(e.target.value)}
-              placeholder="Enter barcode"
-              className="w-full p-3 rounded mb-2"
-            />
-            <p
-              className={`text-red-500 text-sm min-h-5 ${
-                errorMessage ? "visible" : "invisible"
-              }`}
-            >
-              {errorMessage}
-            </p>
-            <button
-              onClick={handleInputSubmit}
-              className="w-full rounded-full bg-blue-600 text-white font-medium py-3 mt-2"
-            >
-              Submit
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default App;
+export default Login;
