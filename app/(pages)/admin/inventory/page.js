@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateInventoryPopup from "./components/createInventoryPopup";
+import { getInventory } from "app/services/inventory";
 
 const columns = [
   {
@@ -146,6 +147,8 @@ const data = [
 const defaultCheckedList = columns.map((item) => item.key);
 
 const Inventory = () => {
+  const [inventory, setInventory] = useState()
+  const [fetchingInventory, setFetchingInventory] = useState(true)
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addInventoryVisible, setAddInventoryVisible] = useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
@@ -160,6 +163,20 @@ const Inventory = () => {
       setSelectedRowKeys(selectedKeys);
     },
   };
+
+  useEffect(() => {
+    const handleFetchInventory = async () => {
+      const { status, data } = await getInventory();
+      if (status === 200) {
+        setFetchingInventory(false)
+        setInventory(data.data)
+      } else {
+        setFetchingInventory(false)
+        message.error(data.error);
+      }
+    }
+    handleFetchInventory()
+  }, [])
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
@@ -179,27 +196,27 @@ const Inventory = () => {
         />
         <div className="flex gap-3 justify-end">
           <p className="text-secondary">
-            Total Inventory: <span>{"(" + data.length + ")"}</span>
+            Total Inventory: <span>{"(" + inventory?.length + ")"}</span>
           </p>
           <p className="text-secondary">
-            Parent Inventory: <span>{"(" + data.length + ")"}</span>
+            Parent Inventory: <span>{"(" + inventory?.length + ")"}</span>
           </p>
         </div>
         <Table
-          loading={false}
+          loading={fetchingInventory}
           size={"large"}
           scroll={{ x: 1400 }}
           columns={newColumns}
           rowSelection={rowSelection}
-          dataSource={data.map((i, index) => ({ ...i, key: index }))}
+          dataSource={inventory && inventory.length > 0 && inventory.map((i, index) => ({ ...i, key: index }))}
           pagination={{
-            total: data.total,
+            total: inventory?.total,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
-            onChange: () => {},
+            onChange: () => { },
           }}
           style={{
             marginTop: 16,

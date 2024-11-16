@@ -9,6 +9,7 @@ import {
 import Button from "@/components/common/Button";
 import InventoryFilter from "./filtersDropdown";
 import AddMaterialTransferPopup from "../../material-transfer/components/addMaterialTransferPopup";
+import { exportInventory } from "app/services/inventory";
 
 const ActionBar = ({
   showAddInventoryModal,
@@ -33,6 +34,15 @@ const ActionBar = ({
       ? checkedList.filter((key) => key !== value)
       : [...checkedList, value];
     setCheckedList(newCheckedList);
+  };
+
+  const handleExportInventory = async () => {
+    const { status, data } = await exportInventory(showHierarchy);
+    if (status === 200) {
+      message.success("Export initiated with hierarchy: " + showHierarchy);
+    } else {
+      message.error(data.error);
+    }
   };
 
   return (
@@ -122,9 +132,7 @@ const ActionBar = ({
               <Menu.Item>
                 <Button
                   onClick={() => {
-                    message.success(
-                      "Export initiated with hierarchy: " + showHierarchy
-                    );
+                    handleExportInventory();
                   }}
                   text="Export"
                 />

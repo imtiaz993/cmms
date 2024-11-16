@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateAssetPopup from "./components/createAssetPopup";
 import { useRouter } from "next/navigation";
+import { getAssets } from "app/services/assets";
 
 // Common column structure
 const baseColumns = [
@@ -81,10 +82,27 @@ const defaultCheckedList = [
 ];
 
 const Assets = () => {
+  const [assets, setAssets] = useState()
+  const [fetchingAssets, setFetchingAssets] = useState(true)
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
   const router = useRouter();
+
+  useEffect(() => {
+    const handleFetchAssets = async () => {
+      const { status, data } = await getAssets();
+      if (status === 200) {
+        setFetchingAssets(false)
+        setAssets(data.data)
+      } else {
+        setFetchingAssets(false)
+        message.error(data.error);
+      }
+    }
+    handleFetchAssets()
+  }, [])
+
 
   // Filter columns dynamically based on checkedList
   const mainColumns = [
@@ -152,10 +170,10 @@ const Assets = () => {
       />
       <div className="flex gap-3 justify-end">
         <p className="text-secondary">
-          Total Assets: <span>{`(${data.length})`}</span>
+          Total Assets: <span>{`(${assets?.length})`}</span>
         </p>
         <p className="text-secondary">
-          Parent Assets: <span>{`(${data.length})`}</span>
+          Parent Assets: <span>{`(${assets?.length})`}</span>
         </p>
       </div>
       <Table
@@ -163,13 +181,13 @@ const Assets = () => {
         onRow={(record) => ({
           onClick: () => router.push(`/admin/assets/${record.key}`),
         })}
-        loading={false}
+        loading={fetchingAssets}
         size="large"
         scroll={{ x: 1100 }}
         columns={mainColumns}
-        dataSource={data}
+        dataSource={assets && assets.length > 0 && assets}
         pagination={{
-          total: data.length,
+          total: assets?.length,
           pageSize: 10,
           showSizeChanger: true,
           showTotal: (total, range) =>
