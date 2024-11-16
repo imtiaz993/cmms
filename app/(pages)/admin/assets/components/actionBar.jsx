@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import AssetFilter from "./filtersDropdown";
+import { exportAssets } from "app/services/assets";
 
 const ActionBar = ({
   showAddAssetModal,
@@ -29,6 +30,15 @@ const ActionBar = ({
       ? checkedList.filter((key) => key !== value)
       : [...checkedList, value];
     setCheckedList(newCheckedList);
+  };
+
+  const handleExportAssets = async () => {
+    const { status, data } = await exportAssets(showHierarchy);
+    if (status === 200) {
+      message.success("Export initiated with hierarchy: " + showHierarchy);
+    } else {
+      message.error(data.error);
+    }
   };
 
   return (
@@ -100,9 +110,7 @@ const ActionBar = ({
               <Menu.Item>
                 <Button
                   onClick={() => {
-                    message.success(
-                      "Export initiated with hierarchy: " + showHierarchy
-                    );
+                    handleExportAssets();
                   }}
                   text="Export"
                 />

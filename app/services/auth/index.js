@@ -1,4 +1,3 @@
-import axios from "axios";
 import { publicRequest } from "../requestHandler";
 
 export const login = async (values) => {
