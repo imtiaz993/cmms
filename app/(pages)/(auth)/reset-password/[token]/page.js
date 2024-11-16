@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { message } from "antd";
@@ -11,7 +11,7 @@ import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 
 const validationSchema = Yup.object().shape({
-  password: Yup.string()
+  newPassword: Yup.string()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters long")
     .matches(/[a-zA-Z]/, "Password must contain at least one alphabet letter")
@@ -21,18 +21,17 @@ const validationSchema = Yup.object().shape({
       "Password must contain at least one special character"
     ),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .oneOf([Yup.ref("newPassword"), null], "Passwords must match")
     .required("Please confirm your password"),
 });
 
 const ResetPassword = () => {
   const router = useRouter();
 
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const { token } = useParams();
 
   const [showPassword, setShowPassword] = useState({
-    password: false,
+    newPassword: false,
     confirmPassword: false,
   });
 
@@ -47,7 +46,7 @@ const ResetPassword = () => {
       router.replace("/login");
       resetForm();
     } else {
-      message.error(data.message);
+      message.error(data.error);
     }
   };
 
@@ -59,7 +58,7 @@ const ResetPassword = () => {
       </p>
       <div className="mt-10 w-full">
         <Formik
-          initialValues={{ password: "", confirmPassword: "" }}
+          initialValues={{ newPassword: "", confirmPassword: "" }}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmit(values, setSubmitting, resetForm);
@@ -68,18 +67,18 @@ const ResetPassword = () => {
           {({ isSubmitting, handleSubmit }) => (
             <Form onSubmit={handleSubmit}>
               <InputField
-                name="password"
+                name="newPassword"
                 placeholder="Password"
                 style={{ height: "40px" }}
-                type={showPassword.password ? "text" : "password"}
+                type={showPassword.newPassword ? "text" : "password"}
                 prefix={
-                  showPassword.password ? (
+                  showPassword.newPassword ? (
                     <EyeOutlined
                       style={{ fontSize: "125%" }}
                       onClick={() => {
                         setShowPassword((prev) => ({
                           ...prev,
-                          password: !prev.password,
+                          newPassword: !prev.newPassword,
                         }));
                       }}
                     />
@@ -89,7 +88,7 @@ const ResetPassword = () => {
                       onClick={() => {
                         setShowPassword((prev) => ({
                           ...prev,
-                          password: !prev.password,
+                          newPassword: !prev.newPassword,
                         }));
                       }}
                     />

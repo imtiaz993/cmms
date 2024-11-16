@@ -30,7 +30,7 @@ const Login = () => {
     const { status, data } = await login(values);
     setSubmitting(false);
     if (status === 200) {
-      localStorage.setItem("user", data.data);
+      localStorage.setItem("user", JSON.stringify(data.data));
       localStorage.setItem("token", data.token);
       message.success(data.message);
       if (data?.data?.role === "supervisor") {
@@ -41,7 +41,7 @@ const Login = () => {
       }
       resetForm();
     } else {
-      message.error(data.message);
+      message.error(data.error);
     }
   };
 

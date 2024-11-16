@@ -45,7 +45,7 @@ const Profile = () => {
     if (status === 200) {
       message.success(data.message);
     } else {
-      message.error(data.message);
+      message.error(data.error);
     }
   };
 

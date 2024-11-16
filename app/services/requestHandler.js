@@ -10,7 +10,7 @@ export const authRequest = async ({ url, method = "GET", data, headers }) => {
     axiosClient({
       method,
       headers: {
-        Authorization: getToken(),
+        Authorization: `Bearer ${getToken()}`,
         ...headers,
       },
       url,
@@ -21,7 +21,7 @@ export const authRequest = async ({ url, method = "GET", data, headers }) => {
       })
       .catch((err) => {
         reject({
-          ...err.response.data,
+          ...err.response,
         });
       });
   });
@@ -42,7 +42,7 @@ export const publicRequest = async ({ url, method = "GET", data, headers }) => {
       })
       .catch((err) => {
         reject({
-          ...err.response.data,
+          ...err.response,
         });
       });
   });
