@@ -43,8 +43,8 @@ const ResetPassword = () => {
     });
     setSubmitting(false);
     if (status === 200) {
-      router.replace("/login");
       message.success(data.message);
+      router.replace("/login");
       resetForm();
     } else {
       message.error(data.message);

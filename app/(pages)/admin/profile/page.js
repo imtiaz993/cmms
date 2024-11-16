@@ -38,7 +38,7 @@ const Profile = () => {
     const { status, data } = await updateProfile(values);
     setSubmitting(false);
     if (status === 200) {
-      localStorage.setItem("user", data);
+      localStorage.setItem("user", { ...getUser(), ...values });
       message.success(data.message);
     } else {
       message.error(data.message);
