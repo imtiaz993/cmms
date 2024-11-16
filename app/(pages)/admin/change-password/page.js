@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { message } from "antd";
-import { updatePassword } from "app/services/user";
+import { changePassword } from "app/services/user";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
+import { getUser } from "@/utils/index";
 
 const validationSchema = Yup.object().shape({
   oldPassword: Yup.string().required("Old Password is required"),
@@ -39,10 +40,9 @@ const Profile = () => {
   });
 
   const handleSubmit = async (values, setSubmitting) => {
-    const { status, data } = await updatePassword(values);
+    const { status, data } = await changePassword({ ...values, email: getUser().email });
     setSubmitting(false);
     if (status === 200) {
-      localStorage.setItem("user", data);
       message.success(data.message);
     } else {
       message.error(data.message);
