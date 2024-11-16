@@ -197,3 +197,7 @@ h6 {
     width: 800px !important;
   }
 }
+
+.ant-spin {
+  color: #000 !important;
+}
