@@ -67,7 +67,7 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
             trigger="click"
           >
             <div className="cursor-pointer flex items-center select-none">
-              <p className={`dark:text-white mr-1`}>{getUser().name}</p>
+              <p className={`dark:text-white mr-1`}>{getUser()?.name}</p>
               <DownOutlined style={{ fontSize: "10px" }} />
             </div>
           </Dropdown>

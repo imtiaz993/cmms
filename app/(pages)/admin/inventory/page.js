@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Table } from "antd";
+import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateInventoryPopup from "./components/createInventoryPopup";
 import { getInventory } from "app/services/inventory";
