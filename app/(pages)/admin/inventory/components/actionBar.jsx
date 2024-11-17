@@ -9,6 +9,7 @@ import {
 import Button from "@/components/common/Button";
 import InventoryFilter from "./filtersDropdown";
 import AddMaterialTransferPopup from "../../material-transfer/components/addMaterialTransferPopup";
+import AddFieldModal from "./addFieldPopup";
 import { exportInventory } from "app/services/inventory";
 
 const ActionBar = ({
@@ -28,6 +29,13 @@ const ActionBar = ({
     value: key,
     key: index,
   }));
+
+  //Add Field
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+  };
 
   const handleCheckboxChange = (value) => {
     const newCheckedList = checkedList.includes(value)
@@ -71,6 +79,15 @@ const ActionBar = ({
             className="col-span-2 sm:col-span-1"
           />
         )}
+        <Button
+          onClick={() => setIsModalVisible(true)}
+          text="Manage Fields"
+          outlined
+        />
+
+        {/* AddFieldModal Component */}
+        <AddFieldModal visible={isModalVisible} onClose={handleModalClose} />
+
         <Dropdown
           dropdownRender={() => <InventoryFilter />}
           trigger={["click"]}

@@ -144,14 +144,14 @@ const CreateInventoryPopup = ({
           >
             <div>
               <div className="grid md:grid-cols-3 gap-4">
-                <InputField
+                {/* <InputField
                   name="physicalLocation"
                   placeholder="Physical Location"
                   maxLength={128}
-                />
+                /> */}
                 <InputField
-                  name="makeModel"
-                  placeholder="Make and/or Model"
+                  name="partName"
+                  placeholder="Part Name"
                   maxLength={128}
                 />
                 <InputField
@@ -159,50 +159,58 @@ const CreateInventoryPopup = ({
                   placeholder="Part # / Item #"
                   maxLength={128}
                 />
-                <InputField
-                  name="assetNumber"
-                  placeholder="Asset # / Serial #"
-                  maxLength={128}
-                />
-                <InputField
-                  name="quantity"
-                  placeholder="Quantity"
-                  maxLength={50}
-                  type="number"
-                />
-                <InputField
+                <Field
+                  component={FormikSelect}
                   name="category"
                   placeholder="Type / Category"
-                  maxLength={128}
+                  style={{ height: "36px" }}
                 />
                 <div className="md:col-span-3">
                   <Field
                     as={Input.TextArea}
-                    name="description"
-                    placeholder="Description"
+                    name="details"
+                    placeholder="Details"
                     maxLength={150}
                     className="!border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                   />
                   <div className="text-right">0/150</div>
-                  <Field
+
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <InputField
+                      name="quantity"
+                      placeholder="Quantity"
+                      maxLength={50}
+                    />
+                    <InputField
+                      name="price"
+                      placeholder="Price"
+                      maxLength={128}
+                    />
+                    <InputField
+                      name="location"
+                      placeholder="Location"
+                      maxLength={128}
+                    />
+
+                    {/* <Field
                     as={Input.TextArea}
                     name="specDetails"
                     placeholder="Spec Details"
                     maxLength={500}
                     className="!border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                   />
-                  <div className="text-right">0/500</div>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <Field
-                      component={FormikDatePicker}
-                      placeholder="Received Date"
-                      name="recievedDate"
-                      style={{ height: "36px" }}
+                  <div className="text-right">0/500</div> */}
+                    <InputField name="PO" placeholder="PO" maxLength={128} />
+                    <InputField name="SO" placeholder="SO" maxLength={128} />
+                    <InputField
+                      name="invoiceNumber"
+                      placeholder="Inv. #"
+                      maxLength={128}
                     />
                     <Field
                       name="supplier"
+                      placeholder="Vendor"
                       component={FormikSelect}
-                      placeholder="Suppliers"
                       style={{ height: "36px" }}
                       options={[
                         { value: "supplier1", label: "Supplier 1" },
@@ -214,16 +222,11 @@ const CreateInventoryPopup = ({
                     />
                     <Field
                       component={FormikDatePicker}
-                      name="installedDate"
-                      placeholder="Installed Date"
+                      name="receivedDate"
+                      placeholder="Received Date"
                       style={{ height: "36px" }}
                     />
-                    <Field
-                      component={FormikDatePicker}
-                      name="originalManufactureDate"
-                      placeholder="Original Manufacture Date"
-                    />
-                    <Field
+                    {/* <Select
                       name="condition"
                       component={FormikSelect}
                       placeholder="Condition"
@@ -236,7 +239,7 @@ const CreateInventoryPopup = ({
                         { label: "Re-Certified", value: "re-certified" },
                       ]}
                       style={{ height: "36px" }}
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>
