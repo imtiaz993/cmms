@@ -88,14 +88,14 @@ const CreateInventoryPopup = ({
           >
             <div>
               <div className="grid md:grid-cols-3 gap-4">
-                <InputField
+                {/* <InputField
                   name="physicalLocation"
                   placeholder="Physical Location"
                   maxLength={128}
-                />
+                /> */}
                 <InputField
-                  name="makeModel"
-                  placeholder="Make and/or Model"
+                  name="partName"
+                  placeholder="Part Name"
                   maxLength={128}
                 />
                 <InputField
@@ -103,65 +103,65 @@ const CreateInventoryPopup = ({
                   placeholder="Part # / Item #"
                   maxLength={128}
                 />
-                <InputField
-                  name="assetNumber"
-                  placeholder="Asset # / Serial #"
-                  maxLength={128}
-                />
-                <InputField
-                  name="quantity"
-                  placeholder="Quantity"
-                  maxLength={50}
-                />
-                <InputField
+                <Select
                   name="category"
                   placeholder="Type / Category"
-                  maxLength={128}
+                  style={{ height: "36px" }}
                 />
                 <div className="md:col-span-3">
                   <Field
                     as={Input.TextArea}
-                    name="description"
-                    placeholder="Description"
+                    name="details"
+                    placeholder="Details"
                     maxLength={150}
                     className="!border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                   />
                   <div className="text-right">0/150</div>
 
-                  <Field
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <InputField
+                      name="quantity"
+                      placeholder="Quantity"
+                      maxLength={50}
+                    />
+                    <InputField
+                      name="price"
+                      placeholder="Price"
+                      maxLength={128}
+                    />
+                    <InputField
+                      name="location"
+                      placeholder="Location"
+                      maxLength={128}
+                    />
+
+                    {/* <Field
                     as={Input.TextArea}
                     name="specDetails"
                     placeholder="Spec Details"
                     maxLength={500}
                     className="!border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                   />
-                  <div className="text-right">0/500</div>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <Field
-                      as={DatePicker}
-                      placeholder="Received Date"
-                      maxLength={10}
-                      name="recievedDate"
-                      style={{ height: "36px" }}
+                  <div className="text-right">0/500</div> */}
+                    <InputField name="PO" placeholder="PO" maxLength={128} />
+                    <InputField name="SO" placeholder="SO" maxLength={128} />
+                    <InputField
+                      name="invoiceNumber"
+                      placeholder="Inv. #"
+                      maxLength={128}
                     />
                     <Select
                       name="supplier"
-                      placeholder="Suppliers"
+                      placeholder="Vendor"
                       style={{ height: "36px" }}
                     />
                     <Field
                       as={DatePicker}
-                      name="installedDate"
-                      placeholder="Installed Date"
+                      name="receivedDate"
+                      placeholder="Received Date"
                       style={{ height: "36px" }}
                     />
-                    <Field
-                      as={DatePicker}
-                      name="originalManufactureDate"
-                      placeholder="Original Manufacture Date"
-                      style={{ height: "36px" }}
-                    />
-                    <Select
+                    {/* <Select
                       name="condition"
                       placeholder="Condition"
                       options={[
@@ -173,7 +173,7 @@ const CreateInventoryPopup = ({
                         { label: "Re-Certified", value: "re-certified" },
                       ]}
                       style={{ height: "36px" }}
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>
