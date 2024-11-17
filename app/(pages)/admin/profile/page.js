@@ -26,7 +26,7 @@ const validationSchema = Yup.object().shape({
     .required("Email is required")
     .email("Invalid email format"),
 
-  phone: Yup.string().required("Phone number is required"),
+  phone: Yup.string(),
 });
 
 const Profile = () => {
@@ -38,10 +38,10 @@ const Profile = () => {
     const { status, data } = await updateProfile(values);
     setSubmitting(false);
     if (status === 200) {
-      localStorage.setItem("user", data);
+      localStorage.setItem("user", JSON.stringify({ ...getUser(), ...values }));
       message.success(data.message);
     } else {
-      message.error(data.message);
+      message.error(data.error);
     }
   };
 
@@ -86,7 +86,7 @@ const Profile = () => {
         </div>
         <div>
           <Formik
-            initialValues={{ email: "", name: "", phone: "" }}
+            initialValues={getUser()}
             validationSchema={isEdit ? validationSchema : {}}
             onSubmit={(values, { setSubmitting }) => {
               handleSubmit(values, setSubmitting);

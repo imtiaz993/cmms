@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Dropdown } from "antd";
@@ -8,6 +10,7 @@ import {
   MenuOutlined,
 } from "@ant-design/icons";
 import DarkModeToggle from "react-dark-mode-toggle";
+import { getUser } from "@/utils/index";
 
 const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
   const router = useRouter();
@@ -64,7 +67,7 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
             trigger="click"
           >
             <div className="cursor-pointer flex items-center select-none">
-              <p className={`dark:text-white mr-1`}>Imtiaz Hussain</p>
+              <p className={`dark:text-white mr-1`}>{getUser().name}</p>
               <DownOutlined style={{ fontSize: "10px" }} />
             </div>
           </Dropdown>

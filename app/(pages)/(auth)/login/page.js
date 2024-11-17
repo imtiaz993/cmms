@@ -30,18 +30,18 @@ const Login = () => {
     const { status, data } = await login(values);
     setSubmitting(false);
     if (status === 200) {
-      localStorage.setItem("user", data.data);
+      localStorage.setItem("user", JSON.stringify(data.data));
       localStorage.setItem("token", data.token);
+      message.success(data.message);
       if (data?.data?.role === "supervisor") {
         router?.replace("/supervisor/dashboard");
       }
       if (data?.data?.role === "admin") {
         router?.replace("/admin/dashboard");
       }
-      message.success(data.message);
       resetForm();
     } else {
-      message.error(data.message);
+      message.error(data.error);
     }
   };
 

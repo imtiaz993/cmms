@@ -1,10 +1,23 @@
 import { authRequest } from "../requestHandler";
 
-export const updateProfile = async (values) => {
+export const getInventory = async () => {
   try {
     const { status, data } = await authRequest({
-      url: "/auth/updateAdminProfile",
-      method: "PATCH",
+      url: "/inventory/get",
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const addInventory = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: '/inventory/add',
+      method: "POST",
       data: values,
     });
     return { status, data };
@@ -12,17 +25,14 @@ export const updateProfile = async (values) => {
     if (e.data) {
       return { status: e.status, data: e.data };
     }
-  };
-}
+  }
+};
 
-export const changePassword = async (values) => {
+export const exportInventory= async (hierarchy) => {
   try {
     const { status, data } = await authRequest({
-      url: `/auth/changePassword`,
-      method: "POST",
-      data: values,
+      url: `/inventory/export?hierarchy=${hierarchy}`,
     });
-
     return { status, data };
   } catch (e) {
     if (e.data) {

@@ -1,54 +1,109 @@
-import { useState } from "react";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { DatePicker, Input, message, Modal, Select, Steps } from "antd";
+import { DatePicker, Input, message, Modal, Select } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-import TextArea from "antd/es/input/TextArea";
+import { addInventory } from "app/services/inventory";
+import dayjs from "dayjs";
 
 const validationSchema = Yup.object().shape({
-  costCenter: Yup.string(),
+  physicalLocation: Yup.string()
+    .required("Physical Location is required")
+    .max(128),
+  makeModel: Yup.string().required("Make and/or Model is required").max(128),
+  partItem: Yup.string().required("Part # / Item # is required").max(128),
+  assetNumber: Yup.string().required("Asset # / Serial # is required").max(128),
+  quantity: Yup.number()
+    .required("Quantity is required")
+    .positive("Quantity must be a positive number"),
+  category: Yup.string().required("Type / Category is required").max(128),
+  description: Yup.string().max(
+    150,
+    "Description cannot exceed 150 characters"
+  ),
+  specDetails: Yup.string().max(
+    500,
+    "Spec Details cannot exceed 500 characters"
+  ),
+  recievedDate: Yup.date().required("Received Date is required"),
+  supplier: Yup.string().required("Supplier is required"),
+  installedDate: Yup.date().required("Installed Date is required"),
+  originalManufactureDate: Yup.date().required(
+    "Original Manufacture Date is required"
+  ),
+  condition: Yup.string().required("Condition is required"),
 });
 
 const CreateInventoryPopup = ({
   addInventoryVisible,
   setAddInventoryVisible,
 }) => {
-  const [currentStep, setCurrentStep] = useState(0);
-
-  const handleNext = () => {
-    setCurrentStep((prev) => prev + 1);
-  };
-
-  const handlePrev = () => {
-    setCurrentStep((prev) => prev - 1);
-  };
-
   const handleSubmit = async (values, setSubmitting, resetForm) => {
-    console.log(values);
-    // const { status, data } = await login(values);
-    // setSubmitting(false);
-    // if (status === 200) {
-    // message.success(data?.message);
-    //   resetForm();
-    // } else {
-    //   message.error(data?.message);
-    // }
+    const { status, data } = await addInventory(values);
+    setSubmitting(false);
+    if (status === 200) {
+      message.success(data.message);
+      resetForm();
+      setAddInventoryVisible(false);
+    } else {
+      message.error(data.error);
+    }
+  };
+
+  const FormikDatePicker = ({ field, form, ...props }) => {
+    const handleChange = (date, dateString) => {
+      form.setFieldValue(field.name, dateString);
+    };
+
+    return (
+      <DatePicker
+        {...field}
+        {...props}
+        onChange={handleChange}
+        value={field.value ? dayjs(field.value) : null}
+      />
+    );
+  };
+
+  const FormikSelect = ({ field, form, options, ...props }) => {
+    const handleChange = (value) => {
+      form.setFieldValue(field.name, value);
+    };
+
+    return (
+      <Select
+        {...props}
+        value={field.value || undefined}
+        onChange={handleChange}
+        onBlur={() => form.setFieldTouched(field.name, true)}
+        options={options}
+      />
+    );
   };
 
   return (
     <Formik
       initialValues={{
-        costCenter: "",
+        physicalLocation: "",
+        makeModel: "",
+        partItem: "",
+        assetNumber: "",
+        quantity: "",
+        category: "",
+        description: "",
+        specDetails: "",
+        recievedDate: null,
+        supplier: "",
+        installedDate: null,
+        originalManufactureDate: null,
+        condition: "",
       }}
       validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting, resetForm }) => {
-        console.log(values);
-
         handleSubmit(values, setSubmitting, resetForm);
       }}
     >
-      {({ isSubmitting, handleSubmit }) => (
+      {({ isSubmitting, handleSubmit, errors, touched }) => (
         <Form onSubmit={handleSubmit}>
           <Modal
             maskClosable={false}
@@ -61,7 +116,7 @@ const CreateInventoryPopup = ({
               <div>
                 <Button
                   className="mr-2"
-                  onClick={handlePrev}
+                  onClick={() => setAddInventoryVisible(false)}
                   outlined
                   size="small"
                   text="Cancel"
@@ -69,10 +124,11 @@ const CreateInventoryPopup = ({
                   disabled={isSubmitting}
                 />
                 <Button
-                  className="mr-2"
+                  className="mr-2 !min-w-[125px]"
                   htmlType="submit"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
+                  onClick={handleSubmit}
                   size="small"
                   text="Add Inventory"
                   fullWidth={false}
@@ -103,7 +159,8 @@ const CreateInventoryPopup = ({
                   placeholder="Part # / Item #"
                   maxLength={128}
                 />
-                <Select
+                <Field
+                  component={FormikSelect}
                   name="category"
                   placeholder="Type / Category"
                   style={{ height: "36px" }}
@@ -150,19 +207,28 @@ const CreateInventoryPopup = ({
                       placeholder="Inv. #"
                       maxLength={128}
                     />
-                    <Select
+                    <Field
                       name="supplier"
                       placeholder="Vendor"
+                      component={FormikSelect}
                       style={{ height: "36px" }}
+                      options={[
+                        { value: "supplier1", label: "Supplier 1" },
+                        { value: "supplier2", label: "Supplier 2" },
+                        { value: "supplier3", label: "Supplier 3" },
+                        { value: "supplier4", label: "Supplier 4" },
+                        { value: "supplier5", label: "Supplier 5" },
+                      ]}
                     />
                     <Field
-                      as={DatePicker}
+                      component={FormikDatePicker}
                       name="receivedDate"
                       placeholder="Received Date"
                       style={{ height: "36px" }}
                     />
                     {/* <Select
                       name="condition"
+                      component={FormikSelect}
                       placeholder="Condition"
                       options={[
                         { label: "Good", value: "good" },
