@@ -153,7 +153,7 @@ const AddFieldForm = ({ onAddField }) => {
 };
 
 // Main Component: AddFieldModal
-const AddFieldModal = ({ visible, onClose }) => {
+const AddFieldPopup = ({ visible, setVisible }) => {
   const [fields, setFields] = useState([
     { name: "Product Name", type: "text" },
     { name: "Price", type: "number" },
@@ -177,7 +177,7 @@ const AddFieldModal = ({ visible, onClose }) => {
     <Modal
       title="Manage Fields"
       open={visible}
-      onCancel={onClose}
+      onCancel={() => setVisible(false)}
       footer={null}
       width={700}
       bodyProps={{ style: { minHeight: "200px" } }}
@@ -195,4 +195,4 @@ const AddFieldModal = ({ visible, onClose }) => {
   );
 };
 
-export default AddFieldModal;
+export default AddFieldPopup;

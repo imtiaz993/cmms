@@ -9,8 +9,10 @@ import {
 import Button from "@/components/common/Button";
 import InventoryFilter from "./filtersDropdown";
 import AddMaterialTransferPopup from "../../material-transfer/components/addMaterialTransferPopup";
-import AddFieldModal from "./addFieldPopup";
+import AddFieldPopup from "../../../../../components/addFieldPopup";
 import { exportInventory } from "app/services/inventory";
+import Link from "next/link";
+import CreatePurchaseOrderPopup from "../purchase-order/createPurchaseOrderPopup";
 
 const ActionBar = ({
   showAddInventoryModal,
@@ -32,6 +34,7 @@ const ActionBar = ({
 
   //Add Field
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [createPOVisible, setCreatePOVisible] = useState(false);
 
   const handleModalClose = () => {
     setIsModalVisible(false);
@@ -54,128 +57,142 @@ const ActionBar = ({
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
+    <>
       {addMaterialTransferVisible && (
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
           setAddMaterialTransferVisible={setAddMaterialTransferVisible}
         />
       )}
-      <Input.Search
-        placeholder="Search..."
-        onChange={(e) => setSearchText(e.target.value)}
-        className="sm:!w-[300px] searchBar"
+      <CreatePurchaseOrderPopup
+        visible={createPOVisible}
+        setVisible={setCreatePOVisible}
       />
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
-        {selectedRowKeys.length > 0 && (
-          <Button
-            text="New Material Transfer"
-            onClick={() => {
-              setAddMaterialTransferVisible(true);
-            }}
-            outlined
-            style={{ padding: "4px 35px" }}
-            prefix={<PlusOutlined />}
-            className="col-span-2 sm:col-span-1"
-          />
-        )}
-        <Button
-          onClick={() => setIsModalVisible(true)}
-          text="Manage Fields"
-          outlined
+
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
+        <Input.Search
+          placeholder="Search..."
+          onChange={(e) => setSearchText(e.target.value)}
+          className="sm:!w-[300px] searchBar"
         />
-
-        {/* AddFieldModal Component */}
-        <AddFieldModal visible={isModalVisible} onClose={handleModalClose} />
-
-        <Dropdown
-          dropdownRender={() => <InventoryFilter />}
-          trigger={["click"]}
-          arrow
-          placement="bottomCenter"
-        >
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
+          {selectedRowKeys.length > 0 && (
+            <Button
+              text="New Material Transfer"
+              onClick={() => {
+                setAddMaterialTransferVisible(true);
+              }}
+              outlined
+              style={{ padding: "4px 35px" }}
+              prefix={<PlusOutlined />}
+              className="col-span-2 sm:col-span-1"
+            />
+          )}
+          {/* <Link href="/admin/inventory/purchase-order"> */}
           <Button
-            text="Filter"
+            text="Purchase Order"
             outlined
-            style={{ padding: "4px 0px" }}
-            prefix={<FilterOutlined />}
+            onClick={() => setCreatePOVisible(true)}
           />
-        </Dropdown>
-        <Dropdown
-          dropdownRender={() => (
-            <Menu>
-              <Menu.ItemGroup title="Select Columns">
-                {options.map((option) => (
-                  <Menu.Item
-                    key={option.value}
-                    style={{ display: "flex", alignItems: "center" }}
-                  >
-                    <Checkbox
-                      value={option.value}
-                      checked={checkedList.includes(option.value)}
-                      onChange={() => {
-                        handleCheckboxChange(option.value);
-                      }}
+          {/* </Link> */}
+          <Button
+            onClick={() => setIsModalVisible(true)}
+            text="Manage Fields"
+            outlined
+          />
+
+          {/* AddFieldModal Component */}
+          <AddFieldPopup visible={isModalVisible} onClose={handleModalClose} />
+
+          <Dropdown
+            dropdownRender={() => <InventoryFilter />}
+            trigger={["click"]}
+            arrow
+            placement="bottomCenter"
+          >
+            <Button
+              text="Filter"
+              outlined
+              style={{ padding: "4px 0px" }}
+              prefix={<FilterOutlined />}
+            />
+          </Dropdown>
+          <Dropdown
+            dropdownRender={() => (
+              <Menu>
+                <Menu.ItemGroup title="Select Columns">
+                  {options.map((option) => (
+                    <Menu.Item
+                      key={option.value}
+                      style={{ display: "flex", alignItems: "center" }}
                     >
-                      {option.label}
-                    </Checkbox>
-                  </Menu.Item>
-                ))}
-              </Menu.ItemGroup>
-            </Menu>
-          )}
-          trigger={["click"]}
-          arrow
-          placement="bottomCenter"
-        >
+                      <Checkbox
+                        value={option.value}
+                        checked={checkedList.includes(option.value)}
+                        onChange={() => {
+                          handleCheckboxChange(option.value);
+                        }}
+                      >
+                        {option.label}
+                      </Checkbox>
+                    </Menu.Item>
+                  ))}
+                </Menu.ItemGroup>
+              </Menu>
+            )}
+            trigger={["click"]}
+            arrow
+            placement="bottomCenter"
+          >
+            <Button
+              text="Column Settings"
+              outlined
+              style={{ padding: "4px 24px" }}
+              prefix={<SettingOutlined />}
+            />
+          </Dropdown>
+          <Dropdown
+            dropdownRender={() => (
+              <Menu>
+                <Menu.Item>
+                  <Checkbox
+                    checked={showHierarchy}
+                    onChange={(e) => setShowHierarchy(e.target.checked)}
+                  >
+                    Show Inventory Hierarchy
+                  </Checkbox>
+                </Menu.Item>
+                <Menu.Item>
+                  <Button
+                    onClick={() => {
+                      handleExportInventory();
+                    }}
+                    text="Export"
+                  />
+                </Menu.Item>
+              </Menu>
+            )}
+            trigger={["click"]}
+            arrow
+            placement="bottomCenter"
+          >
+            <Button
+              text="Export"
+              outlined
+              style={{ padding: "4px 0px" }}
+              prefix={<ExportOutlined />}
+            />
+          </Dropdown>
           <Button
-            text="Column Settings"
+            text="Add New Inventory"
+            onClick={showAddInventoryModal}
             outlined
-            style={{ padding: "4px 24px" }}
-            prefix={<SettingOutlined />}
+            style={{ padding: "4px 30px" }}
+            prefix={<PlusOutlined />}
           />
-        </Dropdown>
-        <Dropdown
-          dropdownRender={() => (
-            <Menu>
-              <Menu.Item>
-                <Checkbox
-                  checked={showHierarchy}
-                  onChange={(e) => setShowHierarchy(e.target.checked)}
-                >
-                  Show Inventory Hierarchy
-                </Checkbox>
-              </Menu.Item>
-              <Menu.Item>
-                <Button
-                  onClick={() => {
-                    handleExportInventory();
-                  }}
-                  text="Export"
-                />
-              </Menu.Item>
-            </Menu>
-          )}
-          trigger={["click"]}
-          arrow
-          placement="bottomCenter"
-        >
-          <Button
-            text="Export"
-            outlined
-            style={{ padding: "4px 0px" }}
-            prefix={<ExportOutlined />}
-          />
-        </Dropdown>
-        <Button
-          text="Add New Inventory"
-          onClick={showAddInventoryModal}
-          outlined
-          style={{ padding: "4px 30px" }}
-          prefix={<PlusOutlined />}
-        />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
