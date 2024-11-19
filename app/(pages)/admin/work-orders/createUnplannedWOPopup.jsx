@@ -5,6 +5,7 @@ import InputField from "@/components/common/InputField";
 import TextArea from "antd/es/input/TextArea";
 import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
+import SelectField from "@/components/common/SelectField";
 
 const validationSchema = Yup.object().shape({
   issueIdentification: Yup.string().required("Required"),
@@ -126,10 +127,9 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
                 name="initialAssessment"
                 placeholder="Initial Assessment"
               />
-              <Select
+              <SelectField
                 name="priorityLevel"
                 placeholder="Priority Level"
-                style={{ height: "36px", width: "100%" }}
                 options={[
                   { label: "High", value: "High" },
                   { label: "Medium", value: "Medium" },

@@ -50,11 +50,7 @@ const AssetFilter = () => {
         {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid gap-3">
-              <Select
-                name="Tasked To"
-                placeholder="Tasked To"
-                className="min-w-[105px]"
-              />
+              <SelectField name="Tasked To" placeholder="Tasked To" />
               <SelectField name="status" placeholder="Status" />
               <SelectField name="category" placeholder="Category" />
               <SelectField name="system" placeholder="System" />
