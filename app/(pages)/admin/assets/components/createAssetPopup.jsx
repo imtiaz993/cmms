@@ -1,4 +1,4 @@
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { DatePicker, Modal, Select } from "antd";
 import InputField from "@/components/common/InputField";
@@ -6,6 +6,7 @@ import Button from "@/components/common/Button";
 import TextArea from "antd/es/input/TextArea";
 import { addAsset } from "app/services/assets";
 import dayjs from "dayjs";
+import SelectField from "@/components/common/SelectField";
 
 const validationSchema = Yup.object().shape({
   physicalLocation: Yup.string().required("Physical Location is required"),
@@ -26,7 +27,7 @@ const validationSchema = Yup.object().shape({
   installedDate: Yup.date()
     .typeError("Installed Date must be a valid date")
     .required("Installed Date is required"),
-  suppliers: Yup.string().required("Suppliers are required"),
+  supplier: Yup.string().required("Suppliers are required"),
   criticality: Yup.string().required("Criticality is required"),
   originalMfrDate: Yup.date()
     .typeError("Original Mfr. Date must be a valid date")
@@ -66,22 +67,6 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
     );
   };
 
-  const FormikSelect = ({ field, form, options, ...props }) => {
-    const handleChange = (value) => {
-      form.setFieldValue(field.name, value);
-    };
-
-    return (
-      <Select
-        {...props}
-        value={field.value || undefined}
-        onChange={handleChange}
-        onBlur={() => form.setFieldTouched(field.name, true)}
-        options={options}
-      />
-    );
-  };
-
   return (
     <Formik
       initialValues={{
@@ -97,7 +82,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
         description: "",
         specDetails: "",
         installedDate: "",
-        suppliers: "",
+        supplier: "",
         criticality: "",
         originalMfrDate: "",
         condition: "",
@@ -149,9 +134,8 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
           >
             <div>
               <div className="grid md:grid-cols-3 gap-4">
-                <Field
+                <SelectField
                   name="physicalLocation"
-                  component={FormikSelect}
                   placeholder="Physical Location (Rig)"
                   options={[
                     { value: "Rig 21", label: "Rig 21" },
@@ -159,9 +143,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                     { value: "Rig 23", label: "Rig 23" },
                   ]}
                 />
-                <Field
+
+                <SelectField
                   name="mainSystem"
-                  component={FormikSelect}
                   placeholder="Main System"
                   options={[
                     { value: "airSystems", label: "Air Systems" },
@@ -211,11 +195,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                       placeholder="Installed Date"
                       style={{ height: "36px" }}
                     />
-                    <Field
+                    <SelectField
                       name="supplier"
-                      component={FormikSelect}
                       placeholder="Suppliers"
-                      style={{ height: "36px" }}
                       options={[
                         { value: "supplier1", label: "Supplier 1" },
                         { value: "supplier2", label: "Supplier 2" },
@@ -224,9 +206,8 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                         { value: "supplier5", label: "Supplier 5" },
                       ]}
                     />
-                    <Field
+                    <SelectField
                       name="criticality"
-                      component={FormikSelect}
                       placeholder="Criticality"
                       options={[
                         { value: "high", label: "High" },
@@ -240,9 +221,8 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                       placeholder="Original Mfr. Date (MM/DD/YYYY)"
                       style={{ height: "36px" }}
                     />
-                    <Field
+                    <SelectField
                       name="condition"
-                      component={FormikSelect}
                       placeholder="Condition"
                       options={[
                         { value: "new", label: "New" },
@@ -250,9 +230,8 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                         { value: "damaged", label: "Damaged" },
                       ]}
                     />
-                    <Field
+                    <SelectField
                       name="maintStatus"
-                      component={FormikSelect}
                       placeholder="Maint. Status"
                       options={[
                         { value: "active", label: "Active" },
