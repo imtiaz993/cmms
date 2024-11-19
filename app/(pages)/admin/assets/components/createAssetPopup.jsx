@@ -7,6 +7,7 @@ import TextArea from "antd/es/input/TextArea";
 import { addAsset } from "app/services/assets";
 import dayjs from "dayjs";
 import SelectField from "@/components/common/SelectField";
+import DatePickerField from "@/components/common/DatePickerField";
 
 const validationSchema = Yup.object().shape({
   physicalLocation: Yup.string().required("Physical Location is required"),
@@ -50,21 +51,6 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
     } else {
       message.error(data.error);
     }
-  };
-
-  const FormikDatePicker = ({ field, form, ...props }) => {
-    const handleChange = (date, dateString) => {
-      form.setFieldValue(field.name, dateString);
-    };
-
-    return (
-      <DatePicker
-        {...field}
-        {...props}
-        onChange={handleChange}
-        value={field.value ? dayjs(field.value) : null}
-      />
-    );
   };
 
   return (
@@ -189,11 +175,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                   />
                   <div className="text-right">0/500</div>
                   <div className="grid md:grid-cols-3 gap-4">
-                    <Field
-                      component={FormikDatePicker}
+                    <DatePickerField
                       name="installedDate"
                       placeholder="Installed Date"
-                      style={{ height: "36px" }}
                     />
                     <SelectField
                       name="supplier"
@@ -215,11 +199,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                         { value: "low", label: "Low" },
                       ]}
                     />
-                    <Field
-                      component={FormikDatePicker}
+                    <DatePickerField
                       name="originalMfrDate"
                       placeholder="Original Mfr. Date (MM/DD/YYYY)"
-                      style={{ height: "36px" }}
                     />
                     <SelectField
                       name="condition"
@@ -238,11 +220,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                         { value: "inactive", label: "Inactive" },
                       ]}
                     />
-                    <Field
-                      component={FormikDatePicker}
+                    <DatePickerField
                       name="maintStartDate"
                       placeholder="Maint. Start Date (MM/DD/YYYY)"
-                      style={{ height: "36px" }}
                     />
                   </div>
                 </div>
