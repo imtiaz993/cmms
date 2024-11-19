@@ -1,4 +1,5 @@
 import Button from "@/components/common/Button";
+import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
 import { DatePicker, Modal, Select, TimePicker } from "antd";
@@ -48,12 +49,9 @@ const AddCostPopup = ({ visible, setVisible }) => {
               width={800}
             >
               <div className="grid md:grid-cols-3 gap-4">
-                <Field
-                  as={DatePicker}
+                <DatePickerField
                   name="createdDate"
                   placeholder="Created Date"
-                  className="w-full"
-                  style={{ height: "36px" }}
                 />
                 <Field
                   as={TimePicker}

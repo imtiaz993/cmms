@@ -4,6 +4,7 @@ import { DatePicker, Input, message, Modal, Select, TimePicker } from "antd";
 import InputField from "@/components/common/InputField";
 import TextArea from "antd/es/input/TextArea";
 import Button from "@/components/common/Button";
+import DatePickerField from "@/components/common/DatePickerField";
 
 const validationSchema = Yup.object().shape({
   issueIdentification: Yup.string().required("Required"),
@@ -98,12 +99,7 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
                 name="issueIdentification"
                 placeholder="Issue Identification"
               />
-              <Field
-                as={DatePicker}
-                name="date"
-                placeholder="Date"
-                style={{ height: "36px", width: "100%" }}
-              />
+              <DatePickerField name="date" placeholder="Date" />
               <Field
                 as={TimePicker}
                 name="time"

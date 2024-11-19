@@ -30,11 +30,11 @@ const TextAreaField = ({
                 component="div"
                 className="text-red-500 text-sm mt-1 w-full mb-3"
               />
-              {maxLength && (
+              {maxLength ? (
                 <div className="text-right text-gray-500 text-xs mt-1 w-full">
                   {field.value?.length || 0}/{maxLength}
                 </div>
-              )}
+              ): <div className="h-4"></div>}
             </div>
           </div>
         )}

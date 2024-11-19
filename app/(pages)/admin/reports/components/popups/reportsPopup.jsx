@@ -1,4 +1,5 @@
 import Button from "@/components/common/Button";
+import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
 import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
@@ -78,13 +79,7 @@ const ReportsPopup = ({
                     )}
                     {date && (
                       <div className="w-full">
-                        <Field
-                          as={DatePicker}
-                          name="date"
-                          placeholder="Date"
-                          className="w-full"
-                          style={{ height: "36px" }}
-                        />
+                        <DatePickerField name="date" placeholder="Date" />
                       </div>
                     )}
 
@@ -123,20 +118,8 @@ const ReportsPopup = ({
                 )}
                 {fromToDate && (
                   <div className="mt-4 flex flex-col md:flex-row gap-4 w-full">
-                    <Field
-                      as={DatePicker}
-                      name="fromDate"
-                      placeholder="From Date"
-                      className="w-full"
-                      style={{ height: "36px" }}
-                    />
-                    <Field
-                      as={DatePicker}
-                      name="fromDate"
-                      placeholder="From Date"
-                      className="w-full"
-                      style={{ height: "36px" }}
-                    />{" "}
+                    <DatePickerField name="fromDate" placeholder="From Date" />
+                    <DatePickerField name="fromDate" placeholder="From Date" />
                   </div>
                 )}
                 <div className="mt-4 flex flex-col md:flex-row gap-4 w-full md:items-center">

@@ -1,4 +1,5 @@
 import Button from "@/components/common/Button";
+import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
 import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
@@ -75,38 +76,30 @@ const PlannedSummaryPopup = ({ visible, setVisible }) => {
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="createdFrom"
                       placeholder="Created Between From"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="createdTo"
                       placeholder="Created Between To"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="closesdFrom"
                       placeholder="Closed Between From"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="closedTo"
                       placeholder="Closed Between To"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 

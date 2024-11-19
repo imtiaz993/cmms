@@ -1,4 +1,5 @@
 import Button from "@/components/common/Button";
+import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
 import { Checkbox, DatePicker, InputNumber, Modal, Radio, Select } from "antd";
@@ -62,23 +63,11 @@ const MaintenanceReusedPopup = ({
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
-                      name="fromDate"
-                      placeholder="From Date"
-                      className="w-full"
-                      style={{ height: "36px" }}
-                    />
+                    <DatePickerField name="fromDate" placeholder="From Date" />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
-                      name="fromDate"
-                      placeholder="From Date"
-                      className="w-full"
-                      style={{ height: "36px" }}
-                    />
+                    <DatePickerField name="fromDate" placeholder="From Date" />
                   </div>
 
                   {criticallyFactor && (

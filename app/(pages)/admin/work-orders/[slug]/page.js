@@ -40,6 +40,7 @@ import AddPartPopup from "../../inventory/components/addPartPopup";
 import UploadLinkDocPopup from "../../material-transfer/[slug]/uploadLinkDocPopup";
 import UploadDocPopup from "../../material-transfer/[slug]/uploadDocPopup";
 import SelectField from "@/components/common/SelectField";
+import DatePickerField from "@/components/common/DatePickerField";
 
 const WorkOrdersDetail = () => {
   const router = useRouter();
@@ -295,7 +296,10 @@ const WorkOrdersDetail = () => {
                       placeholder="Parent Asset"
                       maxLength={128}
                     />
-                    <DatePicker name="createdDateRange" placeholder="Date" />
+                    <DatePickerField
+                      name="createdDateRange"
+                      placeholder="Date"
+                    />
                     <Select
                       name="costCenter"
                       placeholder="Supervisor"

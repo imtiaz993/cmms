@@ -1,10 +1,10 @@
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { DatePicker, Input, message, Modal, Select } from "antd";
+import { Input, message, Modal, Select } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import { addInventory } from "app/services/inventory";
-import dayjs from "dayjs";
+import DatePickerField from "@/components/common/DatePickerField";
 
 const validationSchema = Yup.object().shape({
   physicalLocation: Yup.string()
@@ -48,21 +48,6 @@ const CreateInventoryPopup = ({
     } else {
       message.error(data.error);
     }
-  };
-
-  const FormikDatePicker = ({ field, form, ...props }) => {
-    const handleChange = (date, dateString) => {
-      form.setFieldValue(field.name, dateString);
-    };
-
-    return (
-      <DatePicker
-        {...field}
-        {...props}
-        onChange={handleChange}
-        value={field.value ? dayjs(field.value) : null}
-      />
-    );
   };
 
   const FormikSelect = ({ field, form, options, ...props }) => {
@@ -220,11 +205,9 @@ const CreateInventoryPopup = ({
                         { value: "supplier5", label: "Supplier 5" },
                       ]}
                     />
-                    <Field
-                      component={FormikDatePicker}
+                    <DatePickerField
                       name="receivedDate"
                       placeholder="Received Date"
-                      style={{ height: "36px" }}
                     />
                     {/* <Select
                       name="condition"

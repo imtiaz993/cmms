@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Card, DatePicker, Modal, Table } from "antd";
+import React, { useState } from "react";
+import { Card, Modal, Table } from "antd";
 import * as Yup from "yup";
-import { Field, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import Button from "@/components/common/Button";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
 import InputField from "@/components/common/InputField";
 import AddFieldPopup from "@/components/addFieldPopup";
+import DatePickerField from "@/components/common/DatePickerField";
 
 const validationSchema = Yup.object().shape({
   purchaseDate: Yup.date().required("Required"),
@@ -69,22 +69,6 @@ const CreatePurchaseOrderPopup = ({ visible, setVisible }) => {
     // Handle submit logic here
     resetForm();
     setVisible(false);
-  };
-
-  const FormikDatePicker = ({ field, form, ...props }) => {
-    const handleChange = (date, dateString) => {
-      form.setFieldValue(field.name, dateString);
-    };
-
-    return (
-      <DatePicker
-        {...field}
-        {...props}
-        onChange={handleChange}
-        value={field.value ? dayjs(field.value) : null}
-        style={{ height: "36px" }}
-      />
-    );
   };
 
   const columns = [
@@ -243,9 +227,8 @@ const CreatePurchaseOrderPopup = ({ visible, setVisible }) => {
                 styles={{ body: { paddingTop: 0 } }}
               >
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <Field
+                  <DatePickerField
                     name="purchaseOrderDate"
-                    component={FormikDatePicker}
                     placeholder="Purchase Order Date"
                   />
                 </div>

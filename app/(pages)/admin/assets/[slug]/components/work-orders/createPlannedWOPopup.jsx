@@ -1,8 +1,9 @@
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { DatePicker, Modal, Select, Checkbox } from "antd";
+import { Modal, Checkbox } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
+import DatePickerField from "@/components/common/DatePickerField";
 
 const validationSchema = Yup.object().shape({
   rigNumber: Yup.string().required("Required"),
@@ -67,12 +68,7 @@ const CreatePlannedWOPopup = ({ visible, setVisible }) => {
             <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
               <InputField name="rigNumber" placeholder="Rig #" />
               <InputField name="parentAsset" placeholder="Parent Asset" />
-              <Field
-                as={DatePicker}
-                name="date"
-                placeholder="Date"
-                style={{ height: "36px", width: "100%" }}
-              />
+              <DatePickerField name="date" placeholder="Date" />
               <div className="flex items-center">
                 <Field name="recurring" type="checkbox" as={Checkbox}>
                   Recurring

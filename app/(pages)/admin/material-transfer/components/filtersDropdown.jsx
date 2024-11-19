@@ -5,6 +5,7 @@ import { login } from "app/services/auth";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
+import DatePickerField from "@/components/common/DatePickerField";
 
 const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
@@ -47,8 +48,7 @@ const MaterialTransferFilter = () => {
         {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 gap-4">
-              <Field
-                as={DatePicker}
+              <DatePickerField
                 name="createdDateRange"
                 placeholder="Created Date Range"
               />

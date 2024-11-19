@@ -1,4 +1,5 @@
 import Button from "@/components/common/Button";
+import DatePickerField from "@/components/common/DatePickerField";
 import SelectField from "@/components/common/SelectField";
 import { DatePicker, Input, Modal, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
@@ -52,12 +53,9 @@ const AddDelayReasonPopup = ({ visible, setVisible }) => {
                   ]}
                   placeholder="Delay Reason"
                 />
-                <Field
-                  as={DatePicker}
+                <DatePickerField
                   name="resolutionDate"
                   placeholder="Resolution Date"
-                  style={{ height: "36px" }}
-                  className="w-full"
                 />
                 <Field
                   as={Input.TextArea}
