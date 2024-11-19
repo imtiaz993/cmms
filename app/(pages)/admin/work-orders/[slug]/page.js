@@ -39,6 +39,8 @@ import AddDelayReasonPopup from "./components/addDelayReasonPopup";
 import AddPartPopup from "../../inventory/components/addPartPopup";
 import UploadLinkDocPopup from "../../material-transfer/[slug]/uploadLinkDocPopup";
 import UploadDocPopup from "../../material-transfer/[slug]/uploadDocPopup";
+import SelectField from "@/components/common/SelectField";
+import DatePickerField from "@/components/common/DatePickerField";
 
 const WorkOrdersDetail = () => {
   const router = useRouter();
@@ -170,8 +172,7 @@ const WorkOrdersDetail = () => {
                   style={{ marginTop: "20px" }}
                 >
                   <div className="grid md:grid-cols-3 mx-2 gap-3">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="companyDoingWork"
                       placeholder="Company Doing Work"
                       options={[
@@ -279,11 +280,9 @@ const WorkOrdersDetail = () => {
                   style={{ marginTop: 20 }}
                 >
                   <div className="grid md:grid-cols-3 gap-4">
-                    <Select
+                    <SelectField
                       name="costCenter"
                       placeholder="Rig #"
-                      maxLength={128}
-                      style={{ height: "36px" }}
                       options={[
                         { value: "Rig 21", label: "Rig 21" },
                         { value: "Rig 22", label: "Rig 22" },
@@ -295,23 +294,22 @@ const WorkOrdersDetail = () => {
                       placeholder="Parent Asset"
                       maxLength={128}
                     />
-                    <DatePicker name="createdDateRange" placeholder="Date" />
-                    <Select
+                    <DatePickerField
+                      name="createdDateRange"
+                      placeholder="Date"
+                    />
+                    <SelectField
                       name="costCenter"
                       placeholder="Supervisor"
-                      maxLength={128}
-                      style={{ height: "36px" }}
                       options={[
                         { value: "Supervisor 1", label: "Supervisor 1" },
                         { value: "Supervisor 2", label: "Supervisor 2" },
                         { value: "Supervisor 3", label: "Supervisor 3" },
                       ]}
                     />
-                    <Select
+                    <SelectField
                       name="costCenter"
                       placeholder="Inspected By"
-                      maxLength={128}
-                      style={{ height: "36px" }}
                       options={[
                         { value: "Person 1", label: "Person 1" },
                         { value: "Person 2", label: "Person 2" },
@@ -356,9 +354,8 @@ const WorkOrdersDetail = () => {
                       <div>0 selected</div>
                       <div className="flex gap-3">
                         {batchEdit && (
-                          <Select
+                          <SelectField
                             placeholder="Set Status To"
-                            style={{ height: "36px", width: "100%" }}
                             options={[
                               { label: "Completed", value: "completed" },
                               { label: "N/A", value: "na" },

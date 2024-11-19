@@ -1,4 +1,5 @@
 import Button from "@/components/common/Button";
+import DatePickerField from "@/components/common/DatePickerField";
 import { WarningFilled } from "@ant-design/icons";
 import {
   DatePicker,
@@ -161,8 +162,7 @@ const ReschedulePopup = ({ visible, setVisible, batchEdit, setBatchEdit }) => {
               <Divider />
               <div>
                 <strong className="mr-5">Rescheduled Date</strong>
-                <Field
-                  as={DatePicker}
+                <DatePickerField
                   name="date"
                   placeholder="Select New Date"
                 />

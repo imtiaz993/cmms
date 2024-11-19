@@ -1,8 +1,9 @@
-import { Field, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { DatePicker, Select, message } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
+import SelectField from "@/components/common/SelectField";
+import DatePickerField from "@/components/common/DatePickerField";
 
 const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
@@ -45,8 +46,7 @@ const MaintenanceScheduleFilter = () => {
         {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 gap-4">
-              <Field
-                as={DatePicker}
+              <DatePickerField
                 name="createdDateRange"
                 placeholder="Created Date Range"
               />
@@ -55,8 +55,8 @@ const MaintenanceScheduleFilter = () => {
                 name="materialTranfser"
                 placeholder="Material Transfer"
               />
-              <Select name="origination" placeholder="Origination" />
-              <Select name="destination" placeholder="Destination" />
+              <SelectField name="origination" placeholder="Origination" />
+              <SelectField name="destination" placeholder="Destination" />
 
               <div className="sm:col-span-2 flex justify-end gap-4">
                 <div>

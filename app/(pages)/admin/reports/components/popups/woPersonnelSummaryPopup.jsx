@@ -1,5 +1,7 @@
 import Button from "@/components/common/Button";
+import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
 import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 
@@ -53,92 +55,82 @@ const WOPersonnelSummaryPopup = ({ visible, setVisible }) => {
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="createdFrom"
                       placeholder="Created Between From"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="createdTo"
                       placeholder="Created Between To"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="closesdFrom"
                       placeholder="Closed Between From"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="closedTo"
                       placeholder="Closed Between To"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="createdFromMainHrs"
                       placeholder="Main Hours Created Between From"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="createdToMainHrs"
                       placeholder="Main Hours Created Between To"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="assignedTo"
                       placeholder="Assigned To"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "john", label: "John" },
+                        { value: "jane", label: "Jane" },
+                      ]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="status"
                       placeholder="Status"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "open", label: "Open" },
+                        { value: "closed", label: "Closed" },
+                      ]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="craft"
                       placeholder="Craft"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="priority"
                       placeholder="Priority"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[{ value: "high", label: "High" }]}
                     />
                   </div>
 

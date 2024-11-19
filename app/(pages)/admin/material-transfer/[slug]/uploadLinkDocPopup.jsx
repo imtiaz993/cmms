@@ -1,5 +1,6 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
 import { Divider, Modal, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
@@ -65,11 +66,7 @@ const UploadLinkDocPopup = ({ visible, setVisible }) => {
           >
             <div>
               <div className="flex items-center gap-5 ">
-                <Button
-                  text="Add Link"
-                  fullWidth={false}
-                  outlined
-                />
+                <Button text="Add Link" fullWidth={false} outlined />
                 <p>Add additional links to your upload</p>
               </div>
               <div></div>
@@ -91,11 +88,10 @@ const UploadLinkDocPopup = ({ visible, setVisible }) => {
                 </div>
 
                 <div className="w-full">
-                  <Field
-                    as={Select}
+                  <SelectField
                     name="documentType"
                     placeholder="Document Type"
-                    style={{ height: "36px", width: "100%" }}
+                    options={[]}
                   />
                 </div>
 

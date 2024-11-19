@@ -1,5 +1,7 @@
 import Button from "@/components/common/Button";
+import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
 import { DatePicker, Modal, Select, TimePicker } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { Field, Form, Formik } from "formik";
@@ -47,12 +49,9 @@ const AddCostPopup = ({ visible, setVisible }) => {
               width={800}
             >
               <div className="grid md:grid-cols-3 gap-4">
-                <Field
-                  as={DatePicker}
+                <DatePickerField
                   name="createdDate"
                   placeholder="Created Date"
-                  className="w-full"
-                  style={{ height: "36px" }}
                 />
                 <Field
                   as={TimePicker}
@@ -61,8 +60,7 @@ const AddCostPopup = ({ visible, setVisible }) => {
                   className="w-full"
                   style={{ height: "36px" }}
                 />
-                <Field
-                  as={Select}
+                <SelectField
                   name="costType"
                   placeholder="Cost Type"
                   options={[
@@ -89,12 +87,10 @@ const AddCostPopup = ({ visible, setVisible }) => {
                 <InputField name="description" placeholder="Description" />{" "}
                 <InputField name="quantity" placeholder="Quantity" />{" "}
                 <InputField name="costEach" placeholder="Cost Each" />
-                <Field
-                  as={Select}
+                <SelectField
                   name="currency"
                   placeholder="Currency"
                   options={[{ label: "USD", value: "USD" }]}
-                  style={{ height: "36px" }}
                 />
               </div>
             </Modal>

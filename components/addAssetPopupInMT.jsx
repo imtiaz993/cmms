@@ -3,6 +3,7 @@ import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import Button from "./common/Button";
 import InputField from "./common/InputField";
+import SelectField from "./common/SelectField";
 
 const validationSchema = Yup.object().shape({
   asset: Yup.string(),
@@ -120,21 +121,18 @@ const AddAssetPopupMT = ({ visible, setVisible }) => {
             }}
           >
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-              <Select
+              <SelectField
                 name="asset"
                 placeholder="Select Asset"
-                maxLength={128}
                 options={[
                   { label: "4470 - #2 Fuel Pump", value: "Asset 1" },
                   { label: "4470 - #2 Fuel Pump", value: "Asset 2" },
                   { label: "4470 - #2 Fuel Pump", value: "Asset 3" },
                 ]}
-                style={{ height: "36px" }}
               />
-              <Select
+              <SelectField
                 name="assetCondition"
                 placeholder="Asset Condition"
-                maxLength={128}
                 options={[
                   { label: "Like New", value: "Like New" },
                   {
@@ -143,12 +141,10 @@ const AddAssetPopupMT = ({ visible, setVisible }) => {
                   },
                   { label: "Damaged", value: "Damaged" },
                 ]}
-                style={{ height: "36px" }}
               />
-              <Select
+              <SelectField
                 name="transferReason"
                 placeholder="Transfer Reason"
-                maxLength={128}
                 options={[
                   { label: "Disposal", value: "disposal" },
                   { label: "Repair", value: "repair" },
@@ -158,7 +154,6 @@ const AddAssetPopupMT = ({ visible, setVisible }) => {
                   { label: "Warranty", value: "warranty" },
                   { label: "Other", value: "other" },
                 ]}
-                style={{ height: "36px" }}
               />
               <div className="w-full">
                 <Field as={Checkbox} name="childAssetsParents">

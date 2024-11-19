@@ -1,11 +1,12 @@
-import { Field, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { DatePicker, Modal, Select } from "antd";
+import { Modal } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-import TextArea from "antd/es/input/TextArea";
 import { addAsset } from "app/services/assets";
-import dayjs from "dayjs";
+import SelectField from "@/components/common/SelectField";
+import DatePickerField from "@/components/common/DatePickerField";
+import TextAreaField from "@/components/common/TextAreaField";
 
 const validationSchema = Yup.object().shape({
   physicalLocation: Yup.string().required("Physical Location is required"),
@@ -26,7 +27,7 @@ const validationSchema = Yup.object().shape({
   installedDate: Yup.date()
     .typeError("Installed Date must be a valid date")
     .required("Installed Date is required"),
-  suppliers: Yup.string().required("Suppliers are required"),
+  supplier: Yup.string().required("Suppliers are required"),
   criticality: Yup.string().required("Criticality is required"),
   originalMfrDate: Yup.date()
     .typeError("Original Mfr. Date must be a valid date")
@@ -51,37 +52,6 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
     }
   };
 
-  const FormikDatePicker = ({ field, form, ...props }) => {
-    const handleChange = (date, dateString) => {
-      form.setFieldValue(field.name, dateString);
-    };
-
-    return (
-      <DatePicker
-        {...field}
-        {...props}
-        onChange={handleChange}
-        value={field.value ? dayjs(field.value) : null}
-      />
-    );
-  };
-
-  const FormikSelect = ({ field, form, options, ...props }) => {
-    const handleChange = (value) => {
-      form.setFieldValue(field.name, value);
-    };
-
-    return (
-      <Select
-        {...props}
-        value={field.value || undefined}
-        onChange={handleChange}
-        onBlur={() => form.setFieldTouched(field.name, true)}
-        options={options}
-      />
-    );
-  };
-
   return (
     <Formik
       initialValues={{
@@ -97,7 +67,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
         description: "",
         specDetails: "",
         installedDate: "",
-        suppliers: "",
+        supplier: "",
         criticality: "",
         originalMfrDate: "",
         condition: "",
@@ -149,9 +119,8 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
           >
             <div>
               <div className="grid md:grid-cols-3 gap-4">
-                <Field
+                <SelectField
                   name="physicalLocation"
-                  component={FormikSelect}
                   placeholder="Physical Location (Rig)"
                   options={[
                     { value: "Rig 21", label: "Rig 21" },
@@ -159,9 +128,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                     { value: "Rig 23", label: "Rig 23" },
                   ]}
                 />
-                <Field
+
+                <SelectField
                   name="mainSystem"
-                  component={FormikSelect}
                   placeholder="Main System"
                   options={[
                     { value: "airSystems", label: "Air Systems" },
@@ -186,87 +155,67 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                   name="makeModelPart"
                   placeholder="Make, Model, Part #"
                 />
-                <div className="md:col-span-3">
-                  <Field
-                    as={TextArea}
+                <div className="md:col-span-3 -mb-4">
+                  <TextAreaField
                     name="description"
                     placeholder="Description"
                     maxLength={150}
-                    className="!border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                   />
-                  <div className="text-right">0/150</div>
-
-                  <Field
-                    as={TextArea}
+                  <TextAreaField
                     name="specDetails"
                     placeholder="Spec Details"
                     maxLength={500}
-                    className="!border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                   />
-                  <div className="text-right">0/500</div>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <Field
-                      component={FormikDatePicker}
-                      name="installedDate"
-                      placeholder="Installed Date"
-                      style={{ height: "36px" }}
-                    />
-                    <Field
-                      name="supplier"
-                      component={FormikSelect}
-                      placeholder="Suppliers"
-                      style={{ height: "36px" }}
-                      options={[
-                        { value: "supplier1", label: "Supplier 1" },
-                        { value: "supplier2", label: "Supplier 2" },
-                        { value: "supplier3", label: "Supplier 3" },
-                        { value: "supplier4", label: "Supplier 4" },
-                        { value: "supplier5", label: "Supplier 5" },
-                      ]}
-                    />
-                    <Field
-                      name="criticality"
-                      component={FormikSelect}
-                      placeholder="Criticality"
-                      options={[
-                        { value: "high", label: "High" },
-                        { value: "medium", label: "Medium" },
-                        { value: "low", label: "Low" },
-                      ]}
-                    />
-                    <Field
-                      component={FormikDatePicker}
-                      name="originalMfrDate"
-                      placeholder="Original Mfr. Date (MM/DD/YYYY)"
-                      style={{ height: "36px" }}
-                    />
-                    <Field
-                      name="condition"
-                      component={FormikSelect}
-                      placeholder="Condition"
-                      options={[
-                        { value: "new", label: "New" },
-                        { value: "good", label: "Good" },
-                        { value: "damaged", label: "Damaged" },
-                      ]}
-                    />
-                    <Field
-                      name="maintStatus"
-                      component={FormikSelect}
-                      placeholder="Maint. Status"
-                      options={[
-                        { value: "active", label: "Active" },
-                        { value: "inactive", label: "Inactive" },
-                      ]}
-                    />
-                    <Field
-                      component={FormikDatePicker}
-                      name="maintStartDate"
-                      placeholder="Maint. Start Date (MM/DD/YYYY)"
-                      style={{ height: "36px" }}
-                    />
-                  </div>
                 </div>
+                <DatePickerField
+                  name="installedDate"
+                  placeholder="Installed Date"
+                />
+                <SelectField
+                  name="supplier"
+                  placeholder="Suppliers"
+                  options={[
+                    { value: "supplier1", label: "Supplier 1" },
+                    { value: "supplier2", label: "Supplier 2" },
+                    { value: "supplier3", label: "Supplier 3" },
+                    { value: "supplier4", label: "Supplier 4" },
+                    { value: "supplier5", label: "Supplier 5" },
+                  ]}
+                />
+                <SelectField
+                  name="criticality"
+                  placeholder="Criticality"
+                  options={[
+                    { value: "high", label: "High" },
+                    { value: "medium", label: "Medium" },
+                    { value: "low", label: "Low" },
+                  ]}
+                />
+                <DatePickerField
+                  name="originalMfrDate"
+                  placeholder="Original Mfr. Date (MM/DD/YYYY)"
+                />
+                <SelectField
+                  name="condition"
+                  placeholder="Condition"
+                  options={[
+                    { value: "new", label: "New" },
+                    { value: "good", label: "Good" },
+                    { value: "damaged", label: "Damaged" },
+                  ]}
+                />
+                <SelectField
+                  name="maintStatus"
+                  placeholder="Maint. Status"
+                  options={[
+                    { value: "active", label: "Active" },
+                    { value: "inactive", label: "Inactive" },
+                  ]}
+                />
+                <DatePickerField
+                  name="maintStartDate"
+                  placeholder="Maint. Start Date (MM/DD/YYYY)"
+                />
               </div>
             </div>
           </Modal>

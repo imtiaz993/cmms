@@ -1,5 +1,7 @@
 import Button from "@/components/common/Button";
+import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
 import { Checkbox, DatePicker, InputNumber, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 
@@ -61,47 +63,28 @@ const MaintenanceReusedPopup = ({
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
-                      name="fromDate"
-                      placeholder="From Date"
-                      className="w-full"
-                      style={{ height: "36px" }}
-                    />
+                    <DatePickerField name="fromDate" placeholder="From Date" />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
-                      name="fromDate"
-                      placeholder="From Date"
-                      className="w-full"
-                      style={{ height: "36px" }}
-                    />
+                    <DatePickerField name="fromDate" placeholder="From Date" />
                   </div>
 
                   {criticallyFactor && (
                     <div className="w-full">
-                      <Field
-                        as={Select}
+                      <SelectField
                         name="criticallyFactor"
                         placeholder="Critically Factor"
-                        style={{
-                          height: "36px",
-                          width: "100%",
-                        }}
-                      >
-                        Critically Factor
-                      </Field>
+                        options={[]}
+                      />
                     </div>
                   )}
                   {craft && (
                     <div className="w-full">
-                      <Field
-                        as={Select}
+                      <SelectField
                         name="craft"
                         placeholder="Craft"
-                        style={{ height: "36px", width: "100%" }}
+                        options={[]}
                       />
                     </div>
                   )}

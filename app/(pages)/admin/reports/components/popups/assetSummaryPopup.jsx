@@ -1,5 +1,6 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
 import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 
@@ -61,29 +62,38 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="physicalLocation"
                       placeholder="Physical Location"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "rig-21", label: "Rig 21" },
+                        { value: "rig-22", label: "Rig 22" },
+                        { value: "rig-23", label: "Rig 23" },
+                      ]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="year"
                       placeholder="Year"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "2021", label: "2021" },
+                        { value: "2022", label: "2022" },
+                        { value: "2023", label: "2023" },
+                      ]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="accountingDept"
                       placeholder="Accounting Dept"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "accounting-1", label: "Accounting 1" },
+                        { value: "accounting-2", label: "Accounting 2" },
+                        { value: "accounting-3", label: "Accounting 3" },
+                      ]}
                     />
                   </div>
 
@@ -94,32 +104,30 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="category"
                       placeholder="Category"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "category-1", label: "Category 1" },
+                        { value: "category-2", label: "Category 2" },
+                        { value: "category-3", label: "Category 3" },
+                      ]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="system"
                       placeholder="System"
-                      className="w-full"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[{ value: "air-system", label: "Air System" }]}
                     />
                   </div>
 
                   {Array.from({ length: 4 }).map((_, index) => (
                     <div key={index} className="w-full">
-                      <Field
-                        as={Select}
+                      <SelectField
                         name={`tier${index + 3}`}
                         placeholder={`Tier ${index + 3}`}
-                        className="w-full"
-                        style={{ height: "36px", width: "100%" }}
                       />
                     </div>
                   ))}

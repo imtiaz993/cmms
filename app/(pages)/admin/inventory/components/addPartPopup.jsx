@@ -5,6 +5,7 @@ import { message, Modal, Select, Steps } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
+import SelectField from "@/components/common/SelectField";
 
 const AddPartPopup = ({ visible, setVisible }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -107,14 +108,13 @@ const AddPartPopup = ({ visible, setVisible }) => {
                       placeholder="Search"
                       maxLength={128}
                     />
-                    <Select
+                    <SelectField
                       name="inventoryClass"
                       placeholder="Inventory Class"
                       options={[
                         { label: "Drill Pipe", value: "Drill Pipe" },
                         { label: "Other", value: "Other" },
                       ]}
-                      style={{ height: "36px" }}
                     />
                   </div>
                   <p className="text-center my-20">

@@ -1,5 +1,7 @@
 import Button from "@/components/common/Button";
+import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
 import { DatePicker, Input, Modal, Select, TimePicker } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { Field, Form, Formik } from "formik";
@@ -78,13 +80,7 @@ const AddManHoursPopup = ({ visible, setVisible }) => {
                 {console.log("values", values)}
                 {values.type === "clockInClockOut" && (
                   <div className="grid md:grid-cols-2 gap-4 md:col-span-2">
-                    <Field
-                      as={DatePicker}
-                      name="clockIn"
-                      placeholder="Clock In"
-                      className="w-full"
-                      style={{ height: "36px" }}
-                    />
+                    <DatePickerField name="clockIn" placeholder="Clock In" />
                     <Field
                       as={TimePicker}
                       name="clockInTime"
@@ -96,13 +92,7 @@ const AddManHoursPopup = ({ visible, setVisible }) => {
                 )}
                 {values.type === "clockInClockOut" && (
                   <div className="grid md:grid-cols-2 gap-4 md:col-span-2">
-                    <Field
-                      as={DatePicker}
-                      name="clockOut"
-                      placeholder="Clock Out"
-                      className="w-full"
-                      style={{ height: "36px" }}
-                    />
+                    <DatePickerField name="clockOut" placeholder="Clock Out" />
                     <Field
                       as={TimePicker}
                       name="clockOutTime"
@@ -118,8 +108,7 @@ const AddManHoursPopup = ({ visible, setVisible }) => {
                   name="companyDoingWork"
                   placeholder="Company Doing Work"
                 />
-                <Field
-                  as={Select}
+                <SelectField
                   name="rate"
                   placeholder="Rate"
                   options={[
@@ -127,7 +116,6 @@ const AddManHoursPopup = ({ visible, setVisible }) => {
                     { label: "Double", value: "double" },
                     { label: "Overtime", value: "overtime" },
                   ]}
-                  style={{ height: "36px" }}
                 />
                 <Field
                   as={Input.TextArea}
