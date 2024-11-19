@@ -4,6 +4,7 @@ import { Select, message } from "antd";
 import { login } from "app/services/auth";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
+import SelectField from "@/components/common/SelectField";
 
 const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
@@ -54,13 +55,13 @@ const AssetFilter = () => {
                 placeholder="Tasked To"
                 className="min-w-[105px]"
               />
-              <Select name="status" placeholder="Status" />
-              <Select name="category" placeholder="Category" />
-              <Select name="system" placeholder="System" />
-              <Select name="tier3" placeholder="Tier 3" />
-              <Select name="tier4" placeholder="Tier 4" />
-              <Select name="tier5" placeholder="Tier 5" />
-              <Select name="tier6" placeholder="Tier 6" />
+              <SelectField name="status" placeholder="Status" />
+              <SelectField name="category" placeholder="Category" />
+              <SelectField name="system" placeholder="System" />
+              <SelectField name="tier3" placeholder="Tier 3" />
+              <SelectField name="tier4" placeholder="Tier 4" />
+              <SelectField name="tier5" placeholder="Tier 5" />
+              <SelectField name="tier6" placeholder="Tier 6" />
               <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
                 <div>
                   <Button

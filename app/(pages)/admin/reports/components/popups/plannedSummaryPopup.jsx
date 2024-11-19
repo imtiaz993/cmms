@@ -1,5 +1,6 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
 import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 
@@ -61,11 +62,15 @@ const PlannedSummaryPopup = ({ visible, setVisible }) => {
                   </div>
 
                   <div className="w-full md:col-span-2">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="physicalLocation"
                       placeholder="Physical Location"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        {
+                          value: "Rig Hpu",
+                          label: "Rig Hpu",
+                        },
+                      ]}
                     />
                   </div>
 
@@ -106,29 +111,36 @@ const PlannedSummaryPopup = ({ visible, setVisible }) => {
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="assignedTo"
                       placeholder="Assigned To"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[{ value: "manager", label: "Manager" }]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="priority"
                       placeholder="Priority"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        {
+                          value: "High",
+                          label: "High",
+                        },
+                      ]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="companyDoingWork"
                       placeholder="company Doing Work"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        {
+                          value: "Company 1",
+                          label: "Company 1",
+                        },
+                      ]}
                     />
                   </div>
                 </div>

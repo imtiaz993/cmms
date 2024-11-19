@@ -1,5 +1,6 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
 import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 
@@ -68,14 +69,10 @@ const ReportsPopup = ({
 
                     {assetNumber && (
                       <div className="w-full">
-                        <Field
-                          as={Select}
+                        <SelectField
                           name="assetNumber"
                           placeholder="Asset Number"
-                          style={{
-                            height: "36px",
-                            width: "100%",
-                          }}
+                          options={[]}
                         />
                       </div>
                     )}
@@ -93,14 +90,16 @@ const ReportsPopup = ({
 
                     {year && (
                       <div className="w-full">
-                        <Field
-                          as={Select}
+                        <SelectField
                           name="year"
                           placeholder="Year"
-                          style={{
-                            height: "36px",
-                            width: "100%",
-                          }}
+                          options={[
+                            { value: "2024", label: "2024" },
+                            { value: "2023", label: "2023" },
+                            { value: "2022", label: "2022" },
+                            { value: "2021", label: "2021" },
+                            { value: "2020", label: "2020" },
+                          ]}
                         />
                       </div>
                     )}
@@ -115,14 +114,10 @@ const ReportsPopup = ({
                 )}
                 {physicalLocation && (
                   <div className="mt-4 w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="physicalLocation"
                       placeholder="Physical Location"
-                      style={{
-                        height: "36px",
-                        width: "100%",
-                      }}
+                      options={[{ value: "rig-21", label: "Rig 21" }]}
                     />
                   </div>
                 )}
@@ -147,17 +142,11 @@ const ReportsPopup = ({
                 <div className="mt-4 flex flex-col md:flex-row gap-4 w-full md:items-center">
                   {criticallyFactor && (
                     <div className="w-full">
-                      <Field
-                        as={Select}
+                      <SelectField
                         name="criticallyFactor"
                         placeholder="Critically Factor"
-                        style={{
-                          height: "36px",
-                          width: "100%",
-                        }}
-                      >
-                        Critically Factor
-                      </Field>
+                        options={[]}
+                      />
                     </div>
                   )}
                   {includeChildAssets && (

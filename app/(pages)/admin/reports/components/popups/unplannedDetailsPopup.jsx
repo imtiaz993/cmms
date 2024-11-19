@@ -1,5 +1,6 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
 import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 
@@ -97,47 +98,42 @@ const UnplannedDetailsPopup = ({ visible, setVisible }) => {
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="assignedTo"
                       placeholder="Person Doing Work"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[{ label: "John", value: "john" }]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="status"
                       placeholder="Status"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[{ label: "Open", value: "open" }]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="craft"
                       placeholder="Craft"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="priority"
                       placeholder="Priority"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[{ label: "High", value: "high" }]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="companyDoingWork"
                       placeholder="company Doing Work"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[{ label: "Company 1", value: "company" }]}
                     />
                   </div>
                 </div>

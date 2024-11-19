@@ -1,5 +1,6 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
 import { Checkbox, DatePicker, InputNumber, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 
@@ -82,26 +83,19 @@ const MaintenanceReusedPopup = ({
 
                   {criticallyFactor && (
                     <div className="w-full">
-                      <Field
-                        as={Select}
+                      <SelectField
                         name="criticallyFactor"
                         placeholder="Critically Factor"
-                        style={{
-                          height: "36px",
-                          width: "100%",
-                        }}
-                      >
-                        Critically Factor
-                      </Field>
+                        options={[]}
+                      />
                     </div>
                   )}
                   {craft && (
                     <div className="w-full">
-                      <Field
-                        as={Select}
+                      <SelectField
                         name="craft"
                         placeholder="Craft"
-                        style={{ height: "36px", width: "100%" }}
+                        options={[]}
                       />
                     </div>
                   )}

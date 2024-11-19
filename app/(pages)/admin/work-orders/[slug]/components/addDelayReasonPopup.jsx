@@ -1,4 +1,5 @@
 import Button from "@/components/common/Button";
+import SelectField from "@/components/common/SelectField";
 import { DatePicker, Input, Modal, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { Field, Form, Formik } from "formik";
@@ -43,16 +44,13 @@ const AddDelayReasonPopup = ({ visible, setVisible }) => {
               }
             >
               <div className="grid md:grid-cols-2 gap-4">
-                <Field
-                  as={Select}
+                <SelectField
                   name="delayReason"
                   options={[
                     { value: "contractor", label: "Contractor" },
                     { value: "men", label: "Men" },
                   ]}
                   placeholder="Delay Reason"
-                  style={{ height: "36px" }}
-                  className="w-full"
                 />
                 <Field
                   as={DatePicker}

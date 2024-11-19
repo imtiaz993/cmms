@@ -39,6 +39,7 @@ import AddDelayReasonPopup from "./components/addDelayReasonPopup";
 import AddPartPopup from "../../inventory/components/addPartPopup";
 import UploadLinkDocPopup from "../../material-transfer/[slug]/uploadLinkDocPopup";
 import UploadDocPopup from "../../material-transfer/[slug]/uploadDocPopup";
+import SelectField from "@/components/common/SelectField";
 
 const WorkOrdersDetail = () => {
   const router = useRouter();
@@ -170,8 +171,7 @@ const WorkOrdersDetail = () => {
                   style={{ marginTop: "20px" }}
                 >
                   <div className="grid md:grid-cols-3 mx-2 gap-3">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="companyDoingWork"
                       placeholder="Company Doing Work"
                       options={[

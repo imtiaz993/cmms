@@ -1,5 +1,6 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
 import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
 
@@ -45,32 +46,27 @@ const MaintenanceProceduresPopup = ({ visible, setVisible }) => {
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="category"
                       placeholder="Category"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[]}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="system"
                       placeholder="System"
-                      className="w-full"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[]}
                     />
                   </div>
 
                   {Array.from({ length: 2 }).map((_, index) => (
                     <div key={index} className="w-full">
-                      <Field
-                        as={Select}
+                      <SelectField
                         name={`tier${index + 3}`}
                         placeholder={`Tier ${index + 3}`}
-                        className="w-full"
-                        style={{ height: "36px", width: "100%" }}
+                        options={[]}
                       />
                     </div>
                   ))}

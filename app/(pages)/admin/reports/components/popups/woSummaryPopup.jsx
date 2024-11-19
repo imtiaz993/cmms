@@ -1,7 +1,31 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
-import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
 import { Field, Form, Formik } from "formik";
+import SelectField from "@/components/common/SelectField"; // Import SelectField
+import DatePickerField from "@/components/common/DatePickerField"; // Import DatePickerField
+import { Modal, Radio } from "antd";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object().shape({
+  costCenter: Yup.string().required("Cost Center is required"),
+  assetNumber: Yup.string().required("Asset Number is required"),
+  createdFrom: Yup.date().required("Created From is required"),
+  createdTo: Yup.date().required("Created To is required"),
+  closesdFrom: Yup.date().required("Closed From is required"),
+  closedTo: Yup.date().required("Closed To is required"),
+  assignedTo: Yup.string().required("Person Doing Work is required"),
+  category: Yup.string().required("Category is required"),
+  system: Yup.string().required("System is required"),
+  tier3: Yup.string().required("Tier 3 is required"),
+  tier4: Yup.string().required("Tier 4 is required"),
+  tier5: Yup.string().required("Tier 5 is required"),
+  tier6: Yup.string().required("Tier 6 is required"),
+  type: Yup.string().required("Type is required"),
+  status: Yup.string().required("Status is required"),
+  craft: Yup.string().required("Craft is required"),
+  priority: Yup.string().required("Priority is required"),
+  cause: Yup.string().required("Cause is required"),
+});
 
 const WOSummaryPopup = ({ visible, setVisible }) => {
   return (
@@ -9,7 +33,25 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
       <Formik
         initialValues={{
           costCenter: "",
+          createdFrom: "",
+          createdTo: "",
+          closesdFrom: "",
+          closedTo: "",
+          assignedTo: "",
+          category: "",
+          system: "",
+          tier3: "",
+          tier4: "",
+          tier5: "",
+          tier6: "",
+          type: "",
+          status: "",
+          craft: "",
+          priority: "",
+          cause: "",
+          formType: "pdf", // Default form type as pdf
         }}
+        validationSchema={validationSchema}
       >
         {({ values, isSubmitting }) => (
           <Form>
@@ -39,7 +81,6 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                   />
                 </div>
               }
-              // bodyStyle={{ height: "200px", overflowY: "auto", overflowX: "hidden" }} // Adjusted height
               title="Generate Work Order Summary Report"
             >
               <div>
@@ -60,126 +101,141 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                     />
                   </div>
 
+                  {/* Replace Field with custom DatePickerField */}
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="createdFrom"
                       placeholder="Created Between From"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="createdTo"
                       placeholder="Created Between To"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="closesdFrom"
                       placeholder="Closed Between From"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={DatePicker}
+                    <DatePickerField
                       name="closedTo"
                       placeholder="Closed Between To"
-                      style={{ height: "36px", width: "100%" }}
                     />
                   </div>
 
+                  {/* Replace Field with custom SelectField */}
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="assignedTo"
                       placeholder="Person Doing Work"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "user1", label: "User 1" },
+                        { value: "user2", label: "User 2" },
+                      ]} // Replace with actual options
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="category"
                       placeholder="Category"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "cat1", label: "Category 1" },
+                        { value: "cat2", label: "Category 2" },
+                      ]} // Replace with actual options
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="system"
                       placeholder="System"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "sys1", label: "System 1" },
+                        { value: "sys2", label: "System 2" },
+                      ]} // Replace with actual options
                     />
                   </div>
 
+                  {/* Render dynamic SelectFields */}
                   {Array.from({ length: 4 }).map((_, index) => (
                     <div key={index} className="w-full">
-                      <Field
-                        as={Select}
+                      <SelectField
                         name={`tier${index + 3}`}
                         placeholder={`Tier ${index + 3}`}
-                        className="w-full"
-                        style={{ height: "36px", width: "100%" }}
+                        options={[
+                          {
+                            value: `tier${index + 3}`,
+                            label: `Tier ${index + 3}`,
+                          },
+                        ]} // Replace with actual options
                       />
                     </div>
                   ))}
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="type"
                       placeholder="Type"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "type1", label: "Type 1" },
+                        { value: "type2", label: "Type 2" },
+                      ]} // Replace with actual options
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="status"
                       placeholder="Status"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "open", label: "Open" },
+                        { value: "closed", label: "Closed" },
+                      ]} // Replace with actual options
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="craft"
                       placeholder="Craft"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "craft1", label: "Craft 1" },
+                        { value: "craft2", label: "Craft 2" },
+                      ]} // Replace with actual options
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="priority"
                       placeholder="Priority"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "high", label: "High" },
+                        { value: "low", label: "Low" },
+                      ]} // Replace with actual options
                     />
                   </div>
 
                   <div className="w-full">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="cause"
                       placeholder="Cause"
-                      style={{ height: "36px", width: "100%" }}
+                      options={[
+                        { value: "cause1", label: "Cause 1" },
+                        { value: "cause2", label: "Cause 2" },
+                      ]} // Replace with actual options
                     />
                   </div>
                 </div>
+
                 <div className="mt-4">
                   <p className="text-secondary mb-1">Export As</p>
                   <div role="group">

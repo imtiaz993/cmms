@@ -4,6 +4,7 @@ import { DatePicker, Input, Modal, Select, TimePicker } from "antd";
 import InputField from "@/components/common/InputField";
 import TextArea from "antd/es/input/TextArea";
 import Button from "@/components/common/Button";
+import SelectField from "@/components/common/SelectField";
 
 const validationSchema = Yup.object().shape({
   costCenter: Yup.string(),
@@ -63,20 +64,18 @@ const AddCostPopup = ({ visible, setVisible }) => {
             <div>
               <div className="mt-4 grid md:grid-cols-3 gap-4 w-full items-end md:items-center">
                 <div className="w-full">
-                  <Field
-                    as={Select}
+                  <SelectField
                     name="costType"
                     placeholder="Cost Type"
-                    style={{ height: "36px", width: "100%" }}
+                    options={[]}
                   />
                 </div>
 
                 <div className="w-full">
-                  <Field
-                    as={Select}
+                  <SelectField
                     name="vendor"
                     placeholder="Vendor"
-                    style={{ height: "36px", width: "100%" }}
+                    options={[]}
                   />
                 </div>
                 <div className="w-full">
@@ -95,11 +94,9 @@ const AddCostPopup = ({ visible, setVisible }) => {
                     />
                   </div>
                   <div className="w-1/3">
-                    <Field
-                      as={Select}
+                    <SelectField
                       name="currency"
                       placeholder="Currency"
-                      style={{ height: "36px", width: "100%" }}
                       options={[
                         { label: "USD", value: "USD" },
                         { label: "EUR", value: "EUR" },

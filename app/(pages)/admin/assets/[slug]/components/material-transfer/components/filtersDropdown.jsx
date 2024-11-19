@@ -4,6 +4,7 @@ import { DatePicker, Select, message } from "antd";
 import { login } from "app/services/auth";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
+import SelectField from "@/components/common/SelectField";
 
 const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
@@ -56,8 +57,8 @@ const MaterialTransferFilter = () => {
                 name="materialTranfser"
                 placeholder="Material Transfer"
               />
-              <Select name="origination" placeholder="Origination" />
-              <Select name="destination" placeholder="Destination" />
+              <SelectField name="origination" placeholder="Origination" />
+              <SelectField name="destination" placeholder="Destination" />
 
               <div className="sm:col-span-2 flex justify-end gap-4">
                 <div>
