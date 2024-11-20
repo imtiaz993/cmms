@@ -15,9 +15,9 @@ const ActionBar = ({
   columns,
   checkedList,
   setCheckedList,
-  onSearchTextChange, // Add this prop
+  setSearchText,
+  setAssets,
 }) => {
-  const [searchText, setSearchText] = useState("");
   const [showHierarchy, setShowHierarchy] = useState(false);
 
   const options = columns.map(({ key, title }, index) => ({
@@ -29,7 +29,6 @@ const ActionBar = ({
   // Handle search text change
   const handleSearchChange = (e) => {
     setSearchText(e.target.value);
-    onSearchTextChange(e.target.value); // Call the callback to lift the search text up
   };
 
   const handleCheckboxChange = (value) => {
@@ -57,7 +56,7 @@ const ActionBar = ({
       />
       <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
         <Dropdown
-          dropdownRender={() => <AssetFilter />}
+          dropdownRender={() => <AssetFilter setAssets={setAssets} />}
           trigger={["click"]}
           arrow
           placement="bottomCenter"

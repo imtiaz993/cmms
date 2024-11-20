@@ -5,23 +5,24 @@ import { login } from "app/services/auth";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
+import { getFilteredAssets } from "app/services/assets";
 
 const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
 });
 
-const AssetFilter = () => {
+const AssetFilter = ({ setAssets }) => {
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log(values);
-
-    // const { status, data } = await login(values);
-    // setSubmitting(false);
-    // if (status === 200) {
-    // message.success(data?.message);
-    //   resetForm();
-    // } else {
-    //   message.error(data?.message);
-    // }
+    const { status, data } = await getFilteredAssets(values);
+    setSubmitting(false);
+    if (status === 200) {
+      message.success(data?.message || "Assets fetched successfully");
+      setAssets(data?.data);
+      resetForm();
+    } else {
+      message.error(data?.message || "Failed to fetch assets");
+    }
   };
 
   return (

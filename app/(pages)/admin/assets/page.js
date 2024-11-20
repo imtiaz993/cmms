@@ -82,7 +82,7 @@ const defaultCheckedList = [
 ];
 
 const Assets = () => {
-  const [assets, setAssets] = useState();
+  const [assets, setAssets] = useState(data);
   const [fetchingAssets, setFetchingAssets] = useState(true);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
@@ -126,18 +126,16 @@ const Assets = () => {
 
   // Function to filter the assets based on search text
   const filteredAssets = useMemo(() => {
-    if (!searchText) return data; // Return full data if no search
-    return data?.filter((asset) =>
+    if (!searchText) return assets; // Return full data if no search
+    return assets?.filter((asset) =>
       checkedList.some((key) =>
-        asset[key]?.toString()?.toLowerCase()?.includes(searchText.toLowerCase())
+        asset[key]
+          ?.toString()
+          ?.toLowerCase()
+          ?.includes(searchText.toLowerCase())
       )
     );
   }, [searchText, data, checkedList]);
-
-  // Handle search text change passed from ActionBar
-  const handleSearchTextChange = (text) => {
-    setSearchText(text);
-  };
 
   // Render expanded row content
   const expandedRowRender = (record) => (
@@ -182,7 +180,8 @@ const Assets = () => {
         checkedList={checkedList}
         setCheckedList={setCheckedList}
         columns={baseColumns}
-        onSearchTextChange={handleSearchTextChange} // Pass the search handler
+        setSearchText={setSearchText}
+        setAssets={setAssets}
       />
       <div className="flex gap-3 justify-end">
         <p className="text-secondary">
