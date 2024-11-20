@@ -18,18 +18,13 @@ import {
   Card,
   Checkbox,
   Collapse,
-  DatePicker,
   Dropdown,
-  Input,
   Menu,
   message,
   Radio,
-  Select,
   Tooltip,
-  Typography,
 } from "antd";
-import TextArea from "antd/es/input/TextArea";
-import { Field, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -41,6 +36,7 @@ import UploadLinkDocPopup from "../../material-transfer/[slug]/uploadLinkDocPopu
 import UploadDocPopup from "../../material-transfer/[slug]/uploadDocPopup";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
+import TextAreaField from "@/components/common/TextAreaField";
 
 const WorkOrdersDetail = () => {
   const router = useRouter();
@@ -194,12 +190,13 @@ const WorkOrdersDetail = () => {
                   </div>
                   <p className="opacity-50 mr-2 mt-3">Comments</p>
                   <p>No Comments</p>
-                  <Field
-                    as={Input.TextArea}
-                    name="comment"
-                    placeholder="Add Comment"
-                    className="!mt-3 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
-                  />
+                  <div className="mt-3 -mb-4">
+                    <TextAreaField
+                      name="comment"
+                      placeholder="Add Comment"
+                      maxLength={150}
+                    />
+                  </div>
                   <Collapse style={{ marginTop: "20px" }}>
                     <Collapse.Panel header="View More Details" key="1">
                       {/* Main Container */}
@@ -413,12 +410,13 @@ const WorkOrdersDetail = () => {
                       </div>
                     </div>
                     <p className="opacity-50 mr-2 mt-3">Comments</p>
-                    <Field
-                      as={Input.TextArea}
-                      name="comment"
-                      placeholder="Add Comment"
-                      className="!mt-3 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
-                    />
+                    <div className="mt-3 -mb-4">
+                      <TextAreaField
+                        name="comment"
+                        placeholder="Add Comment"
+                        maxLength={150}
+                      />
+                    </div>
                   </Card>
                 </Card>
               </div>

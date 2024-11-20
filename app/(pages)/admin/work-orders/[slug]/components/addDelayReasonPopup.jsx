@@ -1,6 +1,7 @@
 import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import SelectField from "@/components/common/SelectField";
+import TextAreaField from "@/components/common/TextAreaField";
 import { DatePicker, Input, Modal, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { Field, Form, Formik } from "formik";
@@ -57,12 +58,13 @@ const AddDelayReasonPopup = ({ visible, setVisible }) => {
                   name="resolutionDate"
                   placeholder="Resolution Date"
                 />
-                <Field
-                  as={Input.TextArea}
-                  name="note"
-                  placeholder="Note"
-                  className="w-full col-span-2 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
-                />
+                <div className="col-span-2 -mb-4">
+                  <TextAreaField
+                    name="note"
+                    placeholder="Note"
+                    maxLength={150}
+                  />
+                </div>
               </div>
             </Modal>
           </Form>
