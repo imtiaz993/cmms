@@ -7,6 +7,7 @@ import { ExclamationCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import AddAssetPopupMT from "@/components/addAssetPopupInMT";
 import { useState } from "react";
+import TextAreaField from "@/components/common/TextAreaField";
 
 const validationSchema = Yup.object().shape({
   costCenter: Yup.string(),
@@ -134,13 +135,13 @@ const AddMaterialTransferPopup = ({
                 maxLength={128}
               />
             </div>
-
-            <Field
-              as={Input.TextArea}
-              name="comments"
-              placeholder="Comments"
-              className="!h-28 !mt-3 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
-            />
+            <div className="mt-3">
+              <TextAreaField
+                name="comments"
+                placeholder="Comments"
+                maxLength={150}
+              />
+            </div>
 
             <div>
               <p className="mt-5">
@@ -175,12 +176,13 @@ const AddMaterialTransferPopup = ({
                 <ExclamationCircleOutlined /> No Inventory to display
               </div>
             </div>
-            <Field
-              as={Input.TextArea}
+            <div className="my-3">
+
+            <TextAreaField
               name="misc"
               placeholder="Misc"
-              className="!h-28 !mt-3 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
             />
+            </div>
           </Modal>
         </Form>
       )}

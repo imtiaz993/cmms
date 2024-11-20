@@ -1,10 +1,12 @@
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input, message, Modal, Select } from "antd";
+import { Input, message, Modal } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import { addInventory } from "app/services/inventory";
 import DatePickerField from "@/components/common/DatePickerField";
+import SelectField from "@/components/common/SelectField";
+import TextAreaField from "@/components/common/TextAreaField";
 
 const validationSchema = Yup.object().shape({
   physicalLocation: Yup.string()
@@ -48,22 +50,6 @@ const CreateInventoryPopup = ({
     } else {
       message.error(data.error);
     }
-  };
-
-  const FormikSelect = ({ field, form, options, ...props }) => {
-    const handleChange = (value) => {
-      form.setFieldValue(field.name, value);
-    };
-
-    return (
-      <Select
-        {...props}
-        value={field.value || undefined}
-        onChange={handleChange}
-        onBlur={() => form.setFieldTouched(field.name, true)}
-        options={options}
-      />
-    );
   };
 
   return (
@@ -144,40 +130,28 @@ const CreateInventoryPopup = ({
                   placeholder="Part # / Item #"
                   maxLength={128}
                 />
-                <Field
-                  component={FormikSelect}
-                  name="category"
-                  placeholder="Type / Category"
-                  style={{ height: "36px" }}
-                />
-                <div className="md:col-span-3">
-                  <Field
-                    as={Input.TextArea}
+                <SelectField name="category" placeholder="Type / Category" />
+                <div className="md:col-span-3 -mb-4">
+                  <TextAreaField
                     name="details"
                     placeholder="Details"
                     maxLength={150}
-                    className="!border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                   />
-                  <div className="text-right">0/150</div>
+                </div>
 
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <InputField
-                      name="quantity"
-                      placeholder="Quantity"
-                      maxLength={50}
-                    />
-                    <InputField
-                      name="price"
-                      placeholder="Price"
-                      maxLength={128}
-                    />
-                    <InputField
-                      name="location"
-                      placeholder="Location"
-                      maxLength={128}
-                    />
+                <InputField
+                  name="quantity"
+                  placeholder="Quantity"
+                  maxLength={50}
+                />
+                <InputField name="price" placeholder="Price" maxLength={128} />
+                <InputField
+                  name="location"
+                  placeholder="Location"
+                  maxLength={128}
+                />
 
-                    {/* <Field
+                {/* <Field
                     as={Input.TextArea}
                     name="specDetails"
                     placeholder="Spec Details"
@@ -185,31 +159,29 @@ const CreateInventoryPopup = ({
                     className="!border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
                   />
                   <div className="text-right">0/500</div> */}
-                    <InputField name="PO" placeholder="PO" maxLength={128} />
-                    <InputField name="SO" placeholder="SO" maxLength={128} />
-                    <InputField
-                      name="invoiceNumber"
-                      placeholder="Inv. #"
-                      maxLength={128}
-                    />
-                    <Field
-                      name="supplier"
-                      placeholder="Vendor"
-                      component={FormikSelect}
-                      style={{ height: "36px" }}
-                      options={[
-                        { value: "supplier1", label: "Supplier 1" },
-                        { value: "supplier2", label: "Supplier 2" },
-                        { value: "supplier3", label: "Supplier 3" },
-                        { value: "supplier4", label: "Supplier 4" },
-                        { value: "supplier5", label: "Supplier 5" },
-                      ]}
-                    />
-                    <DatePickerField
-                      name="receivedDate"
-                      placeholder="Received Date"
-                    />
-                    {/* <Select
+                <InputField name="PO" placeholder="PO" maxLength={128} />
+                <InputField name="SO" placeholder="SO" maxLength={128} />
+                <InputField
+                  name="invoiceNumber"
+                  placeholder="Inv. #"
+                  maxLength={128}
+                />
+                <SelectField
+                  name="supplier"
+                  placeholder="Vendor"
+                  options={[
+                    { value: "supplier1", label: "Supplier 1" },
+                    { value: "supplier2", label: "Supplier 2" },
+                    { value: "supplier3", label: "Supplier 3" },
+                    { value: "supplier4", label: "Supplier 4" },
+                    { value: "supplier5", label: "Supplier 5" },
+                  ]}
+                />
+                <DatePickerField
+                  name="receivedDate"
+                  placeholder="Received Date"
+                />
+                {/* <Select
                       name="condition"
                       component={FormikSelect}
                       placeholder="Condition"
@@ -223,8 +195,6 @@ const CreateInventoryPopup = ({
                       ]}
                       style={{ height: "36px" }}
                     /> */}
-                  </div>
-                </div>
               </div>
             </div>
           </Modal>

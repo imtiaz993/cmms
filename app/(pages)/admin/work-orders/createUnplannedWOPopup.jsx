@@ -6,6 +6,7 @@ import TextArea from "antd/es/input/TextArea";
 import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import SelectField from "@/components/common/SelectField";
+import TextAreaField from "@/components/common/TextAreaField";
 
 const validationSchema = Yup.object().shape({
   issueIdentification: Yup.string().required("Required"),
@@ -107,13 +108,13 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
                 placeholder="Time"
                 style={{ height: "36px", width: "100%" }}
               />
-              <Field
-                as={Input.TextArea}
-                name="problemDescription"
-                placeholder="Problem Description"
-                style={{ height: "80px", width: "100%" }}
-                className="col-span-3 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
-              />
+              <div className="md:col-span-3 -mb-4">
+                <TextAreaField
+                  name="problemDescription"
+                  placeholder="Problem Description"
+                  maxLength={150}
+                />
+              </div>
               <InputField name="assetNum" placeholder="Asset #" />
               <InputField
                 name="affectedEquipment"
@@ -148,13 +149,13 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
                 name="requiredTools"
                 placeholder="Required Tools/Parts"
               />
-              <Field
-                as={Input.TextArea}
-                name="statusUpdates"
-                placeholder="Status Updates"
-                style={{ height: "80px", width: "100%" }}
-                className="col-span-3 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
-              />
+              <div className="col-span-3 -mb-4">
+                <TextAreaField
+                  name="statusUpdates"
+                  placeholder="Status Updates"
+                  maxLength={150}
+                />
+              </div>
               <InputField name="checkIn1" placeholder="Check-In 1" />
               <InputField name="checkIn2" placeholder="Check-In 2" />
               <InputField name="checkIn3" placeholder="Check-In 3" />
@@ -164,13 +165,13 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
               />
               <InputField name="partsReplaced" placeholder="Parts Replaced" />
               <InputField name="finalStatus" placeholder="Final Status" />
-              <Field
-                as={Input.TextArea}
-                name="summary"
-                placeholder="Summary"
-                style={{ height: "80px", width: "100%" }}
-                className="col-span-3 !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
-              />
+              <div className="col-span-3 -mb-4">
+                <TextAreaField
+                  name="summary"
+                  placeholder="Summary"
+                  maxLength={150}
+                />
+              </div>
             </div>
           </Modal>
         </Form>

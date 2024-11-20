@@ -15,8 +15,9 @@ const ActionBar = ({
   columns,
   checkedList,
   setCheckedList,
+  setSearchText,
+  setAssets,
 }) => {
-  const [searchText, setSearchText] = useState("");
   const [showHierarchy, setShowHierarchy] = useState(false);
 
   const options = columns.map(({ key, title }, index) => ({
@@ -24,6 +25,11 @@ const ActionBar = ({
     value: key,
     key: index,
   }));
+
+  // Handle search text change
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+  };
 
   const handleCheckboxChange = (value) => {
     const newCheckedList = checkedList.includes(value)
@@ -45,12 +51,12 @@ const ActionBar = ({
     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
       <Input.Search
         placeholder="Search..."
-        onChange={(e) => setSearchText(e.target.value)}
+        onChange={handleSearchChange}
         className="sm:!w-[300px] searchBar"
       />
       <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
         <Dropdown
-          dropdownRender={() => <AssetFilter />}
+          dropdownRender={() => <AssetFilter setAssets={setAssets} />}
           trigger={["click"]}
           arrow
           placement="bottomCenter"

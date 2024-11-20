@@ -16,7 +16,22 @@ export const getAssets = async () => {
 export const addAsset = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: '/asset/add',
+      url: "/asset/add",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const getFilteredAssets = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/asset/getFilteredAssets",
       method: "POST",
       data: values,
     });
