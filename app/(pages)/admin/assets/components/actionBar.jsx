@@ -15,6 +15,7 @@ const ActionBar = ({
   columns,
   checkedList,
   setCheckedList,
+  onSearchTextChange, // Add this prop
 }) => {
   const [searchText, setSearchText] = useState("");
   const [showHierarchy, setShowHierarchy] = useState(false);
@@ -24,6 +25,12 @@ const ActionBar = ({
     value: key,
     key: index,
   }));
+
+  // Handle search text change
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+    onSearchTextChange(e.target.value); // Call the callback to lift the search text up
+  };
 
   const handleCheckboxChange = (value) => {
     const newCheckedList = checkedList.includes(value)
@@ -45,7 +52,7 @@ const ActionBar = ({
     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
       <Input.Search
         placeholder="Search..."
-        onChange={(e) => setSearchText(e.target.value)}
+        onChange={handleSearchChange}
         className="sm:!w-[300px] searchBar"
       />
       <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">

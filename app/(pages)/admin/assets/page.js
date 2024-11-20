@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Table } from "antd";
+import { useEffect, useMemo, useState } from "react";
+import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateAssetPopup from "./components/createAssetPopup";
 import { useRouter } from "next/navigation";
@@ -82,27 +82,27 @@ const defaultCheckedList = [
 ];
 
 const Assets = () => {
-  const [assets, setAssets] = useState()
-  const [fetchingAssets, setFetchingAssets] = useState(true)
+  const [assets, setAssets] = useState();
+  const [fetchingAssets, setFetchingAssets] = useState(true);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+  const [searchText, setSearchText] = useState(""); // State for search text
   const router = useRouter();
 
   useEffect(() => {
     const handleFetchAssets = async () => {
       const { status, data } = await getAssets();
       if (status === 200) {
-        setFetchingAssets(false)
-        setAssets(data.data)
+        setFetchingAssets(false);
+        setAssets(data.data);
       } else {
-        setFetchingAssets(false)
+        setFetchingAssets(false);
         message.error(data.error);
       }
-    }
-    handleFetchAssets()
-  }, [])
-
+    };
+    handleFetchAssets();
+  }, []);
 
   // Filter columns dynamically based on checkedList
   const mainColumns = [
@@ -122,6 +122,21 @@ const Assets = () => {
 
   const showAddAssetModal = () => {
     setAddAssetVisible(true);
+  };
+
+  // Function to filter the assets based on search text
+  const filteredAssets = useMemo(() => {
+    if (!searchText) return data; // Return full data if no search
+    return data?.filter((asset) =>
+      checkedList.some((key) =>
+        asset[key]?.toString()?.toLowerCase()?.includes(searchText.toLowerCase())
+      )
+    );
+  }, [searchText, data, checkedList]);
+
+  // Handle search text change passed from ActionBar
+  const handleSearchTextChange = (text) => {
+    setSearchText(text);
   };
 
   // Render expanded row content
@@ -163,10 +178,11 @@ const Assets = () => {
         />
       )}
       <ActionBar
-        showAddAssetModal={showAddAssetModal}
+        showAddAssetModal={() => setAddAssetVisible(true)}
         checkedList={checkedList}
         setCheckedList={setCheckedList}
         columns={baseColumns}
+        onSearchTextChange={handleSearchTextChange} // Pass the search handler
       />
       <div className="flex gap-3 justify-end">
         <p className="text-secondary">
@@ -185,9 +201,9 @@ const Assets = () => {
         size="large"
         scroll={{ x: 1100 }}
         columns={mainColumns}
-        dataSource={assets && assets.length > 0 && assets}
+        dataSource={filteredAssets}
         pagination={{
-          total: assets?.length,
+          total: filteredAssets?.length,
           pageSize: 10,
           showSizeChanger: true,
           showTotal: (total, range) =>
