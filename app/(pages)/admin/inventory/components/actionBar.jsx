@@ -33,12 +33,8 @@ const ActionBar = ({
   }));
 
   //Add Field
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [createPOVisible, setCreatePOVisible] = useState(false);
-
-  const handleModalClose = () => {
-    setIsModalVisible(false);
-  };
 
   const handleCheckboxChange = (value) => {
     const newCheckedList = checkedList.includes(value)
@@ -68,6 +64,11 @@ const ActionBar = ({
         visible={createPOVisible}
         setVisible={setCreatePOVisible}
       />
+      {/* AddFieldModal Component */}
+      <AddFieldPopup
+        visible={addFieldPopupVisible}
+        setVisible={setAddFieldPopupVisible}
+      />
 
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
         <Input.Search
@@ -96,13 +97,10 @@ const ActionBar = ({
           />
           {/* </Link> */}
           <Button
-            onClick={() => setIsModalVisible(true)}
+            onClick={() => setAddFieldPopupVisible(true)}
             text="Manage Fields"
             outlined
           />
-
-          {/* AddFieldModal Component */}
-          <AddFieldPopup visible={isModalVisible} onClose={handleModalClose} />
 
           <Dropdown
             dropdownRender={() => <InventoryFilter />}
