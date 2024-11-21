@@ -1,21 +1,33 @@
 import { useState } from "react";
-import { Checkbox, Input, Select, Tag } from "antd";
+import { Checkbox, Input, message, Select, Tag } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import DownloadPopup from "./downloadPopup";
+import { getDocumentsByCategory } from "app/services/document";
 
-const ActionBar = () => {
-  const [searchText, setSearchText] = useState("");
+const ActionBar = ({ setSearchText, setDocuments, setFetchingDocuments }) => {
   const [downloadPopup, setDownloadPopup] = useState(false);
-  const [selectedValues, setSelectedValues] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
-  const handleChange = (values) => {
-    setSelectedValues(values);
+  const handleChange = async (values) => {
+    setFetchingDocuments(true);
+    setSelectedCategories(values);
+    const { status, data } = await getDocumentsByCategory(values);
+    if (status === 200) {
+      setDocuments(data?.data);
+    } else {
+      message.error(data?.message || "Failed to fetch documents");
+    }
+    setFetchingDocuments(false);
   };
 
   return (
     <>
-      <DownloadPopup visible={downloadPopup} setVisible={setDownloadPopup} />
+      <DownloadPopup
+        visible={downloadPopup}
+        setVisible={setDownloadPopup}
+        selectedCategories={selectedCategories}
+      />
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-3">
         <Input.Search
           placeholder="Search..."
@@ -38,10 +50,10 @@ const ActionBar = () => {
                 { label: "Material Transfer", value: "materialTransfer" },
                 { label: "Cost", value: "Cost" },
               ]}
-              value={selectedValues}
+              value={selectedCategories}
               onChange={handleChange}
               optionRender={(option) => (
-                <Checkbox checked={selectedValues.includes(option.value)}>
+                <Checkbox checked={selectedCategories.includes(option.value)}>
                   {option.label}
                 </Checkbox>
               )}

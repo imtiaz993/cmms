@@ -20,8 +20,9 @@ const ActionBar = ({
   checkedList,
   setCheckedList,
   selectedRowKeys,
+  setSearchText,
+  setInventory,
 }) => {
-  const [searchText, setSearchText] = useState("");
   const [showHierarchy, setShowHierarchy] = useState(false);
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
@@ -33,11 +34,11 @@ const ActionBar = ({
   }));
 
   //Add Field
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [createPOVisible, setCreatePOVisible] = useState(false);
 
-  const handleModalClose = () => {
-    setIsModalVisible(false);
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
   };
 
   const handleCheckboxChange = (value) => {
@@ -68,11 +69,16 @@ const ActionBar = ({
         visible={createPOVisible}
         setVisible={setCreatePOVisible}
       />
+      {/* AddFieldModal Component */}
+      <AddFieldPopup
+        visible={addFieldPopupVisible}
+        setVisible={setAddFieldPopupVisible}
+      />
 
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
         <Input.Search
           placeholder="Search..."
-          onChange={(e) => setSearchText(e.target.value)}
+          onChange={handleSearchChange}
           className="sm:!w-[300px] searchBar"
         />
         <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
@@ -96,16 +102,13 @@ const ActionBar = ({
           />
           {/* </Link> */}
           <Button
-            onClick={() => setIsModalVisible(true)}
+            onClick={() => setAddFieldPopupVisible(true)}
             text="Manage Fields"
             outlined
           />
 
-          {/* AddFieldModal Component */}
-          <AddFieldPopup visible={isModalVisible} onClose={handleModalClose} />
-
           <Dropdown
-            dropdownRender={() => <InventoryFilter />}
+            dropdownRender={() => <InventoryFilter setInventory={setInventory} />}
             trigger={["click"]}
             arrow
             placement="bottomCenter"

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateInventoryPopup from "./components/createInventoryPopup";
@@ -147,16 +147,14 @@ const data = [
 const defaultCheckedList = columns.map((item) => item.key);
 
 const Inventory = () => {
-  const [inventory, setInventory] = useState()
-  const [fetchingInventory, setFetchingInventory] = useState(true)
+  const [inventory, setInventory] = useState(data);
+  const [fetchingInventory, setFetchingInventory] = useState(true);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addInventoryVisible, setAddInventoryVisible] = useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [searchText, setSearchText] = useState(""); // State for search text
 
-  const showAddInventoryModal = () => {
-    setAddInventoryVisible(true);
-  };
   const rowSelection = {
     selectedRowKeys,
     onChange: (selectedKeys) => {
@@ -168,15 +166,27 @@ const Inventory = () => {
     const handleFetchInventory = async () => {
       const { status, data } = await getInventory();
       if (status === 200) {
-        setFetchingInventory(false)
-        setInventory(data.data)
+        setFetchingInventory(false);
+        setInventory(data.data);
       } else {
-        setFetchingInventory(false)
+        setFetchingInventory(false);
         message.error(data.error);
       }
-    }
-    handleFetchInventory()
-  }, [])
+    };
+    handleFetchInventory();
+  }, []);
+
+  const filteredInventory = useMemo(() => {
+    if (!searchText) return inventory; // Return full data if no search
+    return inventory?.filter((inventoryItem) =>
+      checkedList.some((key) =>
+        inventoryItem[key]
+          ?.toString()
+          ?.toLowerCase()
+          ?.includes(searchText.toLowerCase())
+      )
+    );
+  }, [searchText, data, checkedList]);
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
@@ -188,11 +198,13 @@ const Inventory = () => {
       )}
       <div>
         <ActionBar
-          showAddInventoryModal={showAddInventoryModal}
+          showAddInventoryModal={() => setAddInventoryVisible(true)}
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
           selectedRowKeys={selectedRowKeys}
+          setSearchText={setSearchText}
+          setInventory={setInventory}
         />
         <div className="flex gap-3 justify-end">
           <p className="text-secondary">
@@ -208,15 +220,19 @@ const Inventory = () => {
           scroll={{ x: 1400 }}
           columns={newColumns}
           rowSelection={rowSelection}
-          dataSource={inventory && inventory.length > 0 && inventory.map((i, index) => ({ ...i, key: index }))}
+          dataSource={
+            filteredInventory &&
+            filteredInventory.length > 0 &&
+            filteredInventory.map((i, index) => ({ ...i, key: index }))
+          }
           pagination={{
-            total: inventory?.total,
+            total: filteredInventory?.total,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
-            onChange: () => { },
+            onChange: () => {},
           }}
           style={{
             marginTop: 16,

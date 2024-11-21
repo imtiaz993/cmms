@@ -1,9 +1,9 @@
 import { authRequest } from "../requestHandler";
 
-export const getInventory = async () => {
+export const getMaterialTransferData = async () => {
   try {
     const { status, data } = await authRequest({
-      url: "/inventory/get",
+      url: "/material-transfer/get",
     });
     return { status, data };
   } catch (e) {
@@ -13,10 +13,10 @@ export const getInventory = async () => {
   }
 };
 
-export const addInventory = async (values) => {
+export const getFilteredMT = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: "/inventory/add",
+      url: "/material-transfer/getFilteredMT",
       method: "POST",
       data: values,
     });
@@ -28,10 +28,26 @@ export const addInventory = async (values) => {
   }
 };
 
-export const getFilteredInventory = async (values) => {
+export const getMaterialTransferByStatus = async (value) => {
   try {
     const { status, data } = await authRequest({
-      url: "/inventory/getFilteredInventory",
+      url: "/material-transfer/getMaterialTransferByStatus",
+      method: "POST",
+      data: value,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const printMaterialTransfer = async (values) => {
+  //value could be status (List of MTs based on status)
+  try {
+    const { status, data } = await authRequest({
+      url: "/material-transfer/print",
       method: "POST",
       data: values,
     });
@@ -43,10 +59,13 @@ export const getFilteredInventory = async (values) => {
   }
 };
 
-export const exportInventory = async (hierarchy) => {
+export const exportMaterialTransfer = async (values) => {
+  //value could be status (List of MTs based on status)
   try {
     const { status, data } = await authRequest({
-      url: `/inventory/export?hierarchy=${hierarchy}`,
+      url: "/material-transfer/export",
+      method: "POST",
+      data: values,
     });
     return { status, data };
   } catch (e) {

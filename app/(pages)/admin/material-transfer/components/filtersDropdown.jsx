@@ -6,14 +6,23 @@ import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
+import { getFilteredMT } from "app/services/materialTransfer";
 
 const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
 });
 
-const MaterialTransferFilter = () => {
-  const handleSubmit = async (values, setSubmitting, resetForm) => {
+const MaterialTransferFilter = ({ setMaterialTransfer }) => {
+  const handleSubmit = async (values, setSubmitting) => {
     console.log(values);
+    const { status, data } = await getFilteredMT(values);
+    setSubmitting(false);
+    if (status === 200) {
+      message.success(data?.message || "Assets fetched successfully");
+      setMaterialTransfer(data?.data);
+    } else {
+      message.error(data?.message || "Failed to fetch assets");
+    }
 
     // const { status, data } = await login(values);
     // setSubmitting(false);

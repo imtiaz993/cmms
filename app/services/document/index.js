@@ -1,9 +1,9 @@
 import { authRequest } from "../requestHandler";
 
-export const getInventory = async () => {
+export const getDocuments = async () => {
   try {
     const { status, data } = await authRequest({
-      url: "/inventory/get",
+      url: "/documents/get",
     });
     return { status, data };
   } catch (e) {
@@ -13,10 +13,10 @@ export const getInventory = async () => {
   }
 };
 
-export const addInventory = async (values) => {
+export const getDocumentsByCategory = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: "/inventory/add",
+      url: "/documents/getFilteredDocuments",
       method: "POST",
       data: values,
     });
@@ -28,25 +28,12 @@ export const addInventory = async (values) => {
   }
 };
 
-export const getFilteredInventory = async (values) => {
+export const downloadAllDocuments = async (fileName, selectedCategories) => {
   try {
     const { status, data } = await authRequest({
-      url: "/inventory/getFilteredInventory",
+      url: `/documents/downloadAllDocuments`,
       method: "POST",
-      data: values,
-    });
-    return { status, data };
-  } catch (e) {
-    if (e.data) {
-      return { status: e.status, data: e.data };
-    }
-  }
-};
-
-export const exportInventory = async (hierarchy) => {
-  try {
-    const { status, data } = await authRequest({
-      url: `/inventory/export?hierarchy=${hierarchy}`,
+      data: { fileName, selectedCategories },
     });
     return { status, data };
   } catch (e) {

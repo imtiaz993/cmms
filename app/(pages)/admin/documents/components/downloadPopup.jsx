@@ -1,17 +1,41 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
-import { Modal } from "antd";
+import { message, Modal } from "antd";
+import { downloadAllDocuments } from "app/services/document";
 import { Form, Formik } from "formik";
+import * as Yup from "yup";
 
-const DownloadPopup = ({ visible, setVisible }) => {
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required("File Name is Required"),
+});
+
+const DownloadPopup = ({ visible, setVisible, selectedCategories }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
+    setSubmitting(true);
+    console.log(values);
+    const { status, data } = await downloadAllDocuments(
+      values,
+      selectedCategories
+    );
+    setSubmitting(false);
+    if (status === 200) {
+      message.success(data?.message || "Documents downloaded successfully");
+      setVisible(false);
+    } else {
+      message.error(data?.message || "Failed to download documents");
+    }
+  };
+
   return (
     <div>
       <Formik
         initialValues={{
           name: "",
         }}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
       >
-        {({ values, isSubmitting }) => (
+        {({ values, isSubmitting, submitForm }) => (
           <Form>
             <Modal
               maskClosable={false}
@@ -32,7 +56,8 @@ const DownloadPopup = ({ visible, setVisible }) => {
 
                   <Button
                     className=""
-                    onClick={() => setVisible(false)}
+                    htmlType="submit"
+                    onClick={() => submitForm()}
                     size="small"
                     text="Download"
                     fullWidth={false}
