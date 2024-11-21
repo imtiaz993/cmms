@@ -9,6 +9,7 @@ import {
 import Button from "@/components/common/Button";
 import AssetFilter from "./filtersDropdown";
 import { exportAssets } from "app/services/assets";
+import AddFieldPopup from "@/components/addFieldPopup";
 
 const ActionBar = ({
   showAddAssetModal,
@@ -19,6 +20,8 @@ const ActionBar = ({
   setAssets,
 }) => {
   const [showHierarchy, setShowHierarchy] = useState(false);
+  //Add Field
+  const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
 
   const options = columns.map(({ key, title }, index) => ({
     label: title,
@@ -48,101 +51,114 @@ const ActionBar = ({
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
-      <Input.Search
-        placeholder="Search..."
-        onChange={handleSearchChange}
-        className="sm:!w-[300px] searchBar"
+    <>
+      {/* AddFieldModal Component */}
+      <AddFieldPopup
+        visible={addFieldPopupVisible}
+        setVisible={setAddFieldPopupVisible}
       />
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
-        <Dropdown
-          dropdownRender={() => <AssetFilter setAssets={setAssets} />}
-          trigger={["click"]}
-          arrow
-          placement="bottomCenter"
-        >
+
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
+        <Input.Search
+          placeholder="Search..."
+          onChange={handleSearchChange}
+          className="sm:!w-[300px] searchBar"
+        />
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
           <Button
-            text="Filter"
+            onClick={() => setAddFieldPopupVisible(true)}
+            text="Manage Fields"
             outlined
-            style={{ padding: "4px 0px" }}
-            prefix={<FilterOutlined />}
           />
-        </Dropdown>
-        <Dropdown
-          dropdownRender={() => (
-            <Menu>
-              <Menu.ItemGroup title="Select Columns">
-                {options.map((option) => (
-                  <Menu.Item
-                    key={option.value}
-                    style={{ display: "flex", alignItems: "center" }}
-                  >
-                    <Checkbox
-                      value={option.value}
-                      checked={checkedList.includes(option.value)}
-                      onChange={() => {
-                        handleCheckboxChange(option.value);
-                      }}
+          <Dropdown
+            dropdownRender={() => <AssetFilter setAssets={setAssets} />}
+            trigger={["click"]}
+            arrow
+            placement="bottomCenter"
+          >
+            <Button
+              text="Filter"
+              outlined
+              style={{ padding: "4px 0px" }}
+              prefix={<FilterOutlined />}
+            />
+          </Dropdown>
+          <Dropdown
+            dropdownRender={() => (
+              <Menu>
+                <Menu.ItemGroup title="Select Columns">
+                  {options.map((option) => (
+                    <Menu.Item
+                      key={option.value}
+                      style={{ display: "flex", alignItems: "center" }}
                     >
-                      {option.label}
-                    </Checkbox>
-                  </Menu.Item>
-                ))}
-              </Menu.ItemGroup>
-            </Menu>
-          )}
-          trigger={["click"]}
-          arrow
-          placement="bottomCenter"
-        >
+                      <Checkbox
+                        value={option.value}
+                        checked={checkedList.includes(option.value)}
+                        onChange={() => {
+                          handleCheckboxChange(option.value);
+                        }}
+                      >
+                        {option.label}
+                      </Checkbox>
+                    </Menu.Item>
+                  ))}
+                </Menu.ItemGroup>
+              </Menu>
+            )}
+            trigger={["click"]}
+            arrow
+            placement="bottomCenter"
+          >
+            <Button
+              text="Column Settings"
+              outlined
+              style={{ padding: "4px 24px" }}
+              prefix={<SettingOutlined />}
+            />
+          </Dropdown>
+          <Dropdown
+            dropdownRender={() => (
+              <Menu>
+                <Menu.Item>
+                  <Checkbox
+                    checked={showHierarchy}
+                    onChange={(e) => setShowHierarchy(e.target.checked)}
+                  >
+                    Show Asset Hierarchy
+                  </Checkbox>
+                </Menu.Item>
+                <Menu.Item>
+                  <Button
+                    onClick={() => {
+                      handleExportAssets();
+                    }}
+                    text="Export"
+                  />
+                </Menu.Item>
+              </Menu>
+            )}
+            trigger={["click"]}
+            arrow
+            placement="bottomCenter"
+          >
+            <Button
+              text="Export"
+              outlined
+              style={{ padding: "4px 0px" }}
+              prefix={<ExportOutlined />}
+            />
+          </Dropdown>
           <Button
-            text="Column Settings"
+            text="Add New Asset"
+            onClick={showAddAssetModal}
             outlined
             style={{ padding: "4px 24px" }}
-            prefix={<SettingOutlined />}
+            prefix={<PlusOutlined />}
           />
-        </Dropdown>
-        <Dropdown
-          dropdownRender={() => (
-            <Menu>
-              <Menu.Item>
-                <Checkbox
-                  checked={showHierarchy}
-                  onChange={(e) => setShowHierarchy(e.target.checked)}
-                >
-                  Show Asset Hierarchy
-                </Checkbox>
-              </Menu.Item>
-              <Menu.Item>
-                <Button
-                  onClick={() => {
-                    handleExportAssets();
-                  }}
-                  text="Export"
-                />
-              </Menu.Item>
-            </Menu>
-          )}
-          trigger={["click"]}
-          arrow
-          placement="bottomCenter"
-        >
-          <Button
-            text="Export"
-            outlined
-            style={{ padding: "4px 0px" }}
-            prefix={<ExportOutlined />}
-          />
-        </Dropdown>
-        <Button
-          text="Add New Asset"
-          onClick={showAddAssetModal}
-          outlined
-          style={{ padding: "4px 24px" }}
-          prefix={<PlusOutlined />}
-        />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
