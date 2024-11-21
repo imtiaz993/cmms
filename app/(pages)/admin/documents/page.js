@@ -1,7 +1,9 @@
 "use client";
-import { Table } from "antd";
+import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import { DownloadOutlined } from "@ant-design/icons";
+import { useEffect, useMemo, useState } from "react";
+import { getDocuments } from "app/services/document";
 
 const columns = [
   {
@@ -96,10 +98,44 @@ const data = [
 ];
 
 const Documents = () => {
+  const [documents, setDocuments] = useState(data);
+  const [fetchingDocuments, setFetchingDocuments] = useState(true);
+  const [searchText, setSearchText] = useState(""); // State for search text
+
+  useEffect(() => {
+    const handleFetchDocuments = async () => {
+      const { status, data } = await getDocuments();
+      if (status === 200) {
+        setFetchingDocuments(false);
+        setDocuments(data.data);
+      } else {
+        setFetchingDocuments(false);
+        message.error(data.error);
+      }
+    };
+    handleFetchDocuments();
+  }, []);
+
+  const filteredDocuments = useMemo(() => {
+    if (!searchText) return documents; // Return full data if no search
+    return documents?.filter((document) =>
+      Object.keys(document).some((key) =>
+        document[key]
+          ?.toString()
+          ?.toLowerCase()
+          ?.includes(searchText.toLowerCase())
+      )
+    );
+  }, [searchText, data]);
+
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
       <div>
-        <ActionBar />
+        <ActionBar
+          setSearchText={setSearchText}
+          setDocuments={setDocuments}
+          setFetchingDocuments={setFetchingDocuments}
+        />
         <div className="flex justify-end">
           <p className="text-secondary">
             Total Documents: <span>{"(" + data.length + ")"}</span>
@@ -110,7 +146,7 @@ const Documents = () => {
           size={"large"}
           scroll={{ x: 1100 }}
           columns={columns}
-          dataSource={data}
+          dataSource={filteredDocuments}
           pagination={{
             total: data.total,
             current: 1,
