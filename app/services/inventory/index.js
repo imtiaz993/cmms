@@ -16,7 +16,7 @@ export const getInventory = async () => {
 export const addInventory = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: '/inventory/add',
+      url: "/inventory/add",
       method: "POST",
       data: values,
     });
@@ -28,7 +28,22 @@ export const addInventory = async (values) => {
   }
 };
 
-export const exportInventory= async (hierarchy) => {
+export const getFilteredInventory = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/inventory/getFilteredInventory",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const exportInventory = async (hierarchy) => {
   try {
     const { status, data } = await authRequest({
       url: `/inventory/export?hierarchy=${hierarchy}`,

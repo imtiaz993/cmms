@@ -5,14 +5,24 @@ import { login } from "app/services/auth";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
+import { getFilteredInventory } from "app/services/inventory";
 
 const validationSchema = Yup.object().shape({
   inventoryNumber: Yup.string(),
 });
 
-const InventoryFilter = () => {
+const InventoryFilter = ({ setInventory }) => {
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log(values);
+    const { status, data } = await getFilteredInventory(values);
+    setSubmitting(false);
+    if (status === 200) {
+      message.success(data?.message || "Inventory fetched successfully");
+      setInventory(data?.data);
+      resetForm();
+    } else {
+      message.error(data?.message || "Failed to fetch inventory");
+    }
 
     // const { status, data } = await login(values);
     // setSubmitting(false);
@@ -67,8 +77,14 @@ const InventoryFilter = () => {
               <InputField name="serialNumber" placeholder="Serial #" />
               <InputField name="barcode" placeholder="Barcode" />
               <InputField name="oemSerialNumber" placeholder="OEM Serial #" />
-              <SelectField name="physicalLocation" placeholder="Physical Location" />
-              <SelectField name="accountingDept" placeholder="Accounting Dept." />
+              <SelectField
+                name="physicalLocation"
+                placeholder="Physical Location"
+              />
+              <SelectField
+                name="accountingDept"
+                placeholder="Accounting Dept."
+              />
               <SelectField name="status" placeholder="Status" />
               <SelectField name="category" placeholder="Category" />
               <SelectField name="system" placeholder="System" />

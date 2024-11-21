@@ -20,8 +20,9 @@ const ActionBar = ({
   checkedList,
   setCheckedList,
   selectedRowKeys,
+  setSearchText,
+  setInventory,
 }) => {
-  const [searchText, setSearchText] = useState("");
   const [showHierarchy, setShowHierarchy] = useState(false);
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
@@ -35,6 +36,10 @@ const ActionBar = ({
   //Add Field
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [createPOVisible, setCreatePOVisible] = useState(false);
+
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+  };
 
   const handleCheckboxChange = (value) => {
     const newCheckedList = checkedList.includes(value)
@@ -73,7 +78,7 @@ const ActionBar = ({
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
         <Input.Search
           placeholder="Search..."
-          onChange={(e) => setSearchText(e.target.value)}
+          onChange={handleSearchChange}
           className="sm:!w-[300px] searchBar"
         />
         <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
@@ -103,7 +108,7 @@ const ActionBar = ({
           />
 
           <Dropdown
-            dropdownRender={() => <InventoryFilter />}
+            dropdownRender={() => <InventoryFilter setInventory={setInventory} />}
             trigger={["click"]}
             arrow
             placement="bottomCenter"
