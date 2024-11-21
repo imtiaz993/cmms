@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
-import { EyeFilled, PrinterOutlined } from "@ant-design/icons";
+import { EyeFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import PreviewPopup from "../../../../components/previewPopup";
+import { getMaterialTransferData } from "app/services/materialTransfer";
 
 const data = [
   {
@@ -61,7 +62,12 @@ const data = [
 ];
 
 const MaterialTransfer = () => {
+  const [materialTransferData, setMaterialTransferData] = useState(data);
+  const [fetchingData, setFetchingData] = useState(false);
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
+  const [searchText, setSearchText] = useState(""); // State for search text
+  const router = useRouter();
+
   const columns = [
     {
       title: "Asset Description",
@@ -123,11 +129,29 @@ const MaterialTransfer = () => {
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-  const router = useRouter();
 
-  const showAddMaterialTransferModal = () => {
-    setAddMaterialTransferVisible(true);
-  };
+  useEffect(() => {
+    const handleFetchData = async () => {
+      const { status, data } = await getMaterialTransferData();
+      if (status === 200) {
+        setMaterialTransferData(data);
+        setFetchingData(false);
+      } else {
+        setFetchingData(false);
+        message.error(data.error || "Failed to fetch data");
+      }
+      handleFetchData();
+    };
+  }, []);
+
+  const filteredData = useMemo(() => {
+    if (!searchText) return materialTransferData; // Return full data if no search
+    return materialTransferData?.filter((item) =>
+      checkedList.some((key) =>
+        item[key]?.toString()?.toLowerCase()?.includes(searchText.toLowerCase())
+      )
+    );
+  }, [searchText, data, checkedList]);
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
@@ -143,10 +167,15 @@ const MaterialTransfer = () => {
       )}
       <div>
         <ActionBar
-          showAddMaterialTransferModal={showAddMaterialTransferModal}
+          showAddMaterialTransferModal={() =>
+            setAddMaterialTransferVisible(true)
+          }
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
+          setSearchText={setSearchText}
+          setMaterialTransferData={setMaterialTransferData}
+          setFetchingData={setFetchingData}
         />
         <p className="text-secondary text-end">
           Total Material Transfer: <span>{"(" + data.length + ")"}</span>
@@ -163,13 +192,13 @@ const MaterialTransfer = () => {
               },
             };
           }}
-          loading={false}
+          loading={fetchingData}
           size={"large"}
           scroll={{ x: 1100 }}
           columns={newColumns}
-          dataSource={data}
+          dataSource={filteredData}
           pagination={{
-            total: data.total,
+            total: filteredData.total,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,
