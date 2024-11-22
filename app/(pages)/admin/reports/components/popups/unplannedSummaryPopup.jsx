@@ -2,18 +2,67 @@ import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
-import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
-import { Field, Form, Formik } from "formik";
+import { message, Modal, Radio } from "antd";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import * as Yup from "yup";
+
+// Example for generating the report (adjust this to your actual function)
+import { generateReport } from "app/services/reports";
 
 const UnplannedSummaryPopup = ({ visible, setVisible }) => {
+  // Validation schema for the form
+  const validationSchema = Yup.object({
+    costCenter: Yup.string().required("Cost Center is required"),
+    assetNumber: Yup.string().required("Asset Number is required"),
+    physicalLocation: Yup.string().required("Physical Location is required"),
+    createdFrom: Yup.date().required("Created Between From is required"),
+    createdTo: Yup.date().required("Created Between To is required"),
+    closesdFrom: Yup.date().required("Closed Between From is required"),
+    closedTo: Yup.date().required("Closed Between To is required"),
+    assignedTo: Yup.string().required("Assigned To is required"),
+    priority: Yup.string().required("Priority is required"),
+    companyDoingWork: Yup.string().required("Company Doing Work is required"),
+    formType: Yup.string()
+      .oneOf(["pdf", "csv"], "Select a valid export format")
+      .required("Export format is required"),
+    hasDowntime: Yup.string().required("Select whether there is downtime"),
+  });
+
+  // Form submission handler
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    setSubmitting(true);
+    // Placeholder for actual report generation function
+    const { status, data } = await generateReport(values);
+    if (status === 200) {
+      message.success(data.message || "Report generated successfully");
+    } else {
+      message.error(data.error || "Failed to generate report");
+    }
+    setSubmitting(false);
+    setVisible(false);
+  };
+
   return (
     <div>
       <Formik
         initialValues={{
           costCenter: "",
+          assetNumber: "",
+          physicalLocation: "",
+          createdFrom: null,
+          createdTo: null,
+          closesdFrom: null,
+          closedTo: null,
+          assignedTo: "",
+          priority: "",
+          companyDoingWork: "",
+          formType: "pdf", // Default value for form type
+          hasDowntime: "no", // Default value for downtime
         }}
+        validationSchema={validationSchema} // Use Yup validation schema
+        onSubmit={handleSubmit}
       >
-        {({ values, isSubmitting }) => (
+        {({ values, isSubmitting, submitForm }) => (
           <Form>
             <Modal
               maskClosable={false}
@@ -30,10 +79,8 @@ const UnplannedSummaryPopup = ({ visible, setVisible }) => {
                     fullWidth={false}
                     disabled={isSubmitting}
                   />
-
                   <Button
-                    className=""
-                    onClick={() => setVisible(false)}
+                    onClick={() => submitForm()}
                     size="small"
                     text="Generate"
                     fullWidth={false}
@@ -41,7 +88,6 @@ const UnplannedSummaryPopup = ({ visible, setVisible }) => {
                   />
                 </div>
               }
-              // bodyStyle={{ height: "200px", overflowY: "auto", overflowX: "hidden" }} // Adjusted height
               title="Generate Unplanned Maintenance Summary Report"
             >
               <div>
@@ -150,7 +196,7 @@ const UnplannedSummaryPopup = ({ visible, setVisible }) => {
                   <div className="w-full">
                     <SelectField
                       name="companyDoingWork"
-                      placeholder="company Doing Work"
+                      placeholder="Company Doing Work"
                       options={[{ value: "company", label: "Company 1" }]}
                     />
                   </div>
@@ -162,6 +208,7 @@ const UnplannedSummaryPopup = ({ visible, setVisible }) => {
                       options={[]}
                     />
                   </div>
+
                   <div className="w-full">
                     <p className="">Has Downtime</p>
                     <div role="group">
@@ -198,6 +245,7 @@ const UnplannedSummaryPopup = ({ visible, setVisible }) => {
                     </div>
                   </div>
                 </div>
+
                 <div className="mt-4">
                   <p className="text-secondary mb-1">Export As</p>
                   <div role="group">

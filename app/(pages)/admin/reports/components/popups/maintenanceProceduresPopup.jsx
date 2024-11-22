@@ -1,18 +1,55 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
-import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
+import { Modal, Radio, message } from "antd";
+import { generateReport } from "app/services/reports";
 import { Field, Form, Formik } from "formik";
+import * as Yup from "yup";
+
+// Yup validation schema for Maintenance Procedures
+const validationSchema = Yup.object({
+  category: Yup.string().required("Category is required"),
+  system: Yup.string().required("System is required"),
+  tier3: Yup.string(),
+  tier4: Yup.string(),
+  formType: Yup.string()
+    .oneOf(["pdf", "csv"], "Select a valid export format")
+    .required("Export format is required"),
+});
+
+// Formik initial values for Maintenance Procedures
+const initialValues = {
+  category: "",
+  system: "",
+  tier3: "",
+  tier4: "",
+  formType: "pdf", // Default to pdf for radio button
+};
 
 const MaintenanceProceduresPopup = ({ visible, setVisible }) => {
+  // Form submission handler
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    setSubmitting(true);
+
+    // Placeholder for actual report generation function
+    const { status, data } = await generateReport(values);
+    if (status === 200) {
+      message.success(data.message || "Report generated successfully");
+    } else {
+      message.error(data.error || "Failed to generate report");
+    }
+    setSubmitting(false);
+    setVisible(false);
+  };
+
   return (
     <div>
       <Formik
-        initialValues={{
-          costCenter: "",
-        }}
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
       >
-        {({ values, isSubmitting }) => (
+        {({ values, isSubmitting, submitForm }) => (
           <Form>
             <Modal
               maskClosable={false}
@@ -29,10 +66,8 @@ const MaintenanceProceduresPopup = ({ visible, setVisible }) => {
                     fullWidth={false}
                     disabled={isSubmitting}
                   />
-
                   <Button
-                    className=""
-                    onClick={() => setVisible(false)}
+                    onClick={() => submitForm()}
                     size="small"
                     text="Generate"
                     fullWidth={false}
@@ -40,7 +75,6 @@ const MaintenanceProceduresPopup = ({ visible, setVisible }) => {
                   />
                 </div>
               }
-              // bodyStyle={{ height: "200px", overflowY: "auto", overflowX: "hidden" }} // Adjusted height
               title="Generate Maintenance Procedures Report"
             >
               <div>
@@ -49,7 +83,11 @@ const MaintenanceProceduresPopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="category"
                       placeholder="Category"
-                      options={[]}
+                      options={[
+                        { value: "category-1", label: "Category 1" },
+                        { value: "category-2", label: "Category 2" },
+                        { value: "category-3", label: "Category 3" },
+                      ]}
                     />
                   </div>
 
@@ -57,7 +95,10 @@ const MaintenanceProceduresPopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="system"
                       placeholder="System"
-                      options={[]}
+                      options={[
+                        { value: "air-system", label: "Air System" },
+                        { value: "water-system", label: "Water System" },
+                      ]}
                     />
                   </div>
 
@@ -66,7 +107,10 @@ const MaintenanceProceduresPopup = ({ visible, setVisible }) => {
                       <SelectField
                         name={`tier${index + 3}`}
                         placeholder={`Tier ${index + 3}`}
-                        options={[]}
+                        options={[
+                          { value: `tier-${index + 3}-1`, label: `Tier ${index + 3} Option 1` },
+                          { value: `tier-${index + 3}-2`, label: `Tier ${index + 3} Option 2` },
+                        ]}
                       />
                     </div>
                   ))}

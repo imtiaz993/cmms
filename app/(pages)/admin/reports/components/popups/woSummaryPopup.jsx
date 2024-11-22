@@ -3,9 +3,11 @@ import InputField from "@/components/common/InputField";
 import { Field, Form, Formik } from "formik";
 import SelectField from "@/components/common/SelectField"; // Import SelectField
 import DatePickerField from "@/components/common/DatePickerField"; // Import DatePickerField
-import { Modal, Radio } from "antd";
+import { message, Modal, Radio } from "antd";
 import * as Yup from "yup";
+import { generateReport } from "app/services/reports";
 
+// Validation Schema
 const validationSchema = Yup.object().shape({
   costCenter: Yup.string().required("Cost Center is required"),
   assetNumber: Yup.string().required("Asset Number is required"),
@@ -16,10 +18,10 @@ const validationSchema = Yup.object().shape({
   assignedTo: Yup.string().required("Person Doing Work is required"),
   category: Yup.string().required("Category is required"),
   system: Yup.string().required("System is required"),
-  tier3: Yup.string().required("Tier 3 is required"),
-  tier4: Yup.string().required("Tier 4 is required"),
-  tier5: Yup.string().required("Tier 5 is required"),
-  tier6: Yup.string().required("Tier 6 is required"),
+  tier3: Yup.string(),
+  tier4: Yup.string(),
+  tier5: Yup.string(),
+  tier6: Yup.string(),
   type: Yup.string().required("Type is required"),
   status: Yup.string().required("Status is required"),
   craft: Yup.string().required("Craft is required"),
@@ -28,11 +30,26 @@ const validationSchema = Yup.object().shape({
 });
 
 const WOSummaryPopup = ({ visible, setVisible }) => {
+  // Handle form submission
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    setSubmitting(true);
+    // Placeholder for actual report generation function
+    const { status, data } = await generateReport(values);
+    if (status === 200) {
+      message.success(data.message || "Report generated successfully");
+    } else {
+      message.error(data.error || "Failed to generate report");
+    }
+    setSubmitting(false);
+    setVisible(false);
+  };
+
   return (
     <div>
       <Formik
         initialValues={{
           costCenter: "",
+          assetNumber: "",
           createdFrom: "",
           createdTo: "",
           closesdFrom: "",
@@ -52,8 +69,9 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
           formType: "pdf", // Default form type as pdf
         }}
         validationSchema={validationSchema}
+        onSubmit={handleSubmit}
       >
-        {({ values, isSubmitting }) => (
+        {({ values, isSubmitting, submitForm }) => (
           <Form>
             <Modal
               maskClosable={false}
@@ -70,10 +88,8 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                     fullWidth={false}
                     disabled={isSubmitting}
                   />
-
                   <Button
-                    className=""
-                    onClick={() => setVisible(false)}
+                    onClick={submitForm}
                     size="small"
                     text="Generate"
                     fullWidth={false}
@@ -101,7 +117,7 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                     />
                   </div>
 
-                  {/* Replace Field with custom DatePickerField */}
+                  {/* Date Pickers */}
                   <div className="w-full">
                     <DatePickerField
                       name="createdFrom"
@@ -130,7 +146,7 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                     />
                   </div>
 
-                  {/* Replace Field with custom SelectField */}
+                  {/* Select Fields */}
                   <div className="w-full">
                     <SelectField
                       name="assignedTo"
@@ -138,7 +154,7 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                       options={[
                         { value: "user1", label: "User 1" },
                         { value: "user2", label: "User 2" },
-                      ]} // Replace with actual options
+                      ]}
                     />
                   </div>
 
@@ -149,7 +165,7 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                       options={[
                         { value: "cat1", label: "Category 1" },
                         { value: "cat2", label: "Category 2" },
-                      ]} // Replace with actual options
+                      ]}
                     />
                   </div>
 
@@ -160,11 +176,11 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                       options={[
                         { value: "sys1", label: "System 1" },
                         { value: "sys2", label: "System 2" },
-                      ]} // Replace with actual options
+                      ]}
                     />
                   </div>
 
-                  {/* Render dynamic SelectFields */}
+                  {/* Dynamic Select Fields for Tiers */}
                   {Array.from({ length: 4 }).map((_, index) => (
                     <div key={index} className="w-full">
                       <SelectField
@@ -175,11 +191,12 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                             value: `tier${index + 3}`,
                             label: `Tier ${index + 3}`,
                           },
-                        ]} // Replace with actual options
+                        ]}
                       />
                     </div>
                   ))}
 
+                  {/* Other Select Fields */}
                   <div className="w-full">
                     <SelectField
                       name="type"
@@ -187,7 +204,7 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                       options={[
                         { value: "type1", label: "Type 1" },
                         { value: "type2", label: "Type 2" },
-                      ]} // Replace with actual options
+                      ]}
                     />
                   </div>
 
@@ -198,7 +215,7 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                       options={[
                         { value: "open", label: "Open" },
                         { value: "closed", label: "Closed" },
-                      ]} // Replace with actual options
+                      ]}
                     />
                   </div>
 
@@ -209,7 +226,7 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                       options={[
                         { value: "craft1", label: "Craft 1" },
                         { value: "craft2", label: "Craft 2" },
-                      ]} // Replace with actual options
+                      ]}
                     />
                   </div>
 
@@ -220,7 +237,7 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                       options={[
                         { value: "high", label: "High" },
                         { value: "low", label: "Low" },
-                      ]} // Replace with actual options
+                      ]}
                     />
                   </div>
 
@@ -231,11 +248,12 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                       options={[
                         { value: "cause1", label: "Cause 1" },
                         { value: "cause2", label: "Cause 2" },
-                      ]} // Replace with actual options
+                      ]}
                     />
                   </div>
                 </div>
 
+                {/* Export Format */}
                 <div className="mt-4">
                   <p className="text-secondary mb-1">Export As</p>
                   <div role="group">
