@@ -5,7 +5,7 @@ import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import { SettingOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import CreatePlannedWOPopup from "../assets/[slug]/components/work-orders/createPlannedWOPopup";
+import CreatePlannedWOPopup from "../../assets/[slug]/components/work-orders/createPlannedWOPopup";
 
 const validationSchema = Yup.object().shape({
   costCenter: Yup.string(),

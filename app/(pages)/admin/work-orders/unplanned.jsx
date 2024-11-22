@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Select, Table } from "antd";
 import { EyeFilled, PrinterOutlined } from "@ant-design/icons";
-import EarlyMaintenancePopup from "./earlyMaintenancePopup";
-import ActionBar from "./actionBar";
-import CreateUnplannedWOPopup from "./createUnplannedWOPopup";
+import EarlyMaintenancePopup from "./components/earlyMaintenancePopup";
+import ActionBar from "./components/actionBar";
+import CreateUnplannedWOPopup from "./components/createUnplannedWOPopup";
 import { useRouter } from "next/navigation";
 import PreviewPopup from "../../../../components/previewPopup";
 
