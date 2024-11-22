@@ -163,6 +163,7 @@ const MaterialTransfer = () => {
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
           setAddMaterialTransferVisible={setAddMaterialTransferVisible}
+          setMaterialTransferData={setMaterialTransferData}
         />
       )}
       <div>

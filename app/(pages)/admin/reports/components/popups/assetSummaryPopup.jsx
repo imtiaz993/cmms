@@ -1,18 +1,74 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
-import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
+import { Checkbox, DatePicker, Modal, Radio, message } from "antd";
+import { generateReport } from "app/services/reports";
 import { Field, Form, Formik } from "formik";
+import * as Yup from "yup";
+
+// Yup validation schema
+const validationSchema = Yup.object({
+  costCenter: Yup.string().required("Cost Center is required"),
+  serialNumber: Yup.string().max(
+    128,
+    "Serial Number can't exceed 128 characters"
+  ),
+  physicalLocation: Yup.string().required("Physical Location is required"),
+  year: Yup.string().required("Year is required"),
+  accountingDept: Yup.string().required("Accounting Dept is required"),
+  category: Yup.string().required("Category is required"),
+  system: Yup.string().required("System is required"),
+  expandAssetClass: Yup.boolean(),
+  childAssets: Yup.boolean(),
+  formType: Yup.string()
+    .oneOf(["pdf", "csv"], "Select a valid export format")
+    .required("Export format is required"),
+  tier3: Yup.string(),
+  tier4: Yup.string(),
+  tier5: Yup.string(),
+  tier6: Yup.string(),
+});
+
+// Formik initial values
+const initialValues = {
+  costCenter: "",
+  serialNumber: "",
+  physicalLocation: "",
+  year: "",
+  accountingDept: "",
+  category: "",
+  system: "",
+  expandAssetClass: false,
+  childAssets: false,
+  formType: "pdf", // Default to pdf for radio button
+  tier3: "",
+  tier4: "",
+  tier5: "",
+  tier6: "",
+};
 
 const AssetSummaryPopup = ({ visible, setVisible }) => {
+  // Form submission handler
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    setSubmitting(true);
+    const { status, data } = await generateReport(values);
+    if (status === 200) {
+      message.success(data.message || "Report generated successfully");
+    } else {
+      message.error(data.error || "Failed to generate report");
+    }
+    setSubmitting(false);
+    setVisible(false);
+  };
+
   return (
     <div>
       <Formik
-        initialValues={{
-          costCenter: "",
-        }}
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
       >
-        {({ values, isSubmitting }) => (
+        {({ values, isSubmitting, submitForm }) => (
           <Form>
             <Modal
               maskClosable={false}
@@ -29,10 +85,8 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                     fullWidth={false}
                     disabled={isSubmitting}
                   />
-
                   <Button
-                    className=""
-                    onClick={() => setVisible(false)}
+                    onClick={() => submitForm()}
                     size="small"
                     text="Generate"
                     fullWidth={false}
@@ -40,7 +94,6 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                   />
                 </div>
               }
-              // bodyStyle={{ height: "200px", overflowY: "auto", overflowX: "hidden" }} // Adjusted height
               title="Generate Asset Summary Report"
             >
               <div>

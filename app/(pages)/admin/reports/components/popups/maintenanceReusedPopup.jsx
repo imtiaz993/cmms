@@ -2,8 +2,22 @@ import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
-import { Checkbox, DatePicker, InputNumber, Modal, Radio, Select } from "antd";
+import { Checkbox, InputNumber, message, Modal, Radio } from "antd";
+import { generateReport } from "app/services/reports";
 import { Field, Form, Formik } from "formik";
+import * as Yup from "yup";
+
+// Initial values for the form
+const initialValues = {
+  costCenter: "",
+  fromDate: null,
+  toDate: null,
+  criticallyFactor: "",
+  craft: "",
+  top: null,
+  includeWO: false,
+  formType: "pdf", // Default value for the form type
+};
 
 const MaintenanceReusedPopup = ({
   visible,
@@ -14,14 +28,53 @@ const MaintenanceReusedPopup = ({
   craft,
   top,
 }) => {
+  // Dynamically create Yup validation schema inside the component
+  const validationSchema = Yup.object({
+    costCenter: Yup.string().required("Cost Center is required"),
+    fromDate: Yup.date().required("From Date is required"),
+    toDate: Yup.date().required("To Date is required"),
+    formType: Yup.string()
+      .oneOf(["pdf", "csv"], "Select a valid export format")
+      .required("Export format is required"),
+
+    // Conditionally validate based on props
+    ...(criticallyFactor && {
+      criticallyFactor: Yup.string().required("Critically Factor is required"),
+    }),
+
+    ...(craft && {
+      craft: Yup.string().required("Craft is required"),
+    }),
+
+    ...(top && {
+      top: Yup.number().required("Top is required"),
+    }),
+
+    includeWO: Yup.boolean(),
+  });
+
+  // Form submission handler
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    setSubmitting(true);
+    // Placeholder for actual report generation function
+    const { status, data } = await generateReport(values);
+    if (status === 200) {
+      message.success(data.message || "Report generated successfully");
+    } else {
+      message.error(data.error || "Failed to generate report");
+    }
+    setSubmitting(false);
+    setVisible(false);
+  };
+
   return (
     <div>
       <Formik
-        initialValues={{
-          costCenter: "",
-        }}
+        initialValues={initialValues}
+        validationSchema={validationSchema} // Use the dynamically created schema here
+        onSubmit={handleSubmit}
       >
-        {({ values, isSubmitting }) => (
+        {({ values, isSubmitting, submitForm }) => (
           <Form>
             <Modal
               maskClosable={false}
@@ -38,10 +91,8 @@ const MaintenanceReusedPopup = ({
                     fullWidth={false}
                     disabled={isSubmitting}
                   />
-
                   <Button
-                    className=""
-                    onClick={() => setVisible(false)}
+                    onClick={() => submitForm()}
                     size="small"
                     text="Generate"
                     fullWidth={false}
@@ -49,7 +100,6 @@ const MaintenanceReusedPopup = ({
                   />
                 </div>
               }
-              // bodyStyle={{ height: "200px", overflowY: "auto", overflowX: "hidden" }} // Adjusted height
               title={title}
             >
               <div>
@@ -67,24 +117,26 @@ const MaintenanceReusedPopup = ({
                   </div>
 
                   <div className="w-full">
-                    <DatePickerField name="fromDate" placeholder="From Date" />
+                    <DatePickerField name="toDate" placeholder="To Date" />
                   </div>
 
+                  {/* Conditionally render fields based on props */}
                   {criticallyFactor && (
                     <div className="w-full">
                       <SelectField
                         name="criticallyFactor"
                         placeholder="Critically Factor"
-                        options={[]}
+                        options={[{ value: "factor-1", label: "Factor 1" }]}
                       />
                     </div>
                   )}
+
                   {craft && (
                     <div className="w-full">
                       <SelectField
                         name="craft"
                         placeholder="Craft"
-                        options={[]}
+                        options={[{ value: "craft-1", label: "Craft 1" }]}
                       />
                     </div>
                   )}
@@ -108,6 +160,7 @@ const MaintenanceReusedPopup = ({
                     </div>
                   )}
                 </div>
+
                 <div className="mt-4">
                   <p className="text-secondary mb-1">Export As</p>
                   <div role="group">

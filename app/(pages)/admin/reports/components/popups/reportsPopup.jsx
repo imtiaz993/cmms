@@ -2,8 +2,10 @@ import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
-import { Checkbox, DatePicker, Modal, Radio, Select } from "antd";
+import { Checkbox, message, Modal, Radio } from "antd";
+import { generateReport } from "app/services/reports";
 import { Field, Form, Formik } from "formik";
+import * as Yup from "yup";
 
 const ReportsPopup = ({
   visible,
@@ -19,14 +21,60 @@ const ReportsPopup = ({
   date,
   year,
 }) => {
+  // Build the validation schema based on props
+  const validationSchema = Yup.object({
+    costCenter: costCenter ? Yup.string().required("Cost Center is required") : Yup.string(),
+    assetNumber: assetNumber ? Yup.string().required("Asset Number is required") : Yup.string(),
+    date: date ? Yup.date().required("Date is required") : Yup.date().notRequired(),
+    year: year ? Yup.string().required("Year is required") : Yup.string(),
+    dataOnly: dataOnly ? Yup.boolean() : Yup.boolean(),
+    physicalLocation: physicalLocation ? Yup.string().required("Physical Location is required") : Yup.string(),
+    
+    // Only apply validation for `fromDate` and `toDate` if `fromToDate` prop is true
+    fromDate: fromToDate ? Yup.date().required("From Date is required") : Yup.date().notRequired(),
+    toDate: fromToDate ? Yup.date().required("To Date is required") : Yup.date().notRequired(),
+    
+    criticallyFactor: criticallyFactor ? Yup.string().required("Critically Factor is required") : Yup.string(),
+    childAssets: includeChildAssets ? Yup.boolean() : Yup.boolean(),
+    formType: Yup.string()
+      .oneOf(["pdf", "csv"], "Select a valid export format")
+      .required("Export format is required"),
+  });
+
+  // Handle form submission
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    setSubmitting(true);
+    // Placeholder for actual report generation function
+    const { status, data } = await generateReport(values);
+    if (status === 200) {
+      message.success(data.message || "Report generated successfully");
+    } else {
+      message.error(data.error || "Failed to generate report");
+    }
+    setSubmitting(false);
+    setVisible(false);
+  };
+
   return (
     <div>
       <Formik
         initialValues={{
           costCenter: "",
+          assetNumber: "",
+          physicalLocation: "",
+          date: null,
+          year: "",
+          dataOnly: false,
+          fromDate: null,
+          toDate: null,
+          criticallyFactor: "",
+          childAssets: false,
+          formType: "pdf", // Default value for form type
         }}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
       >
-        {({ values, isSubmitting }) => (
+        {({ values, isSubmitting, submitForm, errors }) => (
           <Form>
             <Modal
               maskClosable={false}
@@ -43,10 +91,10 @@ const ReportsPopup = ({
                     fullWidth={false}
                     disabled={isSubmitting}
                   />
-
                   <Button
-                    className=""
-                    onClick={() => setVisible(false)}
+                    onClick={() =>{
+                      console.log("errors: ", errors);
+                      submitForm()}}
                     size="small"
                     text="Generate"
                     fullWidth={false}
@@ -54,7 +102,6 @@ const ReportsPopup = ({
                   />
                 </div>
               }
-              // bodyStyle={{ height: "200px", overflowY: "auto", overflowX: "hidden" }} // Adjusted height
               title={title}
             >
               <div>
@@ -77,6 +124,7 @@ const ReportsPopup = ({
                         />
                       </div>
                     )}
+
                     {date && (
                       <div className="w-full">
                         <DatePickerField name="date" placeholder="Date" />
@@ -98,6 +146,7 @@ const ReportsPopup = ({
                         />
                       </div>
                     )}
+
                     {dataOnly && (
                       <div className="md:w-1/3">
                         <Field as={Checkbox} name="dataOnly">
@@ -107,6 +156,7 @@ const ReportsPopup = ({
                     )}
                   </div>
                 )}
+
                 {physicalLocation && (
                   <div className="mt-4 w-full">
                     <SelectField
@@ -116,12 +166,14 @@ const ReportsPopup = ({
                     />
                   </div>
                 )}
+
                 {fromToDate && (
                   <div className="mt-4 flex flex-col md:flex-row gap-4 w-full">
                     <DatePickerField name="fromDate" placeholder="From Date" />
-                    <DatePickerField name="fromDate" placeholder="From Date" />
+                    <DatePickerField name="toDate" placeholder="To Date" />
                   </div>
                 )}
+
                 <div className="mt-4 flex flex-col md:flex-row gap-4 w-full md:items-center">
                   {criticallyFactor && (
                     <div className="w-full">
@@ -140,6 +192,7 @@ const ReportsPopup = ({
                     </div>
                   )}
                 </div>
+
                 <div className="mt-4">
                   <p className="text-secondary mb-1">Export As</p>
                   <div role="group">

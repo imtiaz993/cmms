@@ -1,4 +1,6 @@
-import { Table } from "antd";
+import { message, Table } from "antd";
+import { getReadings } from "app/services/reports";
+import { useEffect, useState } from "react";
 
 const columns = [
   {
@@ -69,6 +71,22 @@ const data = [
 ];
 
 const Readings = () => {
+  const [readings, setReadings] = useState(data);
+  const [fetchingData, setFetchingData] = useState(false);
+
+  useEffect(() => {
+    const handleFetchReadings = async () => {
+      setFetchingData(true);
+      const { status, data } = await getReadings();
+      if (status === 200) {
+        setReadings(data.data);
+      } else {
+        message.error(data.error);
+      }
+      setFetchingData(false);
+    };
+    handleFetchReadings();
+  }, []);
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
       <div>
@@ -82,9 +100,9 @@ const Readings = () => {
           size={"large"}
           scroll={{ x: 1100 }}
           columns={columns}
-          dataSource={data}
+          dataSource={readings}
           pagination={{
-            total: data.total,
+            total: readings.total,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,

@@ -8,17 +8,23 @@ import {
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import WOFilter from "./filtersDropdown";
+import {
+  exportWorkOrders,
+  getWorkOrders,
+  getWorkOrdersByStatus,
+  getWorkOrdersByTimeRange,
+} from "app/services/workOrders";
 
 const ActionBar = ({
   showAddWOModal,
   columns,
   checkedList,
   setCheckedList,
+  setSearchText,
+  setWorkOrders,
   unplanned,
+  setFetchingWorkOrders,
 }) => {
-  const [searchText, setSearchText] = useState("");
-  const [showHierarchy, setShowHierarchy] = useState(false);
-
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
     value: key,
@@ -32,11 +38,57 @@ const ActionBar = ({
     setCheckedList(newCheckedList);
   };
 
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value); // Pass search text to parent component
+  };
+
+  const handleStatusChange = async (value) => {
+    console.log(value);
+    // setFetchingData(true);
+    const { status, data } = await getWorkOrdersByStatus(
+      value,
+      unplanned ? "unplanned" : "planned"
+    );
+
+    if (status === 200) {
+      setWorkOrders(data);
+    } else {
+      message.error(data.error || "Failed to fetch data");
+    }
+    setFetchingWorkOrders(false);
+  };
+
+  const handleTimeRangeChange = async (value) => {
+    console.log(value);
+    // setFetchingData(true);
+    const { status, data } = await getWorkOrdersByTimeRange(
+      value,
+      unplanned ? "unplanned" : "planned"
+    );
+    if (status === 200) {
+      setWorkOrders(data);
+    } else {
+      message.error(data.error || "Failed to fetch data");
+    }
+    setFetchingWorkOrders(false);
+  };
+
+  const handleExport = async () => {
+    const { status, data } = await exportWorkOrders(
+      unplanned ? "unplanned" : "planned"
+    );
+    if (status === 200) {
+      message.success("Export initiated");
+    } else {
+      message.error(data.error || "Failed to export data");
+    }
+  };
+
   return (
     <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mb-3">
       <Input.Search
         placeholder="Search..."
-        onChange={(e) => setSearchText(e.target.value)}
+        onChange={handleSearchChange}
         className="sm:!w-[300px] searchBar"
       />
       <div className="grid grid-cols-2 sm:grid-cols-3 md:flex items-center gap-2">
@@ -45,6 +97,7 @@ const ActionBar = ({
             name="status"
             placeholder="Status"
             style={{ height: "36px", width: "100%" }}
+            onChange={handleStatusChange}
             options={[
               { label: "Open", value: "open" },
               { label: "Completed", value: "completed" },
@@ -58,6 +111,7 @@ const ActionBar = ({
             name="timeRange"
             placeholder="Time Range"
             style={{ height: "36px", width: "100%" }}
+            onChange={handleTimeRangeChange}
             options={[
               { label: "Last 30 Days", value: "last30Days" },
               { label: "Last 6 Months", value: "last6Months" },
@@ -67,7 +121,7 @@ const ActionBar = ({
           />
         </div>
         <Dropdown
-          dropdownRender={() => <WOFilter />}
+          dropdownRender={() => <WOFilter setWorkOrders={setWorkOrders} />}
           trigger={["click"]}
           arrow
           placement="bottomCenter"
@@ -119,13 +173,10 @@ const ActionBar = ({
           text="Export"
           outlined
           style={{ padding: "4px 0px" }}
-          onClick={() => {
-            message.success(
-              "Export initiated with hierarchy: " + showHierarchy
-            );
-          }}
+          onClick={handleExport}
           prefix={<ExportOutlined />}
         />
+
         <div>
           <Button
             text={`${

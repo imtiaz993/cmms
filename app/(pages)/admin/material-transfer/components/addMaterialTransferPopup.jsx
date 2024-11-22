@@ -8,32 +8,81 @@ import TextArea from "antd/es/input/TextArea";
 import AddAssetPopupMT from "@/components/addAssetPopupInMT";
 import { useState } from "react";
 import TextAreaField from "@/components/common/TextAreaField";
+import {
+  addMaterialTransfer,
+  saveDraftMaterialTransfer,
+} from "app/services/materialTransfer";
 
+// Validation schema using Yup
 const validationSchema = Yup.object().shape({
-  costCenter: Yup.string(),
+  costCenter: Yup.string().required("Cost center is required."),
+  origination: Yup.string()
+    .max(128, "Origination can't exceed 128 characters")
+    .required("Origination is required."),
+  destination: Yup.string()
+    .max(128, "Destination can't exceed 128 characters")
+    .required("Destination is required."),
+  materialTransferType: Yup.string().required(
+    "Material Transfer Type is required."
+  ),
+  transporter: Yup.string().required("Transporter is required."),
+  attentionTo: Yup.string().required("Attention to is required."),
+  comments: Yup.string()
+    .max(150, "Comments can't exceed 150 characters")
+    .required("Comments are required."),
+  misc: Yup.string().max(150, "Misc information can't exceed 150 characters"),
+  cautions: Yup.object().shape({
+    hazardous: Yup.bool(),
+    nonHazardous: Yup.bool(),
+    msdsSheets: Yup.bool(),
+    ppeRequired: Yup.bool(),
+    requiresStorage: Yup.bool(),
+  }),
 });
 
+// AddMaterialTransferPopup component
 const AddMaterialTransferPopup = ({
   addMaterialTransferVisible,
   setAddMaterialTransferVisible,
+  setMaterialTransferData,
 }) => {
   const [addAssetPopup, setAddAssetPopup] = useState(false);
-  const handleSubmit = async (values, setSubmitting, resetForm) => {
+  const [draft, setDraft] = useState(false);
+
+  // Handle form submission
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     console.log(values);
-    // const { status, data } = await login(values);
-    // setSubmitting(false);
-    // if (status === 200) {
-    // message.success(data?.message);
-    //   resetForm();
-    // } else {
-    //   message.error(data?.message);
-    // }
+    let response;
+    if (draft) {
+      response = await saveDraftMaterialTransfer(values);
+    } else {
+      response = await addMaterialTransfer(values);
+    }
+
+    const { status, data } = response;
+
+    setSubmitting(false);
+    if (status === 200) {
+      message.success(data?.message);
+      resetForm();
+      // setMaterialTransferData();
+      setAddMaterialTransferVisible(false);
+    } else {
+      message.error(data?.message);
+    }
   };
 
   return (
     <Formik
       initialValues={{
         costCenter: "",
+        origination: "",
+        destination: "",
+        materialTransferType: "",
+        transporter: "",
+        attentionTo: "",
+        comments: "",
+        misc: "",
         cautions: {
           hazardous: false,
           nonHazardous: false,
@@ -43,13 +92,9 @@ const AddMaterialTransferPopup = ({
         },
       }}
       validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
-        console.log(values);
-
-        handleSubmit(values, setSubmitting, resetForm);
-      }}
+      onSubmit={handleSubmit}
     >
-      {({ isSubmitting, handleSubmit, setFieldValue }) => (
+      {({ isSubmitting, handleSubmit, submitForm }) => (
         <Form onSubmit={handleSubmit}>
           <AddAssetPopupMT
             visible={addAssetPopup}
@@ -65,7 +110,7 @@ const AddMaterialTransferPopup = ({
             open={addMaterialTransferVisible}
             onCancel={() => setAddMaterialTransferVisible(false)}
             footer={
-              <div className="">
+              <div>
                 <div className="mb-3 sm:inline">
                   <Button
                     className="mr-2"
@@ -78,7 +123,10 @@ const AddMaterialTransferPopup = ({
                   />
                   <Button
                     className="mr-2"
-                    onClick={() => setAddMaterialTransferVisible(false)}
+                    onClick={() => {
+                      setDraft(true);
+                      submitForm();
+                    }}
                     outlined
                     size="small"
                     text="Save as Draft"
@@ -89,7 +137,7 @@ const AddMaterialTransferPopup = ({
 
                 <Button
                   className=""
-                  onClick={() => setAddMaterialTransferVisible(false)}
+                  onClick={() => submitForm()}
                   size="small"
                   text="Submit For Approval"
                   fullWidth={false}
@@ -110,31 +158,28 @@ const AddMaterialTransferPopup = ({
                 placeholder="Origin"
                 maxLength={128}
               />
-
               <InputField
                 name="destination"
                 placeholder="Destination"
                 maxLength={128}
               />
-
               <InputField
-                name="materialTranfserType"
+                name="materialTransferType"
                 placeholder="Transfer Type"
                 maxLength={128}
               />
-
               <InputField
                 name="transporter"
                 placeholder="Transporter"
                 maxLength={128}
               />
-
               <InputField
                 name="attentionTo"
                 placeholder="Attention To"
                 maxLength={128}
               />
             </div>
+
             <div className="mt-3">
               <TextAreaField
                 name="comments"
@@ -176,12 +221,9 @@ const AddMaterialTransferPopup = ({
                 <ExclamationCircleOutlined /> No Inventory to display
               </div>
             </div>
-            <div className="my-3">
 
-            <TextAreaField
-              name="misc"
-              placeholder="Misc"
-            />
+            <div className="my-3">
+              <TextAreaField name="misc" placeholder="Misc" />
             </div>
           </Modal>
         </Form>
