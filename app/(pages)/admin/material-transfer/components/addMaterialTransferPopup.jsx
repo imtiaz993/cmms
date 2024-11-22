@@ -8,7 +8,10 @@ import TextArea from "antd/es/input/TextArea";
 import AddAssetPopupMT from "@/components/addAssetPopupInMT";
 import { useState } from "react";
 import TextAreaField from "@/components/common/TextAreaField";
-import { addMaterialTransfer } from "app/services/materialTransfer";
+import {
+  addMaterialTransfer,
+  saveDraftMaterialTransfer,
+} from "app/services/materialTransfer";
 
 // Validation schema using Yup
 const validationSchema = Yup.object().shape({
@@ -41,17 +44,28 @@ const validationSchema = Yup.object().shape({
 const AddMaterialTransferPopup = ({
   addMaterialTransferVisible,
   setAddMaterialTransferVisible,
+  setMaterialTransferData,
 }) => {
   const [addAssetPopup, setAddAssetPopup] = useState(false);
+  const [draft, setDraft] = useState(false);
 
   // Handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     console.log(values);
-    const { status, data } = await addMaterialTransfer(values);
+    let response;
+    if (draft) {
+      response = await saveDraftMaterialTransfer(values);
+    } else {
+      response = await addMaterialTransfer(values);
+    }
+
+    const { status, data } = response;
+
     setSubmitting(false);
     if (status === 200) {
       message.success(data?.message);
       resetForm();
+      // setMaterialTransferData();
       setAddMaterialTransferVisible(false);
     } else {
       message.error(data?.message);
@@ -109,7 +123,10 @@ const AddMaterialTransferPopup = ({
                   />
                   <Button
                     className="mr-2"
-                    onClick={() => setAddMaterialTransferVisible(false)}
+                    onClick={() => {
+                      setDraft(true);
+                      submitForm();
+                    }}
                     outlined
                     size="small"
                     text="Save as Draft"

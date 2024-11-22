@@ -28,6 +28,21 @@ export const addMaterialTransfer = async (values) => {
   }
 };
 
+export const saveDraftMaterialTransfer = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/material-transfer/saveDraft",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const getFilteredMT = async (values) => {
   try {
     const { status, data } = await authRequest({
