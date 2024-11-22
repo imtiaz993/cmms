@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { Select, Table } from "antd";
+import { useState, useEffect, useMemo } from "react";
+import { message, Table } from "antd";
 import { EyeFilled, PrinterOutlined } from "@ant-design/icons";
 import EarlyMaintenancePopup from "./components/earlyMaintenancePopup";
 import ActionBar from "./components/actionBar";
 import CreateUnplannedWOPopup from "./components/createUnplannedWOPopup";
 import { useRouter } from "next/navigation";
 import PreviewPopup from "../../../../components/previewPopup";
+
+import { getWorkOrders } from "app/services/workOrders";
 
 const data = [
   {
@@ -77,57 +79,39 @@ const data = [
 
 const Unplanned = () => {
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
+  const [workOrders, setWorkOrders] = useState(data);
+  const [fetchingWorkOrders, setFetchingWorkOrders] = useState(false);
+  const [addWOVisible, setAddWOVisible] = useState(false);
+  const [checkedList, setCheckedList] = useState([
+    "asset",
+    "assetDescription",
+    "workOrder",
+    "workRequired",
+    "priority",
+    "created",
+    "due",
+    "status",
+    "costCenter",
+    "cost",
+  ]);
+  const [searchText, setSearchText] = useState("");
+  const router = useRouter();
+
   const columns = [
-    {
-      title: "Asset #",
-      dataIndex: "asset",
-      key: "asset",
-    },
+    { title: "Asset #", dataIndex: "asset", key: "asset" },
     {
       title: "Asset Description",
       dataIndex: "assetDescription",
       key: "assetDescription",
     },
-    {
-      title: "Work Order #",
-      dataIndex: "workOrder",
-      key: "workOrder",
-    },
-    {
-      title: "Work Required",
-      dataIndex: "workRequired",
-      key: "workRequired",
-    },
-    {
-      title: "Priority",
-      dataIndex: "priority",
-      key: "priority",
-    },
-    {
-      title: "Created Date",
-      dataIndex: "created",
-      key: "created",
-    },
-    {
-      title: "Due Date",
-      dataIndex: "due",
-      key: "due",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-    },
-    {
-      title: "Cost Center",
-      dataIndex: "costCenter",
-      key: "costCenter",
-    },
-    {
-      title: "Cost",
-      dataIndex: "cost",
-      key: "cost",
-    },
+    { title: "Work Order #", dataIndex: "workOrder", key: "workOrder" },
+    { title: "Work Required", dataIndex: "workRequired", key: "workRequired" },
+    { title: "Priority", dataIndex: "priority", key: "priority" },
+    { title: "Created Date", dataIndex: "created", key: "created" },
+    { title: "Due Date", dataIndex: "due", key: "due" },
+    { title: "Status", dataIndex: "status", key: "status" },
+    { title: "Cost Center", dataIndex: "costCenter", key: "costCenter" },
+    { title: "Cost", dataIndex: "cost", key: "cost" },
     {
       title: "",
       dataIndex: "print",
@@ -143,74 +127,90 @@ const Unplanned = () => {
       ),
     },
   ];
-  const defaultCheckedList = columns.map((item) => item.key);
-  const [checkedList, setCheckedList] = useState(defaultCheckedList);
-  const [addWOVisible, setAddWOVisible] = useState(false);
-  const newColumns = columns.filter((item) => checkedList.includes(item.key));
-  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUnplannedWorkOrders = async () => {
+      setFetchingWorkOrders(true);
+      const { status, data } = await getWorkOrders("unplanned");
+      if (status === 200) {
+        setWorkOrders(data);
+      } else {
+        message.error(data.error || "Failed to fetch unplanned work orders");
+      }
+      setFetchingWorkOrders(false);
+    };
+    fetchUnplannedWorkOrders();
+  }, []);
+
+  // Dynamically filter columns based on the checkedList
+  const filteredColumns = columns.filter((column) =>
+    checkedList.includes(column.key)
+  );
+
+  // Filter data based on searchText
+  const filteredData = useMemo(() => {
+    if (!searchText) return workOrders; // Return all data if no search text
+    return workOrders?.filter((item) =>
+      checkedList.some((key) =>
+        item[key]?.toString()?.toLowerCase().includes(searchText.toLowerCase())
+      )
+    );
+  }, [searchText, workOrders]);
 
   const showAddWOModal = () => {
     setAddWOVisible(true);
   };
+
   return (
     <div className="h-[calc(100dvh-220px)] overflow-auto mt-4 px-3 lg:px-6">
-      <div className="">
-        <PreviewPopup
-          visible={previewPopupVisible}
-          setVisible={setPreviewPopupVisible}
+      <PreviewPopup
+        visible={previewPopupVisible}
+        setVisible={setPreviewPopupVisible}
+      />
+      {addWOVisible && (
+        <CreateUnplannedWOPopup
+          visible={addWOVisible}
+          setVisible={setAddWOVisible}
         />
-        {addWOVisible && (
-          <CreateUnplannedWOPopup
-            visible={addWOVisible}
-            setVisible={setAddWOVisible}
-          />
-        )}
-        <div>
-          <ActionBar
-            showAddWOModal={showAddWOModal}
-            checkedList={checkedList}
-            setCheckedList={setCheckedList}
-            columns={columns}
-            unplanned
-          />
-          <div className="flex justify-end">
-            <p className="text-secondary">
-              Total Unplanned Work Orders:{" "}
-              <span>{"(" + data.length + ")"}</span>
-            </p>
-          </div>
-          <Table
-            rowClassName="cursor-pointer"
-            onRow={(record, rowIndex) => {
-              return {
-                onClick: () => {
-                  router.push(
-                    `/admin/work-orders/${record?.workOrder}`
-                  );
-                },
-              };
-            }}
-            loading={false}
-            size={"large"}
-            scroll={{ x: 1100 }}
-            columns={newColumns}
-            dataSource={data}
-            pagination={{
-              total: data.total,
-              current: 1,
-              pageSize: 10,
-              showSizeChanger: true,
-              showTotal: (total, range) =>
-                `${range[0]}-${range[1]} of ${total} items`,
-              onChange: () => {},
-            }}
-            style={{
-              marginTop: 16,
-              overflow: "auto",
-            }}
-          />
-        </div>
+      )}
+
+      <ActionBar
+        showAddWOModal={showAddWOModal}
+        checkedList={checkedList}
+        setCheckedList={setCheckedList}
+        columns={columns}
+        unplanned
+        setSearchText={setSearchText}
+        setFetchingWorkOrders={setFetchingWorkOrders}
+      />
+
+      <div className="flex justify-end">
+        <p className="text-secondary">
+          Total Unplanned Work Orders:{" "}
+          <span>{"(" + workOrders.length + ")"}</span>
+        </p>
       </div>
+
+      <Table
+        rowClassName="cursor-pointer"
+        onRow={(record) => ({
+          onClick: () => router.push(`/admin/work-orders/${record?.workOrder}`),
+        })}
+        loading={false}
+        size="large"
+        scroll={{ x: 1100 }}
+        columns={filteredColumns}
+        dataSource={filteredData}
+        pagination={{
+          total: workOrders.length,
+          current: 1,
+          pageSize: 10,
+          showSizeChanger: true,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} items`,
+        }}
+        style={{ marginTop: 16 }}
+      />
     </div>
   );
 };
