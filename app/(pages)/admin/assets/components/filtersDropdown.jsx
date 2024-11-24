@@ -6,20 +6,22 @@ import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
 import { getFilteredAssets } from "app/services/assets";
+import { rigs, systems } from "@/constants/rigsAndSystems";
+import TextAreaField from "@/components/common/TextAreaField";
+import DatePickerField from "@/components/common/DatePickerField";
 
 const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
 });
 
 const AssetFilter = ({ setAssets }) => {
-  const handleSubmit = async (values, setSubmitting, resetForm) => {
+  const submit = async (values, setSubmitting, resetForm) => {
     console.log(values);
     const { status, data } = await getFilteredAssets(values);
     setSubmitting(false);
     if (status === 200) {
       message.success(data?.message || "Assets fetched successfully");
       setAssets(data?.data);
-      resetForm();
     } else {
       message.error(data?.message || "Failed to fetch assets");
     }
@@ -35,54 +37,67 @@ const AssetFilter = ({ setAssets }) => {
     >
       <Formik
         initialValues={{
-          assetNumber: "",
-          assetDescription: "",
-          altId: "",
-          serialNumber: "",
-          barcode: "",
-          oemSerialNumber: "",
           physicalLocation: "",
-          accountingDept: "",
-          status: "",
-          category: "",
-          system: "",
-          tier3: "",
-          tier4: "",
-          tier5: "",
-          tier6: "",
+          mainSystem: "",
+          serialNumber: "",
+          assetNumber: "",
+          make: "",
+          model: "",
+          part: "",
+          criticality: "",
+          maintStatus: "",
+          installedDate: "",
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
-          handleSubmit(values, setSubmitting, resetForm);
+          submit(values, setSubmitting, resetForm);
         }}
       >
-        {({ isSubmitting, handleSubmit, resetForm }) => (
+        {({ isSubmitting, handleSubmit, resetForm, values, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <InputField name="assetNumber" placeholder="Asset #" />
-              <InputField
-                name="assetDescription"
-                placeholder="Asset Description"
-              />
-              <InputField name="altId" placeholder="Alt ID #" />
-              <InputField name="serialNumber" placeholder="Serial #" />
-              <InputField name="barcode" placeholder="Barcode" />
-              <InputField name="oemSerialNumber" placeholder="OEM Serial #" />
               <SelectField
                 name="physicalLocation"
-                placeholder="Physical Location"
+                placeholder="Physical Location (Rig)"
+                options={rigs
+                  .slice(0, rigs.length - 2)
+                  .map((i) => ({ label: i.name, value: i.id }))}
+              />
+
+              <SelectField
+                name="mainSystem"
+                placeholder="Main System"
+                options={systems.map((i) => ({
+                  label: i.name,
+                  value: i.id,
+                }))}
+              />
+              <InputField name="serialNumber" placeholder="Serial #" />
+              <InputField name="assetNumber" placeholder="Asset #" />
+              <InputField name="make" placeholder="Make" />
+              <InputField name="model" placeholder="Model" />
+              <InputField name="part" placeholder="Part #" />
+              <SelectField
+                name="criticality"
+                placeholder="Criticality"
+                options={[
+                  { value: "high", label: "High" },
+                  { value: "medium", label: "Medium" },
+                  { value: "low", label: "Low" },
+                ]}
               />
               <SelectField
-                name="accountingDept"
-                placeholder="Accounting Dept."
+                name="maintStatus"
+                placeholder="Maint. Status"
+                options={[
+                  { value: "active", label: "Active" },
+                  { value: "inactive", label: "Inactive" },
+                ]}
               />
-              <SelectField name="status" placeholder="Status" />
-              <SelectField name="category" placeholder="Category" />
-              <SelectField name="system" placeholder="System" />
-              <SelectField name="tier3" placeholder="Tier 3" />
-              <SelectField name="tier4" placeholder="Tier 4" />
-              <SelectField name="tier5" placeholder="Tier 5" />
-              <SelectField name="tier6" placeholder="Tier 6" />
+              <DatePickerField
+                name="installedDate"
+                placeholder="Installed Date"
+              />
               <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
                 <div>
                   <Button
@@ -90,7 +105,10 @@ const AssetFilter = ({ setAssets }) => {
                     size="small"
                     text="Clear Filter"
                     disabled={isSubmitting}
-                    onClick={resetForm}
+                    onClick={() => {
+                      resetForm();
+                      submit({}, setSubmitting, resetForm);
+                    }}
                     style={{ width: "fit-content" }}
                     className="mr-2"
                   />

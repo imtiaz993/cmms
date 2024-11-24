@@ -78,8 +78,6 @@ export const printMaterialTransfer = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/material-transfer/print",
-      method: "POST",
-      data: values,
     });
     return { status, data };
   } catch (e) {
@@ -94,8 +92,6 @@ export const exportMaterialTransfer = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/material-transfer/export",
-      method: "POST",
-      data: values,
     });
     return { status, data };
   } catch (e) {

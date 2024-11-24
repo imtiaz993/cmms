@@ -2,67 +2,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
-import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 import { EyeFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import PreviewPopup from "../../../../components/previewPopup";
 import { getMaterialTransferData } from "app/services/materialTransfer";
-
-const data = [
-  {
-    assetDesc: "AC Powered 1500 HP O...",
-    assetSerial: "21-001",
-    materialTransfer: "TRF16696000003",
-    creator: "Manager, Rig 27",
-    createdDate: "April 10, 2024",
-    origination: "Rig 27",
-    destination: "-",
-    transporter: "Rig 27",
-  },
-  {
-    assetDesc: "AC Powered 1500 HP O...",
-    assetSerial: "21-001",
-    materialTransfer: "TRF16696000003",
-    creator: "Manager, Rig 27",
-    createdDate: "April 10, 2024",
-    origination: "Rig 27",
-    destination: "-",
-    transporter: "Rig 27",
-  },
-  {
-    assetDesc: "AC Powered 1500 HP O...",
-    assetSerial: "21-001",
-    materialTransfer: "TRF16696000003",
-    creator: "Manager, Rig 27",
-    createdDate: "April 10, 2024",
-    origination: "Rig 27",
-    destination: "-",
-    transporter: "Rig 27",
-  },
-  {
-    assetDesc: "AC Powered 1500 HP O...",
-    assetSerial: "21-001",
-    materialTransfer: "TRF16696000003",
-    creator: "Manager, Rig 27",
-    createdDate: "April 10, 2024",
-    origination: "Rig 27",
-    destination: "-",
-    transporter: "Rig 27",
-  },
-  {
-    assetDesc: "AC Powered 1500 HP O...",
-    assetSerial: "21-001",
-    materialTransfer: "TRF16696000003",
-    creator: "Manager, Rig 27",
-    createdDate: "April 10, 2024",
-    origination: "Rig 27",
-    destination: "-",
-    transporter: "Rig 27",
-  },
-];
+import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 
 const MaterialTransfer = () => {
-  const [materialTransferData, setMaterialTransferData] = useState(data);
+  const [materialTransferData, setMaterialTransferData] = useState();
   const [fetchingData, setFetchingData] = useState(false);
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
   const [searchText, setSearchText] = useState(""); // State for search text
@@ -70,29 +17,9 @@ const MaterialTransfer = () => {
 
   const columns = [
     {
-      title: "Asset Description",
-      dataIndex: "assetDesc",
-      key: "assetDesc",
-    },
-    {
-      title: "Asset Serial #",
-      dataIndex: "assetSerial",
-      key: "assetSerial",
-    },
-    {
-      title: "Creator",
-      dataIndex: "creator",
-      key: "creator",
-    },
-    {
-      title: "Created Date",
-      dataIndex: "createdDate",
-      key: "createdDate",
-    },
-    {
-      title: "Origination",
-      dataIndex: "origination",
-      key: "origination",
+      title: "Origin",
+      dataIndex: "origin",
+      key: "origin",
     },
     {
       title: "Destination",
@@ -100,14 +27,30 @@ const MaterialTransfer = () => {
       key: "destination",
     },
     {
+      title: "Creator",
+      dataIndex: "createdBy",
+      key: "createdBy",
+    },
+    {
+      title: "Created Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+    },
+
+    {
       title: "Transporter",
       dataIndex: "transporter",
       key: "transporter",
     },
     {
-      title: "Material Transfer #",
-      dataIndex: "materialTransfer",
-      key: "materialTransfer",
+      title: "Material Transfer Type",
+      dataIndex: "materialTransferType",
+      key: "materialTransferType",
+    },
+    {
+      title: "Comments",
+      dataIndex: "comments",
+      key: "comments",
     },
     {
       title: "",
@@ -134,24 +77,24 @@ const MaterialTransfer = () => {
     const handleFetchData = async () => {
       const { status, data } = await getMaterialTransferData();
       if (status === 200) {
-        setMaterialTransferData(data);
+        setMaterialTransferData(data.data);
         setFetchingData(false);
       } else {
         setFetchingData(false);
         message.error(data.error || "Failed to fetch data");
       }
-      handleFetchData();
     };
+    handleFetchData();
   }, []);
 
   const filteredData = useMemo(() => {
     if (!searchText) return materialTransferData; // Return full data if no search
     return materialTransferData?.filter((item) =>
-      checkedList.some((key) =>
+      checkedList?.some((key) =>
         item[key]?.toString()?.toLowerCase()?.includes(searchText.toLowerCase())
       )
     );
-  }, [searchText, data, checkedList]);
+  }, [searchText, materialTransferData, checkedList]);
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
@@ -179,7 +122,8 @@ const MaterialTransfer = () => {
           setFetchingData={setFetchingData}
         />
         <p className="text-secondary text-end">
-          Total Material Transfer: <span>{"(" + data.length + ")"}</span>
+          Total Material Transfer:{" "}
+          <span>{"(" + materialTransferData?.length + ")"}</span>
         </p>
         <Table
           rowClassName="cursor-pointer"
@@ -197,9 +141,13 @@ const MaterialTransfer = () => {
           size={"large"}
           scroll={{ x: 1100 }}
           columns={newColumns}
-          dataSource={filteredData}
+          dataSource={
+            filteredData &&
+            filteredData.length > 0 &&
+            filteredData.map((i, index) => ({ ...i, key: index }))
+          }
           pagination={{
-            total: filteredData.total,
+            total: filteredData?.length,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,

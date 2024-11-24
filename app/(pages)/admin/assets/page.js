@@ -14,81 +14,37 @@ const baseColumns = [
     dataIndex: "physicalLocation",
     key: "physicalLocation",
   },
-  { title: "Serial #", dataIndex: "serialNo", key: "serialNo" },
-  { title: "Asset #", dataIndex: "assetNo", key: "assetNo" },
-  { title: "Part #", dataIndex: "partNo", key: "partNo" },
+  { title: "Serial #", dataIndex: "serialNumber", key: "serialNumber" },
+  { title: "Asset #", dataIndex: "assetNumber", key: "assetNumber" },
+  { title: "Part #", dataIndex: "part", key: "part" },
   { title: "Make", dataIndex: "make", key: "make" },
   { title: "Model", dataIndex: "model", key: "model" },
-  { title: "Category", dataIndex: "category", key: "category" },
   { title: "Criticality", dataIndex: "criticality", key: "criticality" },
-  { title: "Status", dataIndex: "status", key: "status" },
+  { title: "Status", dataIndex: "maintStatus", key: "maintStatus" },
   { title: "Installed Date", dataIndex: "installedDate", key: "installedDate" },
-  { title: "Company", dataIndex: "company", key: "company" },
-];
-
-// Data with unique keys
-const data = [
-  {
-    key: "johnBrown",
-    mainSystem: "John Brown",
-    physicalLocation: "New York No. 1 Lake Park",
-    description: "New Description",
-    serialNo: 912,
-    assetNo: 5342,
-    partNo: 345,
-    criticality: "Critical",
-    status: "Active",
-    installedDate: "12/12/2022",
-    company: "ABC Company",
-  },
-  {
-    key: "jimGreen",
-    mainSystem: "Jim Green",
-    description: "New Description",
-    physicalLocation: "London No. 1 Lake Park",
-    serialNo: 912,
-    assetNo: 5342,
-    partNo: 345,
-    criticality: "Critical",
-    status: "Active",
-    installedDate: "12/12/2022",
-    company: "ABC Company",
-  },
-  {
-    key: "joeBlack",
-    mainSystem: "Joe Black",
-    description: "New Description",
-    physicalLocation: "Sidney No. 1 Lake Park",
-    serialNo: 912,
-    assetNo: 5342,
-    partNo: 345,
-    criticality: "Critical",
-    status: "Active",
-    installedDate: "12/12/2022",
-    company: "ABC Company",
-  },
 ];
 
 const defaultCheckedList = [
   "mainSystem",
   "physicalLocation",
-  "assetNo",
+  "assetNumber",
   "make",
   "model",
-  "category",
   "criticality",
-  "status",
+  "maintStatus",
   "installedDate",
 ];
 
 const Assets = () => {
-  const [assets, setAssets] = useState(data);
+  const [assets, setAssets] = useState();
   const [fetchingAssets, setFetchingAssets] = useState(true);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState(""); // State for search text
   const router = useRouter();
+
+  console.log(assets);
 
   useEffect(() => {
     const handleFetchAssets = async () => {
@@ -135,9 +91,9 @@ const Assets = () => {
           ?.includes(searchText.toLowerCase())
       )
     );
-  }, [searchText, data, checkedList]);
+  }, [searchText, assets, checkedList]);
 
-  // Render expanded row content
+  // Render expanded row content<
   const expandedRowRender = (record) => (
     <Table
       columns={parentColumns}
@@ -210,11 +166,11 @@ const Assets = () => {
         }}
         style={{ marginTop: 16 }}
         rowKey="key"
-        expandable={{
-          expandedRowRender,
-          expandedRowKeys,
-          onExpand: handleRowExpand,
-        }}
+        // expandable={{
+        //   expandedRowRender,
+        //   expandedRowKeys,
+        //   onExpand: handleRowExpand,
+        // }}
       />
     </div>
   );

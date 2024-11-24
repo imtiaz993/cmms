@@ -18,7 +18,9 @@ const validationSchema = Yup.object().shape({
   childAsset: Yup.string().required("Child Asset is required"),
   assetNumber: Yup.string().required("Asset # is required"),
   serialNumber: Yup.string().required("Serial # is required"),
-  makeModelPart: Yup.string().required("Make, Model, Part # is required"),
+  make: Yup.string().required("Make is required"),
+  model: Yup.string().required("Model is required"),
+  part: Yup.string().required("Part # is required"),
   description: Yup.string()
     .max(150, "Max 150 characters allowed")
     .required("Description is required"),
@@ -64,7 +66,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
         childAsset: "",
         assetNumber: "",
         serialNumber: "",
-        makeModelPart: "",
+        make: "",
+        model: "",
+        part: "",
         description: "",
         specDetails: "",
         installedDate: "",
@@ -156,10 +160,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                 <InputField name="childAsset" placeholder="Child Asset" />
                 <InputField name="assetNumber" placeholder="Asset #" />
                 <InputField name="serialNumber" placeholder="Serial #" />
-                <InputField
-                  name="makeModelPart"
-                  placeholder="Make, Model, Part #"
-                />
+                <InputField name="make" placeholder="Make" />
+                <InputField name="model" placeholder="Model" />
+                <InputField name="part" placeholder="Part #" />
                 <div className="md:col-span-3 -mb-4">
                   <TextAreaField
                     name="description"

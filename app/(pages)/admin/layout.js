@@ -34,20 +34,20 @@ export default function Layout({ children }) {
     }
   }, [isDarkMode]);
 
-  // useEffect(() => {
-  //   if (typeof window != "undefined") {
-  //     const userToken = getToken();
-  //     const userData = getUser();
-  //     setToken(userToken);
-  //     setData(userData);
+  useEffect(() => {
+    if (typeof window != "undefined") {
+      const userToken = getToken();
+      const userData = getUser();
+      setToken(userToken);
+      setData(userData);
 
-  //     if (!userToken) {
-  //       router.replace("/login");
-  //     } else if (userData?.role === "supervisor") {
-  //       router?.replace("/supervisor/dashboard");
-  //     }
-  //   }
-  // }, [router]);
+      if (!userToken) {
+        router.replace("/login");
+      } else if (userData?.role === "supervisor") {
+        router?.replace("/supervisor/dashboard");
+      }
+    }
+  }, [router]);
   return (
     <>
       {/* {token && data && data.role === "admin" && ( */}

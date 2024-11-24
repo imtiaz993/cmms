@@ -79,11 +79,6 @@ const Schedule = () => {
   };
   return (
     <div className="schdeule ">
-      {/* <ActionBar
-        checkedList={checkedList}
-        setCheckedList={setCheckedList}
-        columns={filters}
-      /> */}
       <DailyBatchPopup
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}

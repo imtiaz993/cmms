@@ -41,31 +41,22 @@ const ActionBar = ({
     setCheckedList(newCheckedList);
   };
 
-  const handleStatusChange = async (value) => {
-    console.log(value);
-    // setFetchingData(true);
-    const { status, data } = await getMaterialTransferByStatus(value);
-
-    if (status === 200) {
-      setMaterialTransferData(data);
-    } else {
-      message.error(data.error || "Failed to fetch data");
-    }
-    setFetchingData(false);
-  };
+  const handleStatusChange = async (value) => {};
 
   const handlePrint = async () => {
-    const { status, data } = await printMaterialTransfer(checkedList);
+    const { status, data } = await printMaterialTransfer();
     if (status === 200) {
+      window.open(data.data);
       message.success(data.message || "Printed successfully");
     } else {
       message.error(data.message || "Failed to print");
     }
   };
-  
+
   const handleExport = async () => {
-    const { status, data } = await exportMaterialTransfer(checkedList);
+    const { status, data } = await exportMaterialTransfer();
     if (status === 200) {
+      window.open(data.data);
       message.success(data.message || "Exported successfully");
     } else {
       message.error(data.message || "Failed to export");

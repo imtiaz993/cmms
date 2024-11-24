@@ -35,6 +35,7 @@ const WOPersonnelSummaryPopup = ({ visible, setVisible }) => {
     // Example of generating a report, replace with actual API call
     const { status, data } = await generateReport(values);
     if (status === 200) {
+      window.open(data.data)
       message.success(data.message || "Report generated successfully");
     } else {
       message.error(data.error || "Failed to generate report");

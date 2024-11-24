@@ -42,9 +42,10 @@ const ActionBar = ({
   };
 
   const handleExportAssets = async () => {
+    message.success("Export initiated with hierarchy: " + showHierarchy);
     const { status, data } = await exportAssets(showHierarchy);
     if (status === 200) {
-      message.success("Export initiated with hierarchy: " + showHierarchy);
+      window.open(data.data);
     } else {
       message.error(data.error);
     }
@@ -52,7 +53,6 @@ const ActionBar = ({
 
   return (
     <>
-      {/* AddFieldModal Component */}
       <AddFieldPopup
         visible={addFieldPopupVisible}
         setVisible={setAddFieldPopupVisible}

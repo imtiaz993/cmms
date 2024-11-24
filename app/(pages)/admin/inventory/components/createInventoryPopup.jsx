@@ -9,31 +9,18 @@ import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
 
 const validationSchema = Yup.object().shape({
-  physicalLocation: Yup.string()
-    .required("Physical Location is required")
-    .max(128),
-  makeModel: Yup.string().required("Make and/or Model is required").max(128),
-  partItem: Yup.string().required("Part # / Item # is required").max(128),
-  assetNumber: Yup.string().required("Asset # / Serial # is required").max(128),
-  quantity: Yup.number()
-    .required("Quantity is required")
-    .positive("Quantity must be a positive number"),
-  category: Yup.string().required("Type / Category is required").max(128),
-  description: Yup.string().max(
-    150,
-    "Description cannot exceed 150 characters"
-  ),
-  specDetails: Yup.string().max(
-    500,
-    "Spec Details cannot exceed 500 characters"
-  ),
-  recievedDate: Yup.date().required("Received Date is required"),
+  partName: Yup.string().required("Part name is required"),
+  partItem: Yup.string().required("Part item is required"),
+  category: Yup.string().required("Category is required"),
+  details: Yup.string().required("Details is required"),
+  quantity: Yup.string().required("Quantity is required"),
+  price: Yup.string().required("Price is required"),
+  location: Yup.string().required("Location is required"),
+  PO: Yup.string().required("PO is required"),
+  SO: Yup.string().required("SO is required"),
+  invoiceNumber: Yup.string().required("Invoice number is required"),
   supplier: Yup.string().required("Supplier is required"),
-  installedDate: Yup.date().required("Installed Date is required"),
-  originalManufactureDate: Yup.date().required(
-    "Original Manufacture Date is required"
-  ),
-  condition: Yup.string().required("Condition is required"),
+  receivedDate: Yup.date().required("Received Date is required"),
 });
 
 const CreateInventoryPopup = ({
@@ -55,19 +42,18 @@ const CreateInventoryPopup = ({
   return (
     <Formik
       initialValues={{
-        physicalLocation: "",
-        makeModel: "",
+        partName: "",
         partItem: "",
-        assetNumber: "",
-        quantity: "",
         category: "",
-        description: "",
-        specDetails: "",
-        recievedDate: null,
+        details: "",
+        quantity: "",
+        price: "",
+        location: "",
+        PO: "",
+        SO: "",
+        invoiceNumber: null,
         supplier: "",
-        installedDate: null,
-        originalManufactureDate: null,
-        condition: "",
+        receivedDate: null,
       }}
       validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -115,11 +101,6 @@ const CreateInventoryPopup = ({
           >
             <div>
               <div className="grid md:grid-cols-3 gap-4">
-                {/* <InputField
-                  name="physicalLocation"
-                  placeholder="Physical Location"
-                  maxLength={128}
-                /> */}
                 <InputField
                   name="partName"
                   placeholder="Part Name"
@@ -130,7 +111,11 @@ const CreateInventoryPopup = ({
                   placeholder="Part # / Item #"
                   maxLength={128}
                 />
-                <SelectField name="category" placeholder="Type / Category" />
+                <SelectField
+                  name="category"
+                  placeholder="Type / Category"
+                  options={[{ value: "Cat 1", label: "Cat 1" }]}
+                />
                 <div className="md:col-span-3 -mb-4">
                   <TextAreaField
                     name="details"
@@ -151,14 +136,6 @@ const CreateInventoryPopup = ({
                   maxLength={128}
                 />
 
-                {/* <Field
-                    as={Input.TextArea}
-                    name="specDetails"
-                    placeholder="Spec Details"
-                    maxLength={500}
-                    className="!border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F]"
-                  />
-                  <div className="text-right">0/500</div> */}
                 <InputField name="PO" placeholder="PO" maxLength={128} />
                 <InputField name="SO" placeholder="SO" maxLength={128} />
                 <InputField
@@ -181,20 +158,6 @@ const CreateInventoryPopup = ({
                   name="receivedDate"
                   placeholder="Received Date"
                 />
-                {/* <Select
-                      name="condition"
-                      component={FormikSelect}
-                      placeholder="Condition"
-                      options={[
-                        { label: "Good", value: "good" },
-                        { label: "Bad", value: "bad" },
-                        { label: "Damaged", value: "damaged" },
-                        { label: "New", value: "new" },
-                        { label: "Rebuilt", value: "rebuilt" },
-                        { label: "Re-Certified", value: "re-certified" },
-                      ]}
-                      style={{ height: "36px" }}
-                    /> */}
               </div>
             </div>
           </Modal>

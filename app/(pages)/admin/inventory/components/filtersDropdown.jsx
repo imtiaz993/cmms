@@ -6,32 +6,23 @@ import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
 import { getFilteredInventory } from "app/services/inventory";
+import DatePickerField from "@/components/common/DatePickerField";
 
 const validationSchema = Yup.object().shape({
   inventoryNumber: Yup.string(),
 });
 
 const InventoryFilter = ({ setInventory }) => {
-  const handleSubmit = async (values, setSubmitting, resetForm) => {
+  const submit = async (values, setSubmitting, resetForm) => {
     console.log(values);
     const { status, data } = await getFilteredInventory(values);
     setSubmitting(false);
     if (status === 200) {
       message.success(data?.message || "Inventory fetched successfully");
       setInventory(data?.data);
-      resetForm();
     } else {
       message.error(data?.message || "Failed to fetch inventory");
     }
-
-    // const { status, data } = await login(values);
-    // setSubmitting(false);
-    // if (status === 200) {
-    // message.success(data?.message);
-    //   resetForm();
-    // } else {
-    //   message.error(data?.message);
-    // }
   };
 
   return (
@@ -44,54 +35,77 @@ const InventoryFilter = ({ setInventory }) => {
     >
       <Formik
         initialValues={{
-          inventorytNumber: "",
-          inventoryDescription: "",
-          altId: "",
-          serialNumber: "",
-          barcode: "",
-          oemSerialNumber: "",
-          physicalLocation: "",
-          accountingDept: "",
-          status: "",
+          partName: "",
+          partItem: "",
           category: "",
-          system: "",
-          tier3: "",
-          tier4: "",
-          tier5: "",
-          tier6: "",
+          details: "",
+          quantity: "",
+          price: "",
+          location: "",
+          PO: "",
+          SO: "",
+          invoiceNumber: "",
+          supplier: "",
+          receivedDate: "",
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
-          handleSubmit(values, setSubmitting, resetForm);
+          submit(values, setSubmitting, resetForm);
         }}
       >
-        {({ isSubmitting, handleSubmit, resetForm }) => (
+        {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <InputField name="inventoryNumber" placeholder="Inventory #" />
               <InputField
-                name="inventoryDescription"
-                placeholder="Inventory Description"
+                name="partName"
+                placeholder="Part Name"
+                maxLength={128}
               />
-              <InputField name="altId" placeholder="Alt ID #" />
-              <InputField name="serialNumber" placeholder="Serial #" />
-              <InputField name="barcode" placeholder="Barcode" />
-              <InputField name="oemSerialNumber" placeholder="OEM Serial #" />
-              <SelectField
-                name="physicalLocation"
-                placeholder="Physical Location"
+              <InputField
+                name="partItem"
+                placeholder="Part # / Item #"
+                maxLength={128}
               />
               <SelectField
-                name="accountingDept"
-                placeholder="Accounting Dept."
+                name="category"
+                placeholder="Type / Category"
+                options={[{ value: "Cat 1", label: "Cat 1" }]}
               />
-              <SelectField name="status" placeholder="Status" />
-              <SelectField name="category" placeholder="Category" />
-              <SelectField name="system" placeholder="System" />
-              <SelectField name="tier3" placeholder="Tier 3" />
-              <SelectField name="tier4" placeholder="Tier 4" />
-              <SelectField name="tier5" placeholder="Tier 5" />
-              <SelectField name="tier6" placeholder="Tier 6" />
+
+              <InputField
+                name="quantity"
+                placeholder="Quantity"
+                maxLength={50}
+              />
+              <InputField name="price" placeholder="Price" maxLength={128} />
+              <InputField
+                name="location"
+                placeholder="Location"
+                maxLength={128}
+              />
+
+              <InputField name="PO" placeholder="PO" maxLength={128} />
+              <InputField name="SO" placeholder="SO" maxLength={128} />
+              <InputField
+                name="invoiceNumber"
+                placeholder="Inv. #"
+                maxLength={128}
+              />
+              <SelectField
+                name="supplier"
+                placeholder="Vendor"
+                options={[
+                  { value: "supplier1", label: "Supplier 1" },
+                  { value: "supplier2", label: "Supplier 2" },
+                  { value: "supplier3", label: "Supplier 3" },
+                  { value: "supplier4", label: "Supplier 4" },
+                  { value: "supplier5", label: "Supplier 5" },
+                ]}
+              />
+              <DatePickerField
+                name="receivedDate"
+                placeholder="Received Date"
+              />
               <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
                 <div>
                   <Button
@@ -99,7 +113,10 @@ const InventoryFilter = ({ setInventory }) => {
                     size="small"
                     text="Clear Filter"
                     disabled={isSubmitting}
-                    onClick={resetForm}
+                    onClick={() => {
+                      resetForm();
+                      submit({}, setSubmitting, resetForm);
+                    }}
                     style={{ width: "fit-content" }}
                     className="mr-2"
                   />

@@ -8,30 +8,17 @@ import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import { getFilteredMT } from "app/services/materialTransfer";
 
-const validationSchema = Yup.object().shape({
-  assetNumber: Yup.string(),
-});
-
-const MaterialTransferFilter = ({ setMaterialTransfer }) => {
-  const handleSubmit = async (values, setSubmitting) => {
+const MaterialTransferFilter = ({ setMaterialTransferData }) => {
+  const submit = async (values, setSubmitting) => {
     console.log(values);
     const { status, data } = await getFilteredMT(values);
     setSubmitting(false);
     if (status === 200) {
       message.success(data?.message || "Assets fetched successfully");
-      setMaterialTransfer(data?.data);
+      setMaterialTransferData(data?.data);
     } else {
       message.error(data?.message || "Failed to fetch assets");
     }
-
-    // const { status, data } = await login(values);
-    // setSubmitting(false);
-    // if (status === 200) {
-    // message.success(data?.message);
-    //   resetForm();
-    // } else {
-    //   message.error(data?.message);
-    // }
   };
 
   return (
@@ -45,16 +32,16 @@ const MaterialTransferFilter = ({ setMaterialTransfer }) => {
       <Formik
         initialValues={{
           createdDateRange: "",
-          materialTranfser: "",
+          materialTransferType: "",
           origination: "",
           destination: "",
+          Transporter: "",
         }}
-        validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
-          handleSubmit(values, setSubmitting, resetForm);
+          submit(values, setSubmitting, resetForm);
         }}
       >
-        {({ isSubmitting, handleSubmit, resetForm }) => (
+        {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 gap-4">
               <DatePickerField
@@ -63,11 +50,25 @@ const MaterialTransferFilter = ({ setMaterialTransfer }) => {
               />
 
               <InputField
-                name="materialTranfser"
-                placeholder="Material Transfer"
+                name="origination"
+                placeholder="Origin"
+                maxLength={128}
               />
-              <SelectField name="origination" placeholder="Origination" />
-              <SelectField name="destination" placeholder="Destination" />
+              <InputField
+                name="destination"
+                placeholder="Destination"
+                maxLength={128}
+              />
+              <InputField
+                name="materialTransferType"
+                placeholder="Transfer Type"
+                maxLength={128}
+              />
+              <InputField
+                name="transporter"
+                placeholder="Transporter"
+                maxLength={128}
+              />
 
               <div className="sm:col-span-2 flex justify-end gap-4">
                 <div>
@@ -76,7 +77,10 @@ const MaterialTransferFilter = ({ setMaterialTransfer }) => {
                     size="small"
                     text="Clear Filter"
                     disabled={isSubmitting}
-                    onClick={resetForm}
+                    onClick={() => {
+                      resetForm();
+                      submit({}, setSubmitting, resetForm);
+                    }}
                     style={{ width: "fit-content" }}
                     className="mr-2"
                   />

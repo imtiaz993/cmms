@@ -1,74 +1,5 @@
 import ReactApexChart from "react-apexcharts";
 
-// const DonutChart = () => (
-//   <ReactApexChart
-//     series={[44, 20, 3]}
-//     options={{
-//       chart: {
-//         width: 380,
-//         type: "donut",
-//       },
-//       labels: ["Completed", "Open", "Past Due"],
-//       colors: ["#009E60", "#40E0D0", "#FFC300"],
-//       dataLabels: {
-//         enabled: true,
-//         formatter: function (_, opt) {
-//           return opt.w.config.series[opt.seriesIndex];
-//         },
-//       },
-//       stroke: {
-//         show: false,
-//         width: 0,
-//       },
-//       legend: {
-//         position: "right",
-//         fontSize: "14px",
-//         fontWeight: "400",
-//         labels: {
-//           colors: ["#000", "#000", "#000"],
-//         },
-//         markers: {
-//           offsetX: -5,
-//         },
-//         itemMargin: {
-//           horizontal: 10,
-//           vertical: 20,
-//         },
-//       },
-//       responsive: [
-//         {
-//           breakpoint: 1150,
-//           options: {
-//             chart: {
-//               width: 320,
-//             },
-//             legend: {
-//               position: "bottom",
-//               itemMargin: {
-//                 horizontal: 10,
-//                 vertical: 10,
-//               },
-//             },
-//           },
-//         },
-//         {
-//           breakpoint: 500,
-//           options: {
-//             chart: {
-//               width: 300,
-//             },
-//             legend: {
-//               fontSize: "12px",
-//             },
-//           },
-//         },
-//       ],
-//     }}
-//     type="donut"
-//     width={380}
-//   />
-// );
-
 const ColumnChart = () => (
   <ReactApexChart
     series={[
@@ -93,7 +24,11 @@ const ColumnChart = () => (
         fontSize: "14px",
         fontWeight: "400",
         labels: {
-          colors: ["var(--text-color)", "var(--text-color)", "var(--text-color)"],
+          colors: [
+            "var(--text-color)",
+            "var(--text-color)",
+            "var(--text-color)",
+          ],
         },
         markers: {
           offsetX: -5,

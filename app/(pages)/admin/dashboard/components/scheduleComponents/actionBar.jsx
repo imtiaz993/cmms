@@ -48,41 +48,6 @@ const ActionBar = ({ columns, checkedList, setCheckedList, unplanned }) => {
           />
         </Dropdown>
 
-        {/* <Dropdown
-          dropdownRender={() => (
-            <Menu>
-              <Menu.ItemGroup title="Select Columns">
-                {options.map((option) => (
-                  <Menu.Item
-                    key={option.value}
-                    style={{ display: "flex", alignItems: "center" }}
-                  >
-                    <Checkbox
-                      value={option.value}
-                      checked={checkedList.includes(option.value)}
-                      onChange={() => {
-                        handleCheckboxChange(option.value);
-                      }}
-                    >
-                      {option.label}
-                    </Checkbox>
-                  </Menu.Item>
-                ))}
-              </Menu.ItemGroup>
-            </Menu>
-          )}
-          trigger={["click"]}
-          arrow
-          placement="bottomCenter"
-        >
-          <Button
-            text="Print"
-            outlined
-            style={{ padding: "4px 24px" }}
-            prefix={<SettingOutlined />}
-          />
-        </Dropdown> */}
-
         <Button
           text="Export"
           outlined
@@ -94,16 +59,6 @@ const ActionBar = ({ columns, checkedList, setCheckedList, unplanned }) => {
           }}
           prefix={<ExportOutlined />}
         />
-        {/* <div>
-          <Button
-            text={`${
-              unplanned ? "Create Unplanned WO" : "Open Early Maintenance"
-            }`}
-            outlined
-            style={{ padding: "4px 24px" }}
-            prefix={<PlusOutlined />}
-          />
-        </div> */}
       </div>
     </div>
   );

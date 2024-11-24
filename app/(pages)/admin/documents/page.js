@@ -7,19 +7,25 @@ import { getDocuments } from "app/services/document";
 
 const columns = [
   {
-    title: "Asset Description",
-    dataIndex: "assetDescription",
-    key: "assetDescription",
+    title: "Document Name",
+    dataIndex: "title",
+    key: "title",
   },
   {
-    title: "Main Asset System",
-    dataIndex: "mainAssetSystem",
-    key: "mainAssetSystem",
+    title: "Asset",
+    dataIndex: "asset",
+    key: "asset",
+    render: (asset) => asset.id,
   },
   {
     title: "Document Type",
-    dataIndex: "docType",
-    key: "docType",
+    dataIndex: "type",
+    key: "type",
+  },
+  {
+    title: "Category",
+    dataIndex: "type",
+    key: "type",
   },
   {
     title: "Uploaded By",
@@ -28,77 +34,28 @@ const columns = [
   },
   {
     title: "Uploaded Date",
-    dataIndex: "uploadedDate",
-    key: "uploadedDate",
+    dataIndex: "createdAt",
+    key: "createdAt",
   },
   {
     title: "Comments",
-    dataIndex: "comments",
-    key: "comments",
+    dataIndex: "comment",
+    key: "comment",
   },
   {
     title: "",
-    dataIndex: "download",
-    key: "download",
-    render: () => (
-      <DownloadOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+    dataIndex: "link",
+    key: "link",
+    render: (link) => (
+      <a href={link} target="_blank">
+        <DownloadOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+      </a>
     ),
   },
 ];
 
-const data = [
-  {
-    assetDescription: "#1 PUMP GEAREND INSP 8-16-23.pdf",
-    mainAssetSystem: "-",
-    docType: "Inspection Document",
-    uploadedBy: "Manager, Rig 21",
-    uploadedDate: "June 15, 2024",
-    comments: "SN#",
-  },
-  {
-    assetDescription: "#1 PUMP GEAREND INSP 8-16-23.pdf",
-    mainAssetSystem: "-",
-    docType: "Inspection Document",
-    uploadedBy: "Manager, Rig 21",
-    uploadedDate: "June 15, 2024",
-    comments: "SN#",
-  },
-  {
-    assetDescription: "#1 PUMP GEAREND INSP 8-16-23.pdf",
-    mainAssetSystem: "-",
-    docType: "Inspection Document",
-    uploadedBy: "Manager, Rig 21",
-    uploadedDate: "June 15, 2024",
-    comments: "SN#",
-  },
-  {
-    assetDescription: "#1 PUMP GEAREND INSP 8-16-23.pdf",
-    mainAssetSystem: "-",
-    docType: "Inspection Document",
-    uploadedBy: "Manager, Rig 21",
-    uploadedDate: "June 15, 2024",
-    comments: "SN#",
-  },
-  {
-    assetDescription: "#1 PUMP GEAREND INSP 8-16-23.pdf",
-    mainAssetSystem: "-",
-    docType: "Inspection Document",
-    uploadedBy: "Manager, Rig 21",
-    uploadedDate: "June 15, 2024",
-    comments: "SN#",
-  },
-  {
-    assetDescription: "#1 PUMP GEAREND INSP 8-16-23.pdf",
-    mainAssetSystem: "-",
-    docType: "Inspection Document",
-    uploadedBy: "Manager, Rig 21",
-    uploadedDate: "June 15, 2024",
-    comments: "SN#",
-  },
-];
-
 const Documents = () => {
-  const [documents, setDocuments] = useState(data);
+  const [documents, setDocuments] = useState();
   const [fetchingDocuments, setFetchingDocuments] = useState(true);
   const [searchText, setSearchText] = useState(""); // State for search text
 
@@ -126,7 +83,7 @@ const Documents = () => {
           ?.includes(searchText.toLowerCase())
       )
     );
-  }, [searchText, data]);
+  }, [searchText, documents]);
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
@@ -138,17 +95,17 @@ const Documents = () => {
         />
         <div className="flex justify-end">
           <p className="text-secondary">
-            Total Documents: <span>{"(" + data.length + ")"}</span>
+            Total Documents: <span>{"(" + documents?.length + ")"}</span>
           </p>
         </div>
         <Table
-          loading={false}
+          loading={fetchingDocuments}
           size={"large"}
           scroll={{ x: 1100 }}
           columns={columns}
           dataSource={filteredDocuments}
           pagination={{
-            total: data.total,
+            total: documents?.length,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,

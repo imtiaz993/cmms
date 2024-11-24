@@ -3,7 +3,7 @@ import { authRequest } from "../requestHandler";
 export const getDocuments = async () => {
   try {
     const { status, data } = await authRequest({
-      url: "/documents/get",
+      url: "/document/get",
     });
     return { status, data };
   } catch (e) {
@@ -16,7 +16,7 @@ export const getDocuments = async () => {
 export const getDocumentsByCategory = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: "/documents/getFilteredDocuments",
+      url: "/document/getFilteredDocuments",
       method: "POST",
       data: values,
     });

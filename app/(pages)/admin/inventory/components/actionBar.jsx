@@ -49,9 +49,10 @@ const ActionBar = ({
   };
 
   const handleExportInventory = async () => {
+    message.success("Export initiated with hierarchy: " + showHierarchy);
     const { status, data } = await exportInventory(showHierarchy);
     if (status === 200) {
-      message.success("Export initiated with hierarchy: " + showHierarchy);
+      window.open(data.data);
     } else {
       message.error(data.error);
     }
@@ -94,13 +95,11 @@ const ActionBar = ({
               className="col-span-2 sm:col-span-1"
             />
           )}
-          {/* <Link href="/admin/inventory/purchase-order"> */}
           <Button
             text="Purchase Order"
             outlined
             onClick={() => setCreatePOVisible(true)}
           />
-          {/* </Link> */}
           <Button
             onClick={() => setAddFieldPopupVisible(true)}
             text="Manage Fields"
@@ -108,7 +107,9 @@ const ActionBar = ({
           />
 
           <Dropdown
-            dropdownRender={() => <InventoryFilter setInventory={setInventory} />}
+            dropdownRender={() => (
+              <InventoryFilter setInventory={setInventory} />
+            )}
             trigger={["click"]}
             arrow
             placement="bottomCenter"

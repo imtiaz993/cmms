@@ -19,7 +19,7 @@ const AssetDetail = () => {
         <div className="static md:absolute left-0">
           <Button
             prefix={<ArrowLeftOutlined />}
-            onClick={() => router.push(-1)}
+            onClick={() => router.back()}
             fullWidth={false}
             outlined
             className="w-full md:w-auto"

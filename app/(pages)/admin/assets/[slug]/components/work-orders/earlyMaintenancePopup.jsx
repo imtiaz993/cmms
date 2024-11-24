@@ -146,11 +146,6 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
               </div>
             }
             width={1000}
-            // bodyStyle={{
-            //   height: "400px",
-            //   overflowY: "auto",
-            //   overflowX: "hidden",
-            // }}
           >
             <div>
               <div className="flex gap-8">
@@ -211,7 +206,6 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
                   onClick: () => setCreatePlannedWOPopup(true),
                   style: { cursor: "pointer" },
                 })}
-
                 columns={columns}
                 dataSource={data}
                 pagination={{

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
-import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 import { EyeFilled, EyeOutlined, PrinterOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import PreviewPopup from "../../../../../../../components/previewPopup";
+import AddMaterialTransferPopup from "app/(pages)/admin/material-transfer/components/addMaterialTransferPopup";
 
 const data = [
   {
