@@ -32,9 +32,13 @@ const MaintenanceProceduresPopup = ({ visible, setVisible }) => {
     setSubmitting(true);
 
     // Placeholder for actual report generation function
-    const { status, data } = await generateReport(values);
+    const { status, data } = await generateReport(
+      values,
+      "Maintenance Procedures Report",
+      "maintenance"
+    );
     if (status === 200) {
-      window.open(data.data)
+      window.open(data.data);
       message.success(data.message || "Report generated successfully");
     } else {
       message.error(data.error || "Failed to generate report");
@@ -109,8 +113,14 @@ const MaintenanceProceduresPopup = ({ visible, setVisible }) => {
                         name={`tier${index + 3}`}
                         placeholder={`Tier ${index + 3}`}
                         options={[
-                          { value: `tier-${index + 3}-1`, label: `Tier ${index + 3} Option 1` },
-                          { value: `tier-${index + 3}-2`, label: `Tier ${index + 3} Option 2` },
+                          {
+                            value: `tier-${index + 3}-1`,
+                            label: `Tier ${index + 3} Option 1`,
+                          },
+                          {
+                            value: `tier-${index + 3}-2`,
+                            label: `Tier ${index + 3} Option 2`,
+                          },
                         ]}
                       />
                     </div>

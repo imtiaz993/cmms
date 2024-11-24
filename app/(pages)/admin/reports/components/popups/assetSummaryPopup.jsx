@@ -52,9 +52,13 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
   // Form submission handler
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
-    const { status, data } = await generateReport(values);
+    const { status, data } = await generateReport(
+      values,
+      "Asset Summary Report",
+      "asset"
+    );
     if (status === 200) {
-      window.open(data.data)
+      window.open(data.data);
       message.success(data.message || "Report generated successfully");
     } else {
       message.error(data.error || "Failed to generate report");
@@ -120,7 +124,10 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="physicalLocation"
                       placeholder="Physical Location"
-                      options={rigs.map((i) => ({ label: i.name, value: i.id }))}
+                      options={rigs.map((i) => ({
+                        label: i.name,
+                        value: i.id,
+                      }))}
                     />
                   </div>
 

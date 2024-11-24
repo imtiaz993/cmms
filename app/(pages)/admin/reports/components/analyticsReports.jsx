@@ -68,7 +68,8 @@ const AnalyticsReports = () => {
       <ReportsPopup
         visible={popup === "Defect and Cost Analysis"}
         setVisible={setPopup}
-        title="Generate Defect and Cost Analysis Report"
+        title="Defect and Cost Analysis Report"
+        type="analytics"
         fromToDate
         includeChildAssets
       />
@@ -76,21 +77,24 @@ const AnalyticsReports = () => {
       <ReportsPopup
         visible={popup === "Asset Class Trend Summary"}
         setVisible={setPopup}
-        title="Generate Asset Class Trend Summary Report"
+        title="Asset Class Trend Summary Report"
+        type="analytics"
         year
       />
 
       <ReportsPopup
         visible={popup === "Corrective Maintenance Measurables"}
         setVisible={setPopup}
-        title="Generate Corrective Maintenance Measurables Report"
+        title="Corrective Maintenance Measurables Report"
+        type="analytics"
         year
       />
 
       <ReportsPopup
         visible={popup === "Maintenance Cost Breakdown"}
         setVisible={setPopup}
-        title="Generate Maintenance Cost Breakdown Report"
+        title="Maintenance Cost Breakdown Report"
+        type="analytics"
         fromToDate
         includeChildAssets
       />
@@ -98,14 +102,16 @@ const AnalyticsReports = () => {
       <ReportsPopup
         visible={popup === "Monthly Maintenance Cost Breakdown"}
         setVisible={setPopup}
-        title="Generate Monthly Maintenance Cost Breakdown Report"
+        title="Monthly Maintenance Cost Breakdown Report"
+        type="analytics"
         year
       />
 
       <ReportsPopup
         visible={popup === "Maintenance and Reliability"}
         setVisible={setPopup}
-        title="Generate Maintenance and Reliability Report"
+        title="Maintenance and Reliability Report"
+        type="analytics"
         fromToDate
         includeChildAssets
       />
@@ -113,7 +119,8 @@ const AnalyticsReports = () => {
       <ReportsPopup
         visible={popup === "Exponential Smoothing Forecast"}
         setVisible={setPopup}
-        title="Generate Exponential Smoothing Forecast Report"
+        title="Exponential Smoothing Forecast Report"
+        type="analytics"
       />
 
       <div className="bg-primary px-2">
