@@ -43,12 +43,8 @@ const ActionBar = ({ setSearchText, setDocuments, setFetchingDocuments }) => {
               style={{ height: "36px", width: "100%" }}
               options={[
                 { label: "Asset", value: "Asset" },
-                { label: "Asset Class", value: "assetClass" },
-                { label: "Procedure", value: "procedure" },
                 { label: "Work Order", value: "workOrder" },
-                { label: "Checklist", value: "checklist" },
                 { label: "Material Transfer", value: "materialTransfer" },
-                { label: "Cost", value: "Cost" },
               ]}
               value={selectedCategories}
               onChange={handleChange}
