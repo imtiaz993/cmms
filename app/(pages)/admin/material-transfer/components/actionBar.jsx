@@ -41,8 +41,6 @@ const ActionBar = ({
     setCheckedList(newCheckedList);
   };
 
-  const handleStatusChange = async (value) => {};
-
   const handlePrint = async () => {
     const { status, data } = await printMaterialTransfer();
     if (status === 200) {
@@ -70,20 +68,6 @@ const ActionBar = ({
         className="sm:!w-[300px] searchBar"
       />
       <div className="grid  md:flex sm:grid-cols-3 items-center gap-2">
-        <div className="sm:min-w-28 col-span-2 sm:col-span-1">
-          <Select
-            name="status"
-            placeholder="Status"
-            style={{ height: "36px", width: "100%" }}
-            onChange={handleStatusChange}
-            options={[
-              { label: "Draft", value: "draft" },
-              { label: "In Progress", value: "progress" },
-              { label: "Approved", value: "approved" },
-              { label: "Declined", value: "declined" },
-            ]}
-          />
-        </div>
         <Dropdown
           dropdownRender={() => (
             <MaterialTransferFilter
