@@ -1,7 +1,8 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
-import { Divider, Modal, Select } from "antd";
+import { Divider, message, Modal, Select } from "antd";
+import { uploadLinkDoc } from "app/services/materialTransfer";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
@@ -10,8 +11,15 @@ const validationSchema = Yup.object().shape({
 });
 
 const UploadLinkDocPopup = ({ visible, setVisible }) => {
-  const handleSubmit = (values, setSubmitting, resetForm) => {
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     console.log(values);
+    const { status, data } = await uploadLinkDoc(values);
+    if (status === 200) {
+      message.success(data.message || "Document uploaded successfully");
+    } else {
+      message.error(data.message || "Failed to upload document");
+    }
+    setSubmitting(false);
   };
   return (
     <Formik
@@ -22,14 +30,10 @@ const UploadLinkDocPopup = ({ visible, setVisible }) => {
         description: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
-        console.log(values);
-
-        handleSubmit(values, setSubmitting, resetForm);
-      }}
+      onSubmit={handleSubmit}
     >
-      {({ isSubmitting, handleSubmit }) => (
-        <Form onSubmit={handleSubmit}>
+      {({ isSubmitting, submitForm }) => (
+        <Form>
           <Modal
             maskClosable={false}
             title={<h1 className="text-lg md:text-2xl mb-5">Link Document</h1>}
@@ -49,7 +53,7 @@ const UploadLinkDocPopup = ({ visible, setVisible }) => {
 
                 <Button
                   className=""
-                  onClick={() => setVisible(false)}
+                  onClick={() => submitForm()}
                   size="small"
                   text="Add to Documents"
                   fullWidth={false}

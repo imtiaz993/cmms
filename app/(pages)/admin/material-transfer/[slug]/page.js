@@ -2,31 +2,20 @@
 import Button from "@/components/common/Button";
 import {
   ArrowLeftOutlined,
-  BackwardFilled,
   ExclamationCircleOutlined,
   ExportOutlined,
   FolderFilled,
   MailOutlined,
   PrinterFilled,
 } from "@ant-design/icons";
-import {
-  BackTop,
-  Badge,
-  Card,
-  Dropdown,
-  Menu,
-  message,
-  Steps,
-  Table,
-  Tabs,
-  Typography,
-} from "antd";
+import { Badge, Card, Dropdown, Menu, message, Steps, Table, Tabs } from "antd";
 import ViewAssetsDetailsPopup from "./viewAssetsDetailsPopup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UploadLinkDocPopup from "./uploadLinkDocPopup";
 import UploadDocPopup from "./uploadDocPopup";
 import { useRouter } from "next/navigation";
 import AddAssetPopupMT from "@/components/addAssetPopupInMT";
+import { emailMaterialTransferDetails, getMaterialTransferDetails, printMaterialTransferDetails } from "app/services/materialTransfer";
 
 const columns = [
   {
@@ -97,11 +86,18 @@ const data = [
 ];
 
 const MaterialTransferDetail = () => {
+  const [details, setDetails] = useState();
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
   const [uploadLinkDocVisible, setUploadLinkDocVisible] = useState(false);
   const [uploadDocVisible, setUploadDocVisible] = useState(false);
   const [addAssetPopup, setAddAssetPopup] = useState(false);
   const router = useRouter();
+
+  // Extract the slug from the URL
+  const url = window.location.href;
+  const urlParts = url.split("/");
+  const slug = urlParts[urlParts.length - 1];
+
   const { Step } = Steps;
 
   const tabs = [
@@ -184,6 +180,38 @@ const MaterialTransferDetail = () => {
     },
   ];
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const { status, data } = await getMaterialTransferDetails(slug);
+      if (status === 200) {
+        console.log(data);
+        setDetails(data);
+      } else {
+        message.error(data?.message || "Failed to fetch data");
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleEmail = async () => {
+    const { status, data } = await emailMaterialTransferDetails(slug);
+    if (status === 200) {
+      message.success(data.message || "Email sent successfully");
+    } else {
+      message.error(data.message || "Failed to send email");
+    }
+  };
+
+  const handlePrint = async () => {
+    const { status, data } = await printMaterialTransferDetails(slug);
+    if (status === 200) {
+      window.open(data.data);
+      message.success(data.message || "Printed successfully");
+    } else {
+      message.error(data.message || "Failed to print");
+    }
+  };
+
   return (
     <div className="p-7 overflow-auto h-[calc(100dvh-130px)]">
       <UploadLinkDocPopup
@@ -206,7 +234,7 @@ const MaterialTransferDetail = () => {
             text="Email"
             prefix={<MailOutlined />}
             fullWidth={false}
-            onClick={() => message.info("Email will be available soon.")}
+            onClick={() => handleEmail()}
           />
 
           <Button
@@ -214,7 +242,7 @@ const MaterialTransferDetail = () => {
             prefix={<PrinterFilled />}
             fullWidth={false}
             className="ml-3"
-            onClick={() => message.info("Print will be available soon.")}
+            onClick={() => handlePrint()}
           />
         </div>
       </div>
