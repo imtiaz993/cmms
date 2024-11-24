@@ -138,7 +138,8 @@ const MaintenanceReports = () => {
       <ReportsPopup
         visible={popup === "Daily Readings"}
         setVisible={setPopup}
-        title="Generate Daily Readings Report"
+        title="Daily Readings Report"
+        type="maintenance"
         physicalLocation
         dataOnly
       />
@@ -146,7 +147,8 @@ const MaintenanceReports = () => {
       <ReportsPopup
         visible={popup === "Downtime Summary"}
         setVisible={setPopup}
-        title="Generate Downtime Summary Report"
+        title="Downtime Summary Report"
+        type="maintenance"
         physicalLocation
         fromToDate
         criticallyFactor
@@ -156,14 +158,16 @@ const MaintenanceReports = () => {
       <ReportsPopup
         visible={popup === "End of Month"}
         setVisible={setPopup}
-        title="Generate End of Month Report"
+        title="End of Month Report"
+        type="maintenance"
         date
       />
 
       <ReportsPopup
         visible={popup === "Asset Downtime"}
         setVisible={setPopup}
-        title="Generate Asset Downtime Report"
+        title="Asset Downtime Report"
+        type="maintenance"
         fromToDate
         includeChildAssets
       />
@@ -171,14 +175,16 @@ const MaintenanceReports = () => {
       <ReportsPopup
         visible={popup === "Maintenance Forecast by Craft"}
         setVisible={setPopup}
-        title="Generate Maintenance Forecast by Craft Report"
+        title="Maintenance Forecast by Craft Report"
+        type="maintenance"
         fromToDate
       />
 
       <ReportsPopup
         visible={popup === "Maintenance Forecast by Zone"}
         setVisible={setPopup}
-        title="Generate Maintenance Forecast by Zone Report"
+        title="Maintenance Forecast by Zone Report"
+        type="maintenance"
         fromToDate
       />
 
@@ -205,14 +211,16 @@ const MaintenanceReports = () => {
       <MaintenanceReusedPopup
         visible={popup === "Unplanned Work Order Survey"}
         setVisible={setPopup}
-        title="Generate Unplanned Work Order Survey Report"
+        title="Unplanned Work Order Survey Report"
+        type="maintenance"
         includeWO
       />
 
       <ReportsPopup
         visible={popup === "Work Orders Past Due"}
         setVisible={setPopup}
-        title="Generate Work Order Past Due Report"
+        title="Work Order Past Due Report"
+        type="maintenance"
         dataOnly
       />
 
@@ -234,21 +242,24 @@ const MaintenanceReports = () => {
       <ReportsPopup
         visible={popup === "Work Orders With Delay Reasons"}
         setVisible={setPopup}
-        title="Generate Work Orders With Delay Reasons Report"
+        title="Work Orders With Delay Reasons Report"
+        type="maintenance"
         dataOnly
       />
 
       <MaintenanceReusedPopup
         visible={popup === "Maintenance Completion By Craft"}
         setVisible={setPopup}
-        title="Generate Maintenance Completion By Craft Report"
+        title="Maintenance Completion By Craft Report"
+        type="maintenance"
         craft
       />
 
       <ReportsPopup
         visible={popup === "MTBF MTTR"}
         setVisible={setPopup}
-        title="Generate MTBF MTTR Report"
+        title="MTBF MTTR Report"
+        type="maintenance"
         date
         criticallyFactor
       />
@@ -256,7 +267,8 @@ const MaintenanceReports = () => {
       <MaintenanceReusedPopup
         visible={popup === "Top Offenders"}
         setVisible={setPopup}
-        title="Generate Top Offenders Report"
+        title="Top Offenders Report"
+        type="maintenance"
         criticallyFactor
         top
       />
@@ -264,7 +276,8 @@ const MaintenanceReports = () => {
       <ReportsPopup
         visible={popup === "Planned WOs vs Unplanned WOs"}
         setVisible={setPopup}
-        title="Generate Planned WOs vs Unplanned WOs Report"
+        title="Planned WOs vs Unplanned WOs Report"
+        type="maintenance"
         criticallyFactor
         fromToDate
       />

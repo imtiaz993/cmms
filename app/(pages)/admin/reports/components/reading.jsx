@@ -96,13 +96,13 @@ const Readings = () => {
           </p>
         </div>
         <Table
-          loading={false}
+          loading={fetchingData}
           size={"large"}
           scroll={{ x: 1100 }}
           columns={columns}
           dataSource={readings}
           pagination={{
-            total: readings.total,
+            total: readings.length,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,

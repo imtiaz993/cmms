@@ -37,9 +37,13 @@ const WOProcedurePopup = ({ visible, setVisible }) => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
     // Example of generating a report, replace with actual API call
-    const { status, data } = await generateReport(values);
+    const { status, data } = await generateReport(
+      values,
+      "Work Order Procedure Report",
+      "maintenance"
+    );
     if (status === 200) {
-      window.open(data.data)
+      window.open(data.data);
       message.success(data.message || "Report generated successfully");
     } else {
       message.error(data.error || "Failed to generate report");

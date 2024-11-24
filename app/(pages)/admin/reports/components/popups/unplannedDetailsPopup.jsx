@@ -30,9 +30,13 @@ const UnplannedDetailsPopup = ({ visible, setVisible }) => {
     setSubmitting(true);
     try {
       // Placeholder for actual report generation function
-      const { status, data } = await generateReport(values);
+      const { status, data } = await generateReport(
+        values,
+        "Unplanned Maintenance Details Report",
+        "maintenance"
+      );
       if (status === 200) {
-        window.open(data.data)
+        window.open(data.data);
         message.success(data.message || "Report generated successfully");
       } else {
         message.error(data.error || "Failed to generate report");

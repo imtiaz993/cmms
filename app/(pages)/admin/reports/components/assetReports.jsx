@@ -80,54 +80,62 @@ const AssetReports = () => {
             );
           }}
           style={{ height: "36px" }}
-           className="sm:!w-[300px] searchBar"
+          className="sm:!w-[300px] searchBar"
         />
       </div>
       <ReportsPopup
         visible={popup === "Asset is Currently Down"}
         setVisible={setPopup}
-        title="Generate Asset is Currently Down Report"
+        title="Asset is Currently Down Report"
+        type="asset"
       />
       <ReportsPopup
         visible={popup === "Asset Class Assignment"}
         setVisible={setPopup}
-        title="Generate Asset Class Assignment Report"
+        title="Asset Class Assignment Report"
+        type="asset"
       />
       <ReportsPopup
         visible={popup === "Asset Classes by Entity"}
         setVisible={setPopup}
-        title="Generate Asset Classes by Entity Report"
+        title="Asset Classes by Entity Report"
+        type="asset"
         dataOnly
       />
       <ReportsPopup
         visible={popup === "Asset Details"}
         setVisible={setPopup}
-        title="Generate Asset Details Report"
+        title="Asset Details Report"
+        type="asset"
         assetNumber
       />
       <ReportsPopup
         visible={popup === "Newly Added Assets"}
         setVisible={setPopup}
-        title="Generate Newly Added Assets Report"
+        title="Newly Added Assets Report"
+        type="asset"
         costCenter={false}
         fromToDate
       />
       <ReportsPopup
         visible={popup === "Asset Operational Status"}
         setVisible={setPopup}
-        title="Generate Asset Operational Status Report"
+        title="Asset Operational Status Report"
+        type="asset"
         dataOnly
       />
       <ReportsPopup
         visible={popup === "Asset Physical Location"}
         setVisible={setPopup}
-        title="Generate Asset Physical Location Report"
+        title="Asset Physical Location Report"
+        type="asset"
         dataOnly
       />
       <ReportsPopup
         visible={popup === "Asset Status Change"}
         setVisible={setPopup}
-        title="Generate Asset Status Change Report"
+        title="Asset Status Change Report"
+        type="asset"
         assetNumber
         fromToDate
       />
@@ -138,14 +146,16 @@ const AssetReports = () => {
       <ReportsPopup
         visible={popup === "Total Cost of Ownership"}
         setVisible={setPopup}
-        title="Generate Total Cost of Ownership Report"
+        title="Total Cost of Ownership Report"
+        type="asset"
         assetNumber
         includeChildAssets
       />
       <ReportsPopup
         visible={popup === "Custom Attributes"}
         setVisible={setPopup}
-        title="Generate Custom Attributes Report"
+        title="Custom Attributes Report"
+        type="asset"
       />
       <div className="bg-primary px-2">
         <List

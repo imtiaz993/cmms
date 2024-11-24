@@ -23,6 +23,7 @@ const MaintenanceReusedPopup = ({
   visible,
   setVisible,
   title,
+  type,
   criticallyFactor,
   includeWO,
   craft,
@@ -57,9 +58,9 @@ const MaintenanceReusedPopup = ({
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
     // Placeholder for actual report generation function
-    const { status, data } = await generateReport(values);
+    const { status, data } = await generateReport(values, title, type);
     if (status === 200) {
-      window.open(data.data)
+      window.open(data.data);
       message.success(data.message || "Report generated successfully");
     } else {
       message.error(data.error || "Failed to generate report");
@@ -101,7 +102,7 @@ const MaintenanceReusedPopup = ({
                   />
                 </div>
               }
-              title={title}
+              title={"Generate " + title}
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 items-center">

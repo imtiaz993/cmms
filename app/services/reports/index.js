@@ -13,7 +13,7 @@ export const getReadings = async () => {
   }
 };
 
-export const generateReport = async (values) => {
+export const generateReport = async (values, reportName, reportType) => {
   try {
     const { status, data } = await authRequest({
       url: "/readings/generateReport",
@@ -28,7 +28,7 @@ export const generateReport = async (values) => {
   }
 };
 
-export const exportReadings = async (hierarchy) => {  
+export const exportReadings = async (hierarchy) => {
   try {
     const { status, data } = await authRequest({
       url: `/readings/export?hierarchy=${hierarchy}`,

@@ -1,26 +1,32 @@
 import Button from "@/components/common/Button";
-import { Modal } from "antd";
+import { message, Modal } from "antd";
+import { uploadDoc } from "app/services/materialTransfer";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({});
 
 const UploadDocPopup = ({ visible, setVisible }) => {
-  const handleSubmit = (values, setSubmitting, resetForm) => {};
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    console.log(values);
+    const { status, data } = await uploadDoc(values);
+    if (status === 200) {
+      message.success(data.message || "Document uploaded successfully");
+    } else {
+      message.error(data.message || "Failed to upload document");
+    }
+    setSubmitting(false);
+  };
   return (
     <Formik
       initialValues={{
         costCenter: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
-        console.log(values);
-
-        handleSubmit(values, setSubmitting, resetForm);
-      }}
+      onSubmit={handleSubmit}
     >
-      {({ isSubmitting, handleSubmit }) => (
-        <Form onSubmit={handleSubmit}>
+      {({ isSubmitting, submitForm }) => (
+        <Form>
           <Modal
             maskClosable={false}
             title={
@@ -42,7 +48,7 @@ const UploadDocPopup = ({ visible, setVisible }) => {
 
                 <Button
                   className=""
-                  onClick={() => setVisible(false)}
+                  onClick={() => submitForm()}
                   size="small"
                   text="Add to Documents"
                   fullWidth={false}

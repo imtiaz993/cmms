@@ -5,6 +5,11 @@ import { Card, Segmented, Table } from "antd";
 import { useSearchParams } from "next/navigation";
 import Schedule from "./components/schedule";
 import dynamic from "next/dynamic";
+import { useEffect } from "react";
+import {
+  getDashboardSchedule,
+  getDashboardStats,
+} from "app/services/dashboard";
 const BarChart = dynamic(() => import("./components/barChart"), {
   ssr: false,
 });
@@ -129,6 +134,27 @@ const Dashboard = () => {
   const activeLocation = searchParams.get("location") || "rig-21";
   const activeSystem = searchParams.get("system") || "air-system";
 
+  useEffect(() => {
+    const getStats = async () => {
+      const { status, data } = await getDashboardStats();
+      if (status === 200) {
+        console.log(data);
+      } else {
+        message.error(data?.message || "Failed to get stats");
+      }
+    };
+    const getSchedule = async () => {
+      const { status, data } = await getDashboardSchedule();
+      if (status === 200) {
+        console.log(data);
+      } else {
+        message.error(data?.message || "Failed to get schedule");
+      }
+    };
+    getStats();
+    getSchedule();
+  }, []);
+
   return (
     <div className="flex flex-col gap-6 h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
       <div className="grid gap-6">
@@ -136,7 +162,7 @@ const Dashboard = () => {
           loading={false}
           className="!bg-primary"
           title={<p className="text-sm md:text-base">Schedule</p>}
-          style={{overflow: "hidden"}}
+          style={{ overflow: "hidden" }}
         >
           <div>
             <Schedule />

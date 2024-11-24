@@ -90,8 +90,9 @@ const Documents = () => {
       <div>
         <ActionBar
           setSearchText={setSearchText}
+          searchText={searchText}
+          documents={documents}
           setDocuments={setDocuments}
-          setFetchingDocuments={setFetchingDocuments}
         />
         <div className="flex justify-end">
           <p className="text-secondary">

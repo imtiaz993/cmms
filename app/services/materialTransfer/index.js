@@ -100,3 +100,74 @@ export const exportMaterialTransfer = async (values) => {
     }
   }
 };
+
+// Material Transfer Details
+
+export const getMaterialTransferDetails = async (slug) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/material-transfer/getMaterialTransferDetails?slug=" + slug,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const uploadDoc = async (doc) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/material-transfer/uploadDoc",
+      method: "POST",
+      data: doc,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const uploadLinkDoc = async (doc) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/material-transfer/uploadLinkDoc",
+      method: "POST",
+      data: doc,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const printMaterialTransferDetails = async (slug) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/material-transfer/printMaterialTransferDetails?slug=" + slug,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const emailMaterialTransferDetails = async (slug) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/material-transfer/emailMaterialTransferDetails?slug=" + slug,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
