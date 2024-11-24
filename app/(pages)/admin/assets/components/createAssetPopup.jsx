@@ -7,6 +7,7 @@ import { addAsset } from "app/services/assets";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
+import { rigs, systems } from "@/constants/rigsAndSystems";
 
 const validationSchema = Yup.object().shape({
   physicalLocation: Yup.string().required("Physical Location is required"),
@@ -80,7 +81,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
         handleSubmit(values, setSubmitting, resetForm);
       }}
     >
-      {({ isSubmitting, handleSubmit }) => (
+      {({ isSubmitting, handleSubmit, values }) => (
         <Form onSubmit={handleSubmit}>
           <Modal
             maskClosable={false}
@@ -122,21 +123,25 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                 <SelectField
                   name="physicalLocation"
                   placeholder="Physical Location (Rig)"
-                  options={[
-                    { value: "Rig 21", label: "Rig 21" },
-                    { value: "Rig 22", label: "Rig 22" },
-                    { value: "Rig 23", label: "Rig 23" },
-                  ]}
+                  options={rigs
+                    .slice(0, rigs.length - 2)
+                    .map((i) => ({ label: i.name, value: i.id }))}
                 />
 
                 <SelectField
                   name="mainSystem"
                   placeholder="Main System"
-                  options={[
-                    { value: "airSystems", label: "Air Systems" },
-                    { value: "BOPSystems", label: "BOP Systems" },
-                    { value: "drillingSystems", label: "Drilling Systems" },
-                  ]}
+                  readOnly={!values.physicalLocation}
+                  options={
+                    values.physicalLocation
+                      ? rigs
+                          .find((i) => i.id === values.physicalLocation)
+                          .systems.map((i) => ({
+                            label: i.name,
+                            value: i.id,
+                          }))
+                      : []
+                  }
                 />
                 <InputField
                   name="accountingDept"

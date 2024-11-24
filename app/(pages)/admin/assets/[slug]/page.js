@@ -19,9 +19,7 @@ const AssetDetail = () => {
         <div className="static md:absolute left-0">
           <Button
             prefix={<ArrowLeftOutlined />}
-            onClick={() =>
-              router.push("/admin/dashboard?tab=assets&location=noram-drilling")
-            }
+            onClick={() => router.push(-1)}
             fullWidth={false}
             outlined
             className="w-full md:w-auto"

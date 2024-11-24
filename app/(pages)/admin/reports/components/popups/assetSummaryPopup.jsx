@@ -1,6 +1,7 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
+import { rigs } from "@/constants/rigsAndSystems";
 import { Checkbox, DatePicker, Modal, Radio, message } from "antd";
 import { generateReport } from "app/services/reports";
 import { Field, Form, Formik } from "formik";
@@ -118,11 +119,7 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="physicalLocation"
                       placeholder="Physical Location"
-                      options={[
-                        { value: "rig-21", label: "Rig 21" },
-                        { value: "rig-22", label: "Rig 22" },
-                        { value: "rig-23", label: "Rig 23" },
-                      ]}
+                      options={rigs.map((i) => ({ label: i.name, value: i.id }))}
                     />
                   </div>
 

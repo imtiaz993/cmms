@@ -2,6 +2,7 @@ import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
+import { rigs } from "@/constants/rigsAndSystems";
 import { Checkbox, message, Modal, Radio } from "antd";
 import { generateReport } from "app/services/reports";
 import { Field, Form, Formik } from "formik";
@@ -23,18 +24,32 @@ const ReportsPopup = ({
 }) => {
   // Build the validation schema based on props
   const validationSchema = Yup.object({
-    costCenter: costCenter ? Yup.string().required("Cost Center is required") : Yup.string(),
-    assetNumber: assetNumber ? Yup.string().required("Asset Number is required") : Yup.string(),
-    date: date ? Yup.date().required("Date is required") : Yup.date().notRequired(),
+    costCenter: costCenter
+      ? Yup.string().required("Cost Center is required")
+      : Yup.string(),
+    assetNumber: assetNumber
+      ? Yup.string().required("Asset Number is required")
+      : Yup.string(),
+    date: date
+      ? Yup.date().required("Date is required")
+      : Yup.date().notRequired(),
     year: year ? Yup.string().required("Year is required") : Yup.string(),
     dataOnly: dataOnly ? Yup.boolean() : Yup.boolean(),
-    physicalLocation: physicalLocation ? Yup.string().required("Physical Location is required") : Yup.string(),
-    
+    physicalLocation: physicalLocation
+      ? Yup.string().required("Physical Location is required")
+      : Yup.string(),
+
     // Only apply validation for `fromDate` and `toDate` if `fromToDate` prop is true
-    fromDate: fromToDate ? Yup.date().required("From Date is required") : Yup.date().notRequired(),
-    toDate: fromToDate ? Yup.date().required("To Date is required") : Yup.date().notRequired(),
-    
-    criticallyFactor: criticallyFactor ? Yup.string().required("Critically Factor is required") : Yup.string(),
+    fromDate: fromToDate
+      ? Yup.date().required("From Date is required")
+      : Yup.date().notRequired(),
+    toDate: fromToDate
+      ? Yup.date().required("To Date is required")
+      : Yup.date().notRequired(),
+
+    criticallyFactor: criticallyFactor
+      ? Yup.string().required("Critically Factor is required")
+      : Yup.string(),
     childAssets: includeChildAssets ? Yup.boolean() : Yup.boolean(),
     formType: Yup.string()
       .oneOf(["pdf", "csv"], "Select a valid export format")
@@ -92,9 +107,10 @@ const ReportsPopup = ({
                     disabled={isSubmitting}
                   />
                   <Button
-                    onClick={() =>{
+                    onClick={() => {
                       console.log("errors: ", errors);
-                      submitForm()}}
+                      submitForm();
+                    }}
                     size="small"
                     text="Generate"
                     fullWidth={false}
@@ -162,7 +178,10 @@ const ReportsPopup = ({
                     <SelectField
                       name="physicalLocation"
                       placeholder="Physical Location"
-                      options={[{ value: "rig-21", label: "Rig 21" }]}
+                      options={rigs.map((i) => ({
+                        label: i.name,
+                        value: i.id,
+                      }))}
                     />
                   </div>
                 )}
