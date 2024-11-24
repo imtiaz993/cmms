@@ -1,24 +1,29 @@
 import { useState } from "react";
-import { Checkbox, Input, message, Select, Tag } from "antd";
-import { DownloadOutlined } from "@ant-design/icons";
-import Button from "@/components/common/Button";
+import { Checkbox, Input, Select } from "antd";
 import DownloadPopup from "./downloadPopup";
-import { getDocumentsByCategory } from "app/services/document";
 
-const ActionBar = ({ setSearchText, setDocuments, setFetchingDocuments }) => {
+const ActionBar = ({ setSearchText, searchText, documents, setDocuments }) => {
   const [downloadPopup, setDownloadPopup] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
-  const handleChange = async (values) => {
-    setFetchingDocuments(true);
+  const handleChange = (values) => {
     setSelectedCategories(values);
-    const { status, data } = await getDocumentsByCategory(values);
-    if (status === 200) {
-      setDocuments(data?.data);
-    } else {
-      message.error(data?.message || "Failed to fetch documents");
-    }
-    setFetchingDocuments(false);
+    // Filter documents where the category is one of the selected categories
+    const filteredDocuments = documents?.filter((document) => {
+      // If searchText is empty or null, only filter by category
+      if (!searchText) {
+        return selectedCategories.includes(document["type"]);
+      }
+
+      // If searchText is not null or empty, filter by both category and search text across all fields
+      return (
+        selectedCategories.includes(document["type"]) &&
+        Object.values(document).some((value) =>
+          value?.toString()?.toLowerCase()?.includes(searchText.toLowerCase())
+        )
+      );
+    });
+    setDocuments(filteredDocuments);
   };
 
   return (
