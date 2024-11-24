@@ -15,7 +15,6 @@ import {
 
 // Validation schema using Yup
 const validationSchema = Yup.object().shape({
-  costCenter: Yup.string().required("Cost center is required."),
   origination: Yup.string()
     .max(128, "Origination can't exceed 128 characters")
     .required("Origination is required."),
@@ -31,20 +30,12 @@ const validationSchema = Yup.object().shape({
     .max(150, "Comments can't exceed 150 characters")
     .required("Comments are required."),
   misc: Yup.string().max(150, "Misc information can't exceed 150 characters"),
-  cautions: Yup.object().shape({
-    hazardous: Yup.bool(),
-    nonHazardous: Yup.bool(),
-    msdsSheets: Yup.bool(),
-    ppeRequired: Yup.bool(),
-    requiresStorage: Yup.bool(),
-  }),
 });
 
 // AddMaterialTransferPopup component
 const AddMaterialTransferPopup = ({
   addMaterialTransferVisible,
   setAddMaterialTransferVisible,
-  setMaterialTransferData,
 }) => {
   const [addAssetPopup, setAddAssetPopup] = useState(false);
   const [draft, setDraft] = useState(false);
@@ -75,7 +66,6 @@ const AddMaterialTransferPopup = ({
   return (
     <Formik
       initialValues={{
-        costCenter: "",
         origination: "",
         destination: "",
         materialTransferType: "",
@@ -83,13 +73,8 @@ const AddMaterialTransferPopup = ({
         attentionTo: "",
         comments: "",
         misc: "",
-        cautions: {
-          hazardous: false,
-          nonHazardous: false,
-          msdsSheets: false,
-          ppeRequired: false,
-          requiresStorage: false,
-        },
+        assets: [],
+        inventory: [],
       }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
@@ -118,18 +103,6 @@ const AddMaterialTransferPopup = ({
                     outlined
                     size="small"
                     text="Cancel"
-                    fullWidth={false}
-                    disabled={isSubmitting}
-                  />
-                  <Button
-                    className="mr-2"
-                    onClick={() => {
-                      setDraft(true);
-                      submitForm();
-                    }}
-                    outlined
-                    size="small"
-                    text="Save as Draft"
                     fullWidth={false}
                     disabled={isSubmitting}
                   />

@@ -7,39 +7,14 @@ import { getInventory } from "app/services/inventory";
 
 const columns = [
   {
-    title: "Inventory",
-    dataIndex: "name",
-    key: "name",
+    title: "Part Name",
+    dataIndex: "partName",
+    key: "partName",
   },
   {
-    title: "Cost Center",
-    dataIndex: "costCenter",
-    key: "costCenter",
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
-  },
-  {
-    title: "Serial No.",
-    dataIndex: "serialNo",
-    key: "serialNo",
-  },
-  {
-    title: "OEM Serial No.",
-    dataIndex: "oemSerialNo",
-    key: "oemSerialNo",
-  },
-  {
-    title: "Alt ID No.",
-    dataIndex: "altIdNo",
-    key: "altIdNo",
-  },
-  {
-    title: "Criticality",
-    dataIndex: "criticality",
-    key: "criticality",
+    title: "Part Number",
+    dataIndex: "partItem",
+    key: "partItem",
   },
   {
     title: "Category",
@@ -47,9 +22,19 @@ const columns = [
     key: "category",
   },
   {
-    title: "Status",
-    dataIndex: "status",
-    key: "status",
+    title: "Details",
+    dataIndex: "details",
+    key: "details",
+  },
+  {
+    title: "Quantity",
+    dataIndex: "quantity",
+    key: "quantity",
+  },
+  {
+    title: "Price",
+    dataIndex: "price",
+    key: "price",
   },
   {
     title: "Location",
@@ -57,97 +42,38 @@ const columns = [
     key: "location",
   },
   {
-    title: "Company",
-    dataIndex: "company",
-    key: "company",
+    title: "PO",
+    dataIndex: "PO",
+    key: "PO",
   },
+  {
+    title: "SO",
+    dataIndex: "SO",
+    key: "SO",
+  },
+  {
+    title: "Invoice number",
+    dataIndex: "invoiceNumber",
+    key: "invoiceNumber",
+  },
+  {
+    title: "Supplier",
+    dataIndex: "supplier",
+    key: "supplier",
+  },
+  {
+    title: "Received Date",
+    dataIndex: "receivedDate",
+    key: "receivedDate",
+  },
+
 ];
 
-const data = [
-  {
-    name: "John Brown",
-    costCenter: "New York No. 1 Lake Park",
-    description: "New Description",
-    serialNo: 912,
-    oemSerialNo: 5342,
-    altIdNo: 345,
-    criticality: "Critical",
-    category: "Production",
-    status: "Active",
-    location: "United States",
-    company: "ABC Company",
-  },
-  {
-    name: "Jim Green",
-    costCenter: "London No. 1 Lake Park",
-    description: "New Description",
-    serialNo: 912,
-    oemSerialNo: 5342,
-    altIdNo: 345,
-    criticality: "Critical",
-    category: "Production",
-    status: "Active",
-    location: "United States",
-    company: "ABC Company",
-  },
-  {
-    name: "Joe Black",
-    costCenter: "Sidney No. 1 Lake Park",
-    description: "New Description",
-    serialNo: 912,
-    oemSerialNo: 5342,
-    altIdNo: 345,
-    criticality: "Critical",
-    category: "Production",
-    status: "Active",
-    location: "United States",
-    company: "ABC Company",
-  },
-  {
-    name: "Jim Red",
-    costCenter: "London No. 2 Lake Park",
-    description: "New Description",
-    serialNo: 912,
-    oemSerialNo: 5342,
-    altIdNo: 345,
-    criticality: "Critical",
-    category: "Production",
-    status: "Active",
-    location: "United States",
-    company: "ABC Company",
-  },
-  {
-    name: "John Brown",
-    costCenter: "New York No. 1 Lake Park",
-    description: "New Description",
-    serialNo: 912,
-    oemSerialNo: 5342,
-    altIdNo: 345,
-    criticality: "Critical",
-    category: "Production",
-    status: "Active",
-    location: "United States",
-    company: "ABC Company",
-  },
-  {
-    name: "Jim Green",
-    costCenter: "London No. 1 Lake Park",
-    description: "New Description",
-    serialNo: 912,
-    oemSerialNo: 5342,
-    altIdNo: 345,
-    criticality: "Critical",
-    category: "Production",
-    status: "Active",
-    location: "United States",
-    company: "ABC Company",
-  },
-];
 
 const defaultCheckedList = columns.map((item) => item.key);
 
 const Inventory = () => {
-  const [inventory, setInventory] = useState(data);
+  const [inventory, setInventory] = useState();
   const [fetchingInventory, setFetchingInventory] = useState(true);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addInventoryVisible, setAddInventoryVisible] = useState(false);
@@ -186,7 +112,7 @@ const Inventory = () => {
           ?.includes(searchText.toLowerCase())
       )
     );
-  }, [searchText, data, checkedList]);
+  }, [searchText, inventory, checkedList]);
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
@@ -226,7 +152,7 @@ const Inventory = () => {
             filteredInventory.map((i, index) => ({ ...i, key: index }))
           }
           pagination={{
-            total: filteredInventory?.total,
+            total: filteredInventory?.length,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,

@@ -58,11 +58,6 @@ const UploadLinkDocPopup = ({ visible, setVisible }) => {
               </div>
             }
             width={1000}
-            // bodyStyle={{
-            //   height: "400px",
-            //   overflowY: "auto",
-            //   overflowX: "hidden",
-            // }}
           >
             <div>
               <div className="flex items-center gap-5 ">

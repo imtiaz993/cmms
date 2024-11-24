@@ -59,13 +59,6 @@ const ActionBar = ({ setSearchText, setDocuments, setFetchingDocuments }) => {
               )}
             />
           </div>
-          <Button
-            text="Download All"
-            outlined
-            style={{ padding: "4px 20px" }}
-            prefix={<DownloadOutlined />}
-            onClick={() => setDownloadPopup(true)}
-          />
         </div>
       </div>
     </>

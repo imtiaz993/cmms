@@ -40,22 +40,9 @@ const ViewAssetsDetailsPopup = ({ visible, setVisible, columns, data }) => {
               text="Cancel"
               fullWidth={false}
             />
-
-            {/* <Button
-              className=""
-              onClick={() => setVisible(false)}
-              size="small"
-              text="Add to Documents"
-              fullWidth={false}
-            /> */}
           </div>
         }
         width={1000}
-        // bodyStyle={{
-        //   height: "400px",
-        //   overflowY: "auto",
-        //   overflowX: "hidden",
-        // }}
       >
         <Table
           loading={false}

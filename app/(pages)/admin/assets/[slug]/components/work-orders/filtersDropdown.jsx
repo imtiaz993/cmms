@@ -13,15 +13,6 @@ const validationSchema = Yup.object().shape({
 const AssetFilter = () => {
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log(values);
-
-    // const { status, data } = await login(values);
-    // setSubmitting(false);
-    // if (status === 200) {
-    // message.success(data?.message);
-    //   resetForm();
-    // } else {
-    //   message.error(data?.message);
-    // }
   };
 
   return (
@@ -67,8 +58,14 @@ const AssetFilter = () => {
               <InputField name="serialNumber" placeholder="Serial #" />
               <InputField name="barcode" placeholder="Barcode" />
               <InputField name="oemSerialNumber" placeholder="OEM Serial #" />
-              <SelectField name="physicalLocation" placeholder="Physical Location" />
-              <SelectField name="accountingDept" placeholder="Accounting Dept." />
+              <SelectField
+                name="physicalLocation"
+                placeholder="Physical Location"
+              />
+              <SelectField
+                name="accountingDept"
+                placeholder="Accounting Dept."
+              />
               <SelectField name="status" placeholder="Status" />
               <SelectField name="category" placeholder="Category" />
               <SelectField name="system" placeholder="System" />

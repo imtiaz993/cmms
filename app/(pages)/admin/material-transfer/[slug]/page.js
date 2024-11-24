@@ -231,15 +231,6 @@ const MaterialTransferDetail = () => {
                 TRF14687000001 <p className="text-xs font-normal">(Approved)</p>
               </div>
             }
-
-            // extra={
-            //   <Link
-            //     href={`/admin/dashboard?tab=work-orders&location=${activeLocation}`}
-            //     className="cursor-pointer text-secondary text-xs md:text-sm"
-            //   >
-            //     View All
-            //   </Link>
-            // }
           >
             <div className="grid md:grid-cols-2 mx-2 gap-3">
               <div>
@@ -258,16 +249,6 @@ const MaterialTransferDetail = () => {
                 <span className="opacity-70 mr-3">Attention To</span>
                 <span className="">Aaron Cannon</span>
               </div>
-              {/* <Table
-            loading={false}
-            size={"small"}
-            columns={unplannedColumns}
-            dataSource={unplannedData}
-            pagination={false}
-            style={{
-              overflow: "auto",
-            }}
-          /> */}
             </div>
           </Card>
           <Card
@@ -301,17 +282,6 @@ const MaterialTransferDetail = () => {
                   Ship 444t 125hp rig house motor to rig 21
                 </span>
               </div>
-
-              {/* <Table
-            loading={false}
-            size={"small"}
-            columns={unplannedColumns}
-            dataSource={unplannedData}
-            pagination={false}
-            style={{
-              overflow: "auto",
-            }}
-          /> */}
             </div>
           </Card>
           <Card

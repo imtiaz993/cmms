@@ -37,6 +37,7 @@ import UploadDocPopup from "../../material-transfer/[slug]/uploadDocPopup";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
+import { rigs } from "@/constants/rigsAndSystems";
 
 const WorkOrdersDetail = () => {
   const router = useRouter();
@@ -280,11 +281,10 @@ const WorkOrdersDetail = () => {
                     <SelectField
                       name="costCenter"
                       placeholder="Rig #"
-                      options={[
-                        { value: "Rig 21", label: "Rig 21" },
-                        { value: "Rig 22", label: "Rig 22" },
-                        { value: "Rig 23", label: "Rig 23" },
-                      ]}
+                      options={rigs.map((i) => ({
+                        label: i.name,
+                        value: i.id,
+                      }))}
                     />
                     <InputField
                       name="costCenter"

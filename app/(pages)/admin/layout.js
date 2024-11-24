@@ -7,6 +7,7 @@ import Appbar from "./appbar";
 import Sidebar from "./sidebar";
 import { Select } from "antd";
 import { ConfigProvider, theme, Button, Card } from "antd";
+import { rigs, systems } from "@/constants/rigsAndSystems";
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -16,8 +17,8 @@ export default function Layout({ children }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const currentPage = pathname.split("/")[2] || "dashboard";
-  const activeLocation = searchParams.get("location") || "rig-21";
-  const activeSystem = searchParams.get("system") || "air-system";
+  const activeLocation = searchParams.get("location") || "1";
+  const activeSystem = searchParams.get("system") || "1";
 
   //dark mode
   const { defaultAlgorithm, darkAlgorithm } = theme;
@@ -33,20 +34,20 @@ export default function Layout({ children }) {
     }
   }, [isDarkMode]);
 
-  // useEffect(() => {
-  //   if (typeof window != "undefined") {
-  //     const userToken = getToken();
-  //     const userData = getUser();
-  //     setToken(userToken);
-  //     setData(userData);
+  useEffect(() => {
+    if (typeof window != "undefined") {
+      const userToken = getToken();
+      const userData = getUser();
+      setToken(userToken);
+      setData(userData);
 
-  //     if (!userToken) {
-  //       router.replace("/login");
-  //     } else if (userData?.role === "supervisor") {
-  //       router?.replace("/supervisor/dashboard");
-  //     }
-  //   }
-  // }, [router]);
+      if (!userToken) {
+        router.replace("/login");
+      } else if (userData?.role === "supervisor") {
+        router?.replace("/supervisor/dashboard");
+      }
+    }
+  }, [router]);
   return (
     <>
       {/* {token && data && data.role === "admin" && ( */}
@@ -76,29 +77,28 @@ export default function Layout({ children }) {
                       `/admin/${currentPage}?location=${value}&system=${activeSystem}`
                     )
                   }
-                  options={[
-                    { value: "rig-21", label: "Rig 21" },
-                    { value: "rig-22", label: "Rig 22" },
-                    { value: "rig-23", label: "Rig 23" },
-                  ]}
+                  options={rigs.map((i) => ({ label: i.name, value: i.id }))}
                   placeholder="Select Parent Location"
                   className="w-full sm:w-40"
                 />
-                <Select
-                  value={activeSystem}
-                  onChange={(value) =>
-                    router.push(
-                      `/admin/${currentPage}?location=${activeLocation}&system=${value}`
-                    )
-                  }
-                  options={[
-                    { value: "air-system", label: "Air System" },
-                    { value: "hydraulic-system", label: "Hydraulic System" },
-                    { value: "electrical-system", label: "Electrical System" },
-                  ]}
-                  placeholder="Select Child Location"
-                  className="w-full sm:w-40"
-                />
+                {activeLocation !== "12" && activeLocation !== "13" && (
+                  <Select
+                    value={activeSystem}
+                    onChange={(value) =>
+                      router.push(
+                        `/admin/${currentPage}?location=${activeLocation}&system=${value}`
+                      )
+                    }
+                    options={rigs
+                      .find((i) => i.id === activeLocation)
+                      .systems.map((i) => ({
+                        label: i.name,
+                        value: i.id,
+                      }))}
+                    placeholder="Select Child Location"
+                    className="w-full sm:w-40"
+                  />
+                )}
               </div>
               {children}
             </div>

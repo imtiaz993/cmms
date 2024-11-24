@@ -8,6 +8,7 @@ import * as Yup from "yup";
 
 // Example for generating the report (adjust this to your actual function)
 import { generateReport } from "app/services/reports";
+import { rigs } from "@/constants/rigsAndSystems";
 
 const UnplannedSummaryPopup = ({ visible, setVisible }) => {
   // Validation schema for the form
@@ -34,6 +35,7 @@ const UnplannedSummaryPopup = ({ visible, setVisible }) => {
     // Placeholder for actual report generation function
     const { status, data } = await generateReport(values);
     if (status === 200) {
+      window.open(data.data)
       message.success(data.message || "Report generated successfully");
     } else {
       message.error(data.error || "Failed to generate report");
@@ -112,13 +114,10 @@ const UnplannedSummaryPopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="physicalLocation"
                       placeholder="Physical Location"
-                      options={[
-                        { value: "rig-21", label: "Rig 21" },
-                        { value: "rig-22", label: "Rig 22" },
-                        { value: "rig-23", label: "Rig 23" },
-                        { value: "rig-24", label: "Rig 24" },
-                        { value: "rig-25", label: "Rig 25" },
-                      ]}
+                      options={rigs.map((i) => ({
+                        label: i.name,
+                        value: i.id,
+                      }))}
                     />
                   </div>
 

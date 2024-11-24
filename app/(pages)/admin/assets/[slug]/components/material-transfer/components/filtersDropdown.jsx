@@ -12,15 +12,6 @@ const validationSchema = Yup.object().shape({
 const MaterialTransferFilter = () => {
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log(values);
-
-    // const { status, data } = await login(values);
-    // setSubmitting(false);
-    // if (status === 200) {
-    // message.success(data?.message);
-    //   resetForm();
-    // } else {
-    //   message.error(data?.message);
-    // }
   };
 
   return (

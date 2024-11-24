@@ -7,6 +7,7 @@ import { addAsset } from "app/services/assets";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
+import { rigs, systems } from "@/constants/rigsAndSystems";
 
 const validationSchema = Yup.object().shape({
   physicalLocation: Yup.string().required("Physical Location is required"),
@@ -17,7 +18,9 @@ const validationSchema = Yup.object().shape({
   childAsset: Yup.string().required("Child Asset is required"),
   assetNumber: Yup.string().required("Asset # is required"),
   serialNumber: Yup.string().required("Serial # is required"),
-  makeModelPart: Yup.string().required("Make, Model, Part # is required"),
+  make: Yup.string().required("Make is required"),
+  model: Yup.string().required("Model is required"),
+  part: Yup.string().required("Part # is required"),
   description: Yup.string()
     .max(150, "Max 150 characters allowed")
     .required("Description is required"),
@@ -63,7 +66,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
         childAsset: "",
         assetNumber: "",
         serialNumber: "",
-        makeModelPart: "",
+        make: "",
+        model: "",
+        part: "",
         description: "",
         specDetails: "",
         installedDate: "",
@@ -80,7 +85,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
         handleSubmit(values, setSubmitting, resetForm);
       }}
     >
-      {({ isSubmitting, handleSubmit }) => (
+      {({ isSubmitting, handleSubmit, values }) => (
         <Form onSubmit={handleSubmit}>
           <Modal
             maskClosable={false}
@@ -122,21 +127,25 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                 <SelectField
                   name="physicalLocation"
                   placeholder="Physical Location (Rig)"
-                  options={[
-                    { value: "Rig 21", label: "Rig 21" },
-                    { value: "Rig 22", label: "Rig 22" },
-                    { value: "Rig 23", label: "Rig 23" },
-                  ]}
+                  options={rigs
+                    .slice(0, rigs.length - 2)
+                    .map((i) => ({ label: i.name, value: i.id }))}
                 />
 
                 <SelectField
                   name="mainSystem"
                   placeholder="Main System"
-                  options={[
-                    { value: "airSystems", label: "Air Systems" },
-                    { value: "BOPSystems", label: "BOP Systems" },
-                    { value: "drillingSystems", label: "Drilling Systems" },
-                  ]}
+                  readOnly={!values.physicalLocation}
+                  options={
+                    values.physicalLocation
+                      ? rigs
+                          .find((i) => i.id === values.physicalLocation)
+                          .systems.map((i) => ({
+                            label: i.name,
+                            value: i.id,
+                          }))
+                      : []
+                  }
                 />
                 <InputField
                   name="accountingDept"
@@ -151,10 +160,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                 <InputField name="childAsset" placeholder="Child Asset" />
                 <InputField name="assetNumber" placeholder="Asset #" />
                 <InputField name="serialNumber" placeholder="Serial #" />
-                <InputField
-                  name="makeModelPart"
-                  placeholder="Make, Model, Part #"
-                />
+                <InputField name="make" placeholder="Make" />
+                <InputField name="model" placeholder="Model" />
+                <InputField name="part" placeholder="Part #" />
                 <div className="md:col-span-3 -mb-4">
                   <TextAreaField
                     name="description"
