@@ -11,21 +11,21 @@ import InventoryFilter from "./filtersDropdown";
 import AddMaterialTransferPopup from "../../material-transfer/components/addMaterialTransferPopup";
 import AddFieldPopup from "../../../../../components/addFieldPopup";
 import { exportInventory } from "app/services/inventory";
-import Link from "next/link";
 import CreatePurchaseOrderPopup from "../purchase-order/createPurchaseOrderPopup";
+import ChangeToAssetPopup from "./changeToAssetPopup";
 
 const ActionBar = ({
   showAddInventoryModal,
   columns,
   checkedList,
   setCheckedList,
-  selectedRowKeys,
+  selectedRows,
   setSearchText,
   setInventory,
 }) => {
-  const [showHierarchy, setShowHierarchy] = useState(false);
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
+  const [changeToAssetVisible, setChangeToAssetVisible] = useState(false);
 
   const options = columns.map(({ key, title }, index) => ({
     label: title,
@@ -49,8 +49,8 @@ const ActionBar = ({
   };
 
   const handleExportInventory = async () => {
-    message.success("Export initiated with hierarchy: " + showHierarchy);
-    const { status, data } = await exportInventory(showHierarchy);
+    message.success("Export initiated ");
+    const { status, data } = await exportInventory();
     if (status === 200) {
       window.open(data.data);
     } else {
@@ -64,6 +64,14 @@ const ActionBar = ({
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
           setAddMaterialTransferVisible={setAddMaterialTransferVisible}
+          handleFetchData={()=>{}}
+        />
+      )}
+      {changeToAssetVisible && (
+        <ChangeToAssetPopup
+          addAssetVisible={changeToAssetVisible}
+          setAddAssetVisible={setChangeToAssetVisible}
+          selectedRows={selectedRows}
         />
       )}
       <CreatePurchaseOrderPopup
@@ -83,23 +91,11 @@ const ActionBar = ({
           className="sm:!w-[300px] searchBar"
         />
         <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
-          {selectedRowKeys.length > 0 && (
-            <Button
-              text="New Material Transfer"
-              onClick={() => {
-                setAddMaterialTransferVisible(true);
-              }}
-              outlined
-              style={{ padding: "4px 35px" }}
-              prefix={<PlusOutlined />}
-              className="col-span-2 sm:col-span-1"
-            />
-          )}
-          <Button
+          {/* <Button
             text="Purchase Order"
             outlined
             onClick={() => setCreatePOVisible(true)}
-          />
+          /> */}
           <Button
             onClick={() => setAddFieldPopupVisible(true)}
             text="Manage Fields"
@@ -155,38 +151,14 @@ const ActionBar = ({
               prefix={<SettingOutlined />}
             />
           </Dropdown>
-          <Dropdown
-            dropdownRender={() => (
-              <Menu>
-                <Menu.Item>
-                  <Checkbox
-                    checked={showHierarchy}
-                    onChange={(e) => setShowHierarchy(e.target.checked)}
-                  >
-                    Show Inventory Hierarchy
-                  </Checkbox>
-                </Menu.Item>
-                <Menu.Item>
-                  <Button
-                    onClick={() => {
-                      handleExportInventory();
-                    }}
-                    text="Export"
-                  />
-                </Menu.Item>
-              </Menu>
-            )}
-            trigger={["click"]}
-            arrow
-            placement="bottomCenter"
-          >
-            <Button
-              text="Export"
-              outlined
-              style={{ padding: "4px 0px" }}
-              prefix={<ExportOutlined />}
-            />
-          </Dropdown>
+
+          <Button
+            text="Export"
+            outlined
+            onClick={handleExportInventory}
+            style={{ padding: "4px 0px" }}
+            prefix={<ExportOutlined />}
+          />
           <Button
             text="Add New Inventory"
             onClick={showAddInventoryModal}
@@ -194,6 +166,33 @@ const ActionBar = ({
             style={{ padding: "4px 30px" }}
             prefix={<PlusOutlined />}
           />
+        </div>
+      </div>
+      <div className="flex justify-end">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
+          {selectedRows.length > 0 && (
+            <Button
+              text="New Material Transfer"
+              onClick={() => {
+                setAddMaterialTransferVisible(true);
+              }}
+              outlined
+              style={{ padding: "4px 35px" }}
+              prefix={<PlusOutlined />}
+              className="col-span-2 sm:col-span-1"
+            />
+          )}
+          {selectedRows.length == 1 && (
+            <Button
+              text="Change to Asset"
+              onClick={() => {
+                setChangeToAssetVisible(true);
+              }}
+              outlined
+              style={{ padding: "4px 35px" }}
+              className="col-span-2 sm:col-span-1"
+            />
+          )}
         </div>
       </div>
     </>

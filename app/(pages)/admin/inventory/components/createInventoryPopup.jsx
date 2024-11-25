@@ -26,6 +26,7 @@ const validationSchema = Yup.object().shape({
 const CreateInventoryPopup = ({
   addInventoryVisible,
   setAddInventoryVisible,
+  handleFetchInventory,
 }) => {
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     const { status, data } = await addInventory(values);
@@ -33,6 +34,7 @@ const CreateInventoryPopup = ({
     if (status === 200) {
       message.success(data.message);
       resetForm();
+      handleFetchInventory()
       setAddInventoryVisible(false);
     } else {
       message.error(data.error);

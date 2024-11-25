@@ -46,17 +46,17 @@ const Assets = () => {
 
   console.log(assets);
 
+  const handleFetchAssets = async () => {
+    const { status, data } = await getAssets();
+    if (status === 200) {
+      setFetchingAssets(false);
+      setAssets(data.data);
+    } else {
+      setFetchingAssets(false);
+      message.error(data.error);
+    }
+  };
   useEffect(() => {
-    const handleFetchAssets = async () => {
-      const { status, data } = await getAssets();
-      if (status === 200) {
-        setFetchingAssets(false);
-        setAssets(data.data);
-      } else {
-        setFetchingAssets(false);
-        message.error(data.error);
-      }
-    };
     handleFetchAssets();
   }, []);
 
@@ -129,6 +129,7 @@ const Assets = () => {
         <CreateAssetPopup
           addAssetVisible={addAssetVisible}
           setAddAssetVisible={setAddAssetVisible}
+          handleFetchAssets={handleFetchAssets}
         />
       )}
       <ActionBar

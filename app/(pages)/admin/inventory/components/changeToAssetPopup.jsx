@@ -1,13 +1,13 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Modal } from "antd";
+import { message, Modal } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-import { addAsset } from "app/services/assets";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
 import { rigs, systems } from "@/constants/rigsAndSystems";
+import { changeInventoryToAsset } from "app/services/inventory";
 
 const validationSchema = Yup.object().shape({
   physicalLocation: Yup.string().required("Physical Location is required"),
@@ -20,7 +20,6 @@ const validationSchema = Yup.object().shape({
   serialNumber: Yup.string().required("Serial # is required"),
   make: Yup.string().required("Make is required"),
   model: Yup.string().required("Model is required"),
-  part: Yup.string().required("Part # is required"),
   description: Yup.string()
     .max(150, "Max 150 characters allowed")
     .required("Description is required"),
@@ -42,18 +41,19 @@ const validationSchema = Yup.object().shape({
     .required("Maint. Start Date is required"),
 });
 
-const CreateAssetPopup = ({
+const ChangeToAssetPopup = ({
   addAssetVisible,
   setAddAssetVisible,
-  handleFetchAssets,
+  selectedRows,
 }) => {
+  console.log(selectedRows);
+
   const handleSubmit = async (values, setSubmitting, resetForm) => {
-    const { status, data } = await addAsset(values);
+    const { status, data } = await changeInventoryToAsset(values);
     setSubmitting(false);
     if (status === 200) {
       message.success(data.message);
       resetForm();
-      handleFetchAssets();
       setAddAssetVisible(false);
     } else {
       message.error(data.error);
@@ -63,6 +63,7 @@ const CreateAssetPopup = ({
   return (
     <Formik
       initialValues={{
+        inventoryId: selectedRows[0]._id,
         physicalLocation: "",
         mainSystem: "",
         rfidBarcode: "",
@@ -73,7 +74,6 @@ const CreateAssetPopup = ({
         serialNumber: "",
         make: "",
         model: "",
-        part: "",
         description: "",
         specDetails: "",
         installedDate: "",
@@ -94,7 +94,11 @@ const CreateAssetPopup = ({
         <Form onSubmit={handleSubmit}>
           <Modal
             maskClosable={false}
-            title={<h1 className="text-lg md:text-2xl mb-5">Add New Asset</h1>}
+            title={
+              <h1 className="text-lg md:text-2xl mb-5">
+                Convert Inventory to Asset
+              </h1>
+            }
             open={addAssetVisible}
             onCancel={() => setAddAssetVisible(false)}
             footer={
@@ -115,7 +119,7 @@ const CreateAssetPopup = ({
                   onClick={handleSubmit}
                   disabled={isSubmitting}
                   size="small"
-                  text="Add Asset"
+                  text="Submit"
                   fullWidth={false}
                 />
               </div>
@@ -167,7 +171,6 @@ const CreateAssetPopup = ({
                 <InputField name="serialNumber" placeholder="Serial #" />
                 <InputField name="make" placeholder="Make" />
                 <InputField name="model" placeholder="Model" />
-                <InputField name="part" placeholder="Part #" />
                 <div className="md:col-span-3 -mb-4">
                   <TextAreaField
                     name="description"
@@ -238,4 +241,4 @@ const CreateAssetPopup = ({
   );
 };
 
-export default CreateAssetPopup;
+export default ChangeToAssetPopup;

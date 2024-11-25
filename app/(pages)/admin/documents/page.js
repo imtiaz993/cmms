@@ -55,9 +55,10 @@ const columns = [
 ];
 
 const Documents = () => {
-  const [documents, setDocuments] = useState();
+  const [documents, setDocuments] = useState([]);
   const [fetchingDocuments, setFetchingDocuments] = useState(true);
-  const [searchText, setSearchText] = useState(""); // State for search text
+  const [searchText, setSearchText] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   useEffect(() => {
     const handleFetchDocuments = async () => {
@@ -74,16 +75,20 @@ const Documents = () => {
   }, []);
 
   const filteredDocuments = useMemo(() => {
-    if (!searchText) return documents; // Return full data if no search
-    return documents?.filter((document) =>
-      Object.keys(document).some((key) =>
-        document[key]
-          ?.toString()
-          ?.toLowerCase()
-          ?.includes(searchText.toLowerCase())
-      )
-    );
-  }, [searchText, documents]);
+    if (!documents) return [];
+    return documents.filter((document) => {
+      const matchesCategory =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(document.type);
+      const matchesSearch =
+        !searchText ||
+        Object.values(document)
+          .join(" ")
+          .toLowerCase()
+          .includes(searchText.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [searchText, selectedCategories, documents]);
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
@@ -91,33 +96,28 @@ const Documents = () => {
         <ActionBar
           setSearchText={setSearchText}
           searchText={searchText}
-          documents={documents}
-          setDocuments={setDocuments}
+          selectedCategories={selectedCategories}
+          setSelectedCategories={setSelectedCategories}
         />
         <div className="flex justify-end">
           <p className="text-secondary">
-            Total Documents: <span>{"(" + documents?.length + ")"}</span>
+            Total Documents: <span>({filteredDocuments.length})</span>
           </p>
         </div>
         <Table
           loading={fetchingDocuments}
-          size={"large"}
+          size="large"
           scroll={{ x: 1100 }}
           columns={columns}
           dataSource={filteredDocuments}
           pagination={{
-            total: documents?.length,
-            current: 1,
+            total: filteredDocuments.length,
             pageSize: 10,
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
-            onChange: () => {},
           }}
-          style={{
-            marginTop: 16,
-            overflow: "auto",
-          }}
+          style={{ marginTop: 16, overflow: "auto" }}
         />
       </div>
     </div>
