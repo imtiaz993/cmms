@@ -73,17 +73,17 @@ const MaterialTransfer = () => {
     useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
 
+  const handleFetchData = async () => {
+    const { status, data } = await getMaterialTransferData();
+    if (status === 200) {
+      setMaterialTransferData(data.data);
+      setFetchingData(false);
+    } else {
+      setFetchingData(false);
+      message.error(data.error || "Failed to fetch data");
+    }
+  };
   useEffect(() => {
-    const handleFetchData = async () => {
-      const { status, data } = await getMaterialTransferData();
-      if (status === 200) {
-        setMaterialTransferData(data.data);
-        setFetchingData(false);
-      } else {
-        setFetchingData(false);
-        message.error(data.error || "Failed to fetch data");
-      }
-    };
     handleFetchData();
   }, []);
 
@@ -106,7 +106,7 @@ const MaterialTransfer = () => {
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
           setAddMaterialTransferVisible={setAddMaterialTransferVisible}
-          setMaterialTransferData={setMaterialTransferData}
+          handleFetchData={handleFetchData}
         />
       )}
       <div>

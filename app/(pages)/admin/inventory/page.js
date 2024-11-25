@@ -66,9 +66,7 @@ const columns = [
     dataIndex: "receivedDate",
     key: "receivedDate",
   },
-
 ];
-
 
 const defaultCheckedList = columns.map((item) => item.key);
 
@@ -79,26 +77,28 @@ const Inventory = () => {
   const [addInventoryVisible, setAddInventoryVisible] = useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
   const [searchText, setSearchText] = useState(""); // State for search text
 
   const rowSelection = {
     selectedRowKeys,
-    onChange: (selectedKeys) => {
-      setSelectedRowKeys(selectedKeys);
+    onChange: (keys, rows) => {
+      setSelectedRows(rows)
+      setSelectedRowKeys(keys);
     },
   };
 
+  const handleFetchInventory = async () => {
+    const { status, data } = await getInventory();
+    if (status === 200) {
+      setFetchingInventory(false);
+      setInventory(data.data);
+    } else {
+      setFetchingInventory(false);
+      message.error(data.error);
+    }
+  };
   useEffect(() => {
-    const handleFetchInventory = async () => {
-      const { status, data } = await getInventory();
-      if (status === 200) {
-        setFetchingInventory(false);
-        setInventory(data.data);
-      } else {
-        setFetchingInventory(false);
-        message.error(data.error);
-      }
-    };
     handleFetchInventory();
   }, []);
 
@@ -120,6 +120,7 @@ const Inventory = () => {
         <CreateInventoryPopup
           addInventoryVisible={addInventoryVisible}
           setAddInventoryVisible={setAddInventoryVisible}
+          handleFetchInventory={handleFetchInventory}
         />
       )}
       <div>
@@ -128,7 +129,7 @@ const Inventory = () => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
-          selectedRowKeys={selectedRowKeys}
+          selectedRows={selectedRows}
           setSearchText={setSearchText}
           setInventory={setInventory}
         />

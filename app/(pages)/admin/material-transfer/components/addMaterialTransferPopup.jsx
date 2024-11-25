@@ -36,6 +36,7 @@ const validationSchema = Yup.object().shape({
 const AddMaterialTransferPopup = ({
   addMaterialTransferVisible,
   setAddMaterialTransferVisible,
+  handleFetchData,
 }) => {
   const [addAssetPopup, setAddAssetPopup] = useState(false);
   const [draft, setDraft] = useState(false);
@@ -56,7 +57,7 @@ const AddMaterialTransferPopup = ({
     if (status === 200) {
       message.success(data?.message);
       resetForm();
-      // setMaterialTransferData();
+      handleFetchData();
       setAddMaterialTransferVisible(false);
     } else {
       message.error(data?.message);
