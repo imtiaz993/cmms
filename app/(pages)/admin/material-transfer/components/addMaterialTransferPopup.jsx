@@ -1,6 +1,6 @@
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Checkbox, Input, message, Modal } from "antd";
+import { Checkbox, Input, message, Modal, Table } from "antd";
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
@@ -12,6 +12,8 @@ import {
   addMaterialTransfer,
   saveDraftMaterialTransfer,
 } from "app/services/materialTransfer";
+import { useSelector } from "react-redux";
+import AddInventoryPopupMT from "@/components/addInventoryPopupInMT";
 
 // Validation schema using Yup
 const validationSchema = Yup.object().shape({
@@ -32,23 +34,99 @@ const validationSchema = Yup.object().shape({
   misc: Yup.string().max(150, "Misc information can't exceed 150 characters"),
 });
 
+const columns = [
+  {
+    title: "Part Name",
+    dataIndex: "partName",
+    key: "partName",
+  },
+  {
+    title: "Part Number",
+    dataIndex: "partItem",
+    key: "partItem",
+  },
+  {
+    title: "Category",
+    dataIndex: "category",
+    key: "category",
+  },
+  {
+    title: "Details",
+    dataIndex: "details",
+    key: "details",
+  },
+  {
+    title: "Quantity",
+    dataIndex: "quantity",
+    key: "quantity",
+  },
+  {
+    title: "Price",
+    dataIndex: "price",
+    key: "price",
+  },
+  {
+    title: "Location",
+    dataIndex: "location",
+    key: "location",
+  },
+  {
+    title: "PO",
+    dataIndex: "PO",
+    key: "PO",
+  },
+  {
+    title: "SO",
+    dataIndex: "SO",
+    key: "SO",
+  },
+  {
+    title: "Invoice number",
+    dataIndex: "invoiceNumber",
+    key: "invoiceNumber",
+  },
+  {
+    title: "Supplier",
+    dataIndex: "supplier",
+    key: "supplier",
+  },
+  {
+    title: "Received Date",
+    dataIndex: "receivedDate",
+    key: "receivedDate",
+  },
+];
+
 // AddMaterialTransferPopup component
 const AddMaterialTransferPopup = ({
   addMaterialTransferVisible,
   setAddMaterialTransferVisible,
-  handleFetchData,
+  selectedInventory,
+  setSelectedInventory,
+  selectedRowKeys,
+  setSelectedRowKeys,
 }) => {
+  const { assets } = useSelector((state) => state.assets);
+  const { inventory } = useSelector((state) => state.inventory);
+  const [addedAssets, setAddedAssets] = useState([]);
   const [addAssetPopup, setAddAssetPopup] = useState(false);
+  const [addInventoryPopup, setAddInventoryPopup] = useState(false);
   const [draft, setDraft] = useState(false);
 
   // Handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     console.log(values);
+    const transferData = {
+      ...values,
+      assets: addedAssets.map((item) => item._id), // Append the array of asset IDs
+      inventory: selectedRowKeys, // Append the array of inventory IDs
+    };
+
     let response;
     if (draft) {
-      response = await saveDraftMaterialTransfer(values);
+      response = await saveDraftMaterialTransfer(transferData);
     } else {
-      response = await addMaterialTransfer(values);
+      response = await addMaterialTransfer(transferData);
     }
 
     const { status, data } = response;
@@ -57,7 +135,6 @@ const AddMaterialTransferPopup = ({
     if (status === 200) {
       message.success(data?.message);
       resetForm();
-      handleFetchData();
       setAddMaterialTransferVisible(false);
     } else {
       message.error(data?.message);
@@ -85,7 +162,18 @@ const AddMaterialTransferPopup = ({
           <AddAssetPopupMT
             visible={addAssetPopup}
             setVisible={setAddAssetPopup}
+            assets={assets}
+            setAddedAssets={setAddedAssets}
           />
+          <AddInventoryPopupMT
+            visible={addInventoryPopup}
+            setVisible={setAddInventoryPopup}
+            inventory={inventory}
+            setSelectedInventory={setSelectedInventory}
+            selectedRowKeys={selectedRowKeys}
+            setSelectedRowKeys={setSelectedRowKeys}
+          />
+          {console.log("addedAssets", addedAssets)}
           <Modal
             maskClosable={false}
             title={
@@ -134,7 +222,8 @@ const AddMaterialTransferPopup = ({
               />
               <InputField
                 name="destination"
-                placeholder="Destination"
+                plac
+                eholder="Destination"
                 maxLength={128}
               />
               <InputField
@@ -174,26 +263,62 @@ const AddMaterialTransferPopup = ({
                   onClick={() => setAddAssetPopup(true)}
                 />
               </p>
-              <div className="text-center my-3">
-                <ExclamationCircleOutlined /> No assets to display
-              </div>
+              {addedAssets.length > 0 ? (
+                <Table
+                  dataSource={addedAssets}
+                  columns={[
+                    { title: "Asset Id", dataIndex: "_id", key: "_id" },
+                    {
+                      title: "Asset Number",
+                      dataIndex: "assetNumber",
+                      key: "assetNumber",
+                    },
+                    {
+                      title: "Asset Condtion",
+                      dataIndex: "assetCondition",
+                      key: "assetCondition",
+                    },
+                    {
+                      title: "Transfer Reason",
+                      dataIndex: "transferReason",
+                      key: "transferReason",
+                    },
+                    //{ title: "Include Asset Parents?", dataIndex: "childAssetsParents", key: "childAssetsParents",},
+                  ]}
+                  pagination={false}
+                  size="small"
+                />
+              ) : (
+                <div className="text-center my-3">
+                  <ExclamationCircleOutlined /> No assets to display
+                </div>
+              )}
             </div>
 
             <div>
-              <p className="mt-5">
+              <p className="my-5">
                 <strong>Inventory</strong>
                 <Button
                   className="ml-4 !text-xs !h-7"
                   size="small"
                   text="Add Inventory"
+                  onClick={() => setAddInventoryPopup(true)}
                   fullWidth={false}
                   outlined
-                  disabled
                 />
               </p>
-              <div className="text-center my-3">
-                <ExclamationCircleOutlined /> No Inventory to display
-              </div>
+              {selectedInventory.length > 0 ? (
+                <Table
+                  dataSource={selectedInventory}
+                  columns={columns}
+                  pagination={false}
+                  size="small"
+                />
+              ) : (
+                <div className="text-center my-3">
+                  <ExclamationCircleOutlined /> No Inventory to display
+                </div>
+              )}
             </div>
 
             <div className="my-3">

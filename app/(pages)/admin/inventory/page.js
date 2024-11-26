@@ -4,6 +4,7 @@ import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateInventoryPopup from "./components/createInventoryPopup";
 import { getInventory } from "app/services/inventory";
+import { useSelector } from "react-redux";
 
 const columns = [
   {
@@ -71,8 +72,11 @@ const columns = [
 const defaultCheckedList = columns.map((item) => item.key);
 
 const Inventory = () => {
-  const [inventory, setInventory] = useState();
-  const [fetchingInventory, setFetchingInventory] = useState(true);
+  const {
+    inventory = [],
+    isLoading,
+    error,
+  } = useSelector((state) => state.inventory); // Get inventory from store
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addInventoryVisible, setAddInventoryVisible] = useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
@@ -83,24 +87,10 @@ const Inventory = () => {
   const rowSelection = {
     selectedRowKeys,
     onChange: (keys, rows) => {
-      setSelectedRows(rows)
+      setSelectedRows(rows);
       setSelectedRowKeys(keys);
     },
   };
-
-  const handleFetchInventory = async () => {
-    const { status, data } = await getInventory();
-    if (status === 200) {
-      setFetchingInventory(false);
-      setInventory(data.data);
-    } else {
-      setFetchingInventory(false);
-      message.error(data.error);
-    }
-  };
-  useEffect(() => {
-    handleFetchInventory();
-  }, []);
 
   const filteredInventory = useMemo(() => {
     if (!searchText) return inventory; // Return full data if no search
@@ -116,11 +106,11 @@ const Inventory = () => {
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
+      {console.log("selected inventory", selectedRows)}
       {addInventoryVisible && (
         <CreateInventoryPopup
           addInventoryVisible={addInventoryVisible}
           setAddInventoryVisible={setAddInventoryVisible}
-          handleFetchInventory={handleFetchInventory}
         />
       )}
       <div>
@@ -129,9 +119,12 @@ const Inventory = () => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
-          selectedRows={selectedRows}
+          selectedInventory={selectedRows}
+          setSelectedInventory={setSelectedRows}
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
           setSearchText={setSearchText}
-          setInventory={setInventory}
+          // setInventory={setInventory}
         />
         <div className="flex gap-3 justify-end">
           <p className="text-secondary">
@@ -142,11 +135,12 @@ const Inventory = () => {
           </p>
         </div>
         <Table
-          loading={fetchingInventory}
+          loading={isLoading}
           size={"large"}
           scroll={{ x: 1400 }}
           columns={newColumns}
           rowSelection={rowSelection}
+          rowKey="_id"
           dataSource={
             filteredInventory &&
             filteredInventory.length > 0 &&

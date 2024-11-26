@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Card, Segmented, Table } from "antd";
+import { Card, message, Segmented, Table } from "antd";
 // import ReactApexChart from "react-apexcharts";
 import { useSearchParams } from "next/navigation";
 import Schedule from "./components/schedule";

@@ -6,85 +6,96 @@ import InputField from "./common/InputField";
 import SelectField from "./common/SelectField";
 
 const validationSchema = Yup.object().shape({
-  asset: Yup.string(),
+  assetNumber: Yup.string().required("Asset is required"),
+  assetCondition: Yup.string().required("Asset Condition is required"),
+  transferReason: Yup.string(),
 });
 
-const columns = [
-  {
-    title: "Asset #",
-    dataIndex: "assetNum",
-    key: "assetNum",
-  },
-  {
-    title: "Asset Description",
-    dataIndex: "assetDescription",
-    key: "assetDescription",
-  },
-  {
-    title: "Serial #",
-    dataIndex: "serialNum",
-    key: "serialNum",
-  },
-  {
-    title: "Alt ID",
-    dataIndex: "altID",
-    key: "altID",
-  },
-  {
-    title: "Category",
-    dataIndex: "category",
-    key: "category",
-  },
-];
+// const columns = [
+//   {
+//     title: "Asset #",
+//     dataIndex: "assetNum",
+//     key: "assetNum",
+//   },
+//   {
+//     title: "Asset Description",
+//     dataIndex: "assetDescription",
+//     key: "assetDescription",
+//   },
+//   {
+//     title: "Serial #",
+//     dataIndex: "serialNum",
+//     key: "serialNum",
+//   },
+//   {
+//     title: "Alt ID",
+//     dataIndex: "altID",
+//     key: "altID",
+//   },
+//   {
+//     title: "Category",
+//     dataIndex: "category",
+//     key: "category",
+//   },
+// ];
 
-const data = [
-  {
-    assetNum: "21-005",
-    assetDescription: "15,000gal Fuel Tank",
-    serialNum: "21-005",
-    altID: "",
-    category: "Fuel Systems",
-  },
-  {
-    assetNum: "1061491692",
-    assetDescription: "#1 Fuel Pump Motor",
-    serialNum: "1061491692",
-    altID: "",
-    category: "Electrical Systems",
-  },
-  {
-    assetNum: "1069397520",
-    assetDescription: "#2 Fuel Pump Motor",
-    serialNum: "1069397520",
-    altID: "",
-    category: "Electrical Systems",
-  },
-  {
-    assetNum: "4470",
-    assetDescription: "#2 Fuel Pump",
-    serialNum: "4470",
-    altID: "",
-    category: "Pump Systems",
-  },
-];
+// const data = [
+//   {
+//     assetNum: "21-005",
+//     assetDescription: "15,000gal Fuel Tank",
+//     serialNum: "21-005",
+//     altID: "",
+//     category: "Fuel Systems",
+//   },
+//   {
+//     assetNum: "1061491692",
+//     assetDescription: "#1 Fuel Pump Motor",
+//     serialNum: "1061491692",
+//     altID: "",
+//     category: "Electrical Systems",
+//   },
+//   {
+//     assetNum: "1069397520",
+//     assetDescription: "#2 Fuel Pump Motor",
+//     serialNum: "1069397520",
+//     altID: "",
+//     category: "Electrical Systems",
+//   },
+//   {
+//     assetNum: "4470",
+//     assetDescription: "#2 Fuel Pump",
+//     serialNum: "4470",
+//     altID: "",
+//     category: "Pump Systems",
+//   },
+// ];
 
-const AddAssetPopupMT = ({ visible, setVisible }) => {
-  const handleSubmit = async (values, setSubmitting, resetForm) => {
+const AddAssetPopupMT = ({ visible, setVisible, assets, setAddedAssets }) => {
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     console.log(values);
+    // Find the full asset object from the assets array using the assetNumber (or any unique identifier)
+    const selectedAsset = assets.find(
+      (asset) => asset.assetNumber === values.assetNumber
+    );
+    setAddedAssets((assets) => [
+      ...assets,
+      { _id: selectedAsset._id, ...values },
+    ]);
+    resetForm();
+    setVisible(false);
   };
   return (
     <Formik
       initialValues={{
-        asset: "",
+        assetNumber: "",
+        assetCondition: "",
+        transferReason: "",
+        childAssetsParents: false,
       }}
       validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
-        console.log(values);
-
-        handleSubmit(values, setSubmitting, resetForm);
-      }}
+      onSubmit={handleSubmit}
     >
-      {({ isSubmitting, handleSubmit, setFieldValue }) => (
+      {({ values, isSubmitting, handleSubmit, submitForm }) => (
         <Form onSubmit={handleSubmit}>
           <Modal
             maskClosable={false}
@@ -104,8 +115,9 @@ const AddAssetPopupMT = ({ visible, setVisible }) => {
 
                 <Button
                   className=""
-                  onClick={() => setVisible(false)}
+                  onClick={() => submitForm()}
                   size="small"
+                  htmlType="submit"
                   text="Add Asset"
                   fullWidth={false}
                   disabled={isSubmitting}
@@ -113,22 +125,21 @@ const AddAssetPopupMT = ({ visible, setVisible }) => {
               </div>
             }
             onCancel={() => setVisible(false)}
-            width={1000}
+            width={500}
             bodyStyle={{
-              height: "400px",
+              height: "200px",
               overflowY: "auto",
               overflowX: "hidden",
             }}
           >
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="grid sm:grid-cols-2 md:grid-cols-2 gap-3">
               <SelectField
-                name="asset"
+                name="assetNumber"
                 placeholder="Select Asset"
-                options={[
-                  { label: "4470 - #2 Fuel Pump", value: "Asset 1" },
-                  { label: "4470 - #2 Fuel Pump", value: "Asset 2" },
-                  { label: "4470 - #2 Fuel Pump", value: "Asset 3" },
-                ]}
+                options={assets.map((asset) => ({
+                  label: asset.assetNumber + " - " + asset.mainSystem,
+                  value: asset.assetNumber,
+                }))}
               />
               <SelectField
                 name="assetCondition"
@@ -161,7 +172,7 @@ const AddAssetPopupMT = ({ visible, setVisible }) => {
                 </Field>
               </div>
             </div>
-            <h4 className="mt-4 text-lg font-semibold">Asset Hierarchy</h4>
+            {/* <h4 className="mt-4 text-lg font-semibold">Asset Hierarchy</h4>
             <Table
               loading={false}
               size={"large"}
@@ -173,7 +184,7 @@ const AddAssetPopupMT = ({ visible, setVisible }) => {
                 marginTop: 16,
                 overflow: "auto",
               }}
-            />
+            /> */}
           </Modal>
         </Form>
       )}

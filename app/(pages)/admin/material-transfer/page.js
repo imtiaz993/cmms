@@ -72,6 +72,8 @@ const MaterialTransfer = () => {
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const [selectedInventory, setSelectedInventory] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const handleFetchData = async () => {
     const { status, data } = await getMaterialTransferData();
@@ -107,6 +109,10 @@ const MaterialTransfer = () => {
           addMaterialTransferVisible={addMaterialTransferVisible}
           setAddMaterialTransferVisible={setAddMaterialTransferVisible}
           handleFetchData={handleFetchData}
+          selectedInventory={selectedInventory}
+          setSelectedInventory={setSelectedInventory}
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
         />
       )}
       <div>

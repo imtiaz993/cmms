@@ -5,6 +5,6 @@ import inventoriesReducer from './slices/inventoriesSlice';
 export const store = configureStore({
   reducer: {
     assets: assetsReducer,
-    inventories: inventoriesReducer,
+    inventory: inventoriesReducer,
   },
 });

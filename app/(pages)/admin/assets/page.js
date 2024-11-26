@@ -5,6 +5,7 @@ import ActionBar from "./components/actionBar";
 import CreateAssetPopup from "./components/createAssetPopup";
 import { useRouter } from "next/navigation";
 import { getAssets } from "app/services/assets";
+import { useSelector } from "react-redux";
 
 // Common column structure
 const baseColumns = [
@@ -36,29 +37,13 @@ const defaultCheckedList = [
 ];
 
 const Assets = () => {
-  const [assets, setAssets] = useState();
-  const [fetchingAssets, setFetchingAssets] = useState(true);
+  // const [assets, setAssets] = useState();
+  const { assets, isLoading, error } = useSelector((state) => state.assets);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState(""); // State for search text
   const router = useRouter();
-
-  console.log(assets);
-
-  const handleFetchAssets = async () => {
-    const { status, data } = await getAssets();
-    if (status === 200) {
-      setFetchingAssets(false);
-      setAssets(data.data);
-    } else {
-      setFetchingAssets(false);
-      message.error(data.error);
-    }
-  };
-  useEffect(() => {
-    handleFetchAssets();
-  }, []);
 
   // Filter columns dynamically based on checkedList
   const mainColumns = [
@@ -129,7 +114,6 @@ const Assets = () => {
         <CreateAssetPopup
           addAssetVisible={addAssetVisible}
           setAddAssetVisible={setAddAssetVisible}
-          handleFetchAssets={handleFetchAssets}
         />
       )}
       <ActionBar
@@ -138,7 +122,6 @@ const Assets = () => {
         setCheckedList={setCheckedList}
         columns={baseColumns}
         setSearchText={setSearchText}
-        setAssets={setAssets}
       />
       <div className="flex gap-3 justify-end">
         <p className="text-secondary">
@@ -153,7 +136,7 @@ const Assets = () => {
         onRow={(record) => ({
           onClick: () => router.push(`/admin/assets/${record.key}`),
         })}
-        loading={fetchingAssets}
+        loading={isLoading}
         size="large"
         scroll={{ x: 1100 }}
         columns={mainColumns}

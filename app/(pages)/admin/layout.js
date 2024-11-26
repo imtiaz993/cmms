@@ -1,18 +1,32 @@
+// Layout.js
 "use client";
 
-import { act, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getToken, getUser } from "@/utils/index";
+import { useDispatch, useSelector } from "react-redux";
 import Appbar from "./appbar";
 import Sidebar from "./sidebar";
 import { Select } from "antd";
-import { ConfigProvider, theme, Button, Card } from "antd";
-import { rigs, systems } from "@/constants/rigsAndSystems";
+import { ConfigProvider, theme } from "antd";
+import { rigs } from "@/constants/rigsAndSystems";
+import { setIn } from "formik";
+import {
+  setInventory,
+  setInventoryLoading,
+  setInventoryError,
+} from "app/redux/slices/inventoriesSlice";
+import { getInventory } from "app/services/inventory";
+import { getAssets } from "app/services/assets";
+import {
+  setAssets,
+  setAssetsError,
+  setAssetsLoading,
+} from "app/redux/slices/assetsSlice";
 
 export default function Layout({ children }) {
   const router = useRouter();
-  const [token, setToken] = useState();
-  const [data, setData] = useState();
+  const dispatch = useDispatch();
   const [openSidebar, setOpenSidebar] = useState(false);
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -20,7 +34,7 @@ export default function Layout({ children }) {
   const activeLocation = searchParams.get("location") || "1";
   const activeSystem = searchParams.get("system") || "1";
 
-  //dark mode
+  // Dark mode
   const { defaultAlgorithm, darkAlgorithm } = theme;
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -35,77 +49,93 @@ export default function Layout({ children }) {
   }, [isDarkMode]);
 
   useEffect(() => {
-    if (typeof window != "undefined") {
+    const handleFetchInventory = async () => {
+      dispatch(setInventoryLoading(true)); // Set loading state
+      const { status, data } = await getInventory();
+      if (status == 200) {
+        dispatch(setInventory(data.data)); // Store inventory in Redux
+      } else {
+        dispatch(setInventoryError(data.error)); // Store error in Redux
+      }
+      dispatch(setInventoryLoading(false));
+    };
+
+    const handleFetchAssets = async () => {
+      dispatch(setAssetsLoading(true));
+      const { status, data } = await getAssets();
+      if (status === 200) {
+        dispatch(setAssets(data?.data));
+      } else {
+        dispatch(setAssetsError(data?.error));
+      }
+      dispatch(setAssetsLoading(false));
+    };
+
+    handleFetchAssets();
+    handleFetchInventory();
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       const userToken = getToken();
       const userData = getUser();
-      setToken(userToken);
-      setData(userData);
-
       if (!userToken) {
         router.replace("/login");
       } else if (userData?.role === "supervisor") {
-        router?.replace("/supervisor/dashboard");
+        router.replace("/supervisor/dashboard");
       }
     }
   }, [router]);
+
   return (
-    <>
-      {/* {token && data && data.role === "admin" && ( */}
-      <ConfigProvider
-        theme={{
-          algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
-        }}
-      >
-        <div>
-          <Appbar
+    <ConfigProvider
+      theme={{ algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm }}
+    >
+      <div>
+        <Appbar
+          setOpenSidebar={setOpenSidebar}
+          isDarkMode={isDarkMode}
+          setIsDarkMode={setIsDarkMode}
+        />
+        <div className="flex items-start mt-4">
+          <Sidebar
+            openSidebar={openSidebar}
             setOpenSidebar={setOpenSidebar}
-            isDarkMode={isDarkMode}
-            setIsDarkMode={setIsDarkMode}
+            params={`?location=${activeLocation}&system=${activeSystem}`}
           />
-          <div className="flex items-start mt-4">
-            <Sidebar
-              openSidebar={openSidebar}
-              setOpenSidebar={setOpenSidebar}
-              params={`?location=${activeLocation}&system=${activeSystem}`}
-            />
-            <div className="w-full lg:w-[calc(100%-300px)]">
-              <div className="px-6 flex gap-3 mb-4">
+          <div className="w-full lg:w-[calc(100%-300px)]">
+            <div className="px-6 flex gap-3 mb-4">
+              <Select
+                value={activeLocation}
+                onChange={(value) =>
+                  router.push(
+                    `/admin/${currentPage}?location=${value}&system=${activeSystem}`
+                  )
+                }
+                options={rigs.map((i) => ({ label: i.name, value: i.id }))}
+                placeholder="Select Parent Location"
+                className="w-full sm:w-40"
+              />
+              {activeLocation !== "12" && activeLocation !== "13" && (
                 <Select
-                  value={activeLocation}
+                  value={activeSystem}
                   onChange={(value) =>
                     router.push(
-                      `/admin/${currentPage}?location=${value}&system=${activeSystem}`
+                      `/admin/${currentPage}?location=${activeLocation}&system=${value}`
                     )
                   }
-                  options={rigs.map((i) => ({ label: i.name, value: i.id }))}
-                  placeholder="Select Parent Location"
+                  options={rigs
+                    .find((i) => i.id === activeLocation)
+                    .systems.map((i) => ({ label: i.name, value: i.id }))}
+                  placeholder="Select Child Location"
                   className="w-full sm:w-40"
                 />
-                {activeLocation !== "12" && activeLocation !== "13" && (
-                  <Select
-                    value={activeSystem}
-                    onChange={(value) =>
-                      router.push(
-                        `/admin/${currentPage}?location=${activeLocation}&system=${value}`
-                      )
-                    }
-                    options={rigs
-                      .find((i) => i.id === activeLocation)
-                      .systems.map((i) => ({
-                        label: i.name,
-                        value: i.id,
-                      }))}
-                    placeholder="Select Child Location"
-                    className="w-full sm:w-40"
-                  />
-                )}
-              </div>
-              {children}
+              )}
             </div>
+            {children}
           </div>
         </div>
-      </ConfigProvider>
-      {/* )} */}
-    </>
+      </div>
+    </ConfigProvider>
   );
 }
