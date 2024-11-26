@@ -9,22 +9,27 @@ import { getFilteredAssets } from "app/services/assets";
 import { rigs, systems } from "@/constants/rigsAndSystems";
 import TextAreaField from "@/components/common/TextAreaField";
 import DatePickerField from "@/components/common/DatePickerField";
+import { useDispatch } from "react-redux";
+import { setAssets, setAssetsLoading } from "app/redux/slices/assetsSlice";
 
 const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
 });
 
-const AssetFilter = ({ setAssets }) => {
+const AssetFilter = () => {
+  const dispatch = useDispatch();
   const submit = async (values, setSubmitting, resetForm) => {
     console.log(values);
+    dispatch(setAssetsLoading(true));
     const { status, data } = await getFilteredAssets(values);
     setSubmitting(false);
     if (status === 200) {
       message.success(data?.message || "Assets fetched successfully");
-      setAssets(data?.data);
+      dispatch(setAssets(data?.data));
     } else {
       message.error(data?.message || "Failed to fetch assets");
     }
+    dispatch(setAssetsLoading(false));
   };
 
   return (

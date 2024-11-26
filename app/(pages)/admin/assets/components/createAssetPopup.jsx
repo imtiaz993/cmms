@@ -1,6 +1,6 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Modal } from "antd";
+import { message, Modal } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import { addAsset } from "app/services/assets";
@@ -8,6 +8,8 @@ import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
 import { rigs, systems } from "@/constants/rigsAndSystems";
+import { useDispatch } from "react-redux";
+import { addAsset as addAssetRedux } from "app/redux/slices/assetsSlice";
 
 const validationSchema = Yup.object().shape({
   physicalLocation: Yup.string().required("Physical Location is required"),
@@ -42,18 +44,16 @@ const validationSchema = Yup.object().shape({
     .required("Maint. Start Date is required"),
 });
 
-const CreateAssetPopup = ({
-  addAssetVisible,
-  setAddAssetVisible,
-  handleFetchAssets,
-}) => {
+const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
+  const dispatch = useDispatch();
+
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     const { status, data } = await addAsset(values);
     setSubmitting(false);
     if (status === 200) {
-      message.success(data.message);
+      message.success(data?.message);
       resetForm();
-      handleFetchAssets();
+      // dispatch(addAssetRedux(data?.data));
       setAddAssetVisible(false);
     } else {
       message.error(data.error);

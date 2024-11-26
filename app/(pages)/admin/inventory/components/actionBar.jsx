@@ -19,9 +19,11 @@ const ActionBar = ({
   columns,
   checkedList,
   setCheckedList,
-  selectedRows,
+  selectedInventory,
+  setSelectedInventory,
+  selectedRowKeys,
+  setSelectedRowKeys,
   setSearchText,
-  setInventory,
 }) => {
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
@@ -64,14 +66,17 @@ const ActionBar = ({
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
           setAddMaterialTransferVisible={setAddMaterialTransferVisible}
-          handleFetchData={()=>{}}
+          selectedInventory={selectedInventory}
+          setSelectedInventory={setSelectedInventory}
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
         />
       )}
       {changeToAssetVisible && (
         <ChangeToAssetPopup
           addAssetVisible={changeToAssetVisible}
           setAddAssetVisible={setChangeToAssetVisible}
-          selectedRows={selectedRows}
+          selectedRows={selectedInventory}
         />
       )}
       <CreatePurchaseOrderPopup
@@ -104,7 +109,9 @@ const ActionBar = ({
 
           <Dropdown
             dropdownRender={() => (
-              <InventoryFilter setInventory={setInventory} />
+              <InventoryFilter
+              //  setInventory={setInventory}
+              />
             )}
             trigger={["click"]}
             arrow
@@ -170,7 +177,7 @@ const ActionBar = ({
       </div>
       <div className="flex justify-end">
         <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
-          {selectedRows.length > 0 && (
+          {selectedInventory.length > 0 && (
             <Button
               text="New Material Transfer"
               onClick={() => {
@@ -182,7 +189,7 @@ const ActionBar = ({
               className="col-span-2 sm:col-span-1"
             />
           )}
-          {selectedRows.length == 1 && (
+          {selectedInventory.length == 1 && (
             <Button
               text="Change to Asset"
               onClick={() => {

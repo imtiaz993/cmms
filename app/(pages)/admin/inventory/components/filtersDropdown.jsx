@@ -7,22 +7,29 @@ import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
 import { getFilteredInventory } from "app/services/inventory";
 import DatePickerField from "@/components/common/DatePickerField";
+import { useDispatch } from "react-redux";
+import { setInventory, setInventoryError, setInventoryLoading } from "app/redux/slices/inventoriesSlice";
 
 const validationSchema = Yup.object().shape({
   inventoryNumber: Yup.string(),
 });
 
-const InventoryFilter = ({ setInventory }) => {
+const InventoryFilter = () => {
+  const dispatch = useDispatch();
+
   const submit = async (values, setSubmitting, resetForm) => {
     console.log(values);
+    dispatch(setInventoryLoading(true));
     const { status, data } = await getFilteredInventory(values);
     setSubmitting(false);
     if (status === 200) {
       message.success(data?.message || "Inventory fetched successfully");
-      setInventory(data?.data);
+      dispatch(setInventory(data?.data));
     } else {
+      dispatch(setInventoryError(data?.error));
       message.error(data?.message || "Failed to fetch inventory");
     }
+    dispatch(setInventoryLoading(false));
   };
 
   return (
