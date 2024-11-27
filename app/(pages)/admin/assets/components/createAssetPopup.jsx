@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { addAsset as addAssetRedux } from "app/redux/slices/assetsSlice";
 import AddFieldPopup from "@/components/addFieldPopup";
 import { useEffect, useState } from "react";
+import { getFields } from "app/services/customFields";
 
 const validationSchema = Yup.object().shape({
   physicalLocation: Yup.string().required("Physical Location is required"),
@@ -55,7 +56,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
 
   useEffect(() => {
     const handleFetchFields = async () => {
-      const { status, data } = await getFields(module);
+      const { status, data } = await getFields("assets");
       if (status === 200) {
         setLoading(false);
         setFields(data.data);
@@ -85,7 +86,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
       <AddFieldPopup
         visible={addFieldPopupVisible}
         setVisible={setAddFieldPopupVisible}
-        module="asset"
+        module="assets"
         fields={fields}
         setFields={setFields}
       />
@@ -163,6 +164,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                     onClick={() => setAddFieldPopupVisible(true)}
                     text="Manage Fields"
                     outlined
+                    htmlType="button"
                   />
                 </div>
                 <div className="grid md:grid-cols-3 gap-4">

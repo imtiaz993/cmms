@@ -21,7 +21,7 @@ const { TabPane } = Tabs;
 const FieldValidationSchema = Yup.object().shape({
   name: Yup.string().required("Field Name is required"),
   type: Yup.string().required("Field Type is required"),
-  options: Yup.string().when("type", {
+  preFilValue: Yup.string().when("type", {
     is: (value) => value === "dropdown",
     then: (schema) => schema.required("Dropdown options are required"),
     otherwise: (schema) => schema.notRequired(),
@@ -49,7 +49,7 @@ const ExistingFields = ({ fields, onDelete }) => {
               <p style={{ margin: 0 }}>Type: {field.type}</p>
               {field.type === "dropdown" && (
                 <p style={{ margin: 0 }}>
-                  <strong>Options:</strong> {field.options.join(", ")}
+                  <strong>Options:</strong> {field.preFilValue.join(", ")}
                 </p>
               )}
             </div>
@@ -76,14 +76,14 @@ const ExistingFields = ({ fields, onDelete }) => {
 const AddFieldForm = ({ onAddField }) => {
   return (
     <Formik
-      initialValues={{ name: "", type: "", options: "" }}
+      initialValues={{ name: "", type: "", preFilValue: "" }}
       validationSchema={FieldValidationSchema}
       onSubmit={(values, { resetForm }) => {
         const newField = {
           ...values,
-          options:
+          preFilValue:
             values.type === "dropdown"
-              ? values.options.split(",").map((opt) => opt.trim())
+              ? values.preFilValue.split(",").map((opt) => opt.trim())
               : [],
         };
         onAddField(newField);
@@ -123,10 +123,10 @@ const AddFieldForm = ({ onAddField }) => {
             {/* Dropdown Options Input */}
             {values.type === "dropdown" && (
               <InputField
-                name="options"
+                name="preFilValue"
                 placeholder="Comma-separated options (e.g., Option1, Option2)"
-                value={values.options}
-                onChange={(e) => setFieldValue("options", e.target.value)}
+                value={values.preFilValue}
+                onChange={(e) => setFieldValue("preFilValue", e.target.value)}
                 className="!mt-3"
               />
             )}
@@ -158,14 +158,14 @@ const AddFieldPopup = ({ visible, setVisible, module, fields, setFields }) => {
   const handleAddField = async (field) => {
     const { status, data } = await addField(module, field);
     if (status === 200) {
-      setFields([...fields, field]);
+      setFields([...fields, data.data]);
     } else {
       message.error(data.error);
     }
   };
 
   const handleDeleteField = async (id) => {
-    const { status, data } = await deleteField(module, id);
+    const { status, data } = await deleteField(id);
     if (status === 200) {
       setFields(fields.filter((f) => f?._id !== id));
     } else {

@@ -28,10 +28,10 @@ export const addField = async (module, body) => {
   }
 };
 
-export const deleteField = async (module, id) => {
+export const deleteField = async (id) => {
   try {
     const { status, data } = await authRequest({
-      url: `/fields/delete?module=${module}&id=${id}`,
+      url: `/fields/delete/${id}`,
       method: "DELETE",
     });
     return { status, data };
