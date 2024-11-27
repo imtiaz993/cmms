@@ -10,6 +10,8 @@ import TextAreaField from "@/components/common/TextAreaField";
 import { rigs, systems } from "@/constants/rigsAndSystems";
 import { useDispatch } from "react-redux";
 import { addAsset as addAssetRedux } from "app/redux/slices/assetsSlice";
+import AddFieldPopup from "@/components/addFieldPopup";
+import { useEffect, useState } from "react";
 
 const validationSchema = Yup.object().shape({
   physicalLocation: Yup.string().required("Physical Location is required"),
@@ -46,6 +48,24 @@ const validationSchema = Yup.object().shape({
 
 const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
   const dispatch = useDispatch();
+  const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
+
+  const [fields, setFields] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const handleFetchFields = async () => {
+      const { status, data } = await getFields(module);
+      if (status === 200) {
+        setLoading(false);
+        setFields(data.data);
+      } else {
+        setLoading(false);
+        message.error(data.error);
+      }
+    };
+    handleFetchFields();
+  }, []);
 
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     const { status, data } = await addAsset(values);
@@ -61,180 +81,198 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
   };
 
   return (
-    <Formik
-      initialValues={{
-        physicalLocation: "",
-        mainSystem: "",
-        rfidBarcode: "",
-        accountingDept: "",
-        parentAsset: "",
-        childAsset: "",
-        assetNumber: "",
-        serialNumber: "",
-        make: "",
-        model: "",
-        part: "",
-        description: "",
-        specDetails: "",
-        installedDate: "",
-        supplier: "",
-        criticality: "",
-        originalMfrDate: "",
-        condition: "",
-        maintStatus: "",
-        maintStartDate: "",
-      }}
-      validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
-        console.log(values);
-        handleSubmit(values, setSubmitting, resetForm);
-      }}
-    >
-      {({ isSubmitting, handleSubmit, values }) => (
-        <Form onSubmit={handleSubmit}>
-          <Modal
-            maskClosable={false}
-            title={<h1 className="text-lg md:text-2xl mb-5">Add New Asset</h1>}
-            open={addAssetVisible}
-            onCancel={() => setAddAssetVisible(false)}
-            footer={
-              <div>
-                <Button
-                  className="mr-2"
-                  onClick={() => setAddAssetVisible(false)}
-                  outlined
-                  size="small"
-                  text="Cancel"
-                  fullWidth={false}
-                  disabled={isSubmitting}
-                />
-                <Button
-                  className="mr-2"
-                  htmlType="submit"
-                  isLoading={isSubmitting}
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  size="small"
-                  text="Add Asset"
-                  fullWidth={false}
-                />
-              </div>
-            }
-            width={1000}
-            bodyStyle={{
-              height: "400px",
-              overflowY: "auto",
-              overflowX: "hidden",
-            }}
-          >
-            <div>
-              <div className="grid md:grid-cols-3 gap-4">
-                <SelectField
-                  name="physicalLocation"
-                  placeholder="Physical Location (Rig)"
-                  options={rigs
-                    .slice(0, rigs.length - 2)
-                    .map((i) => ({ label: i.name, value: i.id }))}
-                />
-
-                <SelectField
-                  name="mainSystem"
-                  placeholder="Main System"
-                  readOnly={!values.physicalLocation}
-                  options={
-                    values.physicalLocation
-                      ? rigs
-                          .find((i) => i.id === values.physicalLocation)
-                          .systems.map((i) => ({
-                            label: i.name,
-                            value: i.id,
-                          }))
-                      : []
-                  }
-                />
-                <InputField
-                  name="accountingDept"
-                  placeholder="Accounting Dept."
-                />
-                <InputField
-                  name="rfidBarcode"
-                  placeholder="RFID/Barcode"
-                  maxLength={128}
-                />
-                <InputField name="parentAsset" placeholder="Parent Asset" />
-                <InputField name="childAsset" placeholder="Child Asset" />
-                <InputField name="assetNumber" placeholder="Asset #" />
-                <InputField name="serialNumber" placeholder="Serial #" />
-                <InputField name="make" placeholder="Make" />
-                <InputField name="model" placeholder="Model" />
-                <InputField name="part" placeholder="Part #" />
-                <div className="md:col-span-3 -mb-4">
-                  <TextAreaField
-                    name="description"
-                    placeholder="Description"
-                    maxLength={150}
+    <>
+      <AddFieldPopup
+        visible={addFieldPopupVisible}
+        setVisible={setAddFieldPopupVisible}
+        module="asset"
+        fields={fields}
+        setFields={setFields}
+      />
+      <Formik
+        initialValues={{
+          physicalLocation: "",
+          mainSystem: "",
+          rfidBarcode: "",
+          accountingDept: "",
+          parentAsset: "",
+          childAsset: "",
+          assetNumber: "",
+          serialNumber: "",
+          make: "",
+          model: "",
+          part: "",
+          description: "",
+          specDetails: "",
+          installedDate: "",
+          supplier: "",
+          criticality: "",
+          originalMfrDate: "",
+          condition: "",
+          maintStatus: "",
+          maintStartDate: "",
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          console.log(values);
+          handleSubmit(values, setSubmitting, resetForm);
+        }}
+      >
+        {({ isSubmitting, handleSubmit, values }) => (
+          <Form onSubmit={handleSubmit}>
+            <Modal
+              maskClosable={false}
+              title={
+                <h1 className="text-lg md:text-2xl mb-5">Add New Asset</h1>
+              }
+              open={addAssetVisible}
+              onCancel={() => setAddAssetVisible(false)}
+              footer={
+                <div>
+                  <Button
+                    className="mr-2"
+                    onClick={() => setAddAssetVisible(false)}
+                    outlined
+                    size="small"
+                    text="Cancel"
+                    fullWidth={false}
+                    disabled={isSubmitting}
                   />
-                  <TextAreaField
-                    name="specDetails"
-                    placeholder="Spec Details"
-                    maxLength={500}
+                  <Button
+                    className="mr-2"
+                    htmlType="submit"
+                    isLoading={isSubmitting}
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    size="small"
+                    text="Add Asset"
+                    fullWidth={false}
                   />
                 </div>
-                <DatePickerField
-                  name="installedDate"
-                  placeholder="Installed Date"
-                />
-                <SelectField
-                  name="supplier"
-                  placeholder="Suppliers"
-                  options={[
-                    { value: "supplier1", label: "Supplier 1" },
-                    { value: "supplier2", label: "Supplier 2" },
-                    { value: "supplier3", label: "Supplier 3" },
-                    { value: "supplier4", label: "Supplier 4" },
-                    { value: "supplier5", label: "Supplier 5" },
-                  ]}
-                />
-                <SelectField
-                  name="criticality"
-                  placeholder="Criticality"
-                  options={[
-                    { value: "high", label: "High" },
-                    { value: "medium", label: "Medium" },
-                    { value: "low", label: "Low" },
-                  ]}
-                />
-                <DatePickerField
-                  name="originalMfrDate"
-                  placeholder="Original Mfr. Date (MM/DD/YYYY)"
-                />
-                <SelectField
-                  name="condition"
-                  placeholder="Condition"
-                  options={[
-                    { value: "new", label: "New" },
-                    { value: "good", label: "Good" },
-                    { value: "damaged", label: "Damaged" },
-                  ]}
-                />
-                <SelectField
-                  name="maintStatus"
-                  placeholder="Maint. Status"
-                  options={[
-                    { value: "active", label: "Active" },
-                    { value: "inactive", label: "Inactive" },
-                  ]}
-                />
-                <DatePickerField
-                  name="maintStartDate"
-                  placeholder="Maint. Start Date (MM/DD/YYYY)"
-                />
+              }
+              width={1000}
+              bodyStyle={{
+                height: "400px",
+                overflowY: "auto",
+                overflowX: "hidden",
+              }}
+            >
+              <div>
+                <div className="flex justify-end mb-5">
+                  <Button
+                    onClick={() => setAddFieldPopupVisible(true)}
+                    text="Manage Fields"
+                    outlined
+                  />
+                </div>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <SelectField
+                    name="physicalLocation"
+                    placeholder="Physical Location (Rig)"
+                    options={rigs
+                      .slice(0, rigs.length - 2)
+                      .map((i) => ({ label: i.name, value: i.id }))}
+                  />
+
+                  <SelectField
+                    name="mainSystem"
+                    placeholder="Main System"
+                    readOnly={!values.physicalLocation}
+                    options={
+                      values.physicalLocation
+                        ? rigs
+                            .find((i) => i.id === values.physicalLocation)
+                            .systems.map((i) => ({
+                              label: i.name,
+                              value: i.id,
+                            }))
+                        : []
+                    }
+                  />
+                  <InputField
+                    name="accountingDept"
+                    placeholder="Accounting Dept."
+                  />
+                  <InputField
+                    name="rfidBarcode"
+                    placeholder="RFID/Barcode"
+                    maxLength={128}
+                  />
+                  <InputField name="parentAsset" placeholder="Parent Asset" />
+                  <InputField name="childAsset" placeholder="Child Asset" />
+                  <InputField name="assetNumber" placeholder="Asset #" />
+                  <InputField name="serialNumber" placeholder="Serial #" />
+                  <InputField name="make" placeholder="Make" />
+                  <InputField name="model" placeholder="Model" />
+                  <InputField name="part" placeholder="Part #" />
+                  <div className="md:col-span-3 -mb-4">
+                    <TextAreaField
+                      name="description"
+                      placeholder="Description"
+                      maxLength={150}
+                    />
+                    <TextAreaField
+                      name="specDetails"
+                      placeholder="Spec Details"
+                      maxLength={500}
+                    />
+                  </div>
+                  <DatePickerField
+                    name="installedDate"
+                    placeholder="Installed Date"
+                  />
+                  <SelectField
+                    name="supplier"
+                    placeholder="Suppliers"
+                    options={[
+                      { value: "supplier1", label: "Supplier 1" },
+                      { value: "supplier2", label: "Supplier 2" },
+                      { value: "supplier3", label: "Supplier 3" },
+                      { value: "supplier4", label: "Supplier 4" },
+                      { value: "supplier5", label: "Supplier 5" },
+                    ]}
+                  />
+                  <SelectField
+                    name="criticality"
+                    placeholder="Criticality"
+                    options={[
+                      { value: "high", label: "High" },
+                      { value: "medium", label: "Medium" },
+                      { value: "low", label: "Low" },
+                    ]}
+                  />
+                  <DatePickerField
+                    name="originalMfrDate"
+                    placeholder="Original Mfr. Date (MM/DD/YYYY)"
+                  />
+                  <SelectField
+                    name="condition"
+                    placeholder="Condition"
+                    options={[
+                      { value: "new", label: "New" },
+                      { value: "good", label: "Good" },
+                      { value: "damaged", label: "Damaged" },
+                    ]}
+                  />
+                  <SelectField
+                    name="maintStatus"
+                    placeholder="Maint. Status"
+                    options={[
+                      { value: "active", label: "Active" },
+                      { value: "inactive", label: "Inactive" },
+                    ]}
+                  />
+                  <DatePickerField
+                    name="maintStartDate"
+                    placeholder="Maint. Start Date (MM/DD/YYYY)"
+                  />
+                </div>
               </div>
-            </div>
-          </Modal>
-        </Form>
-      )}
-    </Formik>
+            </Modal>
+          </Form>
+        )}
+      </Formik>
+    </>
   );
 };
 

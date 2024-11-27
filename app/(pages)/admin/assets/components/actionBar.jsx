@@ -9,7 +9,6 @@ import {
 import Button from "@/components/common/Button";
 import AssetFilter from "./filtersDropdown";
 import { exportAssets } from "app/services/assets";
-import AddFieldPopup from "@/components/addFieldPopup";
 
 const ActionBar = ({
   showAddAssetModal,
@@ -19,8 +18,6 @@ const ActionBar = ({
   setSearchText,
 }) => {
   const [showHierarchy, setShowHierarchy] = useState(false);
-  //Add Field
-  const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
 
   const options = columns.map(({ key, title }, index) => ({
     label: title,
@@ -52,11 +49,6 @@ const ActionBar = ({
 
   return (
     <>
-      <AddFieldPopup
-        visible={addFieldPopupVisible}
-        setVisible={setAddFieldPopupVisible}
-      />
-
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
         <Input.Search
           placeholder="Search..."
@@ -64,11 +56,6 @@ const ActionBar = ({
           className="sm:!w-[300px] searchBar"
         />
         <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
-          <Button
-            onClick={() => setAddFieldPopupVisible(true)}
-            text="Manage Fields"
-            outlined
-          />
           <Dropdown
             dropdownRender={() => <AssetFilter />}
             trigger={["click"]}

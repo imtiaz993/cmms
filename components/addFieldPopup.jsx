@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Input,
@@ -12,6 +12,7 @@ import { Formik, Form, ErrorMessage, Field } from "formik";
 import * as Yup from "yup";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
+import { addField, deleteField, getFields } from "app/services/customFields";
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -54,7 +55,7 @@ const ExistingFields = ({ fields, onDelete }) => {
             </div>
             <Popconfirm
               title="Are you sure you want to delete this field?"
-              onConfirm={() => onDelete(index)}
+              onConfirm={() => onDelete(field?._id)}
               okText="Yes"
               cancelText="No"
             >
@@ -105,7 +106,7 @@ const AddFieldForm = ({ onAddField }) => {
             <Field
               as={Select}
               placeholder="Select field type"
-              value={values.type}
+              value={values.type || undefined}
               onChange={(value) => setFieldValue("type", value)}
               style={{ height: "36px", width: "100%", marginTop: "12px" }}
             >
@@ -153,24 +154,23 @@ const AddFieldForm = ({ onAddField }) => {
 };
 
 // Main Component: AddFieldModal
-const AddFieldPopup = ({ visible, setVisible }) => {
-  const [fields, setFields] = useState([
-    { name: "Product Name", type: "text" },
-    { name: "Price", type: "number" },
-    {
-      name: "Category",
-      type: "dropdown",
-      options: ["Electronics", "Furniture", "Clothing"],
-    },
-  ]);
-
-  const handleAddField = (field) => {
-    setFields([...fields, field]);
+const AddFieldPopup = ({ visible, setVisible, module, fields, setFields }) => {
+  const handleAddField = async (field) => {
+    const { status, data } = await addField(module, field);
+    if (status === 200) {
+      setFields([...fields, field]);
+    } else {
+      message.error(data.error);
+    }
   };
 
-  const handleDeleteField = (index) => {
-    setFields(fields.filter((_, i) => i !== index));
-    message.success("Field deleted successfully");
+  const handleDeleteField = async (id) => {
+    const { status, data } = await deleteField(module, id);
+    if (status === 200) {
+      setFields(fields.filter((f) => f?._id !== id));
+    } else {
+      message.error(data.error);
+    }
   };
 
   return (
