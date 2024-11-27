@@ -9,6 +9,7 @@ import {
 import Button from "@/components/common/Button";
 import InventoryFilter from "./filtersDropdown";
 import AddMaterialTransferPopup from "../../material-transfer/components/addMaterialTransferPopup";
+import AddFieldPopup from "../../../../../components/addFieldPopup";
 import { exportInventory } from "app/services/inventory";
 import CreatePurchaseOrderPopup from "../purchase-order/createPurchaseOrderPopup";
 import ChangeToAssetPopup from "./changeToAssetPopup";
@@ -35,6 +36,7 @@ const ActionBar = ({
   }));
 
   //Add Field
+  const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [createPOVisible, setCreatePOVisible] = useState(false);
 
   const handleSearchChange = (e) => {
@@ -81,6 +83,11 @@ const ActionBar = ({
         visible={createPOVisible}
         setVisible={setCreatePOVisible}
       />
+      {/* AddFieldModal Component */}
+      <AddFieldPopup
+        visible={addFieldPopupVisible}
+        setVisible={setAddFieldPopupVisible}
+      />
 
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
         <Input.Search
@@ -94,6 +101,11 @@ const ActionBar = ({
             outlined
             onClick={() => setCreatePOVisible(true)}
           /> */}
+          <Button
+            onClick={() => setAddFieldPopupVisible(true)}
+            text="Manage Fields"
+            outlined
+          />
 
           <Dropdown
             dropdownRender={() => (

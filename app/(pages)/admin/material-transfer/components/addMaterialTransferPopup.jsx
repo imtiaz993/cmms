@@ -14,7 +14,6 @@ import {
 } from "app/services/materialTransfer";
 import { useSelector } from "react-redux";
 import AddInventoryPopupMT from "@/components/addInventoryPopupInMT";
-import AddFieldPopup from "@/components/addFieldPopup";
 
 // Validation schema using Yup
 const validationSchema = Yup.object().shape({
@@ -113,7 +112,6 @@ const AddMaterialTransferPopup = ({
   const [addAssetPopup, setAddAssetPopup] = useState(false);
   const [addInventoryPopup, setAddInventoryPopup] = useState(false);
   const [draft, setDraft] = useState(false);
-  const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
 
   // Handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -176,26 +174,11 @@ const AddMaterialTransferPopup = ({
             setSelectedRowKeys={setSelectedRowKeys}
           />
           {console.log("addedAssets", addedAssets)}
-          {/* AddFieldModal Component */}
-          <AddFieldPopup
-            visible={addFieldPopupVisible}
-            setVisible={setAddFieldPopupVisible}
-          />
-
           <Modal
             maskClosable={false}
             title={
               <h1 className="text-lg md:text-2xl mb-5">
                 Add Material Transfer
-                <Button
-                  className="ml-2"
-                  onClick={() => setAddFieldPopupVisible(true)}
-                  text="Manage Fields"
-                  outlined
-                  size="small"
-                  fullWidth={false}
-                  disabled={isSubmitting}
-                />
               </h1>
             }
             open={addMaterialTransferVisible}

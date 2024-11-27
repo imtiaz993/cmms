@@ -7,8 +7,6 @@ import { addInventory } from "app/services/inventory";
 import DatePickerField from "@/components/common/DatePickerField";
 import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
-import { useState } from "react";
-import AddFieldPopup from "@/components/addFieldPopup";
 
 const validationSchema = Yup.object().shape({
   partName: Yup.string().required("Part name is required"),
@@ -30,14 +28,13 @@ const CreateInventoryPopup = ({
   setAddInventoryVisible,
   handleFetchInventory,
 }) => {
-  const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     const { status, data } = await addInventory(values);
     setSubmitting(false);
     if (status === 200) {
       message.success(data.message);
       resetForm();
-      handleFetchInventory();
+      handleFetchInventory()
       setAddInventoryVisible(false);
     } else {
       message.error(data.error);
@@ -67,27 +64,10 @@ const CreateInventoryPopup = ({
     >
       {({ isSubmitting, handleSubmit, errors, touched }) => (
         <Form onSubmit={handleSubmit}>
-          {/* AddFieldModal Component */}
-          <AddFieldPopup
-            visible={addFieldPopupVisible}
-            setVisible={setAddFieldPopupVisible}
-          />
-
           <Modal
             maskClosable={false}
             title={
-              <h1 className="text-lg md:text-2xl mb-5">
-                Add New Inventory{" "}
-                <Button
-                  className="ml-2"
-                  onClick={() => setAddFieldPopupVisible(true)}
-                  text="Manage Fields"
-                  outlined
-                  size="small"
-                  fullWidth={false}
-                  disabled={isSubmitting}
-                />
-              </h1>
+              <h1 className="text-lg md:text-2xl mb-5">Add New Inventory</h1>
             }
             open={addInventoryVisible}
             onCancel={() => setAddInventoryVisible(false)}

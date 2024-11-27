@@ -10,8 +10,6 @@ import TextAreaField from "@/components/common/TextAreaField";
 import { rigs, systems } from "@/constants/rigsAndSystems";
 import { useDispatch } from "react-redux";
 import { addAsset as addAssetRedux } from "app/redux/slices/assetsSlice";
-import { useState } from "react";
-import AddFieldPopup from "@/components/addFieldPopup";
 
 const validationSchema = Yup.object().shape({
   physicalLocation: Yup.string().required("Physical Location is required"),
@@ -48,7 +46,6 @@ const validationSchema = Yup.object().shape({
 
 const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
   const dispatch = useDispatch();
-  const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
 
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     const { status, data } = await addAsset(values);
@@ -95,28 +92,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
     >
       {({ isSubmitting, handleSubmit, values }) => (
         <Form onSubmit={handleSubmit}>
-          {/* AddFieldModal Component */}
-          <AddFieldPopup
-            visible={addFieldPopupVisible}
-            setVisible={setAddFieldPopupVisible}
-          />
-
           <Modal
             maskClosable={false}
-            title={
-              <h1 className="text-lg md:text-2xl mb-5">
-                Add New Asset{" "}
-                <Button
-                  className="ml-2"
-                  onClick={() => setAddFieldPopupVisible(true)}
-                  text="Manage Fields"
-                  outlined
-                  size="small"
-                  fullWidth={false}
-                  disabled={isSubmitting}
-                />
-              </h1>
-            }
+            title={<h1 className="text-lg md:text-2xl mb-5">Add New Asset</h1>}
             open={addAssetVisible}
             onCancel={() => setAddAssetVisible(false)}
             footer={
