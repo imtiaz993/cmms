@@ -113,6 +113,7 @@ const AddFieldForm = ({ onAddField }) => {
               <Option value="text">Text</Option>
               <Option value="number">Number</Option>
               <Option value="dropdown">Dropdown</Option>
+              <Option value="date">Date</Option>
             </Field>
             <ErrorMessage
               name="type"

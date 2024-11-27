@@ -1,3 +1,5 @@
+"use client";
+
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Checkbox, Input, message, Modal, Table } from "antd";
@@ -6,7 +8,6 @@ import InputField from "@/components/common/InputField";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import AddAssetPopupMT from "@/components/addAssetPopupInMT";
-import { useState } from "react";
 import TextAreaField from "@/components/common/TextAreaField";
 import {
   addMaterialTransfer,
@@ -14,25 +15,9 @@ import {
 } from "app/services/materialTransfer";
 import { useSelector } from "react-redux";
 import AddInventoryPopupMT from "@/components/addInventoryPopupInMT";
-
-// Validation schema using Yup
-const validationSchema = Yup.object().shape({
-  origination: Yup.string()
-    .max(128, "Origination can't exceed 128 characters")
-    .required("Origination is required."),
-  destination: Yup.string()
-    .max(128, "Destination can't exceed 128 characters")
-    .required("Destination is required."),
-  materialTransferType: Yup.string().required(
-    "Material Transfer Type is required."
-  ),
-  transporter: Yup.string().required("Transporter is required."),
-  attentionTo: Yup.string().required("Attention to is required."),
-  comments: Yup.string()
-    .max(150, "Comments can't exceed 150 characters")
-    .required("Comments are required."),
-  misc: Yup.string().max(150, "Misc information can't exceed 150 characters"),
-});
+import { useEffect, useState } from "react";
+import { getFields } from "app/services/customFields";
+import AddFieldPopup from "@/components/addFieldPopup";
 
 const columns = [
   {
@@ -106,6 +91,10 @@ const AddMaterialTransferPopup = ({
   selectedRowKeys,
   setSelectedRowKeys,
 }) => {
+  const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
+  const [fields, setFields] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const { assets } = useSelector((state) => state.assets);
   const { inventory } = useSelector((state) => state.inventory);
   const [addedAssets, setAddedAssets] = useState([]);
@@ -113,221 +102,354 @@ const AddMaterialTransferPopup = ({
   const [addInventoryPopup, setAddInventoryPopup] = useState(false);
   const [draft, setDraft] = useState(false);
 
-  // Handle form submission
+  useEffect(() => {
+    const handleFetchFields = async () => {
+      const { status, data } = await getFields("materialTransfer");
+      if (status === 200) {
+        setFields(data.data);
+      } else {
+        message.error(data.error);
+      }
+      setLoading(false);
+    };
+    handleFetchFields();
+  }, []);
+
+  // Generate initial values for custom fields
+  const customFieldInitialValues = fields.reduce((acc, field) => {
+    acc[field.uniqueKey] = "";
+    return acc;
+  }, {});
+
+  // Generate validation schema for custom fields
+  const customFieldValidations = fields.reduce((acc, field) => {
+    switch (field.type) {
+      case "text":
+      case "dropdown":
+        acc[field.uniqueKey] = Yup.string().required(
+          `${field.name} is required`
+        );
+        break;
+      case "number":
+        acc[field.uniqueKey] = Yup.number()
+          .typeError(`${field.name} must be a number`)
+          .required(`${field.name} is required`);
+        break;
+      case "date":
+        acc[field.uniqueKey] = Yup.date()
+          .typeError(`${field.name} must be a valid date`)
+          .required(`${field.name} is required`);
+        break;
+      default:
+        acc[field.uniqueKey] = Yup.string().required(
+          `${field.name} is required`
+        );
+    }
+    return acc;
+  }, {});
+
+  const validationSchema = Yup.object().shape({
+    origination: Yup.string()
+      .max(128, "Origination can't exceed 128 characters")
+      .required("Origination is required."),
+    destination: Yup.string()
+      .max(128, "Destination can't exceed 128 characters")
+      .required("Destination is required."),
+    materialTransferType: Yup.string().required(
+      "Material Transfer Type is required."
+    ),
+    transporter: Yup.string().required("Transporter is required."),
+    attentionTo: Yup.string().required("Attention to is required."),
+    comments: Yup.string()
+      .max(150, "Comments can't exceed 150 characters")
+      .required("Comments are required."),
+    misc: Yup.string().max(150, "Misc information can't exceed 150 characters"),
+    ...customFieldValidations,
+  });
+
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    console.log(values);
-    const transferData = {
-      ...values,
-      assets: addedAssets.map((item) => item._id), // Append the array of asset IDs
-      inventory: selectedRowKeys, // Append the array of inventory IDs
+    // Extract custom field values
+    const customFields = fields.map((field) => ({
+      uniqueKey: field.uniqueKey,
+      value: values[field.uniqueKey],
+    }));
+
+    // Remove custom fields from values to get standard fields
+    const standardValues = { ...values };
+    fields.forEach((field) => {
+      delete standardValues[field.uniqueKey];
+    });
+
+    // Prepare payload
+    const payload = {
+      ...standardValues,
+      customFields,
     };
 
-    let response;
-    if (draft) {
-      response = await saveDraftMaterialTransfer(transferData);
-    } else {
-      response = await addMaterialTransfer(transferData);
-    }
-
-    const { status, data } = response;
-
+    const { status, data } = await addMaterialTransfer(payload);
     setSubmitting(false);
     if (status === 200) {
       message.success(data?.message);
       resetForm();
       setAddMaterialTransferVisible(false);
     } else {
-      message.error(data?.message);
+      message.error(data.error);
     }
   };
 
   return (
-    <Formik
-      initialValues={{
-        origination: "",
-        destination: "",
-        materialTransferType: "",
-        transporter: "",
-        attentionTo: "",
-        comments: "",
-        misc: "",
-        assets: [],
-        inventory: [],
-      }}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ isSubmitting, handleSubmit, submitForm }) => (
-        <Form onSubmit={handleSubmit}>
-          <AddAssetPopupMT
-            visible={addAssetPopup}
-            setVisible={setAddAssetPopup}
-            assets={assets}
-            setAddedAssets={setAddedAssets}
-          />
-          <AddInventoryPopupMT
-            visible={addInventoryPopup}
-            setVisible={setAddInventoryPopup}
-            inventory={inventory}
-            setSelectedInventory={setSelectedInventory}
-            selectedRowKeys={selectedRowKeys}
-            setSelectedRowKeys={setSelectedRowKeys}
-          />
-          {console.log("addedAssets", addedAssets)}
-          <Modal
-            maskClosable={false}
-            title={
-              <h1 className="text-lg md:text-2xl mb-5">
-                Add Material Transfer
-              </h1>
-            }
-            open={addMaterialTransferVisible}
-            onCancel={() => setAddMaterialTransferVisible(false)}
-            footer={
-              <div>
-                <div className="mb-3 sm:inline">
+    <>
+      {" "}
+      <AddFieldPopup
+        visible={addFieldPopupVisible}
+        setVisible={setAddFieldPopupVisible}
+        module="materialTransfer"
+        fields={fields}
+        setFields={setFields}
+      />
+      <Formik
+        initialValues={{
+          origination: "",
+          destination: "",
+          materialTransferType: "",
+          transporter: "",
+          attentionTo: "",
+          comments: "",
+          misc: "",
+          assets: [],
+          inventory: [],
+          ...customFieldInitialValues, // Include custom fields
+        }}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting, handleSubmit, submitForm }) => (
+          <Form onSubmit={handleSubmit}>
+            <AddAssetPopupMT
+              visible={addAssetPopup}
+              setVisible={setAddAssetPopup}
+              assets={assets}
+              setAddedAssets={setAddedAssets}
+            />
+            <AddInventoryPopupMT
+              visible={addInventoryPopup}
+              setVisible={setAddInventoryPopup}
+              inventory={inventory}
+              setSelectedInventory={setSelectedInventory}
+              selectedRowKeys={selectedRowKeys}
+              setSelectedRowKeys={setSelectedRowKeys}
+            />
+            {console.log("addedAssets", addedAssets)}
+            <Modal
+              maskClosable={false}
+              title={
+                <h1 className="text-lg md:text-2xl mb-5">
+                  Add Material Transfer
+                </h1>
+              }
+              open={addMaterialTransferVisible}
+              onCancel={() => setAddMaterialTransferVisible(false)}
+              footer={
+                <div>
+                  <div className="mb-3 sm:inline">
+                    <Button
+                      className="mr-2"
+                      onClick={() => setAddMaterialTransferVisible(false)}
+                      outlined
+                      size="small"
+                      text="Cancel"
+                      fullWidth={false}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
                   <Button
-                    className="mr-2"
-                    onClick={() => setAddMaterialTransferVisible(false)}
-                    outlined
+                    className=""
+                    onClick={() => submitForm()}
                     size="small"
-                    text="Cancel"
+                    text="Submit For Approval"
                     fullWidth={false}
                     disabled={isSubmitting}
                   />
                 </div>
+              }
+              width={1000}
+              bodyStyle={{
+                height: "400px",
+                overflowY: "auto",
+                overflowX: "hidden",
+              }}
+            >
+              <div>
+                <div className="flex justify-end mb-5">
+                  <Button
+                    onClick={() => setAddFieldPopupVisible(true)}
+                    text="Manage Fields"
+                    outlined
+                    htmlType="button"
+                    fullWidth={false}
+                  />
+                </div>
+                <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  <InputField
+                    name="origination"
+                    placeholder="Origin"
+                    maxLength={128}
+                  />
+                  <InputField
+                    name="destination"
+                    plac
+                    eholder="Destination"
+                    maxLength={128}
+                  />
+                  <InputField
+                    name="materialTransferType"
+                    placeholder="Transfer Type"
+                    maxLength={128}
+                  />
+                  <InputField
+                    name="transporter"
+                    placeholder="Transporter"
+                    maxLength={128}
+                  />
+                  <InputField
+                    name="attentionTo"
+                    placeholder="Attention To"
+                    maxLength={128}
+                  />
+                </div>
 
-                <Button
-                  className=""
-                  onClick={() => submitForm()}
-                  size="small"
-                  text="Submit For Approval"
-                  fullWidth={false}
-                  disabled={isSubmitting}
-                />
+                <div className="mt-3">
+                  <TextAreaField
+                    name="comments"
+                    placeholder="Comments"
+                    maxLength={150}
+                  />
+                </div>
+
+                <div>
+                  <p className="mt-5">
+                    <strong>Assets</strong>
+                    <Button
+                      className="ml-4 !text-xs !h-7"
+                      size="small"
+                      text="Add Assets"
+                      fullWidth={false}
+                      outlined
+                      onClick={() => setAddAssetPopup(true)}
+                    />
+                  </p>
+                  {addedAssets.length > 0 ? (
+                    <Table
+                      dataSource={addedAssets}
+                      columns={[
+                        { title: "Asset Id", dataIndex: "_id", key: "_id" },
+                        {
+                          title: "Asset Number",
+                          dataIndex: "assetNumber",
+                          key: "assetNumber",
+                        },
+                        {
+                          title: "Asset Condtion",
+                          dataIndex: "assetCondition",
+                          key: "assetCondition",
+                        },
+                        {
+                          title: "Transfer Reason",
+                          dataIndex: "transferReason",
+                          key: "transferReason",
+                        },
+                        //{ title: "Include Asset Parents?", dataIndex: "childAssetsParents", key: "childAssetsParents",},
+                      ]}
+                      pagination={false}
+                      size="small"
+                    />
+                  ) : (
+                    <div className="text-center my-3">
+                      <ExclamationCircleOutlined /> No assets to display
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <p className="my-5">
+                    <strong>Inventory</strong>
+                    <Button
+                      className="ml-4 !text-xs !h-7"
+                      size="small"
+                      text="Add Inventory"
+                      onClick={() => setAddInventoryPopup(true)}
+                      fullWidth={false}
+                      outlined
+                    />
+                  </p>
+                  {selectedInventory.length > 0 ? (
+                    <Table
+                      dataSource={selectedInventory}
+                      columns={columns}
+                      pagination={false}
+                      size="small"
+                    />
+                  ) : (
+                    <div className="text-center my-3">
+                      <ExclamationCircleOutlined /> No Inventory to display
+                    </div>
+                  )}
+                </div>
+
+                <div className="my-3">
+                  <TextAreaField name="misc" placeholder="Misc" />
+                </div>
+
+                {fields.map((field) => {
+                  switch (field.type) {
+                    case "text":
+                      return (
+                        <InputField
+                          key={field.uniqueKey}
+                          name={field.uniqueKey}
+                          placeholder={field.name}
+                        />
+                      );
+                    case "number":
+                      return (
+                        <InputField
+                          key={field.uniqueKey}
+                          name={field.uniqueKey}
+                          placeholder={field.name}
+                          type="number"
+                        />
+                      );
+                    case "dropdown":
+                      return (
+                        <SelectField
+                          key={field.uniqueKey}
+                          name={field.uniqueKey}
+                          placeholder={field.name}
+                          options={field.preFilValue.map((value) => ({
+                            label: value,
+                            value: value,
+                          }))}
+                        />
+                      );
+                    case "date":
+                      return (
+                        <DatePickerField
+                          key={field.uniqueKey}
+                          name={field.uniqueKey}
+                          placeholder={field.name}
+                        />
+                      );
+                    default:
+                      return null;
+                  }
+                })}
               </div>
-            }
-            width={1000}
-            bodyStyle={{
-              height: "400px",
-              overflowY: "auto",
-              overflowX: "hidden",
-            }}
-          >
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-              <InputField
-                name="origination"
-                placeholder="Origin"
-                maxLength={128}
-              />
-              <InputField
-                name="destination"
-                plac
-                eholder="Destination"
-                maxLength={128}
-              />
-              <InputField
-                name="materialTransferType"
-                placeholder="Transfer Type"
-                maxLength={128}
-              />
-              <InputField
-                name="transporter"
-                placeholder="Transporter"
-                maxLength={128}
-              />
-              <InputField
-                name="attentionTo"
-                placeholder="Attention To"
-                maxLength={128}
-              />
-            </div>
-
-            <div className="mt-3">
-              <TextAreaField
-                name="comments"
-                placeholder="Comments"
-                maxLength={150}
-              />
-            </div>
-
-            <div>
-              <p className="mt-5">
-                <strong>Assets</strong>
-                <Button
-                  className="ml-4 !text-xs !h-7"
-                  size="small"
-                  text="Add Assets"
-                  fullWidth={false}
-                  outlined
-                  onClick={() => setAddAssetPopup(true)}
-                />
-              </p>
-              {addedAssets.length > 0 ? (
-                <Table
-                  dataSource={addedAssets}
-                  columns={[
-                    { title: "Asset Id", dataIndex: "_id", key: "_id" },
-                    {
-                      title: "Asset Number",
-                      dataIndex: "assetNumber",
-                      key: "assetNumber",
-                    },
-                    {
-                      title: "Asset Condtion",
-                      dataIndex: "assetCondition",
-                      key: "assetCondition",
-                    },
-                    {
-                      title: "Transfer Reason",
-                      dataIndex: "transferReason",
-                      key: "transferReason",
-                    },
-                    //{ title: "Include Asset Parents?", dataIndex: "childAssetsParents", key: "childAssetsParents",},
-                  ]}
-                  pagination={false}
-                  size="small"
-                />
-              ) : (
-                <div className="text-center my-3">
-                  <ExclamationCircleOutlined /> No assets to display
-                </div>
-              )}
-            </div>
-
-            <div>
-              <p className="my-5">
-                <strong>Inventory</strong>
-                <Button
-                  className="ml-4 !text-xs !h-7"
-                  size="small"
-                  text="Add Inventory"
-                  onClick={() => setAddInventoryPopup(true)}
-                  fullWidth={false}
-                  outlined
-                />
-              </p>
-              {selectedInventory.length > 0 ? (
-                <Table
-                  dataSource={selectedInventory}
-                  columns={columns}
-                  pagination={false}
-                  size="small"
-                />
-              ) : (
-                <div className="text-center my-3">
-                  <ExclamationCircleOutlined /> No Inventory to display
-                </div>
-              )}
-            </div>
-
-            <div className="my-3">
-              <TextAreaField name="misc" placeholder="Misc" />
-            </div>
-          </Modal>
-        </Form>
-      )}
-    </Formik>
+            </Modal>
+          </Form>
+        )}
+      </Formik>
+    </>
   );
 };
 
