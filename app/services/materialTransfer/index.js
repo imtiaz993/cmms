@@ -131,12 +131,12 @@ export const uploadDoc = async (doc) => {
   }
 };
 
-export const uploadLinkDoc = async (doc) => {
+export const uploadLinkDoc = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/material-transfer/uploadLinkDoc",
       method: "POST",
-      data: doc,
+      data: values,
     });
     return { status, data };
   } catch (e) {

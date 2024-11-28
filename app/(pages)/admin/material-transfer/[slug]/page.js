@@ -284,10 +284,12 @@ const MaterialTransferDetail = () => {
       <UploadLinkDocPopup
         visible={uploadLinkDocVisible}
         setVisible={setUploadLinkDocVisible}
+        setDetails={setDetails}
       />
       <UploadDocPopup
         visible={uploadDocVisible}
         setVisible={setUploadDocVisible}
+        setDetails={setDetails}
       />
       <div className="flex justify-between gap-3 mb-5">
         <Button
@@ -511,9 +513,34 @@ const MaterialTransferDetail = () => {
             }
             style={{ marginTop: "20px" }}
           >
-            <div className="text-center my-7">
-              <ExclamationCircleOutlined /> No data to display
-            </div>
+            {details?.documents?.length > 0 ? (
+              <Table
+                columns={[
+                  {
+                    title: "Document Name",
+                    dataIndex: "title",
+                    key: "title",
+                  },
+                  {
+                    title: "Document Type",
+                    dataIndex: "documentType",
+                    key: "documentType",
+                  },
+                  {
+                    title: "Description",
+                    dataIndex: "description",
+                    key: "description",
+                  },
+                ]}
+                dataSource={details?.documents}
+                pagination={false}
+                size="small"
+              />
+            ) : (
+              <div className="text-center my-7">
+                <ExclamationCircleOutlined /> No data to display
+              </div>
+            )}
           </Card>
         </div>
       </div>
