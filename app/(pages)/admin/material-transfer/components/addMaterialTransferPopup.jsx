@@ -18,6 +18,8 @@ import AddInventoryPopupMT from "@/components/addInventoryPopupInMT";
 import { useEffect, useState } from "react";
 import { getFields } from "app/services/customFields";
 import AddFieldPopup from "@/components/addFieldPopup";
+import SelectField from "@/components/common/SelectField";
+import DatePickerField from "@/components/common/DatePickerField";
 
 const columns = [
   {
