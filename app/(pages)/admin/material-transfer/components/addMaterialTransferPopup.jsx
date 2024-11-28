@@ -101,14 +101,10 @@ const columns = [
 const AddMaterialTransferPopup = ({
   addMaterialTransferVisible,
   setAddMaterialTransferVisible,
-  selectedInventory,
-  setSelectedInventory,
   selectedRowKeys,
   setSelectedRowKeys,
 }) => {
-  const { assets } = useSelector((state) => state.assets);
-  const { inventory } = useSelector((state) => state.inventory);
-  const [addedAssets, setAddedAssets] = useState([]);
+  const [addedAssets, setAddedAssets] = useState();
   const [addAssetPopup, setAddAssetPopup] = useState(false);
   const [addInventoryPopup, setAddInventoryPopup] = useState(false);
   const [draft, setDraft] = useState(false);
@@ -118,7 +114,7 @@ const AddMaterialTransferPopup = ({
     console.log(values);
     const transferData = {
       ...values,
-      assets: addedAssets.map((item) => item._id), // Append the array of asset IDs
+      assets: addedAssets, // Append the array of asset IDs
       inventory: selectedRowKeys, // Append the array of inventory IDs
     };
 
@@ -162,14 +158,12 @@ const AddMaterialTransferPopup = ({
           <AddAssetPopupMT
             visible={addAssetPopup}
             setVisible={setAddAssetPopup}
-            assets={assets}
             setAddedAssets={setAddedAssets}
           />
+          {console.log("selected row keys", selectedRowKeys)}
           <AddInventoryPopupMT
             visible={addInventoryPopup}
             setVisible={setAddInventoryPopup}
-            inventory={inventory}
-            setSelectedInventory={setSelectedInventory}
             selectedRowKeys={selectedRowKeys}
             setSelectedRowKeys={setSelectedRowKeys}
           />
@@ -253,30 +247,25 @@ const AddMaterialTransferPopup = ({
 
             <div>
               <p className="mt-5">
-                <strong>Assets</strong>
+                <strong>Asset</strong>
                 <Button
                   className="ml-4 !text-xs !h-7"
                   size="small"
-                  text="Add Assets"
+                  text="Add Asset"
                   fullWidth={false}
                   outlined
                   onClick={() => setAddAssetPopup(true)}
                 />
               </p>
-              {addedAssets.length > 0 ? (
+              {addedAssets ? (
                 <Table
-                  dataSource={addedAssets}
+                  dataSource={[addedAssets]}
                   columns={[
-                    { title: "Asset Id", dataIndex: "_id", key: "_id" },
-                    {
-                      title: "Asset Number",
-                      dataIndex: "assetNumber",
-                      key: "assetNumber",
-                    },
+                    { title: "Asset Id", dataIndex: "id", key: "id" },
                     {
                       title: "Asset Condtion",
-                      dataIndex: "assetCondition",
-                      key: "assetCondition",
+                      dataIndex: "condition",
+                      key: "condition",
                     },
                     {
                       title: "Transfer Reason",
@@ -307,10 +296,24 @@ const AddMaterialTransferPopup = ({
                   outlined
                 />
               </p>
-              {selectedInventory.length > 0 ? (
+              {selectedRowKeys.length > 0 ? (
                 <Table
-                  dataSource={selectedInventory}
-                  columns={columns}
+                  dataSource={selectedRowKeys.map((key) => ({
+                    _id: key,
+                  }))}
+                  columns={[
+                    {
+                      title: "",
+                      dataIndex: "",
+                      key: "",
+                      render: (text, record, index) => index + 1,
+                    },
+                    {
+                      title: "Inventory Id",
+                      dataIndex: "_id",
+                      key: "_id",
+                    },
+                  ]}
                   pagination={false}
                   size="small"
                 />

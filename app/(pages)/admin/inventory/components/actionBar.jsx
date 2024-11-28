@@ -19,8 +19,6 @@ const ActionBar = ({
   columns,
   checkedList,
   setCheckedList,
-  selectedInventory,
-  setSelectedInventory,
   selectedRowKeys,
   setSelectedRowKeys,
   setSearchText,
@@ -66,8 +64,6 @@ const ActionBar = ({
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
           setAddMaterialTransferVisible={setAddMaterialTransferVisible}
-          selectedInventory={selectedInventory}
-          setSelectedInventory={setSelectedInventory}
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
         />
@@ -76,7 +72,7 @@ const ActionBar = ({
         <ChangeToAssetPopup
           addAssetVisible={changeToAssetVisible}
           setAddAssetVisible={setChangeToAssetVisible}
-          selectedRows={selectedInventory}
+          selectedRowKeys={selectedRowKeys}
         />
       )}
       <CreatePurchaseOrderPopup
@@ -177,7 +173,7 @@ const ActionBar = ({
       </div>
       <div className="flex justify-end">
         <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
-          {selectedInventory.length > 0 && (
+          {selectedRowKeys.length > 0 && (
             <Button
               text="New Material Transfer"
               onClick={() => {
@@ -189,7 +185,7 @@ const ActionBar = ({
               className="col-span-2 sm:col-span-1"
             />
           )}
-          {selectedInventory.length == 1 && (
+          {selectedRowKeys.length == 1 && (
             <Button
               text="Change to Asset"
               onClick={() => {

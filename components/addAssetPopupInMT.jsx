@@ -1,14 +1,16 @@
-import { Checkbox, Modal, Select, Table } from "antd";
+import { Checkbox, message, Modal, Select, Table } from "antd";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import Button from "./common/Button";
 import InputField from "./common/InputField";
 import SelectField from "./common/SelectField";
+import { useSelector } from "react-redux";
+import { updateMTAssetInventory } from "app/services/materialTransfer";
 
 const validationSchema = Yup.object().shape({
-  assetNumber: Yup.string().required("Asset is required"),
-  assetCondition: Yup.string().required("Asset Condition is required"),
-  transferReason: Yup.string(),
+  id: Yup.string().required("Asset is required"),
+  condition: Yup.string().required("Asset Condition is required"),
+  transferReason: Yup.string().required("Transfer Reason is required"),
 });
 
 // const columns = [
@@ -70,27 +72,45 @@ const validationSchema = Yup.object().shape({
 //   },
 // ];
 
-const AddAssetPopupMT = ({ visible, setVisible, assets, setAddedAssets }) => {
+const AddAssetPopupMT = ({
+  visible,
+  setVisible,
+  setAddedAssets,
+  materialTransferId,
+  setDetails,
+}) => {
+  const { assets } = useSelector((state) => state.assets);
+
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    console.log(values);
-    // Find the full asset object from the assets array using the assetNumber (or any unique identifier)
-    const selectedAsset = assets.find(
-      (asset) => asset.assetNumber === values.assetNumber
-    );
-    setAddedAssets((assets) => [
-      ...assets,
-      { _id: selectedAsset._id, ...values },
-    ]);
-    resetForm();
-    setVisible(false);
+    setSubmitting(true);
+    if (!materialTransferId) {
+      console.log(values);
+      setAddedAssets(values);
+      setVisible(false);
+      resetForm();
+    } else {
+      const { status, data } = await updateMTAssetInventory({
+        materialTransferId,
+        assets: values,
+      });
+
+      if (status === 200) {
+        message.success(data.message || "Updated successfully");
+        setVisible(false);
+        resetForm();
+        setDetails((prev) => ({ ...prev, assets: values }));
+      } else {
+        message.error(data.message || "Failed to update");
+      }
+    }
+    setSubmitting(false);
   };
   return (
     <Formik
       initialValues={{
-        assetNumber: "",
-        assetCondition: "",
+        id: "",
+        condition: "",
         transferReason: "",
-        childAssetsParents: false,
       }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
@@ -134,15 +154,18 @@ const AddAssetPopupMT = ({ visible, setVisible, assets, setAddedAssets }) => {
           >
             <div className="grid sm:grid-cols-2 md:grid-cols-2 gap-3">
               <SelectField
-                name="assetNumber"
+                name="id"
                 placeholder="Select Asset"
-                options={assets.map((asset) => ({
-                  label: asset.assetNumber + " - " + asset.mainSystem,
-                  value: asset.assetNumber,
-                }))}
+                options={
+                  assets &&
+                  assets.map((asset) => ({
+                    label: asset.assetNumber + " - " + asset.mainSystem,
+                    value: asset._id,
+                  }))
+                }
               />
               <SelectField
-                name="assetCondition"
+                name="condition"
                 placeholder="Asset Condition"
                 options={[
                   { label: "Like New", value: "Like New" },
@@ -166,11 +189,11 @@ const AddAssetPopupMT = ({ visible, setVisible, assets, setAddedAssets }) => {
                   { label: "Other", value: "other" },
                 ]}
               />
-              <div className="w-full">
+              {/* <div className="w-full">
                 <Field as={Checkbox} name="childAssetsParents">
                   Include Asset Parents
                 </Field>
-              </div>
+              </div> */}
             </div>
             {/* <h4 className="mt-4 text-lg font-semibold">Asset Hierarchy</h4>
             <Table

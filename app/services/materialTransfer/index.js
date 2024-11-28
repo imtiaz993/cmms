@@ -171,3 +171,18 @@ export const emailMaterialTransferDetails = async (slug) => {
     }
   }
 };
+
+export const updateMTAssetInventory = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/material-transfer/updateMaterialTransferIA",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
