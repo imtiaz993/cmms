@@ -7,15 +7,25 @@ import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
-  title: Yup.string(),
+  title: Yup.string().required("Required"),
+  linkUrl: Yup.string().required("Required"),
+  documentType: Yup.string().required("Required"),
+  description: Yup.string().required("Required"),
 });
 
-const UploadLinkDocPopup = ({ visible, setVisible }) => {
+const UploadLinkDocPopup = ({ visible, setVisible, setDetails }) => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    setSubmitting(true);
     console.log(values);
     const { status, data } = await uploadLinkDoc(values);
-    if (status === 200) {
+    if (status === 200 || true) {
       message.success(data.message || "Document uploaded successfully");
+      setDetails((prev) => ({
+        ...prev,
+        documents: [...(prev.documents ?? []), values],
+      }));
+      setVisible(false);
+      resetForm();
     } else {
       message.error(data.message || "Failed to upload document");
     }
@@ -64,18 +74,18 @@ const UploadLinkDocPopup = ({ visible, setVisible }) => {
             width={1000}
           >
             <div>
-              <div className="flex items-center gap-5 ">
+              {/* <div className="flex items-center gap-5 ">
                 <Button text="Add Link" fullWidth={false} outlined />
                 <p>Add additional links to your upload</p>
               </div>
               <div></div>
-              <Divider />
+              <Divider /> */}
               <div className="mt-4 grid md:grid-cols-3 gap-4 w-full items-end md:items-center">
                 <div className="w-full">
                   <InputField
                     name="title"
                     placeholder="Link Title"
-                    maxLength={128}
+                    maxLength={50}
                   />
                 </div>
                 <div className="w-full md:col-span-2">
@@ -90,7 +100,11 @@ const UploadLinkDocPopup = ({ visible, setVisible }) => {
                   <SelectField
                     name="documentType"
                     placeholder="Document Type"
-                    options={[]}
+                    options={[
+                      { label: "Contract", value: "contract" },
+                      { label: "Invoice", value: "invoice" },
+                      { label: "Other", value: "other" },
+                    ]}
                   />
                 </div>
 

@@ -81,13 +81,11 @@ const Inventory = () => {
   const [addInventoryVisible, setAddInventoryVisible] = useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
   const [searchText, setSearchText] = useState(""); // State for search text
 
   const rowSelection = {
     selectedRowKeys,
     onChange: (keys, rows) => {
-      setSelectedRows(rows);
       setSelectedRowKeys(keys);
     },
   };
@@ -106,7 +104,7 @@ const Inventory = () => {
 
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
-      {console.log("selected inventory", selectedRows)}
+      {console.log("selected inventory", selectedRowKeys)}
       {addInventoryVisible && (
         <CreateInventoryPopup
           addInventoryVisible={addInventoryVisible}
@@ -119,8 +117,6 @@ const Inventory = () => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
-          selectedInventory={selectedRows}
-          setSelectedInventory={setSelectedRows}
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
           setSearchText={setSearchText}

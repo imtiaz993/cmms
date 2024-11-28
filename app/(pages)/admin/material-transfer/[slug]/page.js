@@ -13,20 +13,36 @@ import ViewAssetsDetailsPopup from "./viewAssetsDetailsPopup";
 import { useEffect, useState } from "react";
 import UploadLinkDocPopup from "./uploadLinkDocPopup";
 import UploadDocPopup from "./uploadDocPopup";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import AddAssetPopupMT from "@/components/addAssetPopupInMT";
-import { emailMaterialTransferDetails, getMaterialTransferDetails, printMaterialTransferDetails } from "app/services/materialTransfer";
+import {
+  emailMaterialTransferDetails,
+  getMaterialTransferDetails,
+  printMaterialTransferDetails,
+} from "app/services/materialTransfer";
+import AddInventoryPopupMT from "@/components/addInventoryPopupInMT";
+import dayjs from "dayjs";
 
 const columns = [
   {
-    title: "Asset",
-    dataIndex: "asset",
-    key: "asset",
+    title: "Asset Number",
+    dataIndex: "id",
+    key: "id",
   },
   {
     title: "Description",
     dataIndex: "description",
     key: "description",
+  },
+  {
+    title: "Condition",
+    dataIndex: "condition",
+    key: "condition",
+  },
+  {
+    title: "Trans. Reason",
+    dataIndex: "transferReason",
+    key: "transferReason",
   },
   {
     title: "Make",
@@ -39,19 +55,9 @@ const columns = [
     key: "modal",
   },
   {
-    title: "Serial Number",
+    title: "Sr#",
     dataIndex: "serialNumber",
     key: "serialNumber",
-  },
-  {
-    title: "Condition",
-    dataIndex: "condition",
-    key: "condition",
-  },
-  {
-    title: "Trans. Reason",
-    dataIndex: "transReason",
-    key: "transReason",
   },
 ];
 
@@ -91,11 +97,12 @@ const MaterialTransferDetail = () => {
   const [uploadLinkDocVisible, setUploadLinkDocVisible] = useState(false);
   const [uploadDocVisible, setUploadDocVisible] = useState(false);
   const [addAssetPopup, setAddAssetPopup] = useState(false);
+  const [addInventoryPopup, setAddInventoryPopup] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const router = useRouter();
-
   // Extract the slug from the URL
-  const url = window.location.href;
-  const urlParts = url.split("/");
+  const pathname = usePathname();
+  const urlParts = pathname.split("/");
   const slug = urlParts[urlParts.length - 1];
 
   const { Step } = Steps;
@@ -114,15 +121,18 @@ const MaterialTransferDetail = () => {
           <AddAssetPopupMT
             visible={addAssetPopup}
             setVisible={setAddAssetPopup}
+            materialTransferId={slug}
+            setDetails={setDetails}
           />
+
           <div className="flex gap-3 justify-end mt-3 xl:mt-0">
-            <Button
+            {/* <Button
               type="primary"
               className="!h-7 md:!h-9"
               onClick={() => setAssetDetailsPopup(true)}
               fullWidth={false}
               text="View Details"
-            />
+            /> */}
 
             <Button
               type="primary"
@@ -144,7 +154,7 @@ const MaterialTransferDetail = () => {
             loading={false}
             size={"small"}
             columns={columns}
-            dataSource={data}
+            dataSource={[details?.assets]}
             pagination={{
               total: data.length,
               current: 1,
@@ -164,11 +174,67 @@ const MaterialTransferDetail = () => {
     },
     {
       label: "Inventory",
-      children: (
-        <div className="text-center my-7">
-          <ExclamationCircleOutlined /> Data not available
-        </div>
-      ),
+      children:
+        details?.inventory.length > 0 ? (
+          <div>
+            {addInventoryPopup && (
+              <AddInventoryPopupMT
+                visible={addInventoryPopup}
+                setVisible={setAddInventoryPopup}
+                selectedRowKeys={selectedRowKeys}
+                setSelectedRowKeys={setSelectedRowKeys}
+                materialTransferId={slug}
+              />
+            )}
+            {console.log("selected: ", selectedRowKeys)}
+            <div className="text-end mt-3 xl:mt-0">
+              <Button
+                type="primary"
+                className="!h-7 md:!h-9"
+                fullWidth={false}
+                text="Add Inventory"
+                onClick={() => setAddInventoryPopup(true)}
+              />
+            </div>
+            <Table
+              loading={false}
+              size={"small"}
+              columns={[
+                {
+                  title: "",
+                  dataIndex: "",
+                  key: "",
+                  render: (text, record, index) => index + 1,
+                },
+                {
+                  title: "Inventory Id",
+                  dataIndex: "_id",
+                  key: "_id",
+                },
+              ]}
+              dataSource={selectedRowKeys.map((id) => ({
+                _id: id,
+              }))}
+              pagination={{
+                total: details?.inventory.length,
+                current: 1,
+                pageSize: 5,
+                showSizeChanger: true,
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`,
+                onChange: () => {},
+              }}
+              style={{
+                overflow: "auto",
+                marginTop: 16,
+              }}
+            />
+          </div>
+        ) : (
+          <div className="text-center my-7">
+            <ExclamationCircleOutlined /> Data not available
+          </div>
+        ),
     },
     {
       label: "Misc",
@@ -185,7 +251,8 @@ const MaterialTransferDetail = () => {
       const { status, data } = await getMaterialTransferDetails(slug);
       if (status === 200) {
         console.log(data);
-        setDetails(data);
+        setDetails(data?.data);
+        setSelectedRowKeys(data?.data?.inventory);
       } else {
         message.error(data?.message || "Failed to fetch data");
       }
@@ -217,10 +284,12 @@ const MaterialTransferDetail = () => {
       <UploadLinkDocPopup
         visible={uploadLinkDocVisible}
         setVisible={setUploadLinkDocVisible}
+        setDetails={setDetails}
       />
       <UploadDocPopup
         visible={uploadDocVisible}
         setVisible={setUploadDocVisible}
+        setDetails={setDetails}
       />
       <div className="flex justify-between gap-3 mb-5">
         <Button
@@ -263,19 +332,19 @@ const MaterialTransferDetail = () => {
             <div className="grid md:grid-cols-2 mx-2 gap-3">
               <div>
                 <span className="opacity-70 mr-3">Origin</span>
-                <span className=""> Rig 23 - Electrical Systems</span>
+                <span className="">{details?.origin}</span>
               </div>
               <div>
                 <span className="opacity-70 mr-3">Transporter</span>
-                <span className=""> Rig 23</span>
+                <span className="">{details?.transporter}</span>
               </div>
               <div>
                 <span className="opacity-70 mr-3">Destination</span>
-                <span className=""> Rig 21 - Electrical Systems</span>
+                <span className="">{details?.destination}</span>
               </div>
               <div>
                 <span className="opacity-70 mr-3">Attention To</span>
-                <span className="">Aaron Cannon</span>
+                <span className="">{details?.attentionTo}</span>
               </div>
             </div>
           </Card>
@@ -288,27 +357,27 @@ const MaterialTransferDetail = () => {
             <div className="grid md:grid-cols-3 mx-2 gap-3">
               <div>
                 <span className="opacity-70 mr-3">Creator</span>
-                <span className="">Manager, Rig 23</span>
+                <span className="">{details?.createdBy}</span>
               </div>
               <div>
                 <span className="opacity-70 mr-3">Created On</span>
-                <span className="">Feb 12, 2024</span>
+                <span className="">
+                  {dayjs(details?.createdAt).format("MMM DD, YYYY")}
+                </span>
               </div>
               <div className="flex">
                 <span className="opacity-70 mr-3 block">
                   Material Transfer Type
                 </span>
-                <span className="">NORAM Yard to Rig</span>
+                <span className="">{details?.materialTransferType}</span>
               </div>
               <div>
                 <span className="opacity-70 mr-3">Cautions</span>
-                <span className="">Non-Hazardous</span>
+                <span className="">--</span>
               </div>
               <div className="md:col-span-2">
                 <span className="opacity-70 mr-3">Comments</span>
-                <span className="">
-                  Ship 444t 125hp rig house motor to rig 21
-                </span>
+                <span className="">{details?.comments}</span>
               </div>
             </div>
           </Card>
@@ -444,9 +513,34 @@ const MaterialTransferDetail = () => {
             }
             style={{ marginTop: "20px" }}
           >
-            <div className="text-center my-7">
-              <ExclamationCircleOutlined /> No data to display
-            </div>
+            {details?.documents?.length > 0 ? (
+              <Table
+                columns={[
+                  {
+                    title: "Document Name",
+                    dataIndex: "title",
+                    key: "title",
+                  },
+                  {
+                    title: "Document Type",
+                    dataIndex: "documentType",
+                    key: "documentType",
+                  },
+                  {
+                    title: "Description",
+                    dataIndex: "description",
+                    key: "description",
+                  },
+                ]}
+                dataSource={details?.documents}
+                pagination={false}
+                size="small"
+              />
+            ) : (
+              <div className="text-center my-7">
+                <ExclamationCircleOutlined /> No data to display
+              </div>
+            )}
           </Card>
         </div>
       </div>

@@ -131,12 +131,12 @@ export const uploadDoc = async (doc) => {
   }
 };
 
-export const uploadLinkDoc = async (doc) => {
+export const uploadLinkDoc = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/material-transfer/uploadLinkDoc",
       method: "POST",
-      data: doc,
+      data: values,
     });
     return { status, data };
   } catch (e) {
@@ -163,6 +163,21 @@ export const emailMaterialTransferDetails = async (slug) => {
   try {
     const { status, data } = await authRequest({
       url: "/material-transfer/emailMaterialTransferDetails?slug=" + slug,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const updateMTAssetInventory = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/material-transfer/updateMaterialTransferIA",
+      method: "POST",
+      data: values,
     });
     return { status, data };
   } catch (e) {

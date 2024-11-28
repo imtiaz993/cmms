@@ -137,9 +137,7 @@ const MaterialTransfer = () => {
             return {
               onClick: () => {
                 console.log("record", record);
-                router.push(
-                  `/admin/material-transfer/${record?.materialTransfer}`
-                );
+                router.push(`/admin/material-transfer/${record?._id}`);
               },
             };
           }}
@@ -152,15 +150,15 @@ const MaterialTransfer = () => {
             filteredData.length > 0 &&
             filteredData.map((i, index) => ({ ...i, key: index }))
           }
-          pagination={{
-            total: filteredData?.length,
-            current: 1,
-            pageSize: 10,
-            showSizeChanger: true,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} items`,
-            onChange: () => {},
-          }}
+          // pagination={{
+          //   total: filteredData?.length,
+          //   current: 1,
+          //   pageSize: 10,
+          //   showSizeChanger: true,
+          //   showTotal: (total, range) =>
+          //     `${range[0]}-${range[1]} of ${total} items`,
+          //   onChange: () => {},
+          // }}
           style={{
             marginTop: 16,
             overflow: "auto",

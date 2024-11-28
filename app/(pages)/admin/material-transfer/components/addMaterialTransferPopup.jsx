@@ -86,8 +86,6 @@ const columns = [
 const AddMaterialTransferPopup = ({
   addMaterialTransferVisible,
   setAddMaterialTransferVisible,
-  selectedInventory,
-  setSelectedInventory,
   selectedRowKeys,
   setSelectedRowKeys,
 }) => {
@@ -97,7 +95,7 @@ const AddMaterialTransferPopup = ({
 
   const { assets } = useSelector((state) => state.assets);
   const { inventory } = useSelector((state) => state.inventory);
-  const [addedAssets, setAddedAssets] = useState([]);
+  const [addedAssets, setAddedAssets] = useState();
   const [addAssetPopup, setAddAssetPopup] = useState(false);
   const [addInventoryPopup, setAddInventoryPopup] = useState(false);
   const [draft, setDraft] = useState(false);
@@ -168,21 +166,19 @@ const AddMaterialTransferPopup = ({
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    // Extract custom field values
     const customFields = fields.map((field) => ({
       uniqueKey: field.uniqueKey,
       value: values[field.uniqueKey],
     }));
-
-    // Remove custom fields from values to get standard fields
-    const standardValues = { ...values };
+    console.log(values);
     fields.forEach((field) => {
       delete standardValues[field.uniqueKey];
     });
 
-    // Prepare payload
-    const payload = {
-      ...standardValues,
+    const transferData = {
+      ...values,
+      assets: addedAssets, // Append the array of asset IDs
+      inventory: selectedRowKeys, // Append the array of inventory IDs
       customFields,
     };
 
@@ -199,7 +195,6 @@ const AddMaterialTransferPopup = ({
 
   return (
     <>
-      {" "}
       <AddFieldPopup
         visible={addFieldPopupVisible}
         setVisible={setAddFieldPopupVisible}
@@ -228,14 +223,12 @@ const AddMaterialTransferPopup = ({
             <AddAssetPopupMT
               visible={addAssetPopup}
               setVisible={setAddAssetPopup}
-              assets={assets}
               setAddedAssets={setAddedAssets}
             />
+            {console.log("selected row keys", selectedRowKeys)}
             <AddInventoryPopupMT
               visible={addInventoryPopup}
               setVisible={setAddInventoryPopup}
-              inventory={inventory}
-              setSelectedInventory={setSelectedInventory}
               selectedRowKeys={selectedRowKeys}
               setSelectedRowKeys={setSelectedRowKeys}
             />
@@ -253,24 +246,14 @@ const AddMaterialTransferPopup = ({
                 <div>
                   <div className="mb-3 sm:inline">
                     <Button
-                      className="mr-2"
-                      onClick={() => setAddMaterialTransferVisible(false)}
-                      outlined
+                      className=""
+                      onClick={() => submitForm()}
                       size="small"
-                      text="Cancel"
+                      text="Submit For Approval"
                       fullWidth={false}
                       disabled={isSubmitting}
                     />
                   </div>
-
-                  <Button
-                    className=""
-                    onClick={() => submitForm()}
-                    size="small"
-                    text="Submit For Approval"
-                    fullWidth={false}
-                    disabled={isSubmitting}
-                  />
                 </div>
               }
               width={1000}
@@ -280,171 +263,168 @@ const AddMaterialTransferPopup = ({
                 overflowX: "hidden",
               }}
             >
-              <div>
-                <div className="flex justify-end mb-5">
-                  <Button
-                    onClick={() => setAddFieldPopupVisible(true)}
-                    text="Manage Fields"
-                    outlined
-                    htmlType="button"
-                    fullWidth={false}
-                  />
-                </div>
-                <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  <InputField
-                    name="origination"
-                    placeholder="Origin"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="destination"
-                    plac
-                    eholder="Destination"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="materialTransferType"
-                    placeholder="Transfer Type"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="transporter"
-                    placeholder="Transporter"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="attentionTo"
-                    placeholder="Attention To"
-                    maxLength={128}
-                  />
-                </div>
-
-                <div className="mt-3">
-                  <TextAreaField
-                    name="comments"
-                    placeholder="Comments"
-                    maxLength={150}
-                  />
-                </div>
-
-                <div>
-                  <p className="mt-5">
-                    <strong>Assets</strong>
-                    <Button
-                      className="ml-4 !text-xs !h-7"
-                      size="small"
-                      text="Add Assets"
-                      fullWidth={false}
-                      outlined
-                      onClick={() => setAddAssetPopup(true)}
-                    />
-                  </p>
-                  {addedAssets.length > 0 ? (
-                    <Table
-                      dataSource={addedAssets}
-                      columns={[
-                        { title: "Asset Id", dataIndex: "_id", key: "_id" },
-                        {
-                          title: "Asset Number",
-                          dataIndex: "assetNumber",
-                          key: "assetNumber",
-                        },
-                        {
-                          title: "Asset Condtion",
-                          dataIndex: "assetCondition",
-                          key: "assetCondition",
-                        },
-                        {
-                          title: "Transfer Reason",
-                          dataIndex: "transferReason",
-                          key: "transferReason",
-                        },
-                        //{ title: "Include Asset Parents?", dataIndex: "childAssetsParents", key: "childAssetsParents",},
-                      ]}
-                      pagination={false}
-                      size="small"
-                    />
-                  ) : (
-                    <div className="text-center my-3">
-                      <ExclamationCircleOutlined /> No assets to display
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <p className="my-5">
-                    <strong>Inventory</strong>
-                    <Button
-                      className="ml-4 !text-xs !h-7"
-                      size="small"
-                      text="Add Inventory"
-                      onClick={() => setAddInventoryPopup(true)}
-                      fullWidth={false}
-                      outlined
-                    />
-                  </p>
-                  {selectedInventory.length > 0 ? (
-                    <Table
-                      dataSource={selectedInventory}
-                      columns={columns}
-                      pagination={false}
-                      size="small"
-                    />
-                  ) : (
-                    <div className="text-center my-3">
-                      <ExclamationCircleOutlined /> No Inventory to display
-                    </div>
-                  )}
-                </div>
-
-                <div className="my-3">
-                  <TextAreaField name="misc" placeholder="Misc" />
-                </div>
-
-                {fields.map((field) => {
-                  switch (field.type) {
-                    case "text":
-                      return (
-                        <InputField
-                          key={field.uniqueKey}
-                          name={field.uniqueKey}
-                          placeholder={field.name}
-                        />
-                      );
-                    case "number":
-                      return (
-                        <InputField
-                          key={field.uniqueKey}
-                          name={field.uniqueKey}
-                          placeholder={field.name}
-                          type="number"
-                        />
-                      );
-                    case "dropdown":
-                      return (
-                        <SelectField
-                          key={field.uniqueKey}
-                          name={field.uniqueKey}
-                          placeholder={field.name}
-                          options={field.preFilValue.map((value) => ({
-                            label: value,
-                            value: value,
-                          }))}
-                        />
-                      );
-                    case "date":
-                      return (
-                        <DatePickerField
-                          key={field.uniqueKey}
-                          name={field.uniqueKey}
-                          placeholder={field.name}
-                        />
-                      );
-                    default:
-                      return null;
-                  }
-                })}
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <InputField
+                  name="origination"
+                  placeholder="Origin"
+                  maxLength={128}
+                />
+                <InputField
+                  name="destination"
+                  plac
+                  eholder="Destination"
+                  maxLength={128}
+                />
+                <InputField
+                  name="materialTransferType"
+                  placeholder="Transfer Type"
+                  maxLength={128}
+                />
+                <InputField
+                  name="transporter"
+                  placeholder="Transporter"
+                  maxLength={128}
+                />
+                <InputField
+                  name="attentionTo"
+                  placeholder="Attention To"
+                  maxLength={128}
+                />
               </div>
+
+              <div className="mt-3">
+                <TextAreaField
+                  name="comments"
+                  placeholder="Comments"
+                  maxLength={150}
+                />
+              </div>
+
+              <div>
+                <p className="mt-5">
+                  <strong>Asset</strong>
+                  <Button
+                    className="ml-4 !text-xs !h-7"
+                    size="small"
+                    text="Add Asset"
+                    fullWidth={false}
+                    outlined
+                    onClick={() => setAddAssetPopup(true)}
+                  />
+                </p>
+                {addedAssets ? (
+                  <Table
+                    dataSource={[addedAssets]}
+                    columns={[
+                      { title: "Asset Id", dataIndex: "id", key: "id" },
+                      {
+                        title: "Asset Condtion",
+                        dataIndex: "condition",
+                        key: "condition",
+                      },
+                      {
+                        title: "Transfer Reason",
+                        dataIndex: "transferReason",
+                        key: "transferReason",
+                      },
+                      //{ title: "Include Asset Parents?", dataIndex: "childAssetsParents", key: "childAssetsParents",},
+                    ]}
+                    pagination={false}
+                    size="small"
+                  />
+                ) : (
+                  <div className="text-center my-3">
+                    <ExclamationCircleOutlined /> No assets to display
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <p className="my-5">
+                  <strong>Inventory</strong>
+                  <Button
+                    className="ml-4 !text-xs !h-7"
+                    size="small"
+                    text="Add Inventory"
+                    onClick={() => setAddInventoryPopup(true)}
+                    fullWidth={false}
+                    outlined
+                  />
+                </p>
+                {selectedRowKeys.length > 0 ? (
+                  <Table
+                    dataSource={selectedRowKeys.map((key) => ({
+                      _id: key,
+                    }))}
+                    columns={[
+                      {
+                        title: "",
+                        dataIndex: "",
+                        key: "",
+                        render: (text, record, index) => index + 1,
+                      },
+                      {
+                        title: "Inventory Id",
+                        dataIndex: "_id",
+                        key: "_id",
+                      },
+                    ]}
+                    pagination={false}
+                    size="small"
+                  />
+                ) : (
+                  <div className="text-center my-3">
+                    <ExclamationCircleOutlined /> No Inventory to display
+                  </div>
+                )}
+              </div>
+
+              <div className="my-3">
+                <TextAreaField name="misc" placeholder="Misc" />
+              </div>
+              {fields.map((field) => {
+                switch (field.type) {
+                  case "text":
+                    return (
+                      <InputField
+                        key={field.uniqueKey}
+                        name={field.uniqueKey}
+                        placeholder={field.name}
+                      />
+                    );
+                  case "number":
+                    return (
+                      <InputField
+                        key={field.uniqueKey}
+                        name={field.uniqueKey}
+                        placeholder={field.name}
+                        type="number"
+                      />
+                    );
+                  case "dropdown":
+                    return (
+                      <SelectField
+                        key={field.uniqueKey}
+                        name={field.uniqueKey}
+                        placeholder={field.name}
+                        options={field.preFilValue.map((value) => ({
+                          label: value,
+                          value: value,
+                        }))}
+                      />
+                    );
+                  case "date":
+                    return (
+                      <DatePickerField
+                        key={field.uniqueKey}
+                        name={field.uniqueKey}
+                        placeholder={field.name}
+                      />
+                    );
+                  default:
+                    return null;
+                }
+              })}
             </Modal>
           </Form>
         )}
