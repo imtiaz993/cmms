@@ -44,9 +44,9 @@ const validationSchema = Yup.object().shape({
 const ChangeToAssetPopup = ({
   addAssetVisible,
   setAddAssetVisible,
-  selectedRows,
+  selectedRowKeys,
 }) => {
-  console.log(selectedRows);
+  console.log(selectedRowKeys);
 
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     const { status, data } = await changeInventoryToAsset(values);
@@ -63,7 +63,7 @@ const ChangeToAssetPopup = ({
   return (
     <Formik
       initialValues={{
-        inventoryId: selectedRows[0]._id,
+        inventoryId: selectedRowKeys[0]._id,
         physicalLocation: "",
         mainSystem: "",
         rfidBarcode: "",

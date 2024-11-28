@@ -1,7 +1,8 @@
-import { Modal, Table } from "antd";
+import { message, Modal, Table } from "antd";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import Button from "./common/Button";
+import { updateMTAssetInventory } from "app/services/materialTransfer";
 
 const columns = [
   {
@@ -71,45 +72,73 @@ const defaultCheckedList = columns.map((item) => item.key);
 const AddInventoryPopupMT = ({
   visible,
   setVisible,
-  inventory,
-  setSelectedInventory,
   selectedRowKeys,
   setSelectedRowKeys,
+  materialTransferId,
 }) => {
+  const { inventory } = useSelector((state) => state.inventory);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const [selected, setSelected] = useState(selectedRowKeys);
+  console.log("selectee", selected);
+  console.log("selectee kjey", selectedRowKeys);
 
   const rowSelection = {
-    selectedRowKeys,
+    selectedRowKeys: selected,
     onChange: (keys, rows) => {
-      setSelectedInventory(rows);
-      setSelectedRowKeys(keys);
+      setSelected(keys);
     },
   };
 
+  const handleSubmit = async () => {
+    console.log(selected);
+    if (materialTransferId) {
+      const { status, data } = await updateMTAssetInventory({
+        materialTransferId,
+        inventory: selected,
+      });
+
+      if (status === 200) {
+        message.success(data.message || "Updated successfully");
+        setSelectedRowKeys(selected);
+      } else {
+        message.error(data.message || "Something went wrong");
+      }
+      setVisible(false);
+    } else {
+      setSelectedRowKeys(selected);
+      setVisible(false);
+    }
+  };
   return (
     <Modal
       title="Add Inventory"
       open={visible}
-      onCancel={() => setVisible(false)}
+      onCancel={() => {
+        setSelected(selectedRowKeys);
+        setVisible(false);
+      }}
       width={800}
       footer={
         <div>
           <Button
             className="mr-2"
-            onClick={() => setVisible(false)}
+            onClick={() => {
+              setSelected(selectedRowKeys);
+              setVisible(false);
+            }}
             outlined
             size="small"
-            text="Close"
+            text="Cancel"
             fullWidth={false}
           />
-          {/* <Button
+          <Button
             className=""
-            onClick={() => setVisible(false)}
+            onClick={() => handleSubmit()}
             size="small"
             text="Save"
             fullWidth={false}
-          /> */}
+          />
         </div>
       }
     >
