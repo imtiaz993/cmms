@@ -18,7 +18,7 @@ export default function Home() {
         if (data?.role === "admin") {
           router?.replace("/admin/dashboard");
         }
-        router.replace("/dashboard");
+        router.replace("/admin/dashboard");
       } else {
         router.replace("/login");
       }
