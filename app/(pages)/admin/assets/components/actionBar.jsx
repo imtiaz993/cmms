@@ -21,6 +21,7 @@ const ActionBar = ({
   const [showHierarchy, setShowHierarchy] = useState(false);
   //Add Field
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
+  const [filterDropdown, setFilterDropdown] = useState(null);
 
   const options = columns.map(({ key, title }, index) => ({
     label: title,
@@ -70,7 +71,11 @@ const ActionBar = ({
             outlined
           />
           <Dropdown
-            dropdownRender={() => <AssetFilter />}
+            open={filterDropdown}
+            onOpenChange={setFilterDropdown}
+            dropdownRender={() => (
+              <AssetFilter closeDropdown={() => setFilterDropdown(false)} />
+            )}
             trigger={["click"]}
             arrow
             placement="bottomCenter"
@@ -80,6 +85,7 @@ const ActionBar = ({
               outlined
               style={{ padding: "4px 0px" }}
               prefix={<FilterOutlined />}
+              onClick={() => setFilterDropdown(!filterDropdown)}
             />
           </Dropdown>
           <Dropdown
