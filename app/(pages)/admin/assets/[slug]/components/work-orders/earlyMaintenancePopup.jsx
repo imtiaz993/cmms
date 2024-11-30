@@ -165,6 +165,7 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
                             <Menu.Item
                               key={option.value}
                               style={{ display: "flex", alignItems: "center" }}
+                              onClick={(e) => e?.stopPropagation()}
                             >
                               <Checkbox
                                 value={option.value}

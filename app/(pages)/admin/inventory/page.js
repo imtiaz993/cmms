@@ -1,9 +1,8 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
-import { message, Table } from "antd";
+import { useMemo, useState } from "react";
+import { Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateInventoryPopup from "./components/createInventoryPopup";
-import { getInventory } from "app/services/inventory";
 import { useSelector } from "react-redux";
 
 const columns = [

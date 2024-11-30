@@ -13,7 +13,7 @@ const assetsSlice = createSlice({
     setAssets(state, action) {
       state.assets = action.payload;
     },
-    addAsset(state, action) {
+    updateAsset(state, action) {
       state.assets.push(action.payload);
     },
     setAssetsLoading(state, action) {
@@ -25,6 +25,6 @@ const assetsSlice = createSlice({
   },
 });
 
-export const { setAssets, addAsset, setAssetsLoading, setAssetsError } =
+export const { setAssets, updateAsset, setAssetsLoading, setAssetsError } =
   assetsSlice.actions;
 export default assetsSlice.reducer;

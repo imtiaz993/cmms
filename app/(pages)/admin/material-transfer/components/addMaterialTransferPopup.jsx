@@ -20,6 +20,7 @@ import { getFields } from "app/services/customFields";
 import AddFieldPopup from "@/components/addFieldPopup";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
+import { rigs } from "@/constants/rigsAndSystems";
 
 const columns = [
   {
@@ -90,6 +91,7 @@ const AddMaterialTransferPopup = ({
   setAddMaterialTransferVisible,
   selectedRowKeys,
   setSelectedRowKeys,
+  setMaterialTransferData,
 }) => {
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [fields, setFields] = useState([]);
@@ -149,12 +151,13 @@ const AddMaterialTransferPopup = ({
   }, {});
 
   const validationSchema = Yup.object().shape({
-    origination: Yup.string()
-      .max(128, "Origination can't exceed 128 characters")
-      .required("Origination is required."),
+    origination: Yup.string().required("Origination is required."),
     destination: Yup.string()
-      .max(128, "Destination can't exceed 128 characters")
-      .required("Destination is required."),
+      .required("Destination is required.")
+      .notOneOf(
+        [Yup.ref("origination")],
+        "Destination must be different from Origination."
+      ),
     materialTransferType: Yup.string().required(
       "Material Transfer Type is required."
     ),
@@ -173,6 +176,7 @@ const AddMaterialTransferPopup = ({
       value: values[field.uniqueKey],
     }));
     console.log(values);
+    const standardValues = { ...values };
     fields.forEach((field) => {
       delete standardValues[field.uniqueKey];
     });
@@ -184,11 +188,12 @@ const AddMaterialTransferPopup = ({
       customFields,
     };
 
-    const { status, data } = await addMaterialTransfer(payload);
+    const { status, data } = await addMaterialTransfer(transferData);
     setSubmitting(false);
     if (status === 200) {
       message.success(data?.message);
       resetForm();
+      setMaterialTransferData((prev) => [...prev, data.data]);
       setAddMaterialTransferVisible(false);
     } else {
       message.error(data.error);
@@ -265,17 +270,25 @@ const AddMaterialTransferPopup = ({
                 overflowX: "hidden",
               }}
             >
+              <div className="flex justify-end mb-5">
+                <Button
+                  onClick={() => setAddFieldPopupVisible(true)}
+                  text="Manage Fields"
+                  outlined
+                  htmlType="button"
+                  fullWidth={false}
+                />
+              </div>
               <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-                <InputField
+                <SelectField
                   name="origination"
                   placeholder="Origin"
-                  maxLength={128}
+                  options={rigs.map((i) => ({ label: i.name, value: i.id }))}
                 />
-                <InputField
+                <SelectField
                   name="destination"
-                  plac
-                  eholder="Destination"
-                  maxLength={128}
+                  placeholder="Destination"
+                  options={rigs.map((i) => ({ label: i.name, value: i.id }))}
                 />
                 <InputField
                   name="materialTransferType"
@@ -318,7 +331,13 @@ const AddMaterialTransferPopup = ({
                   <Table
                     dataSource={[addedAssets]}
                     columns={[
-                      { title: "Asset Id", dataIndex: "id", key: "id" },
+                      {
+                        title: "Asset Id",
+                        dataIndex: "id",
+                        key: "id",
+                        render: (id) =>
+                          assets.find((i) => i._id === id).assetNumber,
+                      },
                       {
                         title: "Asset Condtion",
                         dataIndex: "condition",
@@ -369,6 +388,8 @@ const AddMaterialTransferPopup = ({
                         title: "Inventory Id",
                         dataIndex: "_id",
                         key: "_id",
+                        render: (_id) =>
+                          inventory.find((i) => i._id === _id)?.partName,
                       },
                     ]}
                     pagination={false}
@@ -384,49 +405,54 @@ const AddMaterialTransferPopup = ({
               <div className="my-3">
                 <TextAreaField name="misc" placeholder="Misc" />
               </div>
-              {fields.map((field) => {
-                switch (field.type) {
-                  case "text":
-                    return (
-                      <InputField
-                        key={field.uniqueKey}
-                        name={field.uniqueKey}
-                        placeholder={field.name}
-                      />
-                    );
-                  case "number":
-                    return (
-                      <InputField
-                        key={field.uniqueKey}
-                        name={field.uniqueKey}
-                        placeholder={field.name}
-                        type="number"
-                      />
-                    );
-                  case "dropdown":
-                    return (
-                      <SelectField
-                        key={field.uniqueKey}
-                        name={field.uniqueKey}
-                        placeholder={field.name}
-                        options={field.preFilValue.map((value) => ({
-                          label: value,
-                          value: value,
-                        }))}
-                      />
-                    );
-                  case "date":
-                    return (
-                      <DatePickerField
-                        key={field.uniqueKey}
-                        name={field.uniqueKey}
-                        placeholder={field.name}
-                      />
-                    );
-                  default:
-                    return null;
-                }
-              })}
+              <div className="mt-5">
+                <h1 className="text-base font-medium mb-3">Custom Fields:</h1>
+              </div>
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                {fields.map((field) => {
+                  switch (field.type) {
+                    case "text":
+                      return (
+                        <InputField
+                          key={field.uniqueKey}
+                          name={field.uniqueKey}
+                          placeholder={field.name}
+                        />
+                      );
+                    case "number":
+                      return (
+                        <InputField
+                          key={field.uniqueKey}
+                          name={field.uniqueKey}
+                          placeholder={field.name}
+                          type="number"
+                        />
+                      );
+                    case "dropdown":
+                      return (
+                        <SelectField
+                          key={field.uniqueKey}
+                          name={field.uniqueKey}
+                          placeholder={field.name}
+                          options={field.preFilValue.map((value) => ({
+                            label: value,
+                            value: value,
+                          }))}
+                        />
+                      );
+                    case "date":
+                      return (
+                        <DatePickerField
+                          key={field.uniqueKey}
+                          name={field.uniqueKey}
+                          placeholder={field.name}
+                        />
+                      );
+                    default:
+                      return null;
+                  }
+                })}
+              </div>
             </Modal>
           </Form>
         )}

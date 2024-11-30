@@ -10,12 +10,14 @@ import TextAreaField from "@/components/common/TextAreaField";
 import { useEffect, useState } from "react";
 import { getFields } from "app/services/customFields";
 import AddFieldPopup from "@/components/addFieldPopup";
+import { useDispatch } from "react-redux";
+import { updateInventory } from "app/redux/slices/inventoriesSlice";
 
 const CreateInventoryPopup = ({
   addInventoryVisible,
   setAddInventoryVisible,
-  handleFetchInventory,
 }) => {
+  const dispatch = useDispatch();
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -106,7 +108,7 @@ const CreateInventoryPopup = ({
     if (status === 200) {
       message.success(data?.message);
       resetForm();
-      handleFetchInventory();
+      dispatch(updateInventory(data.data)); // Store inventory in Redux
       setAddInventoryVisible(false);
     } else {
       message.error(data.error);
@@ -258,6 +260,9 @@ const CreateInventoryPopup = ({
                       name="receivedDate"
                       placeholder="Received Date"
                     />
+                    <div className="md:col-span-3 mt-5">
+                      <h1 className="text-base font-medium">Custom Fields:</h1>
+                    </div>
                     {fields.map((field) => {
                       switch (field.type) {
                         case "text":

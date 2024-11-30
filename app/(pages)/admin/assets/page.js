@@ -6,6 +6,7 @@ import CreateAssetPopup from "./components/createAssetPopup";
 import { useRouter } from "next/navigation";
 import { getAssets } from "app/services/assets";
 import { useSelector } from "react-redux";
+import { rigs, systems } from "@/constants/rigsAndSystems";
 
 // Common column structure
 const baseColumns = [
@@ -14,6 +15,8 @@ const baseColumns = [
     title: "Physical Location",
     dataIndex: "physicalLocation",
     key: "physicalLocation",
+    render: (physicalLocation) =>
+      rigs.find((i) => i.id === physicalLocation).name,
   },
   { title: "Serial #", dataIndex: "serialNumber", key: "serialNumber" },
   { title: "Asset #", dataIndex: "assetNumber", key: "assetNumber" },
@@ -47,7 +50,12 @@ const Assets = () => {
 
   // Filter columns dynamically based on checkedList
   const mainColumns = [
-    { title: "Main System", dataIndex: "mainSystem", key: "mainSystem" },
+    {
+      title: "Main System",
+      dataIndex: "mainSystem",
+      key: "mainSystem",
+      render: (mainSystem) => systems.find((i) => i.id === mainSystem).name,
+    },
     ...baseColumns.filter((col) => checkedList.includes(col.key)),
   ];
 

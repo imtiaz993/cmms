@@ -159,7 +159,7 @@ const AddAssetPopupMT = ({
                 options={
                   assets &&
                   assets.map((asset) => ({
-                    label: asset.assetNumber + " - " + asset.mainSystem,
+                    label: asset.assetNumber,
                     value: asset._id,
                   }))
                 }

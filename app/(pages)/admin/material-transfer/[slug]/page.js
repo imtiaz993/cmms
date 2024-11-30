@@ -23,43 +23,11 @@ import {
 import AddInventoryPopupMT from "@/components/addInventoryPopupInMT";
 import dayjs from "dayjs";
 
-const columns = [
-  {
-    title: "Asset Number",
-    dataIndex: "id",
-    key: "id",
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
-  },
-  {
-    title: "Condition",
-    dataIndex: "condition",
-    key: "condition",
-  },
-  {
-    title: "Trans. Reason",
-    dataIndex: "transferReason",
-    key: "transferReason",
-  },
-  {
-    title: "Make",
-    dataIndex: "make",
-    key: "make",
-  },
-  {
-    title: "Model",
-    dataIndex: "modal",
-    key: "modal",
-  },
-  {
-    title: "Sr#",
-    dataIndex: "serialNumber",
-    key: "serialNumber",
-  },
-];
+import { Input } from "antd";
+import { useSelector } from "react-redux";
+import { rigs } from "@/constants/rigsAndSystems";
+
+const { TextArea } = Input;
 
 const data = [
   {
@@ -93,6 +61,8 @@ const data = [
 
 const MaterialTransferDetail = () => {
   const [details, setDetails] = useState();
+  const { assets } = useSelector((state) => state.assets);
+  const { inventory } = useSelector((state) => state.inventory);
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
   const [uploadLinkDocVisible, setUploadLinkDocVisible] = useState(false);
   const [uploadDocVisible, setUploadDocVisible] = useState(false);
@@ -115,7 +85,29 @@ const MaterialTransferDetail = () => {
           <ViewAssetsDetailsPopup
             visible={assetDetailsPopup}
             setVisible={setAssetDetailsPopup}
-            columns={columns}
+            columns={[
+              {
+                title: "Asset Number",
+                dataIndex: "id",
+                key: "id",
+                render: (id) => assets.find((i) => i._id === id).assetNumber,
+              },
+              {
+                title: "Description",
+                dataIndex: "description",
+                key: "description",
+              },
+              {
+                title: "Condition",
+                dataIndex: "condition",
+                key: "condition",
+              },
+              {
+                title: "Trans. Reason",
+                dataIndex: "transferReason",
+                key: "transferReason",
+              },
+            ]}
             data={data}
           />
           <AddAssetPopupMT
@@ -153,8 +145,25 @@ const MaterialTransferDetail = () => {
           <Table
             loading={false}
             size={"small"}
-            columns={columns}
-            dataSource={[details?.assets]}
+            columns={[
+              {
+                title: "Asset Number",
+                dataIndex: "id",
+                key: "id",
+                render: (id) => assets.find((i) => i._id === id)?.assetNumber,
+              },
+              {
+                title: "Condition",
+                dataIndex: "condition",
+                key: "condition",
+              },
+              {
+                title: "Trans. Reason",
+                dataIndex: "transferReason",
+                key: "transferReason",
+              },
+            ]}
+            dataSource={details?.assets}
             pagination={{
               total: data.length,
               current: 1,
@@ -174,8 +183,8 @@ const MaterialTransferDetail = () => {
     },
     {
       label: "Inventory",
-      children:
-        details?.inventory.length > 0 ? (
+      children: (
+        <>
           <div>
             {addInventoryPopup && (
               <AddInventoryPopupMT
@@ -196,6 +205,8 @@ const MaterialTransferDetail = () => {
                 onClick={() => setAddInventoryPopup(true)}
               />
             </div>
+          </div>
+          {details?.inventory.length > 0 ? (
             <Table
               loading={false}
               size={"small"}
@@ -210,6 +221,8 @@ const MaterialTransferDetail = () => {
                   title: "Inventory Id",
                   dataIndex: "_id",
                   key: "_id",
+                  render: (_id) =>
+                    inventory.find((i) => i._id === _id).partName,
                 },
               ]}
               dataSource={selectedRowKeys.map((id) => ({
@@ -229,18 +242,23 @@ const MaterialTransferDetail = () => {
                 marginTop: 16,
               }}
             />
-          </div>
-        ) : (
-          <div className="text-center my-7">
-            <ExclamationCircleOutlined /> Data not available
-          </div>
-        ),
+          ) : (
+            <div className="text-center my-7">
+              <ExclamationCircleOutlined /> Data not available
+            </div>
+          )}
+        </>
+      ),
     },
     {
       label: "Misc",
       children: (
-        <div className="text-center my-7">
-          <ExclamationCircleOutlined /> No misc data to display
+        <div className="text-ellipsisxt-center my-7">
+          <TextArea
+            value={details?.misc}
+            className={` !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F] resize-none`}
+            style={{ width: "100%" }}
+          />
         </div>
       ),
     },
@@ -332,7 +350,9 @@ const MaterialTransferDetail = () => {
             <div className="grid md:grid-cols-2 mx-2 gap-3">
               <div>
                 <span className="opacity-70 mr-3">Origin</span>
-                <span className="">{details?.origin}</span>
+                <span className="">
+                  {rigs.find((i) => i.id === details?.origination)?.name}
+                </span>
               </div>
               <div>
                 <span className="opacity-70 mr-3">Transporter</span>
@@ -340,7 +360,9 @@ const MaterialTransferDetail = () => {
               </div>
               <div>
                 <span className="opacity-70 mr-3">Destination</span>
-                <span className="">{details?.destination}</span>
+                <span className="">
+                  {rigs.find((i) => i.id === details?.destination)?.name}
+                </span>
               </div>
               <div>
                 <span className="opacity-70 mr-3">Attention To</span>
@@ -370,10 +392,6 @@ const MaterialTransferDetail = () => {
                   Material Transfer Type
                 </span>
                 <span className="">{details?.materialTransferType}</span>
-              </div>
-              <div>
-                <span className="opacity-70 mr-3">Cautions</span>
-                <span className="">--</span>
               </div>
               <div className="md:col-span-2">
                 <span className="opacity-70 mr-3">Comments</span>
@@ -420,38 +438,35 @@ const MaterialTransferDetail = () => {
               progressDot
             >
               <Step
-                title={<p className="text-sm">Ship (NORAM Yard to Rig)</p>}
+                title={
+                  <p className="text-sm">
+                    Ship ({" "}
+                    {rigs.find((i) => i.id === details?.origination)?.name} to{" "}
+                    {rigs.find((i) => i.id === details?.destination)?.name})
+                  </p>
+                }
                 description={
                   <div>
                     <p>
                       <span className="text-[#52c41a]">Approved</span> by Rig 23
-                      Manager on 02/12/2024 19:58 (GMT+5)
-                    </p>
-                    <span className="opacity-50">Comment:</span>
-                    <span className="font-italic">
-                      {" "}
-                      &quot;Ship to rig 21&quot;
-                    </span>
-                    <p>
-                      <span className="opacity-50">Primary Approver:</span>{" "}
-                      <strong>Zeba Avera</strong>
+                      Manager
                     </p>
                   </div>
                 }
               />
               <Step
-                title={<p className="text-sm">Receive (NORAM Yard to Rig)</p>}
+                title={
+                  <p className="text-sm">
+                    Receive ({" "}
+                    {rigs.find((i) => i.id === details?.origination)?.name} to{" "}
+                    {rigs.find((i) => i.id === details?.destination)?.name}))
+                  </p>
+                }
                 description={
                   <div>
                     <p>
                       <span className="text-[#52c41a]">Approved</span> by
-                      Midland Yard on 02/23/2024 18:42 (GMT+5)
-                    </p>
-                    <span className="opacity-50"> Comment:</span>{" "}
-                    <span className="font-italic">&quot;AT RIG21&quot;</span>
-                    <p>
-                      <span className="opacity-50">Primary Approver:</span>{" "}
-                      <strong>Zeba Avera</strong>
+                      Midland Yard
                     </p>
                   </div>
                 }
