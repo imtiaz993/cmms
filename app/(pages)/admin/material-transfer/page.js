@@ -7,10 +7,11 @@ import { useRouter } from "next/navigation";
 import PreviewPopup from "../../../../components/previewPopup";
 import { getMaterialTransferData } from "app/services/materialTransfer";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
+import { rigs } from "@/constants/rigsAndSystems";
 
 const MaterialTransfer = () => {
   const [materialTransferData, setMaterialTransferData] = useState();
-  const [fetchingData, setFetchingData] = useState(false);
+  const [fetchingData, setFetchingData] = useState(true);
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
   const [searchText, setSearchText] = useState(""); // State for search text
   const router = useRouter();
@@ -18,13 +19,15 @@ const MaterialTransfer = () => {
   const columns = [
     {
       title: "Origin",
-      dataIndex: "origin",
-      key: "origin",
+      dataIndex: "origination",
+      key: "origination",
+      render: (origination) => rigs.find((i) => i.id === origination).name,
     },
     {
       title: "Destination",
       dataIndex: "destination",
       key: "destination",
+      render: (destination) => rigs.find((i) => i.id === destination).name,
     },
     {
       title: "Creator",
@@ -108,11 +111,11 @@ const MaterialTransfer = () => {
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
           setAddMaterialTransferVisible={setAddMaterialTransferVisible}
-          handleFetchData={handleFetchData}
           selectedInventory={selectedInventory}
           setSelectedInventory={setSelectedInventory}
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
+          setMaterialTransferData={setMaterialTransferData}
         />
       )}
       <div>

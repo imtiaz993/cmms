@@ -9,7 +9,7 @@ import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
 import { rigs } from "@/constants/rigsAndSystems";
 import { useDispatch } from "react-redux";
-import { addAsset as addAssetRedux } from "app/redux/slices/assetsSlice";
+import { updateAsset } from "app/redux/slices/assetsSlice";
 import AddFieldPopup from "@/components/addFieldPopup";
 import { useEffect, useState } from "react";
 import { getFields } from "app/services/customFields";
@@ -125,7 +125,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
     if (status === 200) {
       message.success(data?.message);
       resetForm();
-      // dispatch(addAssetRedux(data?.data));
+      dispatch(updateAsset(data.data)); // Store asset in Redux
       setAddAssetVisible(false);
     } else {
       message.error(data.error);
@@ -319,6 +319,9 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                       name="maintStartDate"
                       placeholder="Maint. Start Date (MM/DD/YYYY)"
                     />
+                    <div className="md:col-span-3 mt-5">
+                      <h1 className="text-base font-medium">Custom Fields:</h1>
+                    </div>
                     {fields.map((field) => {
                       switch (field.type) {
                         case "text":

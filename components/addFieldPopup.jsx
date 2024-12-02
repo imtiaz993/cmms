@@ -32,7 +32,7 @@ const FieldValidationSchema = Yup.object().shape({
 const ExistingFields = ({ fields, onDelete }) => {
   return (
     <div>
-      {fields.length > 0 ? (
+      {fields && fields.length > 0 ? (
         fields.map((field, index) => (
           <div
             key={index}
