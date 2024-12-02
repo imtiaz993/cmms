@@ -1,27 +1,31 @@
-import { Table } from "antd";
+"use client";
+import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import { DownloadOutlined } from "@ant-design/icons";
+import { useEffect, useMemo, useState } from "react";
+import { getDocuments } from "app/services/document";
 
 const columns = [
   {
     title: "Document Name",
-    dataIndex: "name",
-    key: "name",
+    dataIndex: "title",
+    key: "title",
   },
   {
-    title: "Category",
-    dataIndex: "category",
-    key: "category",
-  },
-  {
-    title: "Parent",
-    dataIndex: "parent",
-    key: "parent",
+    title: "Asset",
+    dataIndex: "asset",
+    key: "asset",
+    render: (asset) => asset.id,
   },
   {
     title: "Document Type",
-    dataIndex: "docType",
-    key: "docType",
+    dataIndex: "type",
+    key: "type",
+  },
+  {
+    title: "Category",
+    dataIndex: "type",
+    key: "type",
   },
   {
     title: "Uploaded By",
@@ -30,110 +34,75 @@ const columns = [
   },
   {
     title: "Uploaded Date",
-    dataIndex: "uploadedDate",
-    key: "uploadedDate",
+    dataIndex: "createdAt",
+    key: "createdAt",
   },
   {
     title: "Comments",
-    dataIndex: "comments",
-    key: "comments",
+    dataIndex: "comment",
+    key: "comment",
   },
   {
     title: "",
-    dataIndex: "download",
-    key: "download",
-    render: () => (
-      <DownloadOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+    dataIndex: "link",
+    key: "link",
+    render: (link) => (
+      <a href={link} target="_blank">
+        <DownloadOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+      </a>
     ),
   },
 ];
 
-const data = [
-  {
-    name: "#1 PUMP GEAREND INSP 8-16-23.pdf",
-    category: "Work Order",
-    parent: "UWO013940000021",
-    docType: "Inspection Document",
-    uploadedBy: "Manager, Rig 21",
-    uploadedDate: "June 15, 2024",
-    comments: "SN#",
-  },
-  {
-    name: "#1 PUMP GEAREND INSP 8-16-23.pdf",
-    category: "Work Order",
-    parent: "UWO013940000021",
-    docType: "Inspection Document",
-    uploadedBy: "Manager, Rig 21",
-    uploadedDate: "June 15, 2024",
-    comments: "SN#",
-  },
-  {
-    name: "#1 PUMP GEAREND INSP 8-16-23.pdf",
-    category: "Work Order",
-    parent: "UWO013940000021",
-    docType: "Inspection Document",
-    uploadedBy: "Manager, Rig 21",
-    uploadedDate: "June 15, 2024",
-    comments: "SN#",
-  },
-  {
-    name: "#1 PUMP GEAREND INSP 8-16-23.pdf",
-    category: "Work Order",
-    parent: "UWO013940000021",
-    docType: "Inspection Document",
-    uploadedBy: "Manager, Rig 21",
-    uploadedDate: "June 15, 2024",
-    comments: "SN#",
-  },
-  {
-    name: "#1 PUMP GEAREND INSP 8-16-23.pdf",
-    category: "Work Order",
-    parent: "UWO013940000021",
-    docType: "Inspection Document",
-    uploadedBy: "Manager, Rig 21",
-    uploadedDate: "June 15, 2024",
-    comments: "SN#",
-  },
-  {
-    name: "#1 PUMP GEAREND INSP 8-16-23.pdf",
-    category: "Work Order",
-    parent: "UWO013940000021",
-    docType: "Inspection Document",
-    uploadedBy: "Manager, Rig 21",
-    uploadedDate: "June 15, 2024",
-    comments: "SN#",
-  },
-];
+const Documents = ({ documentsData, setDetails }) => {
+  const [fetchingDocuments, setFetchingDocuments] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
-const Documents = () => {
+  const filteredDocuments = useMemo(() => {
+    if (!documentsData) return [];
+    return documentsData.filter((document) => {
+      const matchesCategory =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(document.type);
+      const matchesSearch =
+        !searchText ||
+        Object.values(document)
+          .join(" ")
+          .toLowerCase()
+          .includes(searchText.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [searchText, selectedCategories, documentsData]);
+
   return (
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
       <div>
-        <ActionBar />
+        <ActionBar
+          setSearchText={setSearchText}
+          searchText={searchText}
+          selectedCategories={selectedCategories}
+          setSelectedCategories={setSelectedCategories}
+        />
         <div className="flex justify-end">
           <p className="text-secondary">
-            Total Documents: <span>{"(" + data.length + ")"}</span>
+            Total Documents: <span>({filteredDocuments.length})</span>
           </p>
         </div>
         <Table
-          loading={false}
-          size={"large"}
+          loading={fetchingDocuments}
+          size="large"
           scroll={{ x: 1100 }}
           columns={columns}
-          dataSource={data}
+          dataSource={filteredDocuments}
           pagination={{
-            total: data.total,
-            current: 1,
+            total: filteredDocuments.length,
             pageSize: 10,
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
-            onChange: () => {},
           }}
-          style={{
-            marginTop: 16,
-            overflow: "auto",
-          }}
+          style={{ marginTop: 16, overflow: "auto" }}
         />
       </div>
     </div>

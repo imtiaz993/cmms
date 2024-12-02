@@ -50,7 +50,9 @@ const Tabs = ({ details, setDetails, slug }) => {
     {
       key: "documents",
       label: "Documents",
-      children: <Documents />,
+      children: (
+        <Documents documentsData={details?.documents} setDetails={setDetails} />
+      ),
     },
     {
       key: "readings",
