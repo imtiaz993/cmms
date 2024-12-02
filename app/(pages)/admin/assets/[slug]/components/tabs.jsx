@@ -11,7 +11,7 @@ import HistoryAssetDetail from "./history";
 import Readings from "./readings/page";
 import Cost from "./cost";
 
-const Tabs = ({ details, slug }) => {
+const Tabs = ({ details, setDetails, slug }) => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -60,7 +60,12 @@ const Tabs = ({ details, slug }) => {
     {
       key: "material-transfer",
       label: "Material Transfer",
-      children: <MaterialTransfer />,
+      children: (
+        <MaterialTransfer
+          materialTransferData={details?.materialTransfers}
+          setDetails={setDetails}
+        />
+      ),
     },
   ];
   return (

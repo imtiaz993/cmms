@@ -66,7 +66,9 @@ const AssetDetail = () => {
           className="md:ml-3"
         />
       </div>
-      {details && <Tabs details={details} slug={slug} />}
+      {details && (
+        <Tabs details={details} setDetails={setDetails} slug={slug} />
+      )}
     </div>
   );
 };

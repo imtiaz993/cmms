@@ -1,30 +1,28 @@
+import { useState } from "react";
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
+import { message } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
-import { message } from "antd";
-import { useState } from "react";
+import { getFilteredMT } from "app/services/materialTransfer";
+import { useParams } from "next/navigation";
 
-const validationSchema = Yup.object().shape({
-  assetNumber: Yup.string(),
-});
-
-const MaterialTransferFilter = ({ closeDropdown }) => {
+const MaterialTransferFilter = ({ setDetails, closeDropdown }) => {
+  const { slug } = useParams();
   const [isClearing, setIsClearing] = useState(false);
-  const handleSubmit = async (values, setSubmitting) => {
-    console.log(values);
+  const submit = async (values, setSubmitting) => {
     console.log(values);
     !setSubmitting && setIsClearing(true);
-    const status = 200;
-    const data = null;
+    const { status, data } = await getFilteredMTinAssets(values, slug);
     setSubmitting ? setSubmitting(false) : setIsClearing(false);
     if (status === 200) {
-      message.success(data?.message || "Assets fetched successfully");
+      message.success(
+        data?.message || "Material Transfers fetched successfully"
+      );
+      setDetails((prev) => ({ ...prev, materialTransfers: data?.data }));
       closeDropdown();
     } else {
-      message.error(data?.message || "Failed to fetch assets");
+      message.error(data?.message || "Failed to fetch material transfers");
     }
   };
 
@@ -39,16 +37,16 @@ const MaterialTransferFilter = ({ closeDropdown }) => {
       <Formik
         initialValues={{
           createdDateRange: "",
-          materialTranfser: "",
+          materialTransferType: "",
           origination: "",
           destination: "",
+          Transporter: "",
         }}
-        validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          handleSubmit(values, setSubmitting);
+          submit(values, setSubmitting);
         }}
       >
-        {({ isSubmitting, handleSubmit, resetForm }) => (
+        {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 gap-4">
               <DatePickerField
@@ -57,11 +55,25 @@ const MaterialTransferFilter = ({ closeDropdown }) => {
               />
 
               <InputField
-                name="materialTranfser"
-                placeholder="Material Transfer"
+                name="origination"
+                placeholder="Origin"
+                maxLength={128}
               />
-              <SelectField name="origination" placeholder="Origination" />
-              <SelectField name="destination" placeholder="Destination" />
+              <InputField
+                name="destination"
+                placeholder="Destination"
+                maxLength={128}
+              />
+              <InputField
+                name="materialTransferType"
+                placeholder="Transfer Type"
+                maxLength={128}
+              />
+              <InputField
+                name="transporter"
+                placeholder="Transporter"
+                maxLength={128}
+              />
 
               <div className="sm:col-span-2 flex justify-end gap-4">
                 <div>
@@ -73,7 +85,7 @@ const MaterialTransferFilter = ({ closeDropdown }) => {
                     isLoading={isClearing}
                     onClick={() => {
                       resetForm();
-                      handleSubmit({});
+                      submit({});
                     }}
                     style={{ width: "fit-content" }}
                     className="mr-2"

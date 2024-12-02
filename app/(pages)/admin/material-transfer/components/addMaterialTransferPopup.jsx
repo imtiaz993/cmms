@@ -92,6 +92,8 @@ const AddMaterialTransferPopup = ({
   selectedRowKeys,
   setSelectedRowKeys,
   setMaterialTransferData,
+  assetDetailsSlug,
+  setAssetDetails,
 }) => {
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [fields, setFields] = useState([]);
@@ -193,7 +195,12 @@ const AddMaterialTransferPopup = ({
     if (status === 200) {
       message.success(data?.message);
       resetForm();
-      setMaterialTransferData((prev) => [...prev, data.data]);
+      assetDetailsSlug
+        ? setAssetDetails((prev) => ({
+            ...prev,
+            materialTransfers: [...prev.materialTransfers, data.data],
+          }))
+        : setMaterialTransferData((prev) => [...prev, data.data]);
       setAddMaterialTransferVisible(false);
     } else {
       message.error(data.error);
@@ -231,8 +238,8 @@ const AddMaterialTransferPopup = ({
               visible={addAssetPopup}
               setVisible={setAddAssetPopup}
               setAddedAssets={setAddedAssets}
+              assetDetailsSlug={assetDetailsSlug}
             />
-            {console.log("selected row keys", selectedRowKeys)}
             <AddInventoryPopupMT
               visible={addInventoryPopup}
               setVisible={setAddInventoryPopup}
