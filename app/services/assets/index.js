@@ -55,3 +55,16 @@ export const exportAssets = async (hierarchy) => {
     }
   }
 };
+
+export const getAssetDetails = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: `/asset/getAssetDetails?slug=${id}`,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};

@@ -1,13 +1,12 @@
+import { useState } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Select, message } from "antd";
-import { login } from "app/services/auth";
+import { message } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
 import { getFilteredAssets } from "app/services/assets";
 import { rigs, systems } from "@/constants/rigsAndSystems";
-import TextAreaField from "@/components/common/TextAreaField";
 import DatePickerField from "@/components/common/DatePickerField";
 import { useDispatch } from "react-redux";
 import { setAssets, setAssetsLoading } from "app/redux/slices/assetsSlice";
@@ -16,16 +15,19 @@ const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
 });
 
-const AssetFilter = () => {
+const AssetFilter = ({ closeDropdown }) => {
+  const [isClearing, setIsClearing] = useState(false);
   const dispatch = useDispatch();
-  const submit = async (values, setSubmitting, resetForm) => {
+  const submit = async (values, setSubmitting) => {
     console.log(values);
+    !setSubmitting && setIsClearing(true);
     dispatch(setAssetsLoading(true));
     const { status, data } = await getFilteredAssets(values);
-    setSubmitting(false);
+    setSubmitting ? setSubmitting(false) : setIsClearing(false);
     if (status === 200) {
       message.success(data?.message || "Assets fetched successfully");
       dispatch(setAssets(data?.data));
+      closeDropdown();
     } else {
       message.error(data?.message || "Failed to fetch assets");
     }
@@ -54,11 +56,11 @@ const AssetFilter = () => {
           installedDate: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
-          submit(values, setSubmitting, resetForm);
+        onSubmit={(values, { setSubmitting }) => {
+          submit(values, setSubmitting);
         }}
       >
-        {({ isSubmitting, handleSubmit, resetForm, values, setSubmitting }) => (
+        {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               <SelectField
@@ -109,10 +111,11 @@ const AssetFilter = () => {
                     outlined
                     size="small"
                     text="Clear Filter"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isClearing}
+                    isLoading={isClearing}
                     onClick={() => {
                       resetForm();
-                      submit({}, setSubmitting, resetForm);
+                      submit({});
                     }}
                     style={{ width: "fit-content" }}
                     className="mr-2"
@@ -121,7 +124,7 @@ const AssetFilter = () => {
                     size="small"
                     text="Filter"
                     htmlType="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isClearing}
                     isLoading={isSubmitting}
                     style={{ width: "fit-content" }}
                   />

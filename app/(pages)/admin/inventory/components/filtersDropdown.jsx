@@ -8,23 +8,31 @@ import SelectField from "@/components/common/SelectField";
 import { getFilteredInventory } from "app/services/inventory";
 import DatePickerField from "@/components/common/DatePickerField";
 import { useDispatch } from "react-redux";
-import { setInventory, setInventoryError, setInventoryLoading } from "app/redux/slices/inventoriesSlice";
+import {
+  setInventory,
+  setInventoryError,
+  setInventoryLoading,
+} from "app/redux/slices/inventoriesSlice";
+import { useState } from "react";
 
 const validationSchema = Yup.object().shape({
   inventoryNumber: Yup.string(),
 });
 
-const InventoryFilter = () => {
+const InventoryFilter = ({ closeDropdown }) => {
   const dispatch = useDispatch();
+  const [isClearing, setIsClearing] = useState(false);
 
-  const submit = async (values, setSubmitting, resetForm) => {
+  const submit = async (values, setSubmitting) => {
     console.log(values);
     dispatch(setInventoryLoading(true));
+    !setSubmitting && setIsClearing(true);
     const { status, data } = await getFilteredInventory(values);
-    setSubmitting(false);
+    setSubmitting ? setSubmitting(false) : setIsClearing(false);
     if (status === 200) {
       message.success(data?.message || "Inventory fetched successfully");
       dispatch(setInventory(data?.data));
+      closeDropdown();
     } else {
       dispatch(setInventoryError(data?.error));
       message.error(data?.message || "Failed to fetch inventory");
@@ -56,8 +64,8 @@ const InventoryFilter = () => {
           receivedDate: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
-          submit(values, setSubmitting, resetForm);
+        onSubmit={(values, { setSubmitting }) => {
+          submit(values, setSubmitting);
         }}
       >
         {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
@@ -119,10 +127,11 @@ const InventoryFilter = () => {
                     outlined
                     size="small"
                     text="Clear Filter"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isClearing}
+                    isLoading={isClearing}
                     onClick={() => {
                       resetForm();
-                      submit({}, setSubmitting, resetForm);
+                      submit({});
                     }}
                     style={{ width: "fit-content" }}
                     className="mr-2"
@@ -131,7 +140,7 @@ const InventoryFilter = () => {
                     size="small"
                     text="Filter"
                     htmlType="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isClearing}
                     isLoading={isSubmitting}
                     style={{ width: "fit-content" }}
                   />

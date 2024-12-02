@@ -6,6 +6,7 @@ import MaintenanceScheduleFilter from "./filtersDropdown";
 
 const ActionBar = () => {
   const [searchText, setSearchText] = useState("");
+  const [filterDropdown, setFilterDropdown] = useState(null);
 
   return (
     <>
@@ -17,7 +18,13 @@ const ActionBar = () => {
         />
         <div className="grid grid-cols-2 sm:flex items-center gap-2">
           <Dropdown
-            dropdownRender={() => <MaintenanceScheduleFilter />}
+            open={filterDropdown}
+            onOpenChange={setFilterDropdown}
+            dropdownRender={() => (
+              <MaintenanceScheduleFilter
+                closeDropdown={() => setFilterDropdown(false)}
+              />
+            )}
             trigger={["click"]}
             arrow
             placement="bottomCenter"
@@ -27,6 +34,7 @@ const ActionBar = () => {
               outlined
               style={{ padding: "4px 0px" }}
               prefix={<FilterOutlined />}
+              onClick={() => setFilterDropdown(!filterDropdown)}
             />
           </Dropdown>
 

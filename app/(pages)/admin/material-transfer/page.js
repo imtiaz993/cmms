@@ -4,7 +4,7 @@ import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import { EyeFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import PreviewPopup from "../../../../components/previewPopup";
+import PreviewPopup from "@/components/previewPopup";
 import { getMaterialTransferData } from "app/services/materialTransfer";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 import { rigs } from "@/constants/rigsAndSystems";

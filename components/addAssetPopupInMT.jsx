@@ -78,6 +78,7 @@ const AddAssetPopupMT = ({
   setAddedAssets,
   materialTransferId,
   setDetails,
+  assetDetailsSlug,
 }) => {
   const { assets } = useSelector((state) => state.assets);
 
@@ -108,7 +109,7 @@ const AddAssetPopupMT = ({
   return (
     <Formik
       initialValues={{
-        id: "",
+        id: assetDetailsSlug ? assetDetailsSlug : "",
         condition: "",
         transferReason: "",
       }}
@@ -157,13 +158,25 @@ const AddAssetPopupMT = ({
                 name="id"
                 placeholder="Select Asset"
                 options={
-                  assets &&
-                  assets.map((asset) => ({
-                    label: asset.assetNumber,
-                    value: asset._id,
-                  }))
+                  assetDetailsSlug
+                    ? [
+                        {
+                          label: assets?.find(
+                            (asset) => asset._id === assetDetailsSlug
+                          )?.assetNumber,
+                          value: assetDetailsSlug,
+                          isDisabled: true, // Disable the selected asset
+                        },
+                      ]
+                    : assets?.map((asset) => ({
+                        label: asset.assetNumber,
+                        value: asset._id,
+                      }))
                 }
-              />
+                value={assetDetailsSlug} // Automatically select the asset if assetDetailsSlug is provided
+                readOnly={assetDetailsSlug ? true : false}
+              />{" "}
+              {console.log(" assetDetailsSlug", assetDetailsSlug)}
               <SelectField
                 name="condition"
                 placeholder="Asset Condition"

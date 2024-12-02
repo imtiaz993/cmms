@@ -1,21 +1,22 @@
-import { Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import { DatePicker, Select, message } from "antd";
-import { login } from "app/services/auth";
+import { useState } from "react";
+import {  Form, Formik } from "formik";
+import {message } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import { getFilteredMT } from "app/services/materialTransfer";
 
-const MaterialTransferFilter = ({ setMaterialTransferData }) => {
+const MaterialTransferFilter = ({ setMaterialTransferData, closeDropdown }) => {0
+  const [isClearing, setIsClearing] = useState(false);
   const submit = async (values, setSubmitting) => {
     console.log(values);
+    !setSubmitting && setIsClearing(true);
     const { status, data } = await getFilteredMT(values);
-    setSubmitting(false);
+    setSubmitting ? setSubmitting(false) : setIsClearing(false);
     if (status === 200) {
       message.success(data?.message || "Assets fetched successfully");
       setMaterialTransferData(data?.data);
+      closeDropdown();
     } else {
       message.error(data?.message || "Failed to fetch assets");
     }
@@ -37,8 +38,8 @@ const MaterialTransferFilter = ({ setMaterialTransferData }) => {
           destination: "",
           Transporter: "",
         }}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
-          submit(values, setSubmitting, resetForm);
+        onSubmit={(values, { setSubmitting }) => {
+          submit(values, setSubmitting);
         }}
       >
         {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
@@ -76,10 +77,11 @@ const MaterialTransferFilter = ({ setMaterialTransferData }) => {
                     outlined
                     size="small"
                     text="Clear Filter"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isClearing}
+                    isLoading={isClearing}
                     onClick={() => {
                       resetForm();
-                      submit({}, setSubmitting, resetForm);
+                      submit({});
                     }}
                     style={{ width: "fit-content" }}
                     className="mr-2"
@@ -88,7 +90,7 @@ const MaterialTransferFilter = ({ setMaterialTransferData }) => {
                     size="small"
                     text="Filter"
                     htmlType="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isClearing}
                     isLoading={isSubmitting}
                     style={{ width: "fit-content" }}
                   />

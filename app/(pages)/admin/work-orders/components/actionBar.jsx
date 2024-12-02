@@ -25,6 +25,7 @@ const ActionBar = ({
   unplanned,
   setFetchingWorkOrders,
 }) => {
+  const [filterDropdown, setFilterDropdown] = useState(null);
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
     value: key,
@@ -121,7 +122,14 @@ const ActionBar = ({
           />
         </div>
         <Dropdown
-          dropdownRender={() => <WOFilter setWorkOrders={setWorkOrders} />}
+          open={filterDropdown}
+          onOpenChange={setFilterDropdown}
+          dropdownRender={() => (
+            <WOFilter
+              setWorkOrders={setWorkOrders}
+              closeDropdown={() => setFilterDropdown(false)}
+            />
+          )}
           trigger={["click"]}
           arrow
           placement="bottomCenter"

@@ -1,17 +1,29 @@
+import { useState } from "react";
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
+import { message } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
+import { getFilteredMT } from "app/services/materialTransfer";
+import { useParams } from "next/navigation";
 
-const validationSchema = Yup.object().shape({
-  assetNumber: Yup.string(),
-});
-
-const MaterialTransferFilter = () => {
-  const handleSubmit = async (values, setSubmitting, resetForm) => {
+const MaterialTransferFilter = ({ setDetails, closeDropdown }) => {
+  const { slug } = useParams();
+  const [isClearing, setIsClearing] = useState(false);
+  const submit = async (values, setSubmitting) => {
     console.log(values);
+    !setSubmitting && setIsClearing(true);
+    const { status, data } = await getFilteredMTinAssets(values, slug);
+    setSubmitting ? setSubmitting(false) : setIsClearing(false);
+    if (status === 200) {
+      message.success(
+        data?.message || "Material Transfers fetched successfully"
+      );
+      setDetails((prev) => ({ ...prev, materialTransfers: data?.data }));
+      closeDropdown();
+    } else {
+      message.error(data?.message || "Failed to fetch material transfers");
+    }
   };
 
   return (
@@ -25,16 +37,16 @@ const MaterialTransferFilter = () => {
       <Formik
         initialValues={{
           createdDateRange: "",
-          materialTranfser: "",
+          materialTransferType: "",
           origination: "",
           destination: "",
+          Transporter: "",
         }}
-        validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
-          handleSubmit(values, setSubmitting, resetForm);
+        onSubmit={(values, { setSubmitting }) => {
+          submit(values, setSubmitting);
         }}
       >
-        {({ isSubmitting, handleSubmit, resetForm }) => (
+        {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 gap-4">
               <DatePickerField
@@ -43,11 +55,25 @@ const MaterialTransferFilter = () => {
               />
 
               <InputField
-                name="materialTranfser"
-                placeholder="Material Transfer"
+                name="origination"
+                placeholder="Origin"
+                maxLength={128}
               />
-              <SelectField name="origination" placeholder="Origination" />
-              <SelectField name="destination" placeholder="Destination" />
+              <InputField
+                name="destination"
+                placeholder="Destination"
+                maxLength={128}
+              />
+              <InputField
+                name="materialTransferType"
+                placeholder="Transfer Type"
+                maxLength={128}
+              />
+              <InputField
+                name="transporter"
+                placeholder="Transporter"
+                maxLength={128}
+              />
 
               <div className="sm:col-span-2 flex justify-end gap-4">
                 <div>
@@ -55,8 +81,12 @@ const MaterialTransferFilter = () => {
                     outlined
                     size="small"
                     text="Clear Filter"
-                    disabled={isSubmitting}
-                    onClick={resetForm}
+                    disabled={isSubmitting || isClearing}
+                    isLoading={isClearing}
+                    onClick={() => {
+                      resetForm();
+                      submit({});
+                    }}
                     style={{ width: "fit-content" }}
                     className="mr-2"
                   />
@@ -64,7 +94,7 @@ const MaterialTransferFilter = () => {
                     size="small"
                     text="Filter"
                     htmlType="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isClearing}
                     isLoading={isSubmitting}
                     style={{ width: "fit-content" }}
                   />

@@ -1,24 +1,27 @@
 import { useState } from "react";
-import { Checkbox, Dropdown, Input, Menu, Select, Tag } from "antd";
-import { DownloadOutlined, PlusOutlined } from "@ant-design/icons";
+import { Dropdown, Input, Menu, Select, Tag } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import DownloadPopup from "./downloadPopup";
 import UploadDocPopup from "./uploadDocPopup";
 import UploadLinkDocPopup from "./uploadLinkDocPopup";
 
-const ActionBar = () => {
-  const [searchText, setSearchText] = useState("");
+const ActionBar = ({
+  setSearchText,
+  searchText,
+  selectedCategories,
+  setSelectedCategories,
+}) => {
   const [downloadPopup, setDownloadPopup] = useState(false);
   const [uploadPopup, setUploadPopup] = useState(false);
-  const [selectedValues, setSelectedValues] = useState([]);
-
-  const handleChange = (values) => {
-    setSelectedValues(values);
-  };
 
   return (
     <>
-      <DownloadPopup visible={downloadPopup} setVisible={setDownloadPopup} />
+      <DownloadPopup
+        visible={downloadPopup}
+        setVisible={setDownloadPopup}
+        selectedCategories={selectedCategories}
+      />
       <UploadDocPopup
         visible={uploadPopup === "uploadDocument"}
         setVisible={setUploadPopup}
@@ -27,44 +30,34 @@ const ActionBar = () => {
         visible={uploadPopup === "uploadLinkDocument"}
         setVisible={setUploadPopup}
       />
+
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-3">
+        {/* Search Bar */}
         <Input.Search
           placeholder="Search..."
+          value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           className="sm:!w-[300px] searchBar"
         />
         <div className="grid grid-cols-2 sm:flex items-center gap-2">
-          <div className="sm:min-w-44 overflow-hidden col-span-2">
-            <Select
-              mode="multiple"
-              name="category"
-              placeholder="Category"
-              style={{ height: "36px", width: "100%" }}
-              options={[
-                { label: "Asset", value: "Asset" },
-                { label: "Asset Class", value: "assetClass" },
-                { label: "Procedure", value: "procedure" },
-                { label: "Work Order", value: "workOrder" },
-                { label: "Checklist", value: "checklist" },
-                { label: "Material Transfer", value: "materialTransfer" },
-                { label: "Cost", value: "Cost" },
-              ]}
-              value={selectedValues}
-              onChange={handleChange}
-              optionRender={(option) => (
-                <Checkbox checked={selectedValues.includes(option.value)}>
-                  {option.label}
-                </Checkbox>
-              )}
-            />
+          {/* Category Selector */}
+          <div className="grid grid-cols-2 sm:flex items-center gap-2">
+            <div className="sm:min-w-44 overflow-hidden">
+              <Select
+                mode="multiple"
+                name="category"
+                placeholder="Category"
+                style={{ height: "36px", width: "100%" }}
+                options={[
+                  { label: "Asset", value: "Asset" },
+                  { label: "Work Order", value: "Work Order" },
+                  { label: "Material Transfer", value: "Material Transfer" },
+                ]}
+                value={selectedCategories}
+                onChange={setSelectedCategories}
+              />
+            </div>
           </div>
-          <Button
-            text="Download All"
-            outlined
-            style={{ padding: "4px 20px" }}
-            prefix={<DownloadOutlined />}
-            onClick={() => setDownloadPopup(true)}
-          />
 
           <Dropdown
             dropdownRender={() => (

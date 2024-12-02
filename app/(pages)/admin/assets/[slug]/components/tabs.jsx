@@ -11,21 +11,21 @@ import HistoryAssetDetail from "./history";
 import Readings from "./readings/page";
 import Cost from "./cost";
 
-const Tabs = () => {
+const Tabs = ({ details, setDetails, slug }) => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
   const activeTab = searchParams.get("tab");
 
   const onChange = (key) => {
-    router.push(`/admin/assets/John%20Brown?tab=${key}`);
+    router.push(`/admin/assets/${slug}?tab=${key}`);
   };
 
   const tabs = [
     {
       key: "dashboard",
       label: "Dashboard",
-      children: <Dashboard />,
+      children: <Dashboard dashboardDetails={details?.dashboard} />,
     },
     {
       key: "work-orders",
@@ -50,7 +50,9 @@ const Tabs = () => {
     {
       key: "documents",
       label: "Documents",
-      children: <Documents />,
+      children: (
+        <Documents documentsData={details?.documents} setDetails={setDetails} />
+      ),
     },
     {
       key: "readings",
@@ -60,7 +62,12 @@ const Tabs = () => {
     {
       key: "material-transfer",
       label: "Material Transfer",
-      children: <MaterialTransfer />,
+      children: (
+        <MaterialTransfer
+          materialTransferData={details?.materialTransfers}
+          setDetails={setDetails}
+        />
+      ),
     },
   ];
   return (
