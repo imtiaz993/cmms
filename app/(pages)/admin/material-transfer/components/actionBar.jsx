@@ -24,6 +24,7 @@ const ActionBar = ({
   setMaterialTransferData,
   setFetchingData,
 }) => {
+  const [filterDropdown, setFilterDropdown] = useState(null);
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
     value: key,
@@ -69,9 +70,12 @@ const ActionBar = ({
       />
       <div className="grid  md:flex sm:grid-cols-3 items-center gap-2">
         <Dropdown
+          open={filterDropdown}
+          onOpenChange={setFilterDropdown}
           dropdownRender={() => (
             <MaterialTransferFilter
               setMaterialTransferData={setMaterialTransferData}
+              closeDropdown={() => setFilterDropdown(false)}
             />
           )}
           trigger={["click"]}
@@ -83,6 +87,7 @@ const ActionBar = ({
             outlined
             style={{ padding: "4px 0px" }}
             prefix={<FilterOutlined />}
+            onClick={() => setFilterDropdown(!filterDropdown)}
           />
         </Dropdown>
         <Dropdown

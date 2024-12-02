@@ -5,14 +5,27 @@ import { login } from "app/services/auth";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
+import { useState } from "react";
 
 const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
 });
 
-const AssetFilter = () => {
-  const handleSubmit = async (values, setSubmitting, resetForm) => {
+const AssetFilter = ({ closeDropdown }) => {
+  const [isClearing, setIsClearing] = useState(false);
+  const handleSubmit = async (values, setSubmitting) => {
     console.log(values);
+    console.log(values);
+    !setSubmitting && setIsClearing(true);
+    const status = 200;
+    const data = null;
+    setSubmitting ? setSubmitting(false) : setIsClearing(false);
+    if (status === 200) {
+      message.success(data?.message || "Assets fetched successfully");
+      closeDropdown();
+    } else {
+      message.error(data?.message || "Failed to fetch assets");
+    }
   };
 
   return (
@@ -42,8 +55,8 @@ const AssetFilter = () => {
           tier6: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
-          handleSubmit(values, setSubmitting, resetForm);
+        onSubmit={(values, { setSubmitting }) => {
+          handleSubmit(values, setSubmitting);
         }}
       >
         {({ isSubmitting, handleSubmit, resetForm }) => (
@@ -79,8 +92,12 @@ const AssetFilter = () => {
                     outlined
                     size="small"
                     text="Clear Filter"
-                    disabled={isSubmitting}
-                    onClick={resetForm}
+                    disabled={isSubmitting || isClearing}
+                    isLoading={isClearing}
+                    onClick={() => {
+                      resetForm();
+                      handleSubmit({});
+                    }}
                     style={{ width: "fit-content" }}
                     className="mr-2"
                   />
@@ -88,7 +105,7 @@ const AssetFilter = () => {
                     size="small"
                     text="Filter"
                     htmlType="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isClearing}
                     isLoading={isSubmitting}
                     style={{ width: "fit-content" }}
                   />

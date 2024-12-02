@@ -26,6 +26,7 @@ const ActionBar = ({
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
   const [changeToAssetVisible, setChangeToAssetVisible] = useState(false);
+  const [filterDropdown, setFilterDropdown] = useState(null);
 
   const options = columns.map(({ key, title }, index) => ({
     label: title,
@@ -91,10 +92,10 @@ const ActionBar = ({
             onClick={() => setCreatePOVisible(true)}
           /> */}
           <Dropdown
+            open={filterDropdown}
+            onOpenChange={setFilterDropdown}
             dropdownRender={() => (
-              <InventoryFilter
-              //  setInventory={setInventory}
-              />
+              <InventoryFilter closeDropdown={() => setFilterDropdown(false)} />
             )}
             trigger={["click"]}
             arrow
@@ -105,6 +106,7 @@ const ActionBar = ({
               outlined
               style={{ padding: "4px 0px" }}
               prefix={<FilterOutlined />}
+              onClick={() => setFilterDropdown(!filterDropdown)}
             />
           </Dropdown>
           <Dropdown

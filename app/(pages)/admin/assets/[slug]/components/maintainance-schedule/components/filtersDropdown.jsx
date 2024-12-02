@@ -4,14 +4,28 @@ import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
+import { useState } from "react";
+import { message } from "antd";
 
 const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
 });
 
-const MaintenanceScheduleFilter = () => {
-  const handleSubmit = async (values, setSubmitting, resetForm) => {
+const MaintenanceScheduleFilter = ({ closeDropdown }) => {
+  const [isClearing, setIsClearing] = useState(false);
+  const handleSubmit = async (values, setSubmitting) => {
     console.log(values);
+    console.log(values);
+    !setSubmitting && setIsClearing(true);
+    const status = 200;
+    const data = null;
+    setSubmitting ? setSubmitting(false) : setIsClearing(false);
+    if (status === 200) {
+      message.success(data?.message || "Assets fetched successfully");
+      closeDropdown();
+    } else {
+      message.error(data?.message || "Failed to fetch assets");
+    }
   };
 
   return (
@@ -31,7 +45,7 @@ const MaintenanceScheduleFilter = () => {
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
-          handleSubmit(values, setSubmitting, resetForm);
+          handleSubmit(values, setSubmitting);
         }}
       >
         {({ isSubmitting, handleSubmit, resetForm }) => (
@@ -55,8 +69,12 @@ const MaintenanceScheduleFilter = () => {
                     outlined
                     size="small"
                     text="Clear Filter"
-                    disabled={isSubmitting}
-                    onClick={resetForm}
+                    disabled={isSubmitting || isClearing}
+                    isLoading={isClearing}
+                    onClick={() => {
+                      resetForm();
+                      handleSubmit({});
+                    }}
                     style={{ width: "fit-content" }}
                     className="mr-2"
                   />
@@ -64,7 +82,7 @@ const MaintenanceScheduleFilter = () => {
                     size="small"
                     text="Filter"
                     htmlType="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isClearing}
                     isLoading={isSubmitting}
                     style={{ width: "fit-content" }}
                   />

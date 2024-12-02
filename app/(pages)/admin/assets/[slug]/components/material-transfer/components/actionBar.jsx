@@ -18,6 +18,7 @@ const ActionBar = ({
 }) => {
   const [searchText, setSearchText] = useState("");
   const [showHierarchy, setShowHierarchy] = useState(false);
+  const [filterDropdown, setFilterDropdown] = useState(null);
 
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
@@ -54,7 +55,13 @@ const ActionBar = ({
           />
         </div>
         <Dropdown
-          dropdownRender={() => <MaterialTransferFilter />}
+          open={filterDropdown}
+          onOpenChange={setFilterDropdown}
+          dropdownRender={() => (
+            <MaterialTransferFilter
+              closeDropdown={() => setFilterDropdown(false)}
+            />
+          )}
           trigger={["click"]}
           arrow
           placement="bottomCenter"
@@ -64,6 +71,7 @@ const ActionBar = ({
             outlined
             style={{ padding: "4px 0px" }}
             prefix={<FilterOutlined />}
+            onClick={() => setFilterDropdown(!filterDropdown)}
           />
         </Dropdown>
         <Dropdown
