@@ -142,7 +142,7 @@ const Assets = () => {
       <Table
         rowClassName="cursor-pointer"
         onRow={(record) => ({
-          onClick: () => router.push(`/admin/assets/${record.key}`),
+          onClick: () => router.push(`/admin/assets/${record._id}`),
         })}
         loading={isLoading}
         size="large"

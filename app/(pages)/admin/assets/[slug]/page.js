@@ -9,10 +9,28 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import { message } from "antd";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getAssetDetails } from "app/services/assets";
 
 const AssetDetail = () => {
+  const [details, setDetails] = useState();
   const router = useRouter();
+  const { slug } = useParams();
+
+  useEffect(() => {
+    const getAsset = async () => {
+      const { status, data } = await getAssetDetails(slug);
+      if (status === 200) {
+        console.log(data);
+        setDetails(data?.data);
+      } else {
+        message.error(data?.message || "Failed to fetch data");
+      }
+    };
+    getAsset();
+  }, [slug]);
+
   return (
     <div className="overflow-auto h-[calc(100dvh-130px)]">
       <div className="relative text-right mx-3 lg:mx-8 mt-3 grid md:block grid-cols-2 gap-3 mb-5">
@@ -48,7 +66,7 @@ const AssetDetail = () => {
           className="md:ml-3"
         />
       </div>
-      <Tabs />
+      {details && <Tabs details={details} slug={slug} />}
     </div>
   );
 };

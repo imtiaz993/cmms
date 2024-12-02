@@ -11,21 +11,21 @@ import HistoryAssetDetail from "./history";
 import Readings from "./readings/page";
 import Cost from "./cost";
 
-const Tabs = () => {
+const Tabs = ({ details, slug }) => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
   const activeTab = searchParams.get("tab");
 
   const onChange = (key) => {
-    router.push(`/admin/assets/John%20Brown?tab=${key}`);
+    router.push(`/admin/assets/${slug}?tab=${key}`);
   };
 
   const tabs = [
     {
       key: "dashboard",
       label: "Dashboard",
-      children: <Dashboard />,
+      children: <Dashboard dashboardDetails={details?.dashboard} />,
     },
     {
       key: "work-orders",

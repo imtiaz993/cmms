@@ -23,7 +23,7 @@ import { useRouter } from "next/navigation";
 import { Children } from "react";
 
 // Work Order Card Tabs
-const AssetInfoTab = () => {
+const AssetInfoTab = ({ dashboardDetails }) => {
   return (
     <div className="mt-5">
       <div className="flex sm:block">
@@ -54,15 +54,32 @@ const AssetInfoTab = () => {
 
             <p>
               <span className="opacity-50 mr-2">Parent Asset</span>
-              <span>-</span>
+              <span>{dashboardDetails.parentAsset}</span>
             </p>
             <p>
               <span className="opacity-50 mr-2">Subunit</span>
-              <span>-</span>
+              <span>{dashboardDetails.childAsset}</span>
             </p>
             <p>
               <span className="opacity-50 mr-2">Accounting Dept.</span>
-              <span>-</span>
+              <span>{dashboardDetails.accountingDept}</span>
+            </p>
+          </div>
+
+          <div className="mt-3">
+            {/* Equipment Info Section */}
+            <p className="font-bold text-lg">Equipment Info</p>
+            <p>
+              <span className="opacity-50 mr-2">Supplier</span>
+              <span>{dashboardDetails.supplier}</span>
+            </p>
+            <p>
+              <span className="opacity-50 mr-2">Model</span>
+              <span>{dashboardDetails.model}</span>
+            </p>
+            <p>
+              <span className="opacity-50 mr-2">Make</span>
+              <span>{dashboardDetails.make}</span>
             </p>
           </div>
         </div>
@@ -75,42 +92,37 @@ const AssetInfoTab = () => {
 
             <p>
               <span className="opacity-50 mr-2">Serial Number</span>
-              <span>04233889RY</span>
-            </p>
-
-            <p>
-              <span className="opacity-50 mr-2">OEM Serial Number</span>
-              <span>-</span>
+              <span>{dashboardDetails.serialNumber}</span>
             </p>
 
             <p>
               <span className="opacity-50 mr-2">Alternative Id #</span>
-              <span>-</span>
+              <span>{dashboardDetails.assetNumber}</span>
             </p>
 
             <p>
               <span className="opacity-50 mr-2">RFID/Barcode</span>
-              <span>-</span>
+              <span>{dashboardDetails.rfidBarCode}</span>
             </p>
 
             <p>
               <span className="opacity-50 mr-2">Physical Location</span>
-              <span>-</span>
+              <span>{dashboardDetails.physicalLocation}</span>
             </p>
 
             <p>
               <span className="opacity-50 mr-2">Downtime Cost/hour</span>
-              <span>-</span>
+              <span> - </span>
             </p>
 
             <p>
               <span className="opacity-50 mr-2">Estimated Life</span>
-              <span>0 Months</span>
+              <span> - </span>
             </p>
 
             <p>
               <span className="opacity-50 mr-2">Spec Details</span>
-              <span>-</span>
+              <span>{dashboardDetails.specDetails}</span>
             </p>
 
             <p>
@@ -124,7 +136,7 @@ const AssetInfoTab = () => {
   );
 };
 
-const MaintenanceTab = () => {
+const MaintenanceTab = ({ dashboardDetails }) => {
   return (
     <div>
       {/* Main Container */}
@@ -136,7 +148,7 @@ const MaintenanceTab = () => {
 
             <p>
               <span className="opacity-50 mr-2">Maintenance Start Date</span>
-              <span>12/01/2023</span>
+              <span>{dashboardDetails.maintStartDate}</span>
             </p>
           </div>
         </div>
@@ -147,13 +159,13 @@ const MaintenanceTab = () => {
             <p className="font-bold text-lg">Information</p>
             <p>
               <span className="opacity-50 mr-2">Condition</span>
-              <span>-</span>
+              <span>{dashboardDetails.condition}</span>
             </p>
             <p>
               <span className="opacity-50 mr-2">
                 Original Manufacturer&apos;s Date
               </span>
-              <span>-</span>
+              <span>{dashboardDetails.originalMfrDate}</span>
             </p>
           </div>
         </div>
@@ -162,7 +174,7 @@ const MaintenanceTab = () => {
   );
 };
 
-const CustomAttributesTab = () => {
+const CustomAttributesTab = ({ customFields }) => {
   return (
     <div>
       {/* Main Container */}
@@ -171,65 +183,17 @@ const CustomAttributesTab = () => {
         <div className="w-full mr-5">
           <div>
             {/* Equipment Info Section */}
-            <p className="font-bold text-lg">Equipment Info</p>
-            <p>
-              <span className="opacity-50 mr-2">Manufacturer</span>
-              <span>-</span>
-            </p>
-            <p>
-              <span className="opacity-50 mr-2">Model</span>
-              <span>-</span>
-            </p>
-          </div>
-
-          {/* Equipment Information Section */}
-          <div className="mt-4">
-            <p className="font-bold text-lg">Equipment Information</p>
-            <p>
-              <span className="opacity-50 mr-2">Model Number</span>
-              <span>-</span>
-            </p>
-            <p>
-              <span className="opacity-50 mr-2">Make</span>
-              <span>-</span>
-            </p>
-            <p>
-              <span className="opacity-50 mr-2">Model #:</span>
-              <span>-</span>
-            </p>
-            <p>
-              <span className="opacity-50 mr-2">Model Number</span>
-              <span>-</span>
-            </p>
-          </div>
-        </div>
-
-        {/* Right Column */}
-        <div className="w-full">
-          {/* General Information Section */}
-          <div>
-            <p className="font-bold text-lg">General Information</p>
-            <p>
-              <span className="opacity-50 mr-2">Additional Equipment Info</span>
-              <span>-</span>
-            </p>
-          </div>
-
-          {/* Manufacture Information Section */}
-          <div className="mt-4">
-            <p className="font-bold text-lg">Manufacture Information</p>
-            <p>
-              <span className="opacity-50 mr-2">Manufacturer</span>
-              <span>DEUTZ</span>
-            </p>
-            <p>
-              <span className="opacity-50 mr-2">Model</span>
-              <span>HG1</span>
-            </p>
-            <p>
-              <span className="opacity-50 mr-2">Manufacture</span>
-              <span>-</span>
-            </p>
+            <p className="font-bold text-lg">Custom Fields</p>
+            {customFields.length > 0 ? (
+              customFields.map((field) => (
+                <p key={field.uniqueKey}>
+                  <span className="opacity-50 mr-2">{field.name}</span>
+                  <span>{field.value}</span>
+                </p>
+              ))
+            ) : (
+              <div> No Custom Fields To Display</div>
+            )}
           </div>
         </div>
       </div>
@@ -245,23 +209,25 @@ const ChildrenAssetsTab = () => {
   );
 };
 
-const WorkOrderCard = () => {
+const WorkOrderCard = ({ dashboardDetails }) => {
   const tabs = [
     {
       label: "Asset Info",
-      children: <AssetInfoTab />,
+      children: <AssetInfoTab dashboardDetails={dashboardDetails} />,
     },
     {
       label: "Maintenance Info",
-      children: <MaintenanceTab />,
+      children: <MaintenanceTab dashboardDetails={dashboardDetails} />,
     },
     {
-      label: "Custom Attributes",
-      children: <CustomAttributesTab />,
+      label: "Custom Fields",
+      children: (
+        <CustomAttributesTab customFields={dashboardDetails.customFields} />
+      ),
     },
     {
       label: "Children Assets",
-      children: <ChildrenAssetsTab />,
+      children: <ChildrenAssetsTab dashboardDetails={dashboardDetails} />,
     },
   ];
   return (
@@ -280,13 +246,14 @@ const WorkOrderCard = () => {
               </Badge>
             </Tooltip>
           </div>
-          04233889RY <p className="text-xs font-normal">(Rig Hpu) </p>
+          {dashboardDetails.assetNumber}{" "}
+          <p className="text-xs font-normal">(Rig Hpu) </p>
         </div>
       }
       extra={
         <p className="text-xs md:text-base">
           <span className="opacity-50 mr-2">Criticality: </span>
-          High <WarningFilled />
+          {dashboardDetails.criticality} <WarningFilled />
         </p>
       }
     >
@@ -294,31 +261,36 @@ const WorkOrderCard = () => {
         <div>
           <div>
             <span className="opacity-70 mr-3">Cost Center</span>
-            <span>Rig 26 - Hydraulic Systems</span>
+            <span>
+              {dashboardDetails.physicalLocation} -{" "}
+              {dashboardDetails.parentAsset}
+            </span>
           </div>
         </div>
         <div>
           <div>
             <span className="opacity-70 mr-3">Asset Class</span>
-            <span>Hydraulic Systems-HPU-N/A-N/A</span>
+            <span>
+              {dashboardDetails.parentAsset}-{dashboardDetails.part}
+            </span>
           </div>
         </div>
         <div>
           <div>
             <span className="opacity-70 mr-3">Criticality</span>
-            <span>High</span>
+            <span>{dashboardDetails.criticality}</span>
           </div>
         </div>
         <div>
           <div>
             <span className="opacity-70 mr-3">Maintenance Status</span>
-            <span>In Full Service</span>
+            <span>{dashboardDetails.maintStatus}</span>
           </div>
         </div>
         <div>
           <div>
             <span className="opacity-70 mr-3">Installed Date</span>
-            <span>09/09/1999</span>
+            <span>{dashboardDetails.installedDate}</span>
           </div>
         </div>
       </div>
@@ -340,7 +312,7 @@ const WorkOrderCard = () => {
   );
 };
 
-const CostCard = () => {
+const CostCard = ({ dashboardDetails }) => {
   const router = useRouter();
   return (
     <Card
@@ -352,11 +324,7 @@ const CostCard = () => {
         <Button
           text="View Cost"
           fullWidth={false}
-          onClick={() =>
-            router.push(
-              "/admin/assets/John%20Brown?tab=cost"
-            )
-          }
+          onClick={() => router.push("/admin/assets/John%20Brown?tab=cost")}
           outlined
         />
       }
@@ -435,7 +403,7 @@ const data = [
   },
 ];
 
-const MaintenanceCard = () => {
+const MaintenanceCard = ({ dashboardDetails }) => {
   const router = useRouter();
 
   return (
@@ -446,9 +414,7 @@ const MaintenanceCard = () => {
           text="View Maintenance Schedule"
           fullWidth={false}
           onClick={() =>
-            router.push(
-              "/admin/assets/John%20Brown?tab=maintenance-schedule"
-            )
+            router.push("/admin/assets/John%20Brown?tab=maintenance-schedule")
           }
           className="!text-xs md:!text-sm"
           outlined
@@ -481,7 +447,7 @@ const MaintenanceCard = () => {
   );
 };
 
-const TotalOpenWorkOrdersCard = () => {
+const TotalOpenWorkOrdersCard = ({ dashboardDetails }) => {
   return (
     <Card
       className="!bg-primary"
@@ -586,17 +552,17 @@ const TotalOpenWorkOrdersCard = () => {
   );
 };
 
-const Dashboard = () => {
+const Dashboard = ({ dashboardDetails }) => {
   return (
     <div className="p-5">
-      <WorkOrderCard />
+      <WorkOrderCard dashboardDetails={dashboardDetails} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <TotalOpenWorkOrdersCard />
+          <TotalOpenWorkOrdersCard dashboardDetails={dashboardDetails} />
         </div>
         <div>
-          <CostCard />
-          <MaintenanceCard />
+          <CostCard dashboardDetails={dashboardDetails} />
+          <MaintenanceCard dashboardDetails={dashboardDetails} />
         </div>
       </div>
     </div>
