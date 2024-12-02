@@ -33,8 +33,6 @@ const ActionBar = ({
     key: index,
   }));
 
-  //Add Field
-  const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [createPOVisible, setCreatePOVisible] = useState(false);
 
   const handleSearchChange = (e) => {
@@ -79,11 +77,6 @@ const ActionBar = ({
         visible={createPOVisible}
         setVisible={setCreatePOVisible}
       />
-      {/* AddFieldModal Component */}
-      <AddFieldPopup
-        visible={addFieldPopupVisible}
-        setVisible={setAddFieldPopupVisible}
-      />
 
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
         <Input.Search
@@ -97,12 +90,6 @@ const ActionBar = ({
             outlined
             onClick={() => setCreatePOVisible(true)}
           /> */}
-          <Button
-            onClick={() => setAddFieldPopupVisible(true)}
-            text="Manage Fields"
-            outlined
-          />
-
           <Dropdown
             dropdownRender={() => (
               <InventoryFilter
@@ -128,6 +115,7 @@ const ActionBar = ({
                     <Menu.Item
                       key={option.value}
                       style={{ display: "flex", alignItems: "center" }}
+                      onClick={(e) => e?.stopPropagation()}
                     >
                       <Checkbox
                         value={option.value}

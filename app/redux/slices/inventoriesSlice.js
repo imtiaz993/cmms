@@ -15,7 +15,7 @@ const inventoriesSlice = createSlice({
       state.inventory = action.payload;
     },
     // Action to add a single inventory item to the list
-    addInventory(state, action) {
+    updateInventory(state, action) {
       state.inventory.push(action.payload);
     },
     // Action to set the loading state
@@ -32,7 +32,7 @@ const inventoriesSlice = createSlice({
 // Export the actions for dispatching
 export const {
   setInventory,
-  addInventory,
+  updateInventory,
   setInventoryLoading,
   setInventoryError,
 } = inventoriesSlice.actions;
