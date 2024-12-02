@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Input,
@@ -12,6 +12,7 @@ import { Formik, Form, ErrorMessage, Field } from "formik";
 import * as Yup from "yup";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
+import { addField, deleteField, getFields } from "app/services/customFields";
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -20,7 +21,7 @@ const { TabPane } = Tabs;
 const FieldValidationSchema = Yup.object().shape({
   name: Yup.string().required("Field Name is required"),
   type: Yup.string().required("Field Type is required"),
-  options: Yup.string().when("type", {
+  preFilValue: Yup.string().when("type", {
     is: (value) => value === "dropdown",
     then: (schema) => schema.required("Dropdown options are required"),
     otherwise: (schema) => schema.notRequired(),
@@ -48,13 +49,13 @@ const ExistingFields = ({ fields, onDelete }) => {
               <p style={{ margin: 0 }}>Type: {field.type}</p>
               {field.type === "dropdown" && (
                 <p style={{ margin: 0 }}>
-                  <strong>Options:</strong> {field.options.join(", ")}
+                  <strong>Options:</strong> {field.preFilValue.join(", ")}
                 </p>
               )}
             </div>
             <Popconfirm
               title="Are you sure you want to delete this field?"
-              onConfirm={() => onDelete(index)}
+              onConfirm={() => onDelete(field?._id)}
               okText="Yes"
               cancelText="No"
             >
@@ -75,14 +76,14 @@ const ExistingFields = ({ fields, onDelete }) => {
 const AddFieldForm = ({ onAddField }) => {
   return (
     <Formik
-      initialValues={{ name: "", type: "", options: "" }}
+      initialValues={{ name: "", type: "", preFilValue: "" }}
       validationSchema={FieldValidationSchema}
       onSubmit={(values, { resetForm }) => {
         const newField = {
           ...values,
-          options:
+          preFilValue:
             values.type === "dropdown"
-              ? values.options.split(",").map((opt) => opt.trim())
+              ? values.preFilValue.split(",").map((opt) => opt.trim())
               : [],
         };
         onAddField(newField);
@@ -105,13 +106,14 @@ const AddFieldForm = ({ onAddField }) => {
             <Field
               as={Select}
               placeholder="Select field type"
-              value={values.type}
+              value={values.type || undefined}
               onChange={(value) => setFieldValue("type", value)}
               style={{ height: "36px", width: "100%", marginTop: "12px" }}
             >
               <Option value="text">Text</Option>
               <Option value="number">Number</Option>
               <Option value="dropdown">Dropdown</Option>
+              <Option value="date">Date</Option>
             </Field>
             <ErrorMessage
               name="type"
@@ -122,10 +124,10 @@ const AddFieldForm = ({ onAddField }) => {
             {/* Dropdown Options Input */}
             {values.type === "dropdown" && (
               <InputField
-                name="options"
+                name="preFilValue"
                 placeholder="Comma-separated options (e.g., Option1, Option2)"
-                value={values.options}
-                onChange={(e) => setFieldValue("options", e.target.value)}
+                value={values.preFilValue}
+                onChange={(e) => setFieldValue("preFilValue", e.target.value)}
                 className="!mt-3"
               />
             )}
@@ -153,24 +155,23 @@ const AddFieldForm = ({ onAddField }) => {
 };
 
 // Main Component: AddFieldModal
-const AddFieldPopup = ({ visible, setVisible }) => {
-  const [fields, setFields] = useState([
-    { name: "Product Name", type: "text" },
-    { name: "Price", type: "number" },
-    {
-      name: "Category",
-      type: "dropdown",
-      options: ["Electronics", "Furniture", "Clothing"],
-    },
-  ]);
-
-  const handleAddField = (field) => {
-    setFields([...fields, field]);
+const AddFieldPopup = ({ visible, setVisible, module, fields, setFields }) => {
+  const handleAddField = async (field) => {
+    const { status, data } = await addField(module, field);
+    if (status === 200) {
+      setFields([...fields, data.data]);
+    } else {
+      message.error(data.error);
+    }
   };
 
-  const handleDeleteField = (index) => {
-    setFields(fields.filter((_, i) => i !== index));
-    message.success("Field deleted successfully");
+  const handleDeleteField = async (id) => {
+    const { status, data } = await deleteField(id);
+    if (status === 200) {
+      setFields(fields.filter((f) => f?._id !== id));
+    } else {
+      message.error(data.error);
+    }
   };
 
   return (
