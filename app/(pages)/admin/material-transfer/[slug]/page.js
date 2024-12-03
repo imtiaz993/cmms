@@ -2,6 +2,7 @@
 import Button from "@/components/common/Button";
 import {
   ArrowLeftOutlined,
+  DownloadOutlined,
   ExclamationCircleOutlined,
   ExportOutlined,
   FolderFilled,
@@ -163,7 +164,7 @@ const MaterialTransferDetail = () => {
                 key: "transferReason",
               },
             ]}
-            dataSource={details?.assets}
+            dataSource={details?.materialTransfer.assets}
             pagination={{
               total: data.length,
               current: 1,
@@ -206,7 +207,7 @@ const MaterialTransferDetail = () => {
               />
             </div>
           </div>
-          {details?.inventory.length > 0 ? (
+          {details?.materialTransfer.inventory.length > 0 ? (
             <Table
               loading={false}
               size={"small"}
@@ -229,7 +230,7 @@ const MaterialTransferDetail = () => {
                 _id: id,
               }))}
               pagination={{
-                total: details?.inventory.length,
+                total: details?.materialTransfer.inventory.length,
                 current: 1,
                 pageSize: 5,
                 showSizeChanger: true,
@@ -255,7 +256,7 @@ const MaterialTransferDetail = () => {
       children: (
         <div className="text-ellipsisxt-center my-7">
           <TextArea
-            value={details?.misc}
+            value={details?.materialTransfer.misc}
             className={` !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F] resize-none`}
             style={{ width: "100%" }}
           />
@@ -270,7 +271,7 @@ const MaterialTransferDetail = () => {
       if (status === 200) {
         console.log(data);
         setDetails(data?.data);
-        setSelectedRowKeys(data?.data?.inventory);
+        setSelectedRowKeys(data?.data?.materialTransfer.inventory);
       } else {
         message.error(data?.message || "Failed to fetch data");
       }
@@ -302,11 +303,13 @@ const MaterialTransferDetail = () => {
       <UploadLinkDocPopup
         visible={uploadLinkDocVisible}
         setVisible={setUploadLinkDocVisible}
+        materialTransferSlug={slug}
         setDetails={setDetails}
       />
       <UploadDocPopup
         visible={uploadDocVisible}
         setVisible={setUploadDocVisible}
+        materialTransferSlug={slug}
         setDetails={setDetails}
       />
       <div className="flex justify-between gap-3 mb-5">
@@ -351,22 +354,34 @@ const MaterialTransferDetail = () => {
               <div>
                 <span className="opacity-70 mr-3">Origin</span>
                 <span className="">
-                  {rigs.find((i) => i.id === details?.origination)?.name}
+                  {
+                    rigs.find(
+                      (i) => i.id === details?.materialTransfer.origination
+                    )?.name
+                  }
                 </span>
               </div>
               <div>
                 <span className="opacity-70 mr-3">Transporter</span>
-                <span className="">{details?.transporter}</span>
+                <span className="">
+                  {details?.materialTransfer.transporter}
+                </span>
               </div>
               <div>
                 <span className="opacity-70 mr-3">Destination</span>
                 <span className="">
-                  {rigs.find((i) => i.id === details?.destination)?.name}
+                  {
+                    rigs.find(
+                      (i) => i.id === details?.materialTransfer.destination
+                    )?.name
+                  }
                 </span>
               </div>
               <div>
                 <span className="opacity-70 mr-3">Attention To</span>
-                <span className="">{details?.attentionTo}</span>
+                <span className="">
+                  {details?.materialTransfer.attentionTo}
+                </span>
               </div>
             </div>
           </Card>
@@ -379,23 +394,27 @@ const MaterialTransferDetail = () => {
             <div className="grid md:grid-cols-3 mx-2 gap-3">
               <div>
                 <span className="opacity-70 mr-3">Creator</span>
-                <span className="">{details?.createdBy}</span>
+                <span className="">{details?.materialTransfer.createdBy}</span>
               </div>
               <div>
                 <span className="opacity-70 mr-3">Created On</span>
                 <span className="">
-                  {dayjs(details?.createdAt).format("MMM DD, YYYY")}
+                  {dayjs(details?.materialTransfer.createdAt).format(
+                    "MMM DD, YYYY"
+                  )}
                 </span>
               </div>
               <div className="flex">
                 <span className="opacity-70 mr-3 block">
                   Material Transfer Type
                 </span>
-                <span className="">{details?.materialTransferType}</span>
+                <span className="">
+                  {details?.materialTransfer.materialTransferType}
+                </span>
               </div>
               <div className="md:col-span-2">
                 <span className="opacity-70 mr-3">Comments</span>
-                <span className="">{details?.comments}</span>
+                <span className="">{details?.materialTransfer.comments}</span>
               </div>
             </div>
           </Card>
@@ -441,8 +460,18 @@ const MaterialTransferDetail = () => {
                 title={
                   <p className="text-sm">
                     Ship ({" "}
-                    {rigs.find((i) => i.id === details?.origination)?.name} to{" "}
-                    {rigs.find((i) => i.id === details?.destination)?.name})
+                    {
+                      rigs.find(
+                        (i) => i.id === details?.materialTransfer.origination
+                      )?.name
+                    }{" "}
+                    to{" "}
+                    {
+                      rigs.find(
+                        (i) => i.id === details?.materialTransfer.destination
+                      )?.name
+                    }
+                    )
                   </p>
                 }
                 description={
@@ -458,8 +487,18 @@ const MaterialTransferDetail = () => {
                 title={
                   <p className="text-sm">
                     Receive ({" "}
-                    {rigs.find((i) => i.id === details?.origination)?.name} to{" "}
-                    {rigs.find((i) => i.id === details?.destination)?.name}))
+                    {
+                      rigs.find(
+                        (i) => i.id === details?.materialTransfer.origination
+                      )?.name
+                    }{" "}
+                    to{" "}
+                    {
+                      rigs.find(
+                        (i) => i.id === details?.materialTransfer.destination
+                      )?.name
+                    }
+                    ))
                   </p>
                 }
                 description={
@@ -538,13 +577,25 @@ const MaterialTransferDetail = () => {
                   },
                   {
                     title: "Document Type",
-                    dataIndex: "documentType",
-                    key: "documentType",
+                    dataIndex: "type",
+                    key: "type",
                   },
                   {
                     title: "Description",
                     dataIndex: "description",
                     key: "description",
+                  },
+                  {
+                    title: "",
+                    dataIndex: "link",
+                    key: "link",
+                    render: (link) => (
+                      <a href={link} target="_blank">
+                        <DownloadOutlined
+                          style={{ fontSize: "20px", cursor: "pointer" }}
+                        />
+                      </a>
+                    ),
                   },
                 ]}
                 dataSource={details?.documents}
