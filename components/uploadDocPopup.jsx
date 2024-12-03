@@ -13,7 +13,13 @@ const validationSchema = Yup.object().shape({
   description: Yup.string().max(128, "Description is too long").nullable(),
 });
 
-const UploadDocPopup = ({ visible, setVisible, assetSlug, setDetails }) => {
+const UploadDocPopup = ({
+  visible,
+  setVisible,
+  assetSlug,
+  materialTransferSlug,
+  setDetails,
+}) => {
   const [fileList, setFileList] = useState([]);
   const [fileName, setFileName] = useState(""); // State to store the selected file name
 
@@ -30,27 +36,32 @@ const UploadDocPopup = ({ visible, setVisible, assetSlug, setDetails }) => {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = new FormData();
+    console.log(values);
     formData.append("document", values.document[0]);
-    formData.append("asset", assetSlug);
+    assetSlug
+      ? formData.append("asset", assetSlug)
+      : materialTransferSlug
+      ? formData.append("materialTransfer", materialTransferSlug)
+      : null;
     formData.append("type", values.documentType);
     formData.append("description", values.description);
     formData.append("title", fileName);
-    if (assetSlug) {
-      const { status, data } = await uploadDoc(formData);
-      if (status === 200) {
-        message.success(data.message || "Document uploaded successfully");
-        setDetails((prev) => ({
-          ...prev,
-          documents: [...(prev.documents ?? []), data?.data],
-        }));
-        setFileList([]);
-        setFileName(""); // Clear file name after successful upload
-        resetForm();
-        setVisible(false);
-      } else {
-        message.error(data.message || "Failed to upload document");
-      }
+
+    const { status, data } = await uploadDoc(formData);
+    if (status === 200) {
+      message.success(data.message || "Document uploaded successfully");
+      setDetails((prev) => ({
+        ...prev,
+        documents: [...(prev.documents ?? []), data?.data],
+      }));
+      setFileList([]);
+      setFileName(""); // Clear file name after successful upload
+      resetForm();
+      setVisible(false);
+    } else {
+      message.error(data.message || "Failed to upload document");
     }
+
     setSubmitting(false);
   };
 

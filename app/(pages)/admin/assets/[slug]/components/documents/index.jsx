@@ -1,9 +1,8 @@
 "use client";
-import { message, Table } from "antd";
+import { Table } from "antd";
 import ActionBar from "./components/actionBar";
 import { DownloadOutlined } from "@ant-design/icons";
-import { useEffect, useMemo, useState } from "react";
-import { getDocuments } from "app/services/document";
+import { useMemo, useState } from "react";
 
 const columns = [
   {

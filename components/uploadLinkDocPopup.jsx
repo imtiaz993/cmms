@@ -13,27 +13,35 @@ const validationSchema = Yup.object().shape({
   description: Yup.string().required("Required"),
 });
 
-const UploadLinkDocPopup = ({ visible, setVisible, setDetails, assetSlug }) => {
+const UploadLinkDocPopup = ({
+  visible,
+  setVisible,
+  setDetails,
+  materialTransferSlug,
+  assetSlug,
+}) => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
-    console.log(values);
-    if (assetSlug) {
-      const { status, data } = await uploadLinkDoc({
-        ...values,
-        asset: assetSlug,
-      });
-      if (status === 200) {
-        message.success(data.message || "Document uploaded successfully");
-        setDetails((prev) => ({
-          ...prev,
-          documents: [...(prev.documents ?? []), data?.data],
-        }));
-        setVisible(false);
-        resetForm();
-      } else {
-        message.error(data.message || "Failed to upload document");
-      }
+    const finalValues = materialTransferSlug
+      ? { ...values, materialTransfer: materialTransferSlug }
+      : assetSlug
+      ? { ...values, asset: assetSlug }
+      : values;
+    console.log(finalValues);
+
+    const { status, data } = await uploadLinkDoc(finalValues);
+    if (status === 200) {
+      message.success(data.message || "Document uploaded successfully");
+      setDetails((prev) => ({
+        ...prev,
+        documents: [...(prev.documents ?? []), data?.data],
+      }));
+      setVisible(false);
+      resetForm();
+    } else {
+      message.error(data.message || "Failed to upload document");
     }
+
     setSubmitting(false);
   };
   return (
