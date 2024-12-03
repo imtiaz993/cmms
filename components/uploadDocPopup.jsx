@@ -1,7 +1,7 @@
 import Button from "@/components/common/Button";
 import { message, Modal, Upload } from "antd";
-import { uploadDoc } from "app/services/materialTransfer";
-import { Form, Formik, Field } from "formik";
+import { uploadDoc } from "app/services/document";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import SelectField from "@/components/common/SelectField";
@@ -13,7 +13,7 @@ const validationSchema = Yup.object().shape({
   description: Yup.string().max(128, "Description is too long").nullable(),
 });
 
-const UploadDocPopup = ({ visible, setVisible }) => {
+const UploadDocPopup = ({ visible, setVisible, assetSlug, setDetails }) => {
   const [fileList, setFileList] = useState([]);
   const [fileName, setFileName] = useState(""); // State to store the selected file name
 
@@ -31,17 +31,25 @@ const UploadDocPopup = ({ visible, setVisible }) => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = new FormData();
     formData.append("document", values.document[0]);
-    formData.append("documentType", values.documentType);
+    formData.append("asset", assetSlug);
+    formData.append("type", values.documentType);
     formData.append("description", values.description);
-
-    const { status, data } = await uploadDoc(formData);
-    if (status === 200) {
-      message.success(data.message || "Document uploaded successfully");
-      setFileList([]);
-      setFileName(""); // Clear file name after successful upload
-      resetForm();
-    } else {
-      message.error(data.message || "Failed to upload document");
+    formData.append("title", fileName);
+    if (assetSlug) {
+      const { status, data } = await uploadDoc(formData);
+      if (status === 200) {
+        message.success(data.message || "Document uploaded successfully");
+        setDetails((prev) => ({
+          ...prev,
+          documents: [...(prev.documents ?? []), data?.data],
+        }));
+        setFileList([]);
+        setFileName(""); // Clear file name after successful upload
+        resetForm();
+        setVisible(false);
+      } else {
+        message.error(data.message || "Failed to upload document");
+      }
     }
     setSubmitting(false);
   };
@@ -60,7 +68,9 @@ const UploadDocPopup = ({ visible, setVisible }) => {
         <Form>
           <Modal
             maskClosable={false}
-            title={<h1 className="text-lg md:text-2xl mb-5">Upload Document</h1>}
+            title={
+              <h1 className="text-lg md:text-2xl mb-5">Upload Document</h1>
+            }
             open={visible}
             onCancel={() => setVisible(false)}
             footer={

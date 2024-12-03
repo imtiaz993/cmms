@@ -83,6 +83,7 @@ const Documents = ({ documentsData, setDetails }) => {
           searchText={searchText}
           selectedCategories={selectedCategories}
           setSelectedCategories={setSelectedCategories}
+          setDetails={setDetails} //set Asset Details on Document add
         />
         <div className="flex justify-end">
           <p className="text-secondary">

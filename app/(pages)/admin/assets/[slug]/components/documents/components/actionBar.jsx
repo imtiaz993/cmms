@@ -3,17 +3,20 @@ import { Dropdown, Input, Menu, Select, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import DownloadPopup from "./downloadPopup";
-import UploadDocPopup from "./uploadDocPopup";
-import UploadLinkDocPopup from "./uploadLinkDocPopup";
+import UploadDocPopup from "@/components/uploadDocPopup";
+import UploadLinkDocPopup from "@/components/uploadLinkDocPopup";
+import { useParams } from "next/navigation";
 
 const ActionBar = ({
   setSearchText,
   searchText,
   selectedCategories,
   setSelectedCategories,
+  setDetails
 }) => {
   const [downloadPopup, setDownloadPopup] = useState(false);
   const [uploadPopup, setUploadPopup] = useState(false);
+  const { slug } = useParams();
 
   return (
     <>
@@ -25,10 +28,14 @@ const ActionBar = ({
       <UploadDocPopup
         visible={uploadPopup === "uploadDocument"}
         setVisible={setUploadPopup}
+        assetSlug={slug}
+        setDetails={setDetails}
       />
       <UploadLinkDocPopup
         visible={uploadPopup === "uploadLinkDocument"}
         setVisible={setUploadPopup}
+        assetSlug={slug}
+        setDetails={setDetails}
       />
 
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-3">

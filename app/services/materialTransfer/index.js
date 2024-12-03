@@ -116,36 +116,6 @@ export const getMaterialTransferDetails = async (slug) => {
   }
 };
 
-export const uploadDoc = async (doc) => {
-  try {
-    const { status, data } = await authRequest({
-      url: "/material-transfer/uploadDoc",
-      method: "POST",
-      data: doc,
-    });
-    return { status, data };
-  } catch (e) {
-    if (e.data) {
-      return { status: e.status, data: e.data };
-    }
-  }
-};
-
-export const uploadLinkDoc = async (values) => {
-  try {
-    const { status, data } = await authRequest({
-      url: "/material-transfer/uploadLinkDoc",
-      method: "POST",
-      data: values,
-    });
-    return { status, data };
-  } catch (e) {
-    if (e.data) {
-      return { status: e.status, data: e.data };
-    }
-  }
-};
-
 export const printMaterialTransferDetails = async (slug) => {
   try {
     const { status, data } = await authRequest({

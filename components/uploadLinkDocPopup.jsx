@@ -1,35 +1,54 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
-import { Divider, Modal, Select } from "antd";
-import { Field, Form, Formik } from "formik";
+import { message, Modal } from "antd";
+import { uploadLinkDoc } from "app/services/document";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
-  title: Yup.string(),
+  title: Yup.string().required("Required"),
+  link: Yup.string().required("Required"),
+  type: Yup.string().required("Required"),
+  description: Yup.string().required("Required"),
 });
 
-const UploadLinkDocPopup = ({ visible, setVisible }) => {
-  const handleSubmit = (values, setSubmitting, resetForm) => {
+const UploadLinkDocPopup = ({ visible, setVisible, setDetails, assetSlug }) => {
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    setSubmitting(true);
     console.log(values);
+    if (assetSlug) {
+      const { status, data } = await uploadLinkDoc({
+        ...values,
+        asset: assetSlug,
+      });
+      if (status === 200) {
+        message.success(data.message || "Document uploaded successfully");
+        setDetails((prev) => ({
+          ...prev,
+          documents: [...(prev.documents ?? []), data?.data],
+        }));
+        setVisible(false);
+        resetForm();
+      } else {
+        message.error(data.message || "Failed to upload document");
+      }
+    }
+    setSubmitting(false);
   };
   return (
     <Formik
       initialValues={{
         title: "",
-        linkUrl: "",
-        documentType: "",
+        link: "",
+        type: "",
         description: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
-        console.log(values);
-
-        handleSubmit(values, setSubmitting, resetForm);
-      }}
+      onSubmit={handleSubmit}
     >
-      {({ isSubmitting, handleSubmit }) => (
-        <Form onSubmit={handleSubmit}>
+      {({ isSubmitting, submitForm }) => (
+        <Form>
           <Modal
             maskClosable={false}
             title={<h1 className="text-lg md:text-2xl mb-5">Link Document</h1>}
@@ -49,7 +68,7 @@ const UploadLinkDocPopup = ({ visible, setVisible }) => {
 
                 <Button
                   className=""
-                  onClick={() => setVisible(false)}
+                  onClick={() => submitForm()}
                   size="small"
                   text="Add to Documents"
                   fullWidth={false}
@@ -60,23 +79,23 @@ const UploadLinkDocPopup = ({ visible, setVisible }) => {
             width={1000}
           >
             <div>
-              <div className="flex items-center gap-5 ">
+              {/* <div className="flex items-center gap-5 ">
                 <Button text="Add Link" fullWidth={false} outlined />
                 <p>Add additional links to your upload</p>
               </div>
               <div></div>
-              <Divider />
+              <Divider /> */}
               <div className="mt-4 grid md:grid-cols-3 gap-4 w-full items-end md:items-center">
                 <div className="w-full">
                   <InputField
                     name="title"
                     placeholder="Link Title"
-                    maxLength={128}
+                    maxLength={50}
                   />
                 </div>
                 <div className="w-full md:col-span-2">
                   <InputField
-                    name="linkUrl"
+                    name="link"
                     placeholder="Link Url"
                     maxLength={128}
                   />
@@ -84,9 +103,13 @@ const UploadLinkDocPopup = ({ visible, setVisible }) => {
 
                 <div className="w-full">
                   <SelectField
-                    name="documentType"
+                    name="type"
                     placeholder="Document Type"
-                    options={[]}
+                    options={[
+                      { label: "Contract", value: "contract" },
+                      { label: "Invoice", value: "invoice" },
+                      { label: "Other", value: "other" },
+                    ]}
                   />
                 </div>
 

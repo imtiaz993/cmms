@@ -11,8 +11,8 @@ import {
 import { Badge, Card, Dropdown, Menu, message, Steps, Table, Tabs } from "antd";
 import ViewAssetsDetailsPopup from "./viewAssetsDetailsPopup";
 import { useEffect, useState } from "react";
-import UploadLinkDocPopup from "./uploadLinkDocPopup";
-import UploadDocPopup from "./uploadDocPopup";
+import UploadLinkDocPopup from "../../../../../components/uploadLinkDocPopup";
+import UploadDocPopup from "../../../../../components/uploadDocPopup";
 import { usePathname, useRouter } from "next/navigation";
 import AddAssetPopupMT from "@/components/addAssetPopupInMT";
 import {
