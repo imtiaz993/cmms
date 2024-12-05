@@ -4,6 +4,7 @@ import ActionBar from "./components/actionBar";
 import { DownloadOutlined } from "@ant-design/icons";
 import { useEffect, useMemo, useState } from "react";
 import { getDocuments } from "app/services/document";
+import Link from "next/link";
 
 const columns = [
   {
@@ -12,10 +13,31 @@ const columns = [
     key: "title",
   },
   {
-    title: "Asset",
+    title: "Asset / MT / workOrders",
     dataIndex: "asset",
     key: "asset",
-    render: (asset) => asset.id,
+    render: (text, record) => {
+      let content = "unknown"; // Default content
+      let url = "#"; // Default URL
+
+      // Check for asset, materialTransfer, and workOrder properties
+      if (record.asset) {
+        content = "Asset (" + record.asset.id + ")";
+        url = "/admin/assets/" + record.asset.id; // Update URL for asset
+      } else if (record.materialTransfer) {
+        content = "Material Transfer (" + record.materialTransfer.id + ")";
+        url = "/admin/material-transfer/" + record.materialTransfer.id; // URL for material transfer
+      } else if (record.workOrder) {
+        content = "Work Order (" + record.workOrder.id + ")";
+        url = "/admin/work-orders/" + record.workOrder.id; // URL for work order
+      }
+
+      return (
+        <Link href={url} target="_blank">
+          {content}
+        </Link>
+      );
+    },
   },
   {
     title: "Document Type",
