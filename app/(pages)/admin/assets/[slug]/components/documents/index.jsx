@@ -56,32 +56,26 @@ const columns = [
 const Documents = ({ documentsData, setDetails }) => {
   const [fetchingDocuments, setFetchingDocuments] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const filteredDocuments = useMemo(() => {
     if (!documentsData) return [];
     return documentsData.filter((document) => {
-      const matchesCategory =
-        selectedCategories.length === 0 ||
-        selectedCategories.includes(document.type);
-      const matchesSearch =
+      return (
         !searchText ||
         Object.values(document)
           .join(" ")
           .toLowerCase()
-          .includes(searchText.toLowerCase());
-      return matchesCategory && matchesSearch;
+          .includes(searchText.toLowerCase())
+      );
     });
-  }, [searchText, selectedCategories, documentsData]);
+  }, [searchText, documentsData]);
 
   return (
-    <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
+    <div className="px-3 lg:px-6 pb-4 pt-3">
       <div>
         <ActionBar
           setSearchText={setSearchText}
           searchText={searchText}
-          selectedCategories={selectedCategories}
-          setSelectedCategories={setSelectedCategories}
           setDetails={setDetails} //set Asset Details on Document add
         />
         <div className="flex justify-end">
