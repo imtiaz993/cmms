@@ -23,11 +23,15 @@ const MainCard = () => (
 );
 
 // Direct Costs Card Component
-const DirectCostsCard = () => {
+const DirectCostsCard = ({ setDetails }) => {
   const [costPopup, setCostPopup] = useState(false);
   return (
     <>
-      <AddCostPopup visible={costPopup} setVisible={setCostPopup} />
+      <AddCostPopup
+        visible={costPopup}
+        setVisible={setCostPopup}
+        setDetails={setDetails}
+      />
       <Card
         title={<h2 className="text-wrap">Direct Costs</h2>}
         size="medium"
@@ -105,12 +109,12 @@ const LaborCostsCard = () => (
 );
 
 // Main layout
-const CardLayout = () => (
+const CardLayout = ({ setDetails }) => (
   <div className="flex flex-col md:flex-row md:gap-4 p-7">
     <div className="w-full flex flex-col gap-4">
       <MainCard />
       <div className="block md:hidden">
-        <DirectCostsCard />
+        <DirectCostsCard setDetails={setDetails} />
       </div>
       <MaintenanceCostsCard />
       <ContractCostsCard />

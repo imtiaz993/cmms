@@ -87,7 +87,7 @@ const MaterialTransfer = ({ materialTransferData, setDetails }) => {
   }, [searchText, materialTransferData, checkedList]);
 
   return (
-    <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
+    <div className="px-3 lg:px-6 pb-4 pt-3">
       <PreviewPopup
         visible={previewPopupVisible}
         setVisible={setPreviewPopupVisible}

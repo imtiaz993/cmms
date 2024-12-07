@@ -45,7 +45,7 @@ const Tabs = ({ details, setDetails, slug }) => {
     {
       key: "cost",
       label: "Cost",
-      children: <Cost />,
+      children: <Cost setDetails={setDetails} />,
     },
     {
       key: "documents",

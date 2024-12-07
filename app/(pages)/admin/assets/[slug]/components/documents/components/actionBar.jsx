@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dropdown, Input, Menu, Select, Tag } from "antd";
+import { Dropdown, Input, Menu } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import DownloadPopup from "./downloadPopup";
@@ -7,24 +7,14 @@ import UploadDocPopup from "@/components/uploadDocPopup";
 import UploadLinkDocPopup from "@/components/uploadLinkDocPopup";
 import { useParams } from "next/navigation";
 
-const ActionBar = ({
-  setSearchText,
-  searchText,
-  selectedCategories,
-  setSelectedCategories,
-  setDetails
-}) => {
+const ActionBar = ({ setSearchText, searchText, setDetails }) => {
   const [downloadPopup, setDownloadPopup] = useState(false);
   const [uploadPopup, setUploadPopup] = useState(false);
   const { slug } = useParams();
 
   return (
     <>
-      <DownloadPopup
-        visible={downloadPopup}
-        setVisible={setDownloadPopup}
-        selectedCategories={selectedCategories}
-      />
+      <DownloadPopup visible={downloadPopup} setVisible={setDownloadPopup} />
       <UploadDocPopup
         visible={uploadPopup === "uploadDocument"}
         setVisible={setUploadPopup}
@@ -47,25 +37,6 @@ const ActionBar = ({
           className="sm:!w-[300px] searchBar"
         />
         <div className="grid grid-cols-2 sm:flex items-center gap-2">
-          {/* Category Selector */}
-          <div className="grid grid-cols-2 sm:flex items-center gap-2">
-            <div className="sm:min-w-44 overflow-hidden">
-              <Select
-                mode="multiple"
-                name="category"
-                placeholder="Category"
-                style={{ height: "36px", width: "100%" }}
-                options={[
-                  { label: "Asset", value: "Asset" },
-                  { label: "Work Order", value: "Work Order" },
-                  { label: "Material Transfer", value: "Material Transfer" },
-                ]}
-                value={selectedCategories}
-                onChange={setSelectedCategories}
-              />
-            </div>
-          </div>
-
           <Dropdown
             dropdownRender={() => (
               <Menu>

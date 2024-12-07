@@ -3,18 +3,25 @@ import * as Yup from "yup";
 import { message, Modal } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-import { addAsset } from "app/services/assets";
+import { addAsset, updateAsset } from "app/services/assets";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
 import { rigs } from "@/constants/rigsAndSystems";
 import { useDispatch } from "react-redux";
-import { updateAsset } from "app/redux/slices/assetsSlice";
+import { editAsset, updateAssets } from "app/redux/slices/assetsSlice";
 import AddFieldPopup from "@/components/addFieldPopup";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getFields } from "app/services/customFields";
 
-const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
+const CreateAssetPopup = ({
+  visible,
+  setVisible,
+  assetId,
+  details,
+  setDetails,
+}) => {
+  const { dashboard } = details;
   const dispatch = useDispatch();
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [fields, setFields] = useState([]);
@@ -34,43 +41,46 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
   }, []);
 
   // Generate initial values for custom fields
-  const customFieldInitialValues = fields.reduce((acc, field) => {
-    acc[field.uniqueKey] = "";
-    return acc;
-  }, {});
+  const customFieldInitialValues = useMemo(() => {
+    return fields.reduce((acc, field) => {
+      acc[field.uniqueKey] = "";
+      return acc;
+    }, {});
+  }, [fields]);
 
-  // Generate validation schema for custom fields
-  const customFieldValidations = fields.reduce((acc, field) => {
-    switch (field.type) {
-      case "text":
-      case "dropdown":
-        acc[field.uniqueKey] = Yup.string().required(
-          `${field.name} is required`
-        );
-        break;
-      case "number":
-        acc[field.uniqueKey] = Yup.number()
-          .typeError(`${field.name} must be a number`)
-          .required(`${field.name} is required`);
-        break;
-      case "date":
-        acc[field.uniqueKey] = Yup.date()
-          .typeError(`${field.name} must be a valid date`)
-          .required(`${field.name} is required`);
-        break;
-      default:
-        acc[field.uniqueKey] = Yup.string().required(
-          `${field.name} is required`
-        );
-    }
-    return acc;
-  }, {});
+  const customFieldValidations = useMemo(() => {
+    return fields.reduce((acc, field) => {
+      switch (field.type) {
+        case "text":
+        case "dropdown":
+          acc[field.uniqueKey] = Yup.string().required(
+            `${field.name} is required`
+          );
+          break;
+        case "number":
+          acc[field.uniqueKey] = Yup.number()
+            .typeError(`${field.name} must be a number`)
+            .required(`${field.name} is required`);
+          break;
+        case "date":
+          acc[field.uniqueKey] = Yup.date()
+            .typeError(`${field.name} must be a valid date`)
+            .required(`${field.name} is required`);
+          break;
+        default:
+          acc[field.uniqueKey] = Yup.string().required(
+            `${field.name} is required`
+          );
+      }
+      return acc;
+    }, {});
+  }, [fields]);
 
   // Combine standard and custom field validations
   const validationSchema = Yup.object().shape({
     physicalLocation: Yup.string().required("Physical Location is required"),
     mainSystem: Yup.string().required("Main System is required"),
-    rfidBarcode: Yup.string().required("RFID/Barcode is required"),
+    rfidBarCode: Yup.string().required("RFID/Barcode is required"),
     accountingDept: Yup.string().required("Accounting Dept. is required"),
     parentAsset: Yup.string().required("Parent Asset is required"),
     childAsset: Yup.string().required("Child Asset is required"),
@@ -119,17 +129,30 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
       ...standardValues,
       customFields,
     };
-
-    const { status, data } = await addAsset(payload);
-    setSubmitting(false);
-    if (status === 200) {
-      message.success(data?.message);
-      resetForm();
-      dispatch(updateAsset(data.data)); // Store asset in Redux
-      setAddAssetVisible(false);
+    if (assetId) {
+      const { status, data } = await addAsset(payload);
+      if (status === 200) {
+        message.success(data?.message || "Asset Added successfully");
+        dispatch(updateAssets(data.data)); // Store asset in Redux
+      } else {
+        message.error(data.error);
+      }
     } else {
-      message.error(data.error);
+      const { status, data } = await updateAsset({
+        ...payload,
+        asset: assetId,
+      });
+      if (status === 200) {
+        message.success(data?.message || "Asset Updated successfully");
+        dispatch(editAsset(data.data)); // update asset in Redux
+        setDetails((prev) => ({ ...prev, dashboard: data.data }));
+      } else {
+        message.error(data.error);
+      }
     }
+    resetForm();
+    setVisible(false);
+    setSubmitting(false);
   };
 
   return (
@@ -144,27 +167,27 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
       {!loading && (
         <Formik
           initialValues={{
-            physicalLocation: "",
-            mainSystem: "",
-            rfidBarcode: "",
-            accountingDept: "",
-            parentAsset: "",
-            childAsset: "",
-            assetNumber: "",
-            serialNumber: "",
-            make: "",
-            model: "",
-            part: "",
-            description: "",
-            specDetails: "",
-            installedDate: "",
-            supplier: "",
-            criticality: "",
-            originalMfrDate: "",
-            condition: "",
-            maintStatus: "",
-            maintStartDate: "",
-            ...customFieldInitialValues, // Include custom fields
+            physicalLocation: dashboard.physicalLocation || "",
+            mainSystem: dashboard.mainSystem || "",
+            rfidBarCode: dashboard.rfidBarCode || "",
+            accountingDept: dashboard.accountingDept || "",
+            parentAsset: dashboard.parentAsset || "",
+            childAsset: dashboard.childAsset || "",
+            assetNumber: dashboard.assetNumber || "",
+            serialNumber: dashboard.serialNumber || "",
+            make: dashboard.make || "",
+            model: dashboard.model || "",
+            part: dashboard.part || "",
+            description: dashboard.description || "",
+            specDetails: dashboard.specDetails || "",
+            installedDate: dashboard.installedDate || "",
+            supplier: dashboard.supplier || "",
+            criticality: dashboard.criticality || "",
+            originalMfrDate: dashboard.originalMfrDate || "",
+            condition: dashboard.condition || "",
+            maintStatus: dashboard.maintStatus || "",
+            maintStartDate: dashboard.maintStartDate || "",
+            ...customFieldInitialValues, // Include custom fields values
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
@@ -174,15 +197,17 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
               <Modal
                 maskClosable={false}
                 title={
-                  <h1 className="text-lg md:text-2xl mb-5">Add New Asset</h1>
+                  <h1 className="text-lg md:text-2xl mb-5">
+                    {assetId ? "Update Asset" : "Add New Asset"}
+                  </h1>
                 }
-                open={addAssetVisible}
-                onCancel={() => setAddAssetVisible(false)}
+                open={visible}
+                onCancel={() => setVisible(false)}
                 footer={
                   <div>
                     <Button
                       className="mr-2"
-                      onClick={() => setAddAssetVisible(false)}
+                      onClick={() => setVisible(false)}
                       outlined
                       size="small"
                       text="Cancel"
@@ -196,7 +221,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                       onClick={handleSubmit}
                       disabled={isSubmitting}
                       size="small"
-                      text="Add Asset"
+                      text={assetId ? "Update" : "Add Asset"}
                       fullWidth={false}
                     />
                   </div>
@@ -247,7 +272,7 @@ const CreateAssetPopup = ({ addAssetVisible, setAddAssetVisible }) => {
                       placeholder="Accounting Dept."
                     />
                     <InputField
-                      name="rfidBarcode"
+                      name="rfidBarCode"
                       placeholder="RFID/Barcode"
                       maxLength={128}
                     />

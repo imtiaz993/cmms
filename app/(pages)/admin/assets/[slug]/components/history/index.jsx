@@ -85,7 +85,7 @@ const HistoryAssetDetail = () => {
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
 
   return (
-    <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
+    <div className="px-3 lg:px-6 pb-4 pt-3">
       <div>
         <ActionBar checkedList={checkedList} setCheckedList={setCheckedList} columns={columns} />
         <div className="flex justify-end">

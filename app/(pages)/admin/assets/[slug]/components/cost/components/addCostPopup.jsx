@@ -1,31 +1,72 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Modal } from "antd";
+import { message, Modal } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
+import { addCost } from "app/services/assets";
+import UploadDocPopup from "@/components/uploadDocPopup";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { currencies } from "@/constants/currencies";
 
 const validationSchema = Yup.object().shape({
-  costCenter: Yup.string(),
+  costType: Yup.string().required("Cost Type is required"),
+  vendor: Yup.string().required("Vendor is required"),
+  poNumber: Yup.string().required("PO Number is required"),
+  price: Yup.number()
+    .required("Price is required")
+    .positive("Price must be positive"),
+  currency: Yup.string().required("Currency is required"),
+  invoiceNumber: Yup.string().required("Invoice Number is required"),
+  transcationDate: Yup.date().required("Transaction Date is required"),
+  description: Yup.string().required("Description is required"),
 });
 
-const AddCostPopup = ({ visible, setVisible }) => {
+const AddCostPopup = ({ visible, setVisible, setDetails }) => {
+  const [uploadDocument, setUploadDocument] = useState(false);
+  const { slug } = useParams();
+
+  const handleSubmit = (values, setSubmitting, resetForm) => {
+    console.log("Form submitted with values: ", values);
+    const { status, data } = addCost({ ...values, asset: slug });
+    if (status === 200) {
+      message.success(data?.message || "Cost added successfully");
+    } else {
+      message.error(data?.message || "Failed to add cost");
+    }
+    setSubmitting(false);
+    resetForm();
+    setVisible(false);
+  };
+
   return (
     <Formik
       initialValues={{
-        costCenter: "",
+        costType: "",
+        vendor: "",
+        poNumber: "",
+        price: "",
+        currency: "",
+        invoiceNumber: "",
+        transcationDate: null,
+        description: "",
       }}
       validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting, resetForm }) => {
-        console.log(values);
-
         handleSubmit(values, setSubmitting, resetForm);
       }}
     >
       {({ isSubmitting, handleSubmit }) => (
         <Form onSubmit={handleSubmit}>
+          <UploadDocPopup
+            visible={uploadDocument}
+            setVisible={setUploadDocument}
+            assetSlug={slug}
+            setDetails={setDetails}
+          />
           <Modal
             maskClosable={false}
             title={
@@ -47,7 +88,7 @@ const AddCostPopup = ({ visible, setVisible }) => {
 
                 <Button
                   className=""
-                  onClick={() => setVisible(false)}
+                  onClick={handleSubmit}
                   size="small"
                   text="Add"
                   fullWidth={false}
@@ -63,7 +104,24 @@ const AddCostPopup = ({ visible, setVisible }) => {
                   <SelectField
                     name="costType"
                     placeholder="Cost Type"
-                    options={[]}
+                    options={[
+                      { label: "Purchase Price", value: "purchasePrice" },
+                      { label: "Direct Cost", value: "directCost" },
+                      {
+                        label: "Third Party Labor Cost",
+                        value: "thirdPartyLaborCost",
+                      },
+                      { label: "Parts", value: "parts" },
+                      {
+                        label: "Third Party Parts & Labor",
+                        value: "thirdPartyParts",
+                      },
+                      {
+                        label: "Third Party Material Cost",
+                        value: "thirdPartyMaterial",
+                      },
+                      { label: "State Sales Tax", value: "stateSalesTax" },
+                    ]}
                   />
                 </div>
 
@@ -71,7 +129,11 @@ const AddCostPopup = ({ visible, setVisible }) => {
                   <SelectField
                     name="vendor"
                     placeholder="Vendor"
-                    options={[]}
+                    options={[
+                      { label: "Noram Drilling", value: "noram-drilling" },
+                      { label: "NORAM Drilling", value: "noram-drilling2" },
+                      { label: "Third Party", value: "third-party" },
+                    ]}
                   />
                 </div>
                 <div className="w-full">
@@ -93,11 +155,7 @@ const AddCostPopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="currency"
                       placeholder="Currency"
-                      options={[
-                        { label: "USD", value: "USD" },
-                        { label: "EUR", value: "EUR" },
-                        { label: "GBP", value: "GBP" },
-                      ]}
+                      options={currencies}
                     />
                   </div>
                 </div>
@@ -123,6 +181,7 @@ const AddCostPopup = ({ visible, setVisible }) => {
                 outlined
                 text="Upload Documents"
                 className="mt-4"
+                onClick={() => setUploadDocument(true)}
               />
             </div>
           </Modal>

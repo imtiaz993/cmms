@@ -13,8 +13,17 @@ const assetsSlice = createSlice({
     setAssets(state, action) {
       state.assets = action.payload;
     },
-    updateAsset(state, action) {
+    updateAssets(state, action) {
       state.assets.push(action.payload);
+    },
+    editAsset(state, action) {
+      const updatedAsset = action.payload;
+      state.assets = state.assets.map((asset) => {
+        if (asset._id === updatedAsset._id) {
+          return updatedAsset;
+        }
+        return asset;
+      });
     },
     setAssetsLoading(state, action) {
       state.isLoading = action.payload;
@@ -25,6 +34,6 @@ const assetsSlice = createSlice({
   },
 });
 
-export const { setAssets, updateAsset, setAssetsLoading, setAssetsError } =
+export const { setAssets, updateAssets, editAsset, setAssetsLoading, setAssetsError } =
   assetsSlice.actions;
 export default assetsSlice.reducer;
