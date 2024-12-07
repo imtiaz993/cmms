@@ -120,8 +120,8 @@ const Assets = () => {
     <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
       {addAssetVisible && (
         <CreateAssetPopup
-          addAssetVisible={addAssetVisible}
-          setAddAssetVisible={setAddAssetVisible}
+          visible={addAssetVisible}
+          setVisible={setAddAssetVisible}
         />
       )}
       <ActionBar

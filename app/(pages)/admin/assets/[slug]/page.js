@@ -12,9 +12,11 @@ import { message } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getAssetDetails } from "app/services/assets";
+import CreateAssetPopup from "../components/createAssetPopup";
 
 const AssetDetail = () => {
   const [details, setDetails] = useState();
+  const [editAssetPopup, setEditAssetPopup] = useState(false);
   const router = useRouter();
   const { slug } = useParams();
 
@@ -33,6 +35,15 @@ const AssetDetail = () => {
 
   return (
     <div className="overflow-auto h-[calc(100dvh-130px)]">
+      {details && (
+        <CreateAssetPopup
+          visible={editAssetPopup}
+          setVisible={setEditAssetPopup}
+          assetId={slug}
+          details={details}
+          setDetails={setDetails}
+        />
+      )}
       <div className="relative text-right mx-3 lg:mx-8 mt-3 grid md:block grid-cols-2 gap-3 mb-5">
         <div className="static md:absolute left-0">
           <Button
@@ -64,6 +75,7 @@ const AssetDetail = () => {
           prefix={<EditOutlined />}
           fullWidth={false}
           className="md:ml-3"
+          onClick={() => setEditAssetPopup(true)}
         />
       </div>
       {details && (

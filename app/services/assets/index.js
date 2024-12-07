@@ -28,6 +28,21 @@ export const addAsset = async (values) => {
   }
 };
 
+export const updateAsset = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/asset/update",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const getFilteredAssets = async (values) => {
   try {
     const { status, data } = await authRequest({
@@ -60,6 +75,21 @@ export const getAssetDetails = async (id) => {
   try {
     const { status, data } = await authRequest({
       url: `/asset/getAssetDetails?slug=${id}`,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const addCost = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/asset/addCost",
+      method: "POST",
+      data: values,
     });
     return { status, data };
   } catch (e) {

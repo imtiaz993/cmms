@@ -50,10 +50,11 @@ const UploadDocPopup = ({
     const { status, data } = await uploadDoc(formData);
     if (status === 200) {
       message.success(data.message || "Document uploaded successfully");
-      setDetails((prev) => ({
-        ...prev,
-        documents: [...(prev.documents ?? []), data?.data],
-      }));
+      setDetails &&
+        setDetails((prev) => ({
+          ...prev,
+          documents: [...(prev.documents ?? []), data?.data],
+        }));
       setFileList([]);
       setFileName(""); // Clear file name after successful upload
       resetForm();
