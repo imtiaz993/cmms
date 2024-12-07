@@ -11,12 +11,14 @@ import {
 import { message } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getAssetDetails } from "app/services/assets";
+import { deleteAsset, getAssetDetails } from "app/services/assets";
 import CreateAssetPopup from "../components/createAssetPopup";
+import ConfirmationPopup from "@/components/confirmationPopup";
 
 const AssetDetail = () => {
   const [details, setDetails] = useState();
   const [editAssetPopup, setEditAssetPopup] = useState(false);
+  const [deleteAssetPopup, setDeleteAssetPopup] = useState(false);
   const router = useRouter();
   const { slug } = useParams();
 
@@ -33,6 +35,16 @@ const AssetDetail = () => {
     getAsset();
   }, [slug]);
 
+  const handleDelete = async () => {
+    const { status, data } = await deleteAsset(slug);
+    if (status === 200) {
+      message.success(data?.message || "Asset deleted successfully");
+      router.push("/admin/assets");
+    } else {
+      message.error(data?.message || "Failed to delete asset");
+    }
+  };
+
   return (
     <div className="overflow-auto h-[calc(100dvh-130px)]">
       {details && (
@@ -44,6 +56,13 @@ const AssetDetail = () => {
           setDetails={setDetails}
         />
       )}
+      <ConfirmationPopup
+        visible={deleteAssetPopup}
+        setVisible={setDeleteAssetPopup}
+        message="Are you sure you want to delete this asset?"
+        onConfirm={handleDelete}
+        onCancel={() => message.info("Delete action cancelled")}
+      />
       <div className="relative text-right mx-3 lg:mx-8 mt-3 grid md:block grid-cols-2 gap-3 mb-5">
         <div className="static md:absolute left-0">
           <Button
@@ -58,7 +77,7 @@ const AssetDetail = () => {
           text="Delete"
           prefix={<DeleteOutlined />}
           fullWidth={false}
-          onClick={() => message.info("Asset Delete will be available soon.")}
+          onClick={() => setDeleteAssetPopup(true)}
           outlined
         />
         <Button

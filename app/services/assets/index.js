@@ -43,6 +43,21 @@ export const updateAsset = async (values) => {
   }
 };
 
+export const deleteAsset = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/asset/delete",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const getFilteredAssets = async (values) => {
   try {
     const { status, data } = await authRequest({
