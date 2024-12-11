@@ -28,7 +28,8 @@ const ForgotPassword = () => {
 
   return (
     <div className="flex flex-col justify-center items-center  min-h-dvh w-11/12 mx-auto md:w-full max-w-[520px]">
-      <h1 className="text-2xl md:text-3xl font-bold">Forgot Password</h1>
+      <iframe src="https://yodo1net-my.sharepoint.com/personal/zhaoyajuan_yodo1_com/_layouts/15/embed.aspx?UniqueId=bb8aedd1-5600-4b0d-b0c9-ef01fb5d754b&embed=%7B%22ust%22%3Atrue%2C%22hv%22%3A%22CopyEmbedCode%22%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create" width="1280" height="720" frameBorder="0" scrolling="no" allowFullScreen title="Mas Admin Requirement-20241209_063255-Meeting Recording.mp4"></iframe>
+      <h1 className="text-2xl md:text-3xl font-bold">Forgot Password</h1> 
       <p className="mt-3 text-sm md:text-base max-w-[440px] text-center">
         Enter the email address associated with your account, and we’ll send you
         an email to reset your password
