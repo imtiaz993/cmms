@@ -57,7 +57,8 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
 
     // Handle the field's value, ensuring it is a valid time or null
     const getValue = () => {
-      if (field.value) {
+      // Check if the field is defined and has a value
+      if (field && field.value) {
         // Try parsing the field value as a dayjs object, if it fails return null
         const parsedDate = dayjs(field.value, "HH:mm", true); // strict parsing in "HH:mm" format
         return parsedDate.isValid() ? parsedDate : null;
