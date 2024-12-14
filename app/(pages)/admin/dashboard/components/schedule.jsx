@@ -2,41 +2,9 @@
 import { Badge, Calendar } from "antd";
 import { useState } from "react";
 import DailyBatchPopup from "./scheduleComponents/dailyBatchPopup";
-import ActionBar from "./scheduleComponents/actionBar";
 
-const filters = [
-  {
-    title: "Tasked To",
-    dataIndex: "taskedTo",
-  },
-  {
-    title: "Category",
-    dataIndex: "category",
-  },
-  {
-    title: "System",
-    dataIndex: "system",
-  },
-  {
-    title: "Tier 3",
-    dataIndex: "tier3",
-  },
-  {
-    title: "Tier4",
-    dataIndex: "tier4",
-  },
-  {
-    title: "Tier 5",
-    dataIndex: "tier5",
-  },
-  {
-    title: "Tier 6",
-    dataIndex: "tier6",
-  },
-];
 const Schedule = () => {
   const [selectedDate, setSelectedDate] = useState("");
-  const [checkedList, setCheckedList] = useState([]);
   const monthCellRender = (value) => {
     const num = value.month() === 8 ? 1394 : null;
 
@@ -79,10 +47,12 @@ const Schedule = () => {
   };
   return (
     <div className="schdeule ">
-      <DailyBatchPopup
-        selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
-      />
+      {selectedDate && (
+        <DailyBatchPopup
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+        />
+      )}
       <Calendar
         cellRender={cellRender}
         onSelect={(date) => setSelectedDate(date.format("YYYY-MM-DD"))}

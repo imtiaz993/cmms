@@ -1,18 +1,19 @@
 import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import { WarningFilled } from "@ant-design/icons";
-import {
-  DatePicker,
-  Divider,
-  message,
-  Modal,
-  Radio,
-  Table,
-  Typography,
-} from "antd";
-import { Field, Form, Formik } from "formik";
+import { Divider, message, Modal, Radio, Table, Typography } from "antd";
+import { rescheduleWorkOrders } from "app/services/dashboard";
+import { ErrorMessage, Form, Formik } from "formik";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object().shape({
+  workOrders: Yup.array().min(1, "At least one work order is required"),
+  date: Yup.date().required("Reschedule Date is required"),
+  type: Yup.string().required("Type is Required"),
+});
 
 const columns = [
+  { title: "id", dataIndex: "id", key: "id" },
   {
     title: "Asset",
     dataIndex: "asset",
@@ -35,40 +36,39 @@ const columns = [
   },
 ];
 
-const data = [
-  {
-    asset: "1053402443",
-    description: "Mud Pump #2 A Blower Motor",
-    requiredWork: "30 Day - General - 0.5 hrs",
-    scheduledDate: "2022-10-10",
-  },
-  {
-    asset: "1053402443",
-    description: "Mud Pump #2 A Blower Motor",
-    requiredWork: "30 Day - General - 0.5 hrs",
-    scheduledDate: "2022-10-10",
-  },
-  {
-    asset: "1053402443",
-    description: "Mud Pump #2 A Blower Motor",
-    requiredWork: "30 Day - General - 0.5 hrs",
-    scheduledDate: "2022-10-10",
-  },
-  {
-    asset: "1053402443",
-    description: "Mud Pump #2 A Blower Motor",
-    requiredWork: "30 Day - General - 0.5 hrs",
-    scheduledDate: "2022-10-10",
-  },
-];
-
-const ReschedulePopup = ({ visible, setVisible, batchEdit, setBatchEdit }) => {
+const ReschedulePopup = ({
+  visible,
+  setVisible,
+  batchEdit,
+  setBatchEdit,
+  selectedItems,
+}) => {
   const { Text } = Typography;
 
   return (
     <div>
-      <Formik initialValues={{}} onSubmit={(values) => console.log(values)}>
-        {({ values, setFieldValue, isSubmitting }) => (
+      <Formik
+        initialValues={{
+          workOrders: selectedItems,
+          date: null,
+          type: "",
+        }}
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
+          console.log(values);
+          const { status, data } = await rescheduleWorkOrders(values);
+          if (status === 200) {
+            message.success(data.message || "Rescheduled Successfully");
+            setVisible(false);
+            batchEdit && setBatchEdit(false);
+            resetForm();
+          } else {
+            message.error(data.message || "Something went wrong");
+          }
+          setSubmitting(false);
+        }}
+        validationSchema={validationSchema}
+      >
+        {({ values, setFieldValue, isSubmitting, errors, submitForm }) => (
           <Form>
             <Modal
               // maskClosable={false}
@@ -88,11 +88,8 @@ const ReschedulePopup = ({ visible, setVisible, batchEdit, setBatchEdit }) => {
 
                   <Button
                     className=""
-                    onClick={() => {
-                      message.success("Rescheduled Successfully");
-                      setVisible(false);
-                      batchEdit && setBatchEdit(false);
-                    }}
+                    htmlType="submit"
+                    onClick={() => submitForm()}
                     size="small"
                     text="Reschedule"
                     fullWidth={false}
@@ -143,9 +140,11 @@ const ReschedulePopup = ({ visible, setVisible, batchEdit, setBatchEdit }) => {
                   loading={false}
                   size={"large"}
                   columns={columns}
-                  dataSource={data}
+                  dataSource={selectedItems.map((item) => ({
+                    id: item,
+                  }))}
                   pagination={{
-                    total: data.total,
+                    total: selectedItems.total,
                     current: 1,
                     pageSize: 5,
                     showSizeChanger: true,
@@ -159,23 +158,31 @@ const ReschedulePopup = ({ visible, setVisible, batchEdit, setBatchEdit }) => {
                   }}
                 />
               )}
+              <ErrorMessage
+                name="workOrders"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
               <Divider />
               <div>
                 <strong className="mr-5">Rescheduled Date</strong>
-                <DatePickerField
-                  name="date"
-                  placeholder="Select New Date"
-                />
+                <DatePickerField name="date" placeholder="Select New Date" />
               </div>
 
               <div className="mt-5">
                 <Radio.Group
-                  value={values.series}
-                  onChange={(e) => setFieldValue("series", e.target.value)}
+                  value={values.type}
+                  onChange={(e) => setFieldValue("type", e.target.value)}
                 >
                   <Radio value="single">Single Occurrence</Radio>
                   <Radio value="series">Series</Radio>
                 </Radio.Group>
+                <ErrorMessage
+                  name="type"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+                {console.log("errors: ", errors)}
               </div>
             </Modal>
           </Form>

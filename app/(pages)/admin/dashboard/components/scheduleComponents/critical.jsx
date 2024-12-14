@@ -1,13 +1,22 @@
 import { CalendarFilled, WarningFilled } from "@ant-design/icons";
 import { Card, Checkbox, Typography } from "antd";
 import { useRouter } from "next/navigation";
-const Critical = ({ batchEdit, print, setBatchEditPopup }) => {
+const Critical = ({
+  batchEdit,
+  print,
+  setBatchEditPopup,
+  data,
+  selectedItems,
+  handleCheckboxChange,
+}) => {
   const { Text } = Typography;
   const router = useRouter();
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      {Array.from({ length: 10 }).map((_, index) => (
+      {/* {data &&
+        data.map((item, index) => ( */}
+      {Array.from({ length: 10 }).map((key, index) => (
         <Card
           size="small"
           title={"11M1948377"}
@@ -16,7 +25,11 @@ const Critical = ({ batchEdit, print, setBatchEditPopup }) => {
           }}
           extra={
             batchEdit || print ? (
-              <Checkbox onClick={(e) => e.stopPropagation()} />
+              <Checkbox
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => handleCheckboxChange(index)}
+                checked={selectedItems.has(index)}
+              />
             ) : (
               <CalendarFilled
                 className="cursor-pointer"
@@ -27,11 +40,7 @@ const Critical = ({ batchEdit, print, setBatchEditPopup }) => {
               />
             )
           }
-          onClick={() =>
-            router.push(
-              "/admin/work-orders/PWO013942000998"
-            )
-          }
+          onClick={() => router.push("/admin/work-orders/PWO013942000998")}
           className="cursor-pointer"
           key={index}
         >
