@@ -1,9 +1,10 @@
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Modal, Checkbox } from "antd";
+import { Modal, Checkbox, message } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
+import { addPlannedWorkOrder } from "app/services/workOrders";
 
 const validationSchema = Yup.object().shape({
   rigNumber: Yup.string().required("Required"),
@@ -15,6 +16,20 @@ const validationSchema = Yup.object().shape({
 });
 
 const CreatePlannedWOPopup = ({ visible, setVisible }) => {
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
+    console.log(values);
+    const { status, data } = await addPlannedWorkOrder(values);
+    if (status === 200) {
+      console.log(data);
+      message.success(data?.message || "Work order added successfully");
+    } else {
+      message.error(data?.message || "Failed to add work order");
+    }
+    setSubmitting(false);
+    resetForm();
+    setVisible(false);
+  };
+
   return (
     <Formik
       initialValues={{
@@ -31,7 +46,7 @@ const CreatePlannedWOPopup = ({ visible, setVisible }) => {
         handleSubmit(values, setSubmitting, resetForm);
       }}
     >
-      {({ isSubmitting, handleSubmit }) => (
+      {({ isSubmitting, handleSubmit, submitForm }) => (
         <Form onSubmit={handleSubmit}>
           <Modal
             maskClosable={false}
@@ -55,7 +70,8 @@ const CreatePlannedWOPopup = ({ visible, setVisible }) => {
                 />
                 <Button
                   className=""
-                  onClick={() => setVisible(false)}
+                  htmlType="submit"
+                  onClick={submitForm}
                   size="small"
                   text="Create Work Order"
                   fullWidth={false}

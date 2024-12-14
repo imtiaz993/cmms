@@ -55,3 +55,128 @@ export const getWorkOrdersByTimeRange = async (timeRange, query) => {
     }
   }
 };
+
+export const getFilteredWorkOrders = async (values, query) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/getFilteredWorkOrders?query=" + query,
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const getEarlyMaintenanceData = async () => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/getEarlyMaintenanceData",
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const addPlannedWorkOrder = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/addPlannedWorkOrder",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const addUnplannedWorkOrder = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/addUnplannedWorkOrder",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+// details page
+export const emailWorkOrder = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/email/" + id,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const printWorkOrder = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/print/" + id,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const cancelWorkOrder = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/cancel/" + id,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const completeWorkOrder = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/complete/" + id,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const addManHours = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/addManHours",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};

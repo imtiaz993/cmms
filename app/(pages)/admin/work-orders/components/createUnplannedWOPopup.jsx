@@ -7,6 +7,8 @@ import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
+import { addUnplannedWorkOrder } from "app/services/workOrders";
+import dayjs from "dayjs";
 
 const validationSchema = Yup.object().shape({
   issueIdentification: Yup.string().required("Required"),
@@ -32,6 +34,49 @@ const validationSchema = Yup.object().shape({
 });
 
 const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
+    console.log(values);
+    const { status, data } = await addUnplannedWorkOrder(values);
+    if (status === 200) {
+      console.log(data);
+      message.success(data?.message || "Work order added successfully");
+    } else {
+      message.error(data?.message || "Failed to add work order");
+    }
+    setSubmitting(false);
+    resetForm();
+    setVisible(false);
+  };
+
+  const FormikTimePicker = ({ field, form, readOnly, ...props }) => {
+    // Handle the change of the time picker and update the form field value
+    const handleChange = (date, dateString) => {
+      // Update the form's field value with the date string
+      form.setFieldValue(field.name, dateString);
+    };
+
+    // Handle the field's value, ensuring it is a valid time or null
+    const getValue = () => {
+      // Check if the field is defined and has a value
+      if (field && field.value) {
+        // Try parsing the field value as a dayjs object, if it fails return null
+        const parsedDate = dayjs(field.value, "HH:mm", true); // strict parsing in "HH:mm" format
+        return parsedDate.isValid() ? parsedDate : null;
+      }
+      return null; // Return null if field.value is falsy (empty)
+    };
+
+    return (
+      <TimePicker
+        {...props}
+        onChange={handleChange} // Update form value on time change
+        value={getValue()} // Convert field value to dayjs, or return null if invalid
+        disabled={readOnly} // Use `disabled` for read-only functionality
+        format="HH:mm" // Optional: Set the format you want for the time picker
+      />
+    );
+  };
+
   return (
     <Formik
       initialValues={{
@@ -62,7 +107,7 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
         handleSubmit(values, setSubmitting, resetForm);
       }}
     >
-      {({ isSubmitting, handleSubmit }) => (
+      {({ isSubmitting, handleSubmit, submitForm, resetForm }) => (
         <Form onSubmit={handleSubmit}>
           <Modal
             maskClosable={false}
@@ -77,7 +122,10 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
               <div>
                 <Button
                   className="mr-2"
-                  onClick={() => setVisible(false)}
+                  onClick={() => {
+                    resetForm();
+                    setVisible(false);
+                  }}
                   outlined
                   size="small"
                   text="Cancel"
@@ -86,7 +134,8 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
                 />
                 <Button
                   className=""
-                  onClick={() => setVisible(false)}
+                  htmlType="submit"
+                  onClick={submitForm}
                   size="small"
                   text="Create Work Order"
                   fullWidth={false}
@@ -103,7 +152,7 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
               />
               <DatePickerField name="date" placeholder="Date" />
               <Field
-                as={TimePicker}
+                component={FormikTimePicker}
                 name="time"
                 placeholder="Time"
                 style={{ height: "36px", width: "100%" }}

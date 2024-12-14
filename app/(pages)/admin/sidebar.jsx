@@ -4,8 +4,6 @@ import { Drawer, Menu } from "antd";
 import {
   DashboardOutlined,
   AppstoreOutlined,
-  ContainerOutlined,
-  ScheduleOutlined,
   FileTextOutlined,
   BarChartOutlined,
   ToolOutlined,

@@ -4,8 +4,9 @@ import { Checkbox, Dropdown, Menu, message, Modal, Space, Table } from "antd";
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import { SettingOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreatePlannedWOPopup from "../../assets/[slug]/components/work-orders/createPlannedWOPopup";
+import { getEarlyMaintenanceData } from "app/services/workOrders";
 
 const validationSchema = Yup.object().shape({
   costCenter: Yup.string(),
@@ -88,6 +89,17 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
     value: key,
     key: index,
   }));
+
+  useEffect(() => {
+    const getData = async () => {
+      const { status, data } = await getEarlyMaintenanceData();
+      if (status === 200) {
+      } else {
+        message.error(data.error || "Failed to fetch data");
+      }
+    };
+    getData();
+  }, []);
 
   const handleCheckboxChange = (value) => {
     const newCheckedList = checkedList.includes(value)

@@ -26,7 +26,7 @@ import {
 } from "antd";
 import { Form, Formik } from "formik";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import AddManHoursPopup from "./components/addManHoursPopup";
 import AddCostPopup from "./components/addCostPopup";
@@ -38,12 +38,55 @@ import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
 import { rigs } from "@/constants/rigsAndSystems";
+import {
+  cancelWorkOrder,
+  completeWorkOrder,
+  emailWorkOrder,
+  printWorkOrder,
+} from "app/services/workOrders";
 
 const WorkOrdersDetail = () => {
   const router = useRouter();
   const [popup, setPopup] = useState();
   const [batchEdit, setBatchEdit] = useState(false);
   const [createUnplannedWO, setCreateUnplannedWO] = useState(false);
+  const { slug } = useParams();
+
+  const handleEmail = async () => {
+    const { status, data } = await emailWorkOrder(slug);
+    if (status === 200) {
+      message.success(data.message || "Email sent successfully");
+    } else {
+      message.error(data.message || "Failed to send email");
+    }
+  };
+  const handlePrint = async () => {
+    const { status, data } = await printWorkOrder(slug);
+    if (status === 200) {
+      window.open(data.data);
+      message.success(data.message || "Printed successfully");
+    } else {
+      message.error(data.message || "Failed to print");
+    }
+  };
+  const handleCancelWO = async () => {
+    const { status, data } = await cancelWorkOrder(slug);
+    if (status === 200) {
+      message.success(data.message || "Work order cancelled successfully");
+      router.push("/admin/work-orders");
+    } else {
+      message.error(data.message || "Failed to cancel work order");
+    }
+  };
+  const handleComplete = async () => {
+    const { status, data } = await completeWorkOrder(slug);
+    if (status === 200) {
+      message.success(data.message || "Work order completed successfully");
+      router.push("/admin/work-orders");
+    } else {
+      message.error(data.message || "Failed to complete work order");
+    }
+  };
 
   return (
     <div className="p-7 overflow-auto h-[calc(100dvh-130px)]">
@@ -77,7 +120,7 @@ const WorkOrdersDetail = () => {
             text="Email"
             prefix={<MailOutlined />}
             fullWidth={false}
-            onClick={() => message.info("Email will be available soon.")}
+            onClick={handleEmail}
             outlined
           />
 
@@ -86,7 +129,7 @@ const WorkOrdersDetail = () => {
             prefix={<PrinterFilled />}
             fullWidth={false}
             className="ml-3"
-            onClick={() => message.info("Print will be available soon.")}
+            onClick={handlePrint}
             outlined
           />
 
@@ -95,6 +138,7 @@ const WorkOrdersDetail = () => {
             prefix={<CloseCircleOutlined />}
             fullWidth={false}
             className="ml-3"
+            onClick={handleCancelWO}
             outlined
           />
           <Button
@@ -107,6 +151,7 @@ const WorkOrdersDetail = () => {
             text="Complete"
             prefix={<CheckCircleOutlined />}
             fullWidth={false}
+            onClick={handleComplete}
             className="ml-3"
           />
         </div>

@@ -1,26 +1,34 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Select, message } from "antd";
-import { login } from "app/services/auth";
+import { message } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
 import { useState } from "react";
+import DatePickerField from "@/components/common/DatePickerField";
+import { getFilteredWorkOrders } from "app/services/workOrders";
 
 const validationSchema = Yup.object().shape({
-  assetNumber: Yup.string(),
+  asset: Yup.string(),
+  workOrder: Yup.string(),
+  priority: Yup.string(),
+  created: Yup.date().nullable(),
+  due: Yup.date().nullable(),
+  costCenter: Yup.string(),
+  cost: Yup.number().nullable(),
 });
 
-const AssetFilter = ({ closeDropdown }) => {
+const WorkOrdersFilter = ({ setWorkOrders, closeDropdown, WOType }) => {
   const [isClearing, setIsClearing] = useState(false);
-  const handleSubmit = async (values, setSubmitting) => {
-    console.log(values);
+
+  const submit = async (values, setSubmitting) => {
     console.log(values);
     !setSubmitting && setIsClearing(true);
-    const status = 200;
-    const data = null;
+    const { status, data } = await getFilteredWorkOrders(values, WOType);
     setSubmitting ? setSubmitting(false) : setIsClearing(false);
+
     if (status === 200) {
+      setWorkOrders(data?.data);
       message.success(data?.message || "Assets fetched successfully");
       closeDropdown();
     } else {
@@ -38,54 +46,30 @@ const AssetFilter = ({ closeDropdown }) => {
     >
       <Formik
         initialValues={{
-          assetNumber: "",
-          assetDescription: "",
-          altId: "",
-          serialNumber: "",
-          barcode: "",
-          oemSerialNumber: "",
-          physicalLocation: "",
-          accountingDept: "",
-          status: "",
-          category: "",
-          system: "",
-          tier3: "",
-          tier4: "",
-          tier5: "",
-          tier6: "",
+          asset: "",
+          workOrder: "",
+          priority: "",
+          created: null,
+          due: null,
+          costCenter: "",
+          cost: "",
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          handleSubmit(values, setSubmitting);
+          submit(values, setSubmitting);
         }}
       >
         {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <InputField name="assetNumber" placeholder="Asset #" />
-              <InputField
-                name="assetDescription"
-                placeholder="Asset Description"
-              />
-              <InputField name="altId" placeholder="Alt ID #" />
-              <InputField name="serialNumber" placeholder="Serial #" />
-              <InputField name="barcode" placeholder="Barcode" />
-              <InputField name="oemSerialNumber" placeholder="OEM Serial #" />
-              <SelectField
-                name="physicalLocation"
-                placeholder="Physical Location"
-              />
-              <SelectField
-                name="accountingDept"
-                placeholder="Accounting Dept."
-              />
-              <SelectField name="status" placeholder="Status" />
-              <SelectField name="category" placeholder="Category" />
-              <SelectField name="system" placeholder="System" />
-              <SelectField name="tier3" placeholder="Tier 3" />
-              <SelectField name="tier4" placeholder="Tier 4" />
-              <SelectField name="tier5" placeholder="Tier 5" />
-              <SelectField name="tier6" placeholder="Tier 6" />
+              <InputField name="asset" placeholder="Asset" />
+              <InputField name="workOrder" placeholder="Work Order" />
+              <SelectField name="priority" placeholder="Priority" />
+              <DatePickerField name="created" placeholder="Created" />
+              <DatePickerField name="due" placeholder="Due" />
+              <SelectField name="costCenter" placeholder="Cost Center" />
+              <InputField name="cost" placeholder="Cost" type="number" />
+
               <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
                 <div>
                   <Button
@@ -96,7 +80,7 @@ const AssetFilter = ({ closeDropdown }) => {
                     isLoading={isClearing}
                     onClick={() => {
                       resetForm();
-                      handleSubmit({});
+                      submit({});
                     }}
                     style={{ width: "fit-content" }}
                     className="mr-2"
@@ -119,4 +103,4 @@ const AssetFilter = ({ closeDropdown }) => {
   );
 };
 
-export default AssetFilter;
+export default WorkOrdersFilter;

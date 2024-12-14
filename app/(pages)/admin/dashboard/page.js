@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Card, message, Segmented, Table } from "antd";
+import { Card, message, Segmented } from "antd";
 // import ReactApexChart from "react-apexcharts";
 import { useSearchParams } from "next/navigation";
 import Schedule from "./components/schedule";
@@ -16,118 +16,6 @@ const BarChart = dynamic(() => import("./components/barChart"), {
 const ColumnChart = dynamic(() => import("./components/columnChart"), {
   ssr: false,
 });
-
-const unplannedColumns = [
-  {
-    title: "Asset Desc.",
-    dataIndex: "assetDesc",
-  },
-  {
-    title: "Asset #",
-    dataIndex: "assetNo",
-  },
-  {
-    title: "Date Performed",
-    dataIndex: "datePerformed",
-  },
-  {
-    title: "performed by",
-    dataIndex: "performedBy",
-  },
-];
-
-const unplannedData = [
-  {
-    assetDesc: "UWO016696000001",
-    assetNo: "20-1384-13-07M",
-    datePerformed: "Feb 22, 2022",
-    performedBy: "John Doe",
-  },
-
-  {
-    assetDesc: "UWO016696000002",
-    assetNo: "20-1384-13-07M",
-    datePerformed: "Feb 23, 2022",
-    performedBy: "John Doe",
-  },
-
-  {
-    assetDesc: "UWO016696000003",
-    assetNo: "20-1384-13-07M",
-    datePerformed: "Feb 24, 2022",
-    performedBy: "John Doe",
-  },
-
-  {
-    assetDesc: "UWO016696000004",
-    assetNo: "20-1384-13-07M",
-    datePerformed: "Feb 25, 2022",
-    performedBy: "John Doe",
-  },
-
-  {
-    assetDesc: "UWO016696000005",
-    assetNo: "20-1384-13-07M",
-    datePerformed: "Feb 26, 2022",
-    performedBy: "John Doe",
-  },
-];
-
-const plannedColumns = [
-  {
-    title: "Asset Desc.",
-    dataIndex: "assetDesc",
-  },
-  {
-    title: "Asset #",
-    dataIndex: "assetNo",
-  },
-  {
-    title: "Date Performed",
-    dataIndex: "datePerformed",
-  },
-  {
-    title: "performed by",
-    dataIndex: "performedBy",
-  },
-];
-
-const plannedData = [
-  {
-    assetDesc: "PWO013940000220",
-    assetNo: "Z013-01",
-    datePerformed: "2022-09-21",
-    performedBy: "John Doe",
-  },
-
-  {
-    assetDesc: "PWO013940000221",
-    assetNo: "Z013-01",
-    datePerformed: "2022-09-21",
-    performedBy: "John Doe",
-  },
-
-  {
-    assetDesc: "PWO013940000222",
-    assetNo: "Z013-01",
-    datePerformed: "2022-09-22",
-    performedBy: "John Doe",
-  },
-
-  {
-    assetDesc: "PWO013940000223",
-    assetNo: "Z013-01",
-    datePerformed: "2022-09-23",
-    performedBy: "John Doe",
-  },
-
-  {
-    assetDesc: "PWO013940000224",
-    assetNo: "Z013-01",
-    datePerformed: "2022-09-24",
-    performedBy: "John Doe",
-  },
-];
 
 const Dashboard = () => {
   const searchParams = useSearchParams();
