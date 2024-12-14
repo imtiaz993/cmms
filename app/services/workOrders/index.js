@@ -55,3 +55,61 @@ export const getWorkOrdersByTimeRange = async (timeRange, query) => {
     }
   }
 };
+
+export const getFilteredWorkOrders = async (values, query) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/getFilteredWorkOrders?query=" + query,
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const getEarlyMaintenanceData = async () => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/getEarlyMaintenanceData",
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const addPlannedWorkOrder = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/addPlannedWorkOrder",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const addUnplannedWorkOrder = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/addUnplannedWorkOrder",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};

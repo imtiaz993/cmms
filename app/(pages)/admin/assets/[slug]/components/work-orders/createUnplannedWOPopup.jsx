@@ -7,6 +7,7 @@ import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
 import SelectField from "@/components/common/SelectField";
+import { addUnplannedWorkOrder } from "app/services/workOrders";
 
 const validationSchema = Yup.object().shape({
   issueIdentification: Yup.string().required("Required"),
@@ -32,6 +33,19 @@ const validationSchema = Yup.object().shape({
 });
 
 const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
+    console.log(values);
+    const { status, data } = await addUnplannedWorkOrderForAsset(values);
+    if (status === 200) {
+      console.log(data);
+      message.success(data?.message || "Work order added successfully");
+    } else {
+      message.error(data?.message || "Failed to add work order");
+    }
+    setSubmitting(false);
+    resetForm();
+    setVisible(false);
+  };
   return (
     <Formik
       initialValues={{
@@ -62,7 +76,7 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
         handleSubmit(values, setSubmitting, resetForm);
       }}
     >
-      {({ isSubmitting, handleSubmit }) => (
+      {({ isSubmitting, handleSubmit, submitForm, resetForm }) => (
         <Form onSubmit={handleSubmit}>
           <Modal
             maskClosable={false}
@@ -77,7 +91,10 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
               <div>
                 <Button
                   className="mr-2"
-                  onClick={() => setVisible(false)}
+                  onClick={() => {
+                    resetForm();
+                    setVisible(false);
+                  }}
                   outlined
                   size="small"
                   text="Cancel"
@@ -86,7 +103,8 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
                 />
                 <Button
                   className=""
-                  onClick={() => setVisible(false)}
+                  htmlType="submit"
+                  onClick={submitForm}
                   size="small"
                   text="Create Work Order"
                   fullWidth={false}

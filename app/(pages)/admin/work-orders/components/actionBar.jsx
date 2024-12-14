@@ -128,6 +128,7 @@ const ActionBar = ({
             <WOFilter
               setWorkOrders={setWorkOrders}
               closeDropdown={() => setFilterDropdown(false)}
+              WOType={unplanned ? "unplanned" : "planned"}
             />
           )}
           trigger={["click"]}
