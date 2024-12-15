@@ -3,10 +3,10 @@ import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
-import { message, Modal, Select, TimePicker } from "antd";
+import TimePickerField from "@/components/common/TimePickerField";
+import { message, Modal } from "antd";
 import { addManHours } from "app/services/workOrders";
-import dayjs from "dayjs";
-import { Form, Formik, Field } from "formik";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 // Validation Schema using Yup
@@ -35,31 +35,6 @@ const validationSchema = Yup.object({
   rate: Yup.string().required("Rate is required"),
   comment: Yup.string().max(150, "Comment cannot exceed 150 characters"),
 });
-
-// Custom Formik TimePicker Component
-const FormikTimePicker = ({ field, form, readOnly, ...props }) => {
-  const handleChange = (date, dateString) => {
-    form.setFieldValue(field.name, dateString);
-  };
-
-  const getValue = () => {
-    if (field && field.value) {
-      const parsedDate = dayjs(field.value, "HH:mm", true);
-      return parsedDate.isValid() ? parsedDate : null;
-    }
-    return null;
-  };
-
-  return (
-    <TimePicker
-      {...props}
-      onChange={handleChange}
-      value={getValue()}
-      disabled={readOnly}
-      format="HH:mm"
-    />
-  );
-};
 
 const AddManHoursPopup = ({ visible, setVisible }) => {
   const handleSubmit = async (values, setSubmitting, resetForm) => {
@@ -150,24 +125,14 @@ const AddManHoursPopup = ({ visible, setVisible }) => {
                   <>
                     <div className="grid md:grid-cols-2 gap-4 md:col-span-2">
                       <DatePickerField name="clockIn" placeholder="Clock In" />
-                      <Field
-                        component={FormikTimePicker}
-                        name="clockInTime"
-                        placeholder="Time"
-                        className="w-full"
-                      />
+                      <TimePickerField name="clockInTime" placeholder="Time" />
                     </div>
                     <div className="grid md:grid-cols-2 gap-4 md:col-span-2">
                       <DatePickerField
                         name="clockOut"
                         placeholder="Clock Out"
                       />
-                      <Field
-                        component={FormikTimePicker}
-                        name="clockOutTime"
-                        placeholder="Time"
-                        className="w-full"
-                      />
+                      <TimePickerField name="clockOutTime" placeholder="Time" />
                     </div>
                   </>
                 )}

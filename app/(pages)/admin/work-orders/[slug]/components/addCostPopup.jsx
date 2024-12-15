@@ -2,9 +2,9 @@ import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
-import { DatePicker, Modal, Select, TimePicker } from "antd";
-import TextArea from "antd/es/input/TextArea";
-import { Field, Form, Formik } from "formik";
+import TimePickerField from "@/components/common/TimePickerField";
+import { Modal } from "antd";
+import { Form, Formik } from "formik";
 
 const AddCostPopup = ({ visible, setVisible }) => {
   return (
@@ -53,12 +53,9 @@ const AddCostPopup = ({ visible, setVisible }) => {
                   name="createdDate"
                   placeholder="Created Date"
                 />
-                <Field
-                  as={TimePicker}
+                <TimePickerField
                   name="createdTime"
                   placeholder="Created Time"
-                  className="w-full"
-                  style={{ height: "36px" }}
                 />
                 <SelectField
                   name="costType"

@@ -1,14 +1,13 @@
-import { Field, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { DatePicker, Input, message, Modal, Select, TimePicker } from "antd";
+import { message, Modal, TimePicker } from "antd";
 import InputField from "@/components/common/InputField";
-import TextArea from "antd/es/input/TextArea";
 import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
 import { addUnplannedWorkOrder } from "app/services/workOrders";
-import dayjs from "dayjs";
+import TimePickerField from "@/components/common/TimePickerField";
 
 const validationSchema = Yup.object().shape({
   issueIdentification: Yup.string().required("Required"),
@@ -46,35 +45,6 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
     setSubmitting(false);
     resetForm();
     setVisible(false);
-  };
-
-  const FormikTimePicker = ({ field, form, readOnly, ...props }) => {
-    // Handle the change of the time picker and update the form field value
-    const handleChange = (date, dateString) => {
-      // Update the form's field value with the date string
-      form.setFieldValue(field.name, dateString);
-    };
-
-    // Handle the field's value, ensuring it is a valid time or null
-    const getValue = () => {
-      // Check if the field is defined and has a value
-      if (field && field.value) {
-        // Try parsing the field value as a dayjs object, if it fails return null
-        const parsedDate = dayjs(field.value, "HH:mm", true); // strict parsing in "HH:mm" format
-        return parsedDate.isValid() ? parsedDate : null;
-      }
-      return null; // Return null if field.value is falsy (empty)
-    };
-
-    return (
-      <TimePicker
-        {...props}
-        onChange={handleChange} // Update form value on time change
-        value={getValue()} // Convert field value to dayjs, or return null if invalid
-        disabled={readOnly} // Use `disabled` for read-only functionality
-        format="HH:mm" // Optional: Set the format you want for the time picker
-      />
-    );
   };
 
   return (
@@ -151,12 +121,7 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
                 placeholder="Issue Identification"
               />
               <DatePickerField name="date" placeholder="Date" />
-              <Field
-                component={FormikTimePicker}
-                name="time"
-                placeholder="Time"
-                style={{ height: "36px", width: "100%" }}
-              />
+              <TimePickerField name="time" placeholder="Time" />
               <div className="md:col-span-3 -mb-4">
                 <TextAreaField
                   name="problemDescription"
