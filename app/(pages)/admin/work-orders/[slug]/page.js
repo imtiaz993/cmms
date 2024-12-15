@@ -103,10 +103,12 @@ const WorkOrdersDetail = () => {
       <UploadLinkDocPopup
         visible={popup === "uploadLinkDocument"}
         setVisible={setPopup}
+        workOrderSlug={slug}
       />
       <UploadDocPopup
         visible={popup === "uploadDocument"}
         setVisible={setPopup}
+        workOrderSlug={slug}
       />
       <div className="flex justify-between gap-3 mb-5">
         <Button

@@ -19,6 +19,7 @@ const UploadDocPopup = ({
   assetSlug,
   materialTransferSlug,
   setDetails,
+  workOrderSlug,
 }) => {
   const [fileList, setFileList] = useState([]);
   const [fileName, setFileName] = useState(""); // State to store the selected file name
@@ -42,6 +43,8 @@ const UploadDocPopup = ({
       ? formData.append("asset", assetSlug)
       : materialTransferSlug
       ? formData.append("materialTransfer", materialTransferSlug)
+      : workOrderSlug
+      ? formData.append("workOrder", workOrderSlug)
       : null;
     formData.append("type", values.documentType);
     formData.append("description", values.description);

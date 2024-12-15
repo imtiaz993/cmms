@@ -19,6 +19,7 @@ const UploadLinkDocPopup = ({
   setDetails,
   materialTransferSlug,
   assetSlug,
+  workOrderSlug,
 }) => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
@@ -26,6 +27,8 @@ const UploadLinkDocPopup = ({
       ? { ...values, materialTransfer: materialTransferSlug }
       : assetSlug
       ? { ...values, asset: assetSlug }
+      : workOrderSlug
+      ? { ...values, workOrder: workOrderSlug }
       : values;
     console.log(finalValues);
 
