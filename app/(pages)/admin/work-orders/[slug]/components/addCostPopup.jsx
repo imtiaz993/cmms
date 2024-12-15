@@ -3,21 +3,65 @@ import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
 import TimePickerField from "@/components/common/TimePickerField";
-import { Modal } from "antd";
+import { currencies } from "@/constants/currencies";
+import { message, Modal } from "antd";
+import { addCostinWO } from "app/services/workOrders";
 import { Form, Formik } from "formik";
+import * as Yup from "yup"; // Importing Yup for validation
 
 const AddCostPopup = ({ visible, setVisible }) => {
+  // Define initial values for the form
+  const initialValues = {
+    createdDate: null,
+    createdTime: null,
+    costType: "",
+    item: "",
+    description: "",
+    quantity: "",
+    costEach: "",
+    currency: "USD",
+  };
+
+  // Define validation schema using Yup
+  const validationSchema = Yup.object({
+    createdDate: Yup.date().required("Created Date is required"),
+    createdTime: Yup.string().required("Created Time is required"),
+    costType: Yup.string().required("Cost Type is required"),
+    item: Yup.string().required("Item is required"),
+    description: Yup.string().required("Description is required"),
+    quantity: Yup.number()
+      .required("Quantity is required")
+      .positive("Quantity must be a positive number")
+      .integer("Quantity must be an integer"),
+    costEach: Yup.number()
+      .required("Cost Each is required")
+      .positive("Cost Each must be a positive number"),
+    currency: Yup.string().required("Currency is required"),
+  });
+
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
+    // Handle submit logic here
+    const { status, data } = await addCostinWO(values);
+    if (status === 200) {
+      setVisible(false);
+      resetForm();
+      message.success(data.message || "Cost added successfully");
+    } else {
+      message.error(data.message || "Failed to add cost");
+    }
+    setSubmitting(false);
+  };
+
   return (
     <div>
       <Formik
-        initialValues={{}}
-        // validationSchema={{}}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log(values);
-          setVisible(false);
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          handleSubmit(values, setSubmitting, resetForm);
         }}
       >
-        {({ values, isSubmitting, handleSubmit, setFieldValue }) => (
+        {({ isSubmitting, handleSubmit, submitForm }) => (
           <Form onSubmit={handleSubmit}>
             <Modal
               maskClosable={false}
@@ -38,7 +82,8 @@ const AddCostPopup = ({ visible, setVisible }) => {
 
                   <Button
                     className=""
-                    onClick={() => setVisible(false)}
+                    htmlType="submit"
+                    onClick={submitForm}
                     size="small"
                     text="Add"
                     fullWidth={false}
@@ -81,13 +126,13 @@ const AddCostPopup = ({ visible, setVisible }) => {
                   style={{ height: "36px" }}
                 />
                 <InputField name="item" placeholder="Item" />
-                <InputField name="description" placeholder="Description" />{" "}
-                <InputField name="quantity" placeholder="Quantity" />{" "}
+                <InputField name="description" placeholder="Description" />
+                <InputField name="quantity" placeholder="Quantity" />
                 <InputField name="costEach" placeholder="Cost Each" />
                 <SelectField
                   name="currency"
                   placeholder="Currency"
-                  options={[{ label: "USD", value: "USD" }]}
+                  options={currencies}
                 />
               </div>
             </Modal>
