@@ -1,13 +1,12 @@
-import { Field, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { DatePicker, Input, message, Modal, Select, TimePicker } from "antd";
+import { message, Modal } from "antd";
 import InputField from "@/components/common/InputField";
-import TextArea from "antd/es/input/TextArea";
 import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
 import SelectField from "@/components/common/SelectField";
-import { addUnplannedWorkOrder } from "app/services/workOrders";
+import TimePickerField from "@/components/common/TimePickerField";
 
 const validationSchema = Yup.object().shape({
   issueIdentification: Yup.string().required("Required"),
@@ -120,12 +119,7 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
                 placeholder="Issue Identification"
               />
               <DatePickerField name="date" placeholder="Date" />
-              <Field
-                as={TimePicker}
-                name="time"
-                placeholder="Time"
-                style={{ height: "36px", width: "100%" }}
-              />
+              <TimePickerField name="time" placeholder="Time" />
               <div className="md:col-span-3 -mb-4">
                 <TextAreaField
                   name="problemDescription"

@@ -114,6 +114,19 @@ export const addUnplannedWorkOrder = async (values) => {
   }
 };
 // details page
+export const getWorkOrderDetails = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/getWorkOrderDetails/" + id,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const emailWorkOrder = async (id) => {
   try {
     const { status, data } = await authRequest({
@@ -170,6 +183,21 @@ export const addManHours = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/work-orders/addManHours",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const addCostinWO = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/addCostinWO",
       method: "POST",
       data: values,
     });

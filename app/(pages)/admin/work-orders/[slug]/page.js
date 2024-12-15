@@ -27,7 +27,7 @@ import {
 import { Form, Formik } from "formik";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddManHoursPopup from "./components/addManHoursPopup";
 import AddCostPopup from "./components/addCostPopup";
 import AddDelayReasonPopup from "./components/addDelayReasonPopup";
@@ -42,15 +42,29 @@ import {
   cancelWorkOrder,
   completeWorkOrder,
   emailWorkOrder,
+  getWorkOrderDetails,
   printWorkOrder,
 } from "app/services/workOrders";
 
 const WorkOrdersDetail = () => {
+  const [workOrder, setWorkOrder] = useState({});
   const router = useRouter();
   const [popup, setPopup] = useState();
   const [batchEdit, setBatchEdit] = useState(false);
   const [createUnplannedWO, setCreateUnplannedWO] = useState(false);
   const { slug } = useParams();
+
+  useEffect(() => {
+    const getData = async () => {
+      const { status, data } = await getWorkOrderDetails(slug);
+      if (status === 200) {
+        setWorkOrder(data);
+      } else {
+        message.error(data.message || "Failed to get work order details");
+      }
+    };
+    getData();
+  });
 
   const handleEmail = async () => {
     const { status, data } = await emailWorkOrder(slug);
@@ -103,10 +117,12 @@ const WorkOrdersDetail = () => {
       <UploadLinkDocPopup
         visible={popup === "uploadLinkDocument"}
         setVisible={setPopup}
+        workOrderSlug={slug}
       />
       <UploadDocPopup
         visible={popup === "uploadDocument"}
         setVisible={setPopup}
+        workOrderSlug={slug}
       />
       <div className="flex justify-between gap-3 mb-5">
         <Button
