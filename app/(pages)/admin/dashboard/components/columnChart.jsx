@@ -1,15 +1,15 @@
 import ReactApexChart from "react-apexcharts";
 
-const ColumnChart = () => (
+const ColumnChart = ({stats}) => (
   <ReactApexChart
     series={[
       {
         name: "Created",
-        data: [76, 85, 101],
+        data: stats?.created,
       },
       {
         name: "Completed",
-        data: [44, 55, 57],
+        data: stats?.completed,
       },
     ]}
     options={{
@@ -64,7 +64,7 @@ const ColumnChart = () => (
             colors: "var(--text-color)",
           },
         },
-        categories: ["Feb", "Mar", "Apr"],
+        categories: stats?.month,
         crosshairs: {
           show: false,
         },

@@ -5,7 +5,7 @@ import { Card, message, Segmented } from "antd";
 import { useSearchParams } from "next/navigation";
 import Schedule from "./components/schedule";
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   getDashboardSchedule,
   getDashboardStats,
@@ -18,24 +18,36 @@ const ColumnChart = dynamic(() => import("./components/columnChart"), {
 });
 
 const Dashboard = () => {
+  const [stats,setStats]=useState()
+  const [loadingStats,setLoadingStats]=useState(true)
+  const [schedule,setSchedule]=useState()
+  const [loadingSchedule,setLoadingSchedule]=useState(true)
+  const [activeManHoursTab,setActiveManHoursTab]=useState("30 Days")
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "rig-21";
   const activeSystem = searchParams.get("system") || "air-system";
+
+  console.log(stats);
+  
 
   useEffect(() => {
     const getStats = async () => {
       const { status, data } = await getDashboardStats();
       if (status === 200) {
-        console.log(data);
+        setStats(data.data)
+        setLoadingStats(false)
       } else {
+        setLoadingStats(false)
         message.error(data?.message || "Failed to get stats");
       }
     };
     const getSchedule = async () => {
       const { status, data } = await getDashboardSchedule();
       if (status === 200) {
-        console.log(data);
+        setSchedule(data.data);
+        setLoadingSchedule(false)
       } else {
+        setLoadingSchedule(false)
         message.error(data?.message || "Failed to get schedule");
       }
     };
@@ -53,7 +65,7 @@ const Dashboard = () => {
           style={{ overflow: "hidden" }}
         >
           <div>
-            <Schedule />
+            <Schedule schedule={schedule} loadingSchedule={loadingSchedule}/>
           </div>
         </Card>
       </div>
@@ -69,7 +81,7 @@ const Dashboard = () => {
           }
         >
           <div className="flex justify-center">
-            <ColumnChart />
+            <ColumnChart stats={stats?.unPlanned} />
           </div>
         </Card>
         <Card
@@ -83,7 +95,7 @@ const Dashboard = () => {
           }
         >
           <div className="flex justify-center">
-            <ColumnChart />
+            <ColumnChart stats={stats?.planned} />
           </div>
         </Card>
         <Card
@@ -104,12 +116,12 @@ const Dashboard = () => {
               options={["30 Days", "60 Days", "90 Days"]}
               defaultValue="30 Days"
               onChange={(value) => {
-                // TODO: Change chart data
+                setActiveManHoursTab(value)
               }}
             />
           </div>
           <div className="flex justify-center">
-            <BarChart />
+            <BarChart stats={stats?.[activeManHoursTab]?.replace(/" "/g,"")} />
           </div>
         </Card>
       </div>
