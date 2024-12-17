@@ -3,7 +3,7 @@ import { Badge, Calendar } from "antd";
 import { useState } from "react";
 import DailyBatchPopup from "./scheduleComponents/dailyBatchPopup";
 
-const Schedule = () => {
+const Schedule = ({ schedule, loadingSchedule }) => {
   const [selectedDate, setSelectedDate] = useState("");
   const monthCellRender = (value) => {
     const num = value.month() === 8 ? 1394 : null;

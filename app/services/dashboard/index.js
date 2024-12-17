@@ -22,10 +22,10 @@ export const getDashboardSchedule = async () => {
   }
 };
 
-export const getDailyWorkOrders = async (date, tab) => {
+export const getDailyWorkOrders = async (date) => {
   try {
     const { status, data } = await authRequest({
-      url: `/work-orders/getDailyWorkOrders?date=${date}&tab=${tab}`,
+      url: `/work-orders/getDailyWorkOrders?date=${date}`,
     });
     return { status, data };
   } catch (e) {
@@ -38,7 +38,7 @@ export const getDailyWorkOrders = async (date, tab) => {
 export const printDailyWorkOrders = async (ids) => {
   try {
     const { status, data } = await authRequest({
-      url: `/work-orders/printDailyWorkOrders}`,
+      url: `/work-orders/printDailyWorkOrders`,
       method: "POST",
       data: ids,
     });
