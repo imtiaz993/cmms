@@ -166,6 +166,51 @@ export const cancelWorkOrder = async (id) => {
   }
 };
 
+export const saveWorkOrder = async (id, values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/save/" + id,
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const startWorkOrder = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/startWorkOrder",
+      method: "POST",
+      data: { workOrder: id },
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const endWorkOrder = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/endWorkOrder",
+      method: "POST",
+      data: { workOrder: id },
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const completeWorkOrder = async (id) => {
   try {
     const { status, data } = await authRequest({

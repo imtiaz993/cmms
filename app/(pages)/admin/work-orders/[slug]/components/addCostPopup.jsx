@@ -9,7 +9,7 @@ import { addCostinWO } from "app/services/workOrders";
 import { Form, Formik } from "formik";
 import * as Yup from "yup"; // Importing Yup for validation
 
-const AddCostPopup = ({ visible, setVisible }) => {
+const AddCostPopup = ({ visible, setVisible, setWorkOrder, slug }) => {
   // Define initial values for the form
   const initialValues = {
     createdDate: null,
@@ -41,9 +41,13 @@ const AddCostPopup = ({ visible, setVisible }) => {
 
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     // Handle submit logic here
-    const { status, data } = await addCostinWO(values);
+    const { status, data } = await addCostinWO({
+      ...values,
+      workOrder: slug,
+    });
     if (status === 200) {
       setVisible(false);
+      setWorkOrder((prev) => ({ ...prev, costs: [...prev.costs, data?.data] }));
       resetForm();
       message.success(data.message || "Cost added successfully");
     } else {

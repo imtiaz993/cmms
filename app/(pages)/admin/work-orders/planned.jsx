@@ -7,109 +7,47 @@ import { useRouter } from "next/navigation";
 import PreviewPopup from "../../../../components/previewPopup";
 import { getWorkOrders } from "app/services/workOrders";
 
-const data = [
-  {
-    workOrder: "PWO013942000998",
-    workRequired: "Weekly Maintenance (...",
-    priority: "High",
-    created: "September 30, 2024",
-    due: "October 7, 2024",
-    status: "Open",
-    costCenter: "Rig 21 - Drilling Sy...",
-    cost: "$0.00",
-    asset: "21-001",
-    assetDescription: "AC Powered 1500 HP O...",
-    print: "",
-  },
-  {
-    workOrder: "PWO013942000998",
-    workRequired: "Weekly Maintenance (...",
-    priority: "High",
-    created: "September 30, 2024",
-    due: "October 7, 2024",
-    status: "Open",
-    costCenter: "Rig 21 - Drilling Sy...",
-    cost: "$0.00",
-    asset: "21-001",
-    assetDescription: "AC Powered 1500 HP O...",
-    print: "",
-  },
-  {
-    workOrder: "PWO013942000998",
-    workRequired: "Weekly Maintenance (...",
-    priority: "High",
-    created: "September 30, 2024",
-    due: "October 7, 2024",
-    status: "Open",
-    costCenter: "Rig 21 - Drilling Sy...",
-    cost: "$0.00",
-    asset: "21-001",
-    assetDescription: "AC Powered 1500 HP O...",
-    print: "",
-  },
-  {
-    workOrder: "PWO013942000998",
-    workRequired: "Weekly Maintenance (...",
-    priority: "High",
-    created: "September 30, 2024",
-    due: "October 7, 2024",
-    status: "Open",
-    costCenter: "Rig 21 - Drilling Sy...",
-    cost: "$0.00",
-    asset: "21-001",
-    assetDescription: "AC Powered 1500 HP O...",
-    print: "",
-  },
-  {
-    workOrder: "PWO013942000998",
-    workRequired: "Weekly Maintenance (...",
-    priority: "High",
-    created: "September 30, 2024",
-    due: "October 7, 2024",
-    status: "Open",
-    costCenter: "Rig 21 - Drilling Sy...",
-    cost: "$0.00",
-    asset: "21-001",
-    assetDescription: "AC Powered 1500 HP O...",
-    print: "",
-  },
-];
-
 const Planned = () => {
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
   const [addWOVisible, setAddWOVisible] = useState(false);
-  const [workOrders, setWorkOrders] = useState(data);
-  const [fetchingWorkOrders, setFetchingWorkOrders] = useState(false);
+  const [workOrders, setWorkOrders] = useState([]);
+  const [fetchingWorkOrders, setFetchingWorkOrders] = useState(true);
   const [checkedList, setCheckedList] = useState([
     "asset",
     "assetDescription",
     "workOrder",
-    "workRequired",
-    "priority",
-    "created",
+    // "workRequired",
+    "priorityLevel",
+    "createdAt",
     "due",
     "status",
-    "costCenter",
-    "cost",
+    // "costCenter",
+    // "cost",
   ]);
   const [searchText, setSearchText] = useState("");
   const router = useRouter();
 
   const columns = [
-    { title: "Asset #", dataIndex: "asset", key: "asset" },
+    {
+      title: "Asset #",
+      dataIndex: "asset",
+      key: "asset",
+      render: (asset) => asset?.name,
+    },
     {
       title: "Asset Description",
-      dataIndex: "assetDescription",
+      dataIndex: "asset",
       key: "assetDescription",
+      render: (asset) => asset?.description,
     },
-    { title: "Work Order #", dataIndex: "workOrder", key: "workOrder" },
-    { title: "Work Required", dataIndex: "workRequired", key: "workRequired" },
-    { title: "Priority", dataIndex: "priority", key: "priority" },
-    { title: "Created Date", dataIndex: "created", key: "created" },
-    { title: "Due Date", dataIndex: "due", key: "due" },
+    { title: "Work Order #", dataIndex: "_id", key: "workOrder" },
+    // { title: "Work Required", dataIndex: "workRequired", key: "workRequired" },
+    { title: "Priority", dataIndex: "priorityLevel", key: "priorityLevel" },
+    { title: "Created Date", dataIndex: "createdAt", key: "createdAt" },
+    { title: "Due Date", dataIndex: "date", key: "due" },
     { title: "Status", dataIndex: "status", key: "status" },
-    { title: "Cost Center", dataIndex: "costCenter", key: "costCenter" },
-    { title: "Cost", dataIndex: "cost", key: "cost" },
+    // { title: "Cost Center", dataIndex: "costCenter", key: "costCenter" },
+    // { title: "Cost", dataIndex: "cost", key: "cost" },
     {
       title: "",
       dataIndex: "print",
@@ -130,7 +68,7 @@ const Planned = () => {
     const fetchWorkOrders = async () => {
       const { status, data } = await getWorkOrders("planned");
       if (status === 200) {
-        setWorkOrders(data);
+        setWorkOrders(data?.data);
       } else {
         message.error(data.error || "Failed to fetch work orders");
       }
@@ -193,7 +131,7 @@ const Planned = () => {
         onRow={(record) => ({
           onClick: () => router.push(`/admin/work-orders/${record?.workOrder}`),
         })}
-        loading={false}
+        loading={fetchingWorkOrders}
         size="large"
         scroll={{ x: 1100 }}
         columns={filteredColumns}

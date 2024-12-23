@@ -21,7 +21,7 @@ const CreateAssetPopup = ({
   details,
   setDetails,
 }) => {
-  const { dashboard } = details;
+  const { dashboard } = details ?? {};
   const dispatch = useDispatch();
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [fields, setFields] = useState([]);
@@ -167,26 +167,26 @@ const CreateAssetPopup = ({
       {!loading && (
         <Formik
           initialValues={{
-            physicalLocation: dashboard.physicalLocation || "",
-            mainSystem: dashboard.mainSystem || "",
-            rfidBarCode: dashboard.rfidBarCode || "",
-            accountingDept: dashboard.accountingDept || "",
-            parentAsset: dashboard.parentAsset || "",
-            childAsset: dashboard.childAsset || "",
-            assetNumber: dashboard.assetNumber || "",
-            serialNumber: dashboard.serialNumber || "",
-            make: dashboard.make || "",
-            model: dashboard.model || "",
-            part: dashboard.part || "",
-            description: dashboard.description || "",
-            specDetails: dashboard.specDetails || "",
-            installedDate: dashboard.installedDate || "",
-            supplier: dashboard.supplier || "",
-            criticality: dashboard.criticality || "",
-            originalMfrDate: dashboard.originalMfrDate || "",
-            condition: dashboard.condition || "",
-            maintStatus: dashboard.maintStatus || "",
-            maintStartDate: dashboard.maintStartDate || "",
+            physicalLocation: dashboard?.physicalLocation || "",
+            mainSystem: dashboard?.mainSystem || "",
+            rfidBarCode: dashboard?.rfidBarCode || "",
+            accountingDept: dashboard?.accountingDept || "",
+            parentAsset: dashboard?.parentAsset || "",
+            childAsset: dashboard?.childAsset || "",
+            assetNumber: dashboard?.assetNumber || "",
+            serialNumber: dashboard?.serialNumber || "",
+            make: dashboard?.make || "",
+            model: dashboard?.model || "",
+            part: dashboard?.part || "",
+            description: dashboard?.description || "",
+            specDetails: dashboard?.specDetails || "",
+            installedDate: dashboard?.installedDate || "",
+            supplier: dashboard?.supplier || "",
+            criticality: dashboard?.criticality || "",
+            originalMfrDate: dashboard?.originalMfrDate || "",
+            condition: dashboard?.condition || "",
+            maintStatus: dashboard?.maintStatus || "",
+            maintStartDate: dashboard?.maintStartDate || "",
             ...customFieldInitialValues, // Include custom fields values
           }}
           validationSchema={validationSchema}

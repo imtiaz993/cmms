@@ -36,12 +36,44 @@ const validationSchema = Yup.object({
   comment: Yup.string().max(150, "Comment cannot exceed 150 characters"),
 });
 
-const AddManHoursPopup = ({ visible, setVisible }) => {
+const AddManHoursPopup = ({ visible, setVisible, setWorkOrder, slug }) => {
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log(values);
-    const { status, data } = await addManHours(values);
+    if (
+      values.clockIn &&
+      values.clockOut &&
+      values.clockInTime &&
+      values.clockOutTime
+    ) {
+      // Combine the date and time strings
+      const clockInDateTime = `${values.clockIn}T${values.clockInTime}:00`; // Format: "YYYY-MM-DDTHH:mm:ss"
+      const clockOutDateTime = `${values.clockOut}T${values.clockOutTime}:00`; // Format: "YYYY-MM-DDTHH:mm:ss"
+
+      // Convert the combined strings to Date objects
+      const clockInDate = new Date(clockInDateTime);
+      const clockOutDate = new Date(clockOutDateTime);
+
+      // Check if both clockInDate and clockOutDate are valid dates
+      if (!isNaN(clockInDate) && !isNaN(clockOutDate)) {
+        // Calculate the difference in milliseconds
+        values.manHours =
+          (clockOutDate.getTime() - clockInDate.getTime()) / (1000 * 60 * 60); // Convert ms to hours
+        console.log(values.manHours); // Outputs the calculated man hours
+      } else {
+        console.error("Invalid clockIn or clockOut date/time");
+      }
+    }
+
+    const { status, data } = await addManHours({
+      ...values,
+      workOrder: slug,
+    });
     if (status === 200) {
       console.log(data);
+      setWorkOrder((prev) => ({
+        ...prev,
+        manHours: [...prev.manHours, data?.data],
+      }));
       message.success(data?.message || "Work order added successfully");
     } else {
       message.error(data?.message || "Failed to add work order");
