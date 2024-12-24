@@ -18,29 +18,36 @@ const ColumnChart = dynamic(() => import("./components/columnChart"), {
 });
 
 const Dashboard = () => {
+  const [stats, setStats] = useState();
+  const [loadingStats, setLoadingStats] = useState(true);
+  const [schedule, setSchedule] = useState();
+  const [loadingSchedule, setLoadingSchedule] = useState(true);
+  const [activeManHoursTab, setActiveManHoursTab] = useState("30 Days");
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "rig-21";
   const activeSystem = searchParams.get("system") || "air-system";
-  const [schedule, setSchedule] = useState();
-  const [stats, setStats] = useState();
   const [selectedRange, setSelectedRange] = useState("30Days"); // Default to 30Days
+
+  console.log(stats);
 
   useEffect(() => {
     const getStats = async () => {
       const { status, data } = await getDashboardStats();
       if (status === 200) {
-        console.log(data);
-        setStats(data?.data);
+        setStats(data.data);
+        setLoadingStats(false);
       } else {
+        setLoadingStats(false);
         message.error(data?.message || "Failed to get stats");
       }
     };
     const getSchedule = async () => {
       const { status, data } = await getDashboardSchedule();
       if (status === 200) {
-        console.log(data);
-        setSchedule(data?.data);
+        setSchedule(data.data);
+        setLoadingSchedule(false);
       } else {
+        setLoadingSchedule(false);
         message.error(data?.message || "Failed to get schedule");
       }
     };
@@ -57,7 +64,13 @@ const Dashboard = () => {
           title={<p className="text-sm md:text-base">Schedule</p>}
           style={{ overflow: "hidden" }}
         >
-          <div>{schedule && <Schedule schedule={schedule} />}</div>
+          <div>
+            {schedule ? (
+              <Schedule schedule={schedule} loadingSchedule={loadingSchedule} />
+            ) : (
+              <p className="text-center my-5"> Loading... </p>
+            )}
+          </div>
         </Card>
       </div>
       <div className="grid xl:grid-cols-3 gap-6">
@@ -108,15 +121,15 @@ const Dashboard = () => {
               defaultValue="30 Days"
               onChange={(value) => {
                 const range = value.replace(" ", ""); // Converts "30 Days" to "30Days"
-                setSelectedRange(range);
+                setActiveManHoursTab(range);
               }}
             />
           </div>
           <div className="flex justify-center">
             {stats ? (
               <BarChart
-                categories={stats[selectedRange]?.Categories || []}
-                data={stats[selectedRange]?.data || []}
+                categories={stats[setActiveManHoursTab]?.Categories || []}
+                data={stats[setActiveManHoursTab]?.data || []}
               />
             ) : (
               <p className="text-center my-5"> Loading... </p>

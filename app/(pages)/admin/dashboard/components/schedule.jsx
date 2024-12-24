@@ -4,7 +4,7 @@ import { useState } from "react";
 import DailyBatchPopup from "./scheduleComponents/dailyBatchPopup";
 import dayjs from "dayjs";
 
-const Schedule = ({ schedule }) => {
+const Schedule = ({ schedule, loadingSchedule }) => {
   const [selectedDate, setSelectedDate] = useState("");
 
   const getScheduleData = (date) => {

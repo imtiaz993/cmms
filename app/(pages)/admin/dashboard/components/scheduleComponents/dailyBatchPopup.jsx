@@ -22,7 +22,7 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
 
   useEffect(() => {
     const getDailyWO = async () => {
-      const { status, data } = await getDailyWorkOrders(selectedDate, "all");
+      const { status, data } = await getDailyWorkOrders(selectedDate);
       if (status === 200) {
         setdata(data?.data);
       } else {
