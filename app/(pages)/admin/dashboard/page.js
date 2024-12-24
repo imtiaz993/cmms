@@ -1,8 +1,5 @@
 "use client";
-import Link from "next/link";
 import { Card, message, Segmented } from "antd";
-// import ReactApexChart from "react-apexcharts";
-import { useSearchParams } from "next/navigation";
 import Schedule from "./components/schedule";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
@@ -18,26 +15,22 @@ const ColumnChart = dynamic(() => import("./components/columnChart"), {
 });
 
 const Dashboard = () => {
-  const [stats,setStats]=useState()
-  const [loadingStats,setLoadingStats]=useState(true)
-  const [schedule,setSchedule]=useState()
-  const [loadingSchedule,setLoadingSchedule]=useState(true)
-  const [activeManHoursTab,setActiveManHoursTab]=useState("30 Days")
-  const searchParams = useSearchParams();
-  const activeLocation = searchParams.get("location") || "rig-21";
-  const activeSystem = searchParams.get("system") || "air-system";
+  const [stats, setStats] = useState();
+  const [loadingStats, setLoadingStats] = useState(true);
+  const [schedule, setSchedule] = useState();
+  const [loadingSchedule, setLoadingSchedule] = useState(true);
+  const [activeManHoursTab, setActiveManHoursTab] = useState("30 Days");
 
   console.log(stats);
-  
 
   useEffect(() => {
     const getStats = async () => {
       const { status, data } = await getDashboardStats();
       if (status === 200) {
-        setStats(data.data)
-        setLoadingStats(false)
+        setStats(data.data);
+        setLoadingStats(false);
       } else {
-        setLoadingStats(false)
+        setLoadingStats(false);
         message.error(data?.message || "Failed to get stats");
       }
     };
@@ -45,9 +38,9 @@ const Dashboard = () => {
       const { status, data } = await getDashboardSchedule();
       if (status === 200) {
         setSchedule(data.data);
-        setLoadingSchedule(false)
+        setLoadingSchedule(false);
       } else {
-        setLoadingSchedule(false)
+        setLoadingSchedule(false);
         message.error(data?.message || "Failed to get schedule");
       }
     };
@@ -65,7 +58,11 @@ const Dashboard = () => {
           style={{ overflow: "hidden" }}
         >
           <div>
-            <Schedule schedule={schedule} loadingSchedule={loadingSchedule}/>
+            {schedule ? (
+              <Schedule schedule={schedule} loadingSchedule={loadingSchedule} />
+            ) : (
+              <p className="text-center my-5"> Loading... </p>
+            )}
           </div>
         </Card>
       </div>
@@ -81,7 +78,11 @@ const Dashboard = () => {
           }
         >
           <div className="flex justify-center">
-            <ColumnChart stats={stats?.unPlanned} />
+            {stats ? (
+              <ColumnChart data={stats?.unPlanned} />
+            ) : (
+              <p className="text-center my-5"> Loading... </p>
+            )}
           </div>
         </Card>
         <Card
@@ -95,33 +96,37 @@ const Dashboard = () => {
           }
         >
           <div className="flex justify-center">
-            <ColumnChart stats={stats?.planned} />
+            {stats ? (
+              <ColumnChart data={stats?.planned} />
+            ) : (
+              <p className="text-center my-5"> Loading... </p>
+            )}
           </div>
         </Card>
         <Card
           loading={false}
           className="!bg-primary"
           title={<p className="text-sm md:text-base">Projected Man Hours</p>}
-          extra={
-            <Link
-              href={`/admin/schedule?location=${activeLocation}&system=${activeSystem}`}
-              className="cursor-pointer text-secondary text-xs md:text-sm"
-            >
-              View Schdeule
-            </Link>
-          }
         >
           <div className="flex justify-center">
             <Segmented
               options={["30 Days", "60 Days", "90 Days"]}
               defaultValue="30 Days"
               onChange={(value) => {
-                setActiveManHoursTab(value)
+                const range = value.replace(" ", ""); // Converts "30 Days" to "30Days"
+                setActiveManHoursTab(range);
               }}
             />
           </div>
           <div className="flex justify-center">
-            <BarChart stats={stats?.[activeManHoursTab]?.replace(/" "/g,"")} />
+            {stats ? (
+              <BarChart
+                categories={stats[activeManHoursTab]?.Categories || []}
+                data={stats[activeManHoursTab]?.data || []}
+              />
+            ) : (
+              <p className="text-center my-5"> Loading... </p>
+            )}
           </div>
         </Card>
       </div>

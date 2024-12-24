@@ -79,39 +79,50 @@ const data = [
 
 const Unplanned = () => {
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
-  const [workOrders, setWorkOrders] = useState(data);
-  const [fetchingWorkOrders, setFetchingWorkOrders] = useState(false);
+  const [workOrders, setWorkOrders] = useState([]);
+  const [fetchingWorkOrders, setFetchingWorkOrders] = useState(true);
   const [addWOVisible, setAddWOVisible] = useState(false);
   const [checkedList, setCheckedList] = useState([
     "asset",
     "assetDescription",
     "workOrder",
-    "workRequired",
-    "priority",
-    "created",
-    "due",
+    // "workRequired",
+    "priorityLevel",
+    "createdAt",
+    "date",
     "status",
-    "costCenter",
-    "cost",
+    // "costCenter",
+    // "cost",
   ]);
   const [searchText, setSearchText] = useState("");
   const router = useRouter();
 
   const columns = [
-    { title: "Asset #", dataIndex: "asset", key: "asset" },
+    {
+      title: "Asset #",
+      dataIndex: "asset",
+      key: "asset",
+      render: (asset) => asset?.name,
+    },
     {
       title: "Asset Description",
-      dataIndex: "assetDescription",
+      dataIndex: "asset",
       key: "assetDescription",
+      render: (asset) => asset?.description,
     },
-    { title: "Work Order #", dataIndex: "workOrder", key: "workOrder" },
-    { title: "Work Required", dataIndex: "workRequired", key: "workRequired" },
-    { title: "Priority", dataIndex: "priority", key: "priority" },
-    { title: "Created Date", dataIndex: "created", key: "created" },
-    { title: "Due Date", dataIndex: "due", key: "due" },
+    { title: "Work Order #", dataIndex: "_id", key: "workOrder" },
+    // { title: "Work Required", dataIndex: "workRequired", key: "workRequired" },
+    { title: "Priority", dataIndex: "priorityLevel", key: "priorityLevel" },
+    { title: "Created Date", dataIndex: "createdAt", key: "createdAt" },
+    { title: "Due Date", dataIndex: "date", key: "date" },
     { title: "Status", dataIndex: "status", key: "status" },
-    { title: "Cost Center", dataIndex: "costCenter", key: "costCenter" },
-    { title: "Cost", dataIndex: "cost", key: "cost" },
+    // { title: "Cost Center", dataIndex: "costCenter", key: "costCenter" },
+    // { title: "Cost", dataIndex: "cost", key: "cost" },
+    {
+      title: "Affected Equipment",
+      dataIndex: "affectedEquipment",
+      key: "affectedEquipment",
+    },
     {
       title: "",
       dataIndex: "print",
@@ -133,7 +144,7 @@ const Unplanned = () => {
       setFetchingWorkOrders(true);
       const { status, data } = await getWorkOrders("unplanned");
       if (status === 200) {
-        setWorkOrders(data);
+        setWorkOrders(data?.data);
       } else {
         message.error(data.error || "Failed to fetch unplanned work orders");
       }
@@ -194,9 +205,9 @@ const Unplanned = () => {
       <Table
         rowClassName="cursor-pointer"
         onRow={(record) => ({
-          onClick: () => router.push(`/admin/work-orders/${record?.workOrder}`),
+          onClick: () => router.push(`/admin/work-orders/${record?._id}`),
         })}
-        loading={false}
+        loading={fetchingWorkOrders}
         size="large"
         scroll={{ x: 1100 }}
         columns={filteredColumns}

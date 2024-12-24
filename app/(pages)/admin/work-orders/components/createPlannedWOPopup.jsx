@@ -1,25 +1,50 @@
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { DatePicker, Modal, Select, Checkbox } from "antd";
+import { Modal, Checkbox, message } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
+import { useSearchParams } from "next/navigation";
+import { addPlannedWorkOrder } from "app/services/workOrders";
+import { useSelector } from "react-redux";
+import SelectField from "@/components/common/SelectField";
 
 const validationSchema = Yup.object().shape({
-  rigNumber: Yup.string().required("Required"),
-  parentAsset: Yup.string().required("Required"),
+  // rigNumber: Yup.string().required("Required"),
+  // parentAsset: Yup.string().required("Required"),
   date: Yup.date().required("Required"),
   recurring: Yup.boolean(),
   inspectedBy: Yup.string().required("Required"),
   supervisor: Yup.string().required("Required"),
 });
 
-const CreatePlannedWOPopup = ({ visible, setVisible }) => {
+const CreatePlannedWOPopup = ({ visible, setVisible, asset }) => {
+  // const { assets, isLoading, error } = useSelector((state) => state.assets);
+  const searchParams = useSearchParams();
+  const location = searchParams.get("location") || "1";
+
+  console.log("Physical location", location);
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
+    const { status, data } = await addPlannedWorkOrder({
+      ...values,
+      physicalLocation: location,
+      asset,
+    });
+    if (status === 200) {
+      console.log(data);
+      resetForm();
+      setVisible(false);
+      message.success(data?.message || "Work order added successfully");
+    } else {
+      message.error(data?.message || "Failed to add work order");
+    }
+    setSubmitting(false);
+  };
   return (
     <Formik
       initialValues={{
-        rigNumber: "",
-        parentAsset: "",
+        // rigNumber: "",
+        // parentAsset: "",
         date: null,
         recurring: false,
         inspectedBy: "",
@@ -31,7 +56,7 @@ const CreatePlannedWOPopup = ({ visible, setVisible }) => {
         handleSubmit(values, setSubmitting, resetForm);
       }}
     >
-      {({ isSubmitting, handleSubmit }) => (
+      {({ isSubmitting, handleSubmit, submitForm }) => (
         <Form onSubmit={handleSubmit}>
           <Modal
             maskClosable={false}
@@ -55,27 +80,36 @@ const CreatePlannedWOPopup = ({ visible, setVisible }) => {
                 />
                 <Button
                   className=""
-                  onClick={() => setVisible(false)}
+                  htmlType="submit"
+                  onClick={submitForm}
                   size="small"
                   text="Create Work Order"
                   fullWidth={false}
                   disabled={isSubmitting}
+                  isLoading={isSubmitting}
                 />
               </div>
             }
             width={600}
           >
             <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
-              <InputField name="rigNumber" placeholder="Rig #" />
-              <InputField name="parentAsset" placeholder="Parent Asset" />
+              {/* <InputField name="rigNumber" placeholder="Rig #" /> */}
+              {/* <SelectField
+                name="parentAsset"
+                placeholder="Parent Asset"
+                options={assets?.map((asset) => ({
+                  label: asset.assetNumber,
+                  value: asset._id,
+                }))}
+              /> */}
               <DatePickerField name="date" placeholder="Date" />
+              <InputField name="inspectedBy" placeholder="Inspected By" />
+              <InputField name="supervisor" placeholder="Supervisor" />
               <div className="flex items-center">
                 <Field name="recurring" type="checkbox" as={Checkbox}>
                   Recurring
                 </Field>
               </div>
-              <InputField name="inspectedBy" placeholder="Inspected By" />
-              <InputField name="supervisor" placeholder="Supervisor" />
             </div>
           </Modal>
         </Form>

@@ -8,6 +8,7 @@ import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
 import { addUnplannedWorkOrder } from "app/services/workOrders";
 import TimePickerField from "@/components/common/TimePickerField";
+import { useSelector } from "react-redux";
 
 const validationSchema = Yup.object().shape({
   issueIdentification: Yup.string().required("Required"),
@@ -33,18 +34,20 @@ const validationSchema = Yup.object().shape({
 });
 
 const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
+  const { assets, isLoading, error } = useSelector((state) => state.assets);
+
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log(values);
     const { status, data } = await addUnplannedWorkOrder(values);
     if (status === 200) {
       console.log(data);
+      resetForm();
+      setVisible(false);
       message.success(data?.message || "Work order added successfully");
     } else {
       message.error(data?.message || "Failed to add work order");
     }
     setSubmitting(false);
-    resetForm();
-    setVisible(false);
   };
 
   return (
@@ -129,7 +132,14 @@ const CreateUnplannedWOPopup = ({ visible, setVisible }) => {
                   maxLength={150}
                 />
               </div>
-              <InputField name="assetNum" placeholder="Asset #" />
+              <SelectField
+                name="assetNum"
+                placeholder="Asset #"
+                options={assets?.map((asset) => ({
+                  label: asset.assetNumber,
+                  value: asset._id,
+                }))}
+              />
               <InputField
                 name="affectedEquipment"
                 placeholder="Affected Equipment"

@@ -13,7 +13,7 @@ import {
 } from "app/services/dashboard";
 
 const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
-  const [data, setdata] = useState([]);
+  const [data, setdata] = useState();
   const [selectedTab, setSelectedTab] = useState("Critical"); // State to track the selected tab
   const [batchEdit, setBatchEdit] = useState(false);
   const [reschedulePopup, setReschedulePopup] = useState(false);
@@ -30,7 +30,7 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
       }
     };
     getDailyWO();
-  }, [selectedTab]);
+  }, []);
 
   const handleCheckboxChange = (item) => {
     setSelectedItems((prev) => {
@@ -61,18 +61,22 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
   const renderContent = () => {
     switch (selectedTab) {
       case "Critical":
-        return (
+        return data.critical.length > 0 ? (
           <Critical
             batchEdit={batchEdit}
             print={print}
             setBatchEditPopup={setReschedulePopup}
-            data={data}
+            data={data.critical}
             selectedItems={selectedItems}
             handleCheckboxChange={handleCheckboxChange}
           />
+        ) : (
+          <p className="text-center my-10">
+            No Critical Work Orders To Display
+          </p>
         );
       case "High":
-        return (
+        return data.high.length > 0 ? (
           <High
             batchEdit={batchEdit}
             print={print}
@@ -81,9 +85,11 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
             selectedItems={selectedItems}
             handleCheckboxChange={handleCheckboxChange}
           />
+        ) : (
+          <p className="text-center my-10">No High Work Orders To Display</p>
         );
       case "Medium":
-        return (
+        return data.medium.length > 0 ? (
           <Medium
             batchEdit={batchEdit}
             print={print}
@@ -92,9 +98,11 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
             selectedItems={selectedItems}
             handleCheckboxChange={handleCheckboxChange}
           />
+        ) : (
+          <p className="text-center my-10">No Medium Work Orders To Display</p>
         );
       case "Low":
-        return (
+        return data.low.length > 0 ? (
           <Low
             batchEdit={batchEdit}
             print={print}
@@ -103,6 +111,8 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
             selectedItems={selectedItems}
             handleCheckboxChange={handleCheckboxChange}
           />
+        ) : (
+          <p className="text-center my-10">No Low Work Orders To Display</p>
         );
       default:
         return null;
@@ -199,7 +209,13 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
                   </div>
                 )}
                 {/* Render content based on selected radio button */}
-                <div>{renderContent()}</div>
+                <div>
+                  {data ? (
+                    renderContent()
+                  ) : (
+                    <p className="text-center my-10">Loading...</p>
+                  )}
+                </div>
               </div>
             </Modal>
           </Form>

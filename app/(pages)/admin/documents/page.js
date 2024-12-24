@@ -60,9 +60,9 @@ const columns = [
     key: "createdAt",
   },
   {
-    title: "Comments",
-    dataIndex: "comment",
-    key: "comment",
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
   },
   {
     title: "",
