@@ -5,7 +5,7 @@ import { Card, message, Segmented } from "antd";
 import { useSearchParams } from "next/navigation";
 import Schedule from "./components/schedule";
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   getDashboardSchedule,
   getDashboardStats,
@@ -21,6 +21,7 @@ const Dashboard = () => {
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "rig-21";
   const activeSystem = searchParams.get("system") || "air-system";
+  const [schedule, setSchedule] = useState();
 
   useEffect(() => {
     const getStats = async () => {
@@ -35,6 +36,7 @@ const Dashboard = () => {
       const { status, data } = await getDashboardSchedule();
       if (status === 200) {
         console.log(data);
+        setSchedule(data?.data);
       } else {
         message.error(data?.message || "Failed to get schedule");
       }
@@ -52,9 +54,7 @@ const Dashboard = () => {
           title={<p className="text-sm md:text-base">Schedule</p>}
           style={{ overflow: "hidden" }}
         >
-          <div>
-            <Schedule />
-          </div>
+          <div>{schedule && <Schedule schedule={schedule} />}</div>
         </Card>
       </div>
       <div className="grid xl:grid-cols-3 gap-6">
