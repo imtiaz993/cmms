@@ -1,10 +1,10 @@
 import ReactApexChart from "react-apexcharts";
 
-const BarChart = () => (
+const BarChart = ({ categories, data }) => (
   <ReactApexChart
     series={[
       {
-        data: [400, 430, 448, 470, 540, 580, 690, 1100],
+        data: data, // Data dynamically passed from the parent
       },
     ]}
     options={{
@@ -35,16 +35,7 @@ const BarChart = () => (
             colors: "var(--text-color)",
           },
         },
-        categories: [
-          "Motorman",
-          "Floorman",
-          "MUD PUMP INSP.",
-          "Driller",
-          "Rig Manager",
-          "Tool Pusher",
-          "Derrickman",
-          "Third Party",
-        ],
+        categories: categories, // Categories dynamically passed from the parent
       },
       yaxis: {
         labels: {
@@ -61,7 +52,7 @@ const BarChart = () => (
           breakpoint: 1600,
           options: {
             chart: {
-              width: 370,
+              width: 300,
             },
             plotOptions: {
               bar: {

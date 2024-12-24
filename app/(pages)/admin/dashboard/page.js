@@ -22,12 +22,15 @@ const Dashboard = () => {
   const activeLocation = searchParams.get("location") || "rig-21";
   const activeSystem = searchParams.get("system") || "air-system";
   const [schedule, setSchedule] = useState();
+  const [stats, setStats] = useState();
+  const [selectedRange, setSelectedRange] = useState("30Days"); // Default to 30Days
 
   useEffect(() => {
     const getStats = async () => {
       const { status, data } = await getDashboardStats();
       if (status === 200) {
         console.log(data);
+        setStats(data?.data);
       } else {
         message.error(data?.message || "Failed to get stats");
       }
@@ -69,7 +72,11 @@ const Dashboard = () => {
           }
         >
           <div className="flex justify-center">
-            <ColumnChart />
+            {stats ? (
+              <ColumnChart data={stats?.unPlanned} />
+            ) : (
+              <p className="text-center my-5"> Loading... </p>
+            )}
           </div>
         </Card>
         <Card
@@ -83,33 +90,37 @@ const Dashboard = () => {
           }
         >
           <div className="flex justify-center">
-            <ColumnChart />
+            {stats ? (
+              <ColumnChart data={stats?.planned} />
+            ) : (
+              <p className="text-center my-5"> Loading... </p>
+            )}
           </div>
         </Card>
         <Card
           loading={false}
           className="!bg-primary"
           title={<p className="text-sm md:text-base">Projected Man Hours</p>}
-          extra={
-            <Link
-              href={`/admin/schedule?location=${activeLocation}&system=${activeSystem}`}
-              className="cursor-pointer text-secondary text-xs md:text-sm"
-            >
-              View Schdeule
-            </Link>
-          }
         >
           <div className="flex justify-center">
             <Segmented
               options={["30 Days", "60 Days", "90 Days"]}
               defaultValue="30 Days"
               onChange={(value) => {
-                // TODO: Change chart data
+                const range = value.replace(" ", ""); // Converts "30 Days" to "30Days"
+                setSelectedRange(range);
               }}
             />
           </div>
           <div className="flex justify-center">
-            <BarChart />
+            {stats ? (
+              <BarChart
+                categories={stats[selectedRange]?.Categories || []}
+                data={stats[selectedRange]?.data || []}
+              />
+            ) : (
+              <p className="text-center my-5"> Loading... </p>
+            )}
           </div>
         </Card>
       </div>
