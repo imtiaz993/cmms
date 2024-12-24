@@ -1,8 +1,5 @@
 "use client";
-import Link from "next/link";
 import { Card, message, Segmented } from "antd";
-// import ReactApexChart from "react-apexcharts";
-import { useSearchParams } from "next/navigation";
 import Schedule from "./components/schedule";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
@@ -23,10 +20,6 @@ const Dashboard = () => {
   const [schedule, setSchedule] = useState();
   const [loadingSchedule, setLoadingSchedule] = useState(true);
   const [activeManHoursTab, setActiveManHoursTab] = useState("30 Days");
-  const searchParams = useSearchParams();
-  const activeLocation = searchParams.get("location") || "rig-21";
-  const activeSystem = searchParams.get("system") || "air-system";
-  const [selectedRange, setSelectedRange] = useState("30Days"); // Default to 30Days
 
   console.log(stats);
 
@@ -128,8 +121,8 @@ const Dashboard = () => {
           <div className="flex justify-center">
             {stats ? (
               <BarChart
-                categories={stats[setActiveManHoursTab]?.Categories || []}
-                data={stats[setActiveManHoursTab]?.data || []}
+                categories={stats[activeManHoursTab]?.Categories || []}
+                data={stats[activeManHoursTab]?.data || []}
               />
             ) : (
               <p className="text-center my-5"> Loading... </p>
