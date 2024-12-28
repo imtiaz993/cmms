@@ -184,7 +184,7 @@ const Planned = () => {
               return {
                 onClick: () => {
                   router.push(
-                    `/admin/work-orders/${record?.workOrder}`
+                    `/admin/work-orders/${record?._id}`
                   );
                 },
               };
