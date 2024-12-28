@@ -129,7 +129,7 @@ const Planned = () => {
       <Table
         rowClassName="cursor-pointer"
         onRow={(record) => ({
-          onClick: () => router.push(`/admin/work-orders/${record?.workOrder}`),
+          onClick: () => router.push(`/admin/work-orders/${record?._id}`),
         })}
         loading={fetchingWorkOrders}
         size="large"
