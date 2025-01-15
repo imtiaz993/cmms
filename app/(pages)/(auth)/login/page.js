@@ -48,7 +48,7 @@ const Login = () => {
   return (
     <div className="flex flex-col justify-center items-center min-h-dvh ">
       <div className="p-10 w-full max-w-[520px] rounded-lg bg-primary">
-        <h1 className="text-3xl md:text-3xl font-bold mt-8">
+        <h1 className="text-2xl md:text-3xl font-bold mt-8">
           Log in to your account
         </h1>
         {/* <p className="mt-3 text-sm md:text-base">
