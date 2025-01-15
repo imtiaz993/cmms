@@ -44,8 +44,8 @@ const CheckEmail = () => {
         </h1>
         <p className="mt-5 text-sm md:text-lg">
           It may take a few minutes for the email to arrive. Be sure to check
-          your spam or junk folder. If you still haven't received the email, you
-          can:
+          your spam or junk folder. If you still haven&apos;t received the
+          email, you can:
         </p>
         <Button
           text="Resend Link"

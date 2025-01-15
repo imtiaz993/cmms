@@ -45,11 +45,11 @@ const ForgotPassword = () => {
           Forgot your Password?
         </h1>
         <p className="mt-7 text-lg md:text-2xl">
-          No worries! We'll help you reset it.
+          No worries! We&apos;ll help you reset it.
         </p>
         <p className="mt-5 text-sm md:text-lg">
-          Enter the email address associated with your account, and we'll send
-          you a link to reset your password.
+          Enter the email address associated with your account, and we&apos;ll
+          send you a link to reset your password.
         </p>
 
         <div className="my-8 w-full">
