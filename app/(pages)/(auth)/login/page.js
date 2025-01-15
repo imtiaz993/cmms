@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { message } from "antd";
+import { Checkbox, message } from "antd";
 import { login } from "app/services/auth";
 import {
   EyeInvisibleOutlined,
@@ -46,70 +46,77 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-dvh w-11/12 mx-auto md:w-full max-w-[520px]">
-      <h1 className="text-2xl md:text-3xl font-bold">Login</h1>
-      <p className="mt-3 text-sm md:text-base">
-        Welcome back! Please enter your details
-      </p>
-      <div className="mt-10 w-full">
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting, resetForm }) => {
-            handleSubmit(values, setSubmitting, resetForm);
-          }}
-        >
-          {({ isSubmitting, handleSubmit }) => (
-            <Form onSubmit={handleSubmit}>
-              <InputField
-                placeholder="Email"
-                name="email"
-                style={{ height: "40px" }}
-                prefix={<MailOutlined style={{ fontSize: "125%" }} />}
-              />
-              <InputField
-                name="password"
-                placeholder="Password"
-                type={showPassword ? "text" : "password"}
-                style={{ height: "40px" }}
-                prefix={
-                  showPassword ? (
-                    <EyeOutlined
-                      style={{ fontSize: "125%" }}
-                      onClick={() => {
-                        setShowPassword((prev) => !prev);
-                      }}
-                    />
-                  ) : (
-                    <EyeInvisibleOutlined
-                      style={{ fontSize: "125%" }}
-                      onClick={() => {
-                        setShowPassword((prev) => !prev);
-                      }}
-                    />
-                  )
-                }
-                className="mt-7"
-              />
-              <div className="flex justify-end">
-                <Link
-                  href="/forgot-password"
-                  className="mt-4 text-sm font-medium "
-                >
-                  Forgot Password?
-                </Link>
-              </div>
-              <Button
-                text="Login Now"
-                htmlType="submit"
-                disabled={isSubmitting}
-                isLoading={isSubmitting}
-                className="mt-7"
-                style={{ height: "40px", fontSize: "16px" }}
-              />
-            </Form>
-          )}
-        </Formik>
+    <div className="flex flex-col justify-center items-center min-h-dvh ">
+      <div className="p-10 w-full max-w-[520px] rounded-lg bg-primary">
+        <h1 className="text-2xl md:text-3xl font-bold mt-8">
+          Log in to your account
+        </h1>
+        {/* <p className="mt-3 text-sm md:text-base">
+          Welcome back! Please enter your details
+        </p> */}
+        <div className="my-8 w-full">
+          <Formik
+            initialValues={{ email: "", password: "" }}
+            validationSchema={validationSchema}
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+              handleSubmit(values, setSubmitting, resetForm);
+            }}
+          >
+            {({ isSubmitting, handleSubmit }) => (
+              <Form onSubmit={handleSubmit}>
+                <p className="text-lg mb-2">Email Address</p>
+                <InputField
+                  placeholder="email@email.com"
+                  name="email"
+                  style={{ height: "40px" }}
+                />
+                <p className="text-lg mt-5 mb-2">Password</p>
+                <InputField
+                  name="password"
+                  placeholder="Password"
+                  type={showPassword ? "text" : "password"}
+                  style={{ height: "40px" }}
+                  suffix={
+                    showPassword ? (
+                      <EyeOutlined
+                        style={{ fontSize: "125%" }}
+                        onClick={() => {
+                          setShowPassword((prev) => !prev);
+                        }}
+                      />
+                    ) : (
+                      <EyeInvisibleOutlined
+                        style={{ fontSize: "125%" }}
+                        onClick={() => {
+                          setShowPassword((prev) => !prev);
+                        }}
+                      />
+                    )
+                  }
+                />
+                <div className="flex justify-between items-center mt-5">
+                  <Checkbox>
+                    <p className="text-lg">Remember me</p>
+                  </Checkbox>
+                  <Link
+                    href="/forgot-password"
+                    className="text-[#116AFC] underline text-lg"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
+                <Button
+                  text="Login"
+                  htmlType="submit"
+                  disabled={isSubmitting}
+                  isLoading={isSubmitting}
+                  className="mt-7 !text-black !font-medium"
+                  style={{ height: "40px", fontSize: "18px" }}
+                />
+              </Form>
+            )}
+          </Formik>
+        </div>
       </div>
     </div>
   );

@@ -51,93 +51,98 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center  min-h-dvh w-11/12 mx-auto md:w-full max-w-[520px]">
-      <h1 className="text-2xl md:text-3xl font-bold">Create a New Password</h1>
-      <p className="mt-3 text-sm md:text-base">
-        Set a new secured password for your account.
-      </p>
-      <div className="mt-10 w-full">
-        <Formik
-          initialValues={{ newPassword: "", confirmPassword: "" }}
-          validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting, resetForm }) => {
-            handleSubmit(values, setSubmitting, resetForm);
-          }}
-        >
-          {({ isSubmitting, handleSubmit }) => (
-            <Form onSubmit={handleSubmit}>
-              <InputField
-                name="newPassword"
-                placeholder="Password"
-                style={{ height: "40px" }}
-                type={showPassword.newPassword ? "text" : "password"}
-                prefix={
-                  showPassword.newPassword ? (
-                    <EyeOutlined
-                      style={{ fontSize: "125%" }}
-                      onClick={() => {
-                        setShowPassword((prev) => ({
-                          ...prev,
-                          newPassword: !prev.newPassword,
-                        }));
-                      }}
-                    />
-                  ) : (
-                    <EyeInvisibleOutlined
-                      style={{ fontSize: "125%" }}
-                      onClick={() => {
-                        setShowPassword((prev) => ({
-                          ...prev,
-                          newPassword: !prev.newPassword,
-                        }));
-                      }}
-                    />
-                  )
-                }
-                className="mt-7"
-              />
-              <InputField
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                style={{ height: "40px" }}
-                type={showPassword.confirmPassword ? "text" : "password"}
-                prefix={
-                  showPassword.confirmPassword ? (
-                    <EyeOutlined
-                      style={{ fontSize: "125%" }}
-                      onClick={() => {
-                        setShowPassword((prev) => ({
-                          ...prev,
-                          confirmPassword: !prev.confirmPassword,
-                        }));
-                      }}
-                    />
-                  ) : (
-                    <EyeInvisibleOutlined
-                      style={{ fontSize: "125%" }}
-                      onClick={() => {
-                        setShowPassword((prev) => ({
-                          ...prev,
-                          confirmPassword: !prev.confirmPassword,
-                        }));
-                      }}
-                    />
-                  )
-                }
-                className="mt-7"
-              />
+    <div className="flex flex-col justify-center items-center min-h-dvh ">
+      <div className="p-10 w-full max-w-[520px] rounded-lg bg-primary">
+        <h1 className="text-2xl md:text-3xl font-bold mt-8">
+          Create a New Password
+        </h1>
+        <p className="mt-7 text-lg md:text-xl">
+          Set a new secured password for your account.
+        </p>
+        <div className="my-8 w-full">
+          <Formik
+            initialValues={{ newPassword: "", confirmPassword: "" }}
+            validationSchema={validationSchema}
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+              handleSubmit(values, setSubmitting, resetForm);
+            }}
+          >
+            {({ isSubmitting, handleSubmit }) => (
+              <Form onSubmit={handleSubmit}>
+                <p className="text-lg mb-2">New Password</p>
 
-              <Button
-                text="Reset Now"
-                htmlType="submit"
-                disabled={isSubmitting}
-                isLoading={isSubmitting}
-                className="mt-7"
-                style={{ height: "40px", fontSize: "16px" }}
-              />
-            </Form>
-          )}
-        </Formik>
+                <InputField
+                  name="newPassword"
+                  placeholder="Password"
+                  style={{ height: "40px" }}
+                  type={showPassword.newPassword ? "text" : "password"}
+                  suffix={
+                    showPassword.newPassword ? (
+                      <EyeOutlined
+                        style={{ fontSize: "125%" }}
+                        onClick={() => {
+                          setShowPassword((prev) => ({
+                            ...prev,
+                            newPassword: !prev.newPassword,
+                          }));
+                        }}
+                      />
+                    ) : (
+                      <EyeInvisibleOutlined
+                        style={{ fontSize: "125%" }}
+                        onClick={() => {
+                          setShowPassword((prev) => ({
+                            ...prev,
+                            newPassword: !prev.newPassword,
+                          }));
+                        }}
+                      />
+                    )
+                  }
+                />
+                <p className="text-lg mt-5 mb-2">Confirm New Password</p>
+                <InputField
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  style={{ height: "40px" }}
+                  type={showPassword.confirmPassword ? "text" : "password"}
+                  suffix={
+                    showPassword.confirmPassword ? (
+                      <EyeOutlined
+                        style={{ fontSize: "125%" }}
+                        onClick={() => {
+                          setShowPassword((prev) => ({
+                            ...prev,
+                            confirmPassword: !prev.confirmPassword,
+                          }));
+                        }}
+                      />
+                    ) : (
+                      <EyeInvisibleOutlined
+                        style={{ fontSize: "125%" }}
+                        onClick={() => {
+                          setShowPassword((prev) => ({
+                            ...prev,
+                            confirmPassword: !prev.confirmPassword,
+                          }));
+                        }}
+                      />
+                    )
+                  }
+                />
+
+                <Button
+                  text="Reset Now"
+                  htmlType="submit"
+                  disabled={isSubmitting}
+                  isLoading={isSubmitting}
+                  className="mt-7 !text-black"
+                  style={{ height: "40px", fontSize: "16px" }}
+                />
+              </Form>
+            )}
+          </Formik>
+        </div>
       </div>
     </div>
   );
