@@ -10,6 +10,7 @@ const InputField = ({
   style,
   readOnly,
   maxLength,
+  suffix,
 }) => {
   return (
     <div>
@@ -19,6 +20,7 @@ const InputField = ({
         type={type}
         as={Input}
         prefix={prefix}
+        suffix={suffix}
         className={className}
         disabled={readOnly}
         maxLength={maxLength}
@@ -26,6 +28,7 @@ const InputField = ({
           height: "36px",
           ...style,
         }}
+        extra={prefix}
       />
       <ErrorMessage
         name={name}

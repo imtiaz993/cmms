@@ -30,12 +30,12 @@ export default function Layout({ children }) {
           <div className="absolute inset-0">
             {/* Triangle Background */}
             <div
-              className="w-full mt-56 h-[200px] bg-[#3F3F3F]"
+              className="w-full mt-56 h-[300px] bg-[#3F3F3F]"
               style={{ clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)" }}
             ></div>
 
             {/* Black Background */}
-            <div className="bg-[#3F3F3F]  h-[calc(100vh-224px-200px)]"></div>
+            <div className="bg-[#3F3F3F]  h-[calc(100vh-224px-300px)] -mt-px"></div>
           </div>
 
           {/* Content Section */}
