@@ -33,7 +33,7 @@ const InputField = ({
       <ErrorMessage
         name={name}
         component="div"
-        className="text-red-500 text-sm mt-1"
+        className="text-red-500 text-sm md:text-base mt-1"
       />
     </div>
   );

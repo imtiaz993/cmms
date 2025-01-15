@@ -3,11 +3,11 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { message } from "antd";
-import { MailOutlined } from "@ant-design/icons";
 import { forgotPassword } from "app/services/auth";
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -16,14 +16,16 @@ const validationSchema = Yup.object().shape({
 });
 
 const ForgotPassword = () => {
+  const router = useRouter();
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     const { status, data } = await forgotPassword(values);
     setSubmitting(false);
     if (status === 200) {
       message.success(data.message);
       resetForm();
+      router.push("/check-email?email=" + values.email);
     } else {
-      message.error(data.message);
+      message.error(data.error);
     }
   };
 
@@ -50,7 +52,7 @@ const ForgotPassword = () => {
           you a link to reset your password.
         </p>
 
-        <div className="my-9 w-full">
+        <div className="my-8 w-full">
           <Formik
             initialValues={{ email: "" }}
             validationSchema={validationSchema}

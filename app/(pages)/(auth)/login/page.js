@@ -54,7 +54,7 @@ const Login = () => {
         {/* <p className="mt-3 text-sm md:text-base">
           Welcome back! Please enter your details
         </p> */}
-        <div className="my-9 w-full">
+        <div className="my-8 w-full">
           <Formik
             initialValues={{ email: "", password: "" }}
             validationSchema={validationSchema}
