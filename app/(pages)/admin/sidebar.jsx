@@ -17,16 +17,40 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
   const currentPage = pathname.split("/")[2] || "dashboard";
 
   const items = [
-    { key: "dashboard", icon: <DashboardOutlined />, label: "Control Panel" },
-    { key: "assets", icon: <AppstoreOutlined />, label: "Assets" },
-    { key: "inventory", icon: <DatabaseOutlined />, label: "Inventory" },
-    { key: "work-orders", icon: <ToolOutlined />, label: "Work Orders" },
-    { key: "documents", icon: <FileTextOutlined />, label: "Documents" },
-    { key: "reports", icon: <BarChartOutlined />, label: "Reports" },
+    {
+      key: "dashboard",
+      icon: <DashboardOutlined style={{ fontSize: "18px" }} />,
+      label: <span style={{ fontSize: "18px" }}>Control Panel</span>,
+    },
+    {
+      key: "assets",
+      icon: <AppstoreOutlined style={{ fontSize: "18px" }} />,
+      label: <span style={{ fontSize: "18px" }}>Assets</span>,
+    },
+    {
+      key: "inventory",
+      icon: <DatabaseOutlined style={{ fontSize: "18px" }} />,
+      label: <span style={{ fontSize: "18px" }}>Inventory</span>,
+    },
+    {
+      key: "work-orders",
+      icon: <ToolOutlined style={{ fontSize: "18px" }} />,
+      label: <span style={{ fontSize: "18px" }}>Work Orders</span>,
+    },
+    {
+      key: "documents",
+      icon: <FileTextOutlined style={{ fontSize: "18px" }} />,
+      label: <span style={{ fontSize: "18px" }}>Documents</span>,
+    },
+    {
+      key: "reports",
+      icon: <BarChartOutlined style={{ fontSize: "18px" }} />,
+      label: <span style={{ fontSize: "18px" }}>Reports</span>,
+    },
     {
       key: "material-transfer",
-      icon: <SwapOutlined />,
-      label: "Material Transfer",
+      icon: <SwapOutlined style={{ fontSize: "18px" }} />,
+      label: <span style={{ fontSize: "18px" }}>Material Transfer</span>,
     },
   ];
 
@@ -37,7 +61,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
 
   return (
     <div className="rounded-tr-xl bg-primary overflow-hidden">
-      <div className=" max-h-[calc(100dvh-16px-60px)] min-h-[calc(100dvh-16px-60px)] overflow-auto hidden lg:block lg:w-[250px] p-5 select-none">
+      <div className=" max-h-[calc(100dvh-16px-60px)] min-h-[calc(100dvh-16px-60px)] overflow-auto hidden lg:block lg:w-[250px] p-5 pt-7 select-none">
         <Menu
           mode="inline"
           defaultSelectedKeys={[currentPage || "dashboard"]}
