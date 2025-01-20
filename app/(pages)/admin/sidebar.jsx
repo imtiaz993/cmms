@@ -60,8 +60,8 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
   };
 
   return (
-    <div className="rounded-tr-xl bg-primary overflow-hidden">
-      <div className=" max-h-[calc(100dvh-16px-60px)] min-h-[calc(100dvh-16px-60px)] overflow-auto hidden lg:block lg:w-[250px] p-5 pt-7 select-none">
+    <div className="rounded-tr-xl bg-primary overflow-hidden shadow-custom">
+      <div className=" max-h-[calc(100dvh-16px-60px-16px)] min-h-[calc(100dvh-16px-60px-16px)] overflow-auto hidden lg:block lg:w-[250px] p-5 pt-7 select-none">
         <Menu
           mode="inline"
           defaultSelectedKeys={[currentPage || "dashboard"]}

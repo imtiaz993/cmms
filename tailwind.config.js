@@ -17,7 +17,9 @@ module.exports = {
         senary: "",
       },
       backgroundImage: {},
-      boxShadow: {},
+      boxShadow: {
+        custom: "0px 5px 20px 0px #0000000D",
+      },
     },
   },
   plugins: [],

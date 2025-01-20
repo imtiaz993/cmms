@@ -85,7 +85,7 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
                 height={40}
                 className="rounded-full h-6 w-6 object-top"
               />
-              <p className={`dark:text-white text-lg`}>{userName}</p>
+              <p className={`dark:text-white text-lg hidden md:block`}>{userName}</p>
               <DownOutlined style={{ fontSize: "10px" }} />
             </div>
           </Dropdown>

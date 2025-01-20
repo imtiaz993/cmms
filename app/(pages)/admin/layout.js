@@ -158,10 +158,10 @@ export default function Layout({ children }) {
             params={`?location=${activeLocation}&system=${activeSystem}`}
           />
           <div className="w-full lg:w-[calc(100%-300px)]">
-            <h1 className="px-6 text-2xl font-medium capitalize">
+            <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
               {currentItem.icon} {currentPage}
             </h1>
-            <div className="px-6 flex gap-3 my-4">
+            <div className="px-5 md:px-10 flex gap-3 my-4">
               <Select
                 value={activeLocation}
                 onChange={(value) =>
