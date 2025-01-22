@@ -1,7 +1,7 @@
 "use client";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
-import { DownloadOutlined } from "@ant-design/icons";
+import { DownloadOutlined, EyeOutlined } from "@ant-design/icons";
 import { useEffect, useMemo, useState } from "react";
 import { getDocuments } from "app/services/document";
 import Link from "next/link";
@@ -55,22 +55,22 @@ const columns = [
     key: "uploadedBy",
   },
   {
-    title: "Uploaded Date",
+    title: "Upload Date",
     dataIndex: "createdAt",
     key: "createdAt",
   },
+  // {
+  //   title: "Description",
+  //   dataIndex: "description",
+  //   key: "description",
+  // },
   {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
-  },
-  {
-    title: "",
+    title: "Preview",
     dataIndex: "link",
     key: "link",
     render: (link) => (
       <a href={link} target="_blank">
-        <DownloadOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+        <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
       </a>
     ),
   },
@@ -81,6 +81,14 @@ const Documents = () => {
   const [fetchingDocuments, setFetchingDocuments] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (keys, rows) => {
+      setSelectedRowKeys(keys);
+    },
+  };
 
   useEffect(() => {
     const handleFetchDocuments = async () => {
@@ -113,7 +121,7 @@ const Documents = () => {
   }, [searchText, selectedCategories, documents]);
 
   return (
-    <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
+    <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
       <div>
         <ActionBar
           setSearchText={setSearchText}
@@ -121,16 +129,18 @@ const Documents = () => {
           selectedCategories={selectedCategories}
           setSelectedCategories={setSelectedCategories}
         />
-        <div className="flex justify-end">
+        {/* <div className="flex justify-end">
           <p className="text-secondary">
             Total Documents: <span>({filteredDocuments.length})</span>
           </p>
-        </div>
+        </div> */}
         <Table
-          loading={fetchingDocuments}
+          loading={false}
           size="large"
           scroll={{ x: 1100 }}
           columns={columns}
+          rowKey="_id"
+          rowSelection={rowSelection}
           dataSource={filteredDocuments}
           pagination={{
             total: filteredDocuments.length,
@@ -139,7 +149,7 @@ const Documents = () => {
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
           }}
-          style={{ marginTop: 16, overflow: "auto" }}
+          style={{ marginTop: 16, overflow: "auto", fontSize: "18px" }}
         />
       </div>
     </div>
