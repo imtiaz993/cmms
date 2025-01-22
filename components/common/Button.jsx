@@ -19,10 +19,14 @@ const Button = ({
       htmlType={htmlType}
       disabled={disabled}
       onClick={onClick}
-      className={`${fullWidth ? "w-full" : ""} ${className} `}
+      className={`${fullWidth ? "w-full" : ""} ${className} ${
+        outlined && "!shadow-none"
+      }`}
       style={{
-        background: outlined ? "" : "#F0BF60",
-        borderColor: outlined ? "" : "#F0BF60",
+        background: outlined ? "white" : "#F0BF60",
+        color: outlined ? "black" : "white",
+        border: outlined ? "1px solid #D6D6D6" : "",
+        borderColor: outlined ? "none" : "#F0BF60",
         opacity: disabled ? "0.7" : "",
         height: "36px",
         fontWeight: "500",
@@ -31,10 +35,7 @@ const Button = ({
       }}
     >
       {isLoading ? (
-        <Spin
-          spinning={true}
-          indicator={<LoadingOutlined spin />}
-        />
+        <Spin spinning={true} indicator={<LoadingOutlined spin />} />
       ) : (
         <div className="flex items-center">
           {prefix ? <div className="mr-1">{prefix}</div> : ""}

@@ -23,6 +23,17 @@ import {
   setAssetsLoading,
 } from "app/redux/slices/assetsSlice";
 import { jwtDecode } from "jwt-decode";
+import {
+  AppstoreOutlined,
+  BarChartOutlined,
+  DashboardOutlined,
+  DatabaseOutlined,
+  EnvironmentOutlined,
+  FileTextOutlined,
+  ShareAltOutlined,
+  SwapOutlined,
+  ToolOutlined,
+} from "@ant-design/icons";
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -33,6 +44,28 @@ export default function Layout({ children }) {
   const currentPage = pathname.split("/")[2] || "dashboard";
   const activeLocation = searchParams.get("location") || "1";
   const activeSystem = searchParams.get("system") || "1";
+
+  const items = [
+    {
+      key: "dashboard",
+      icon: <DashboardOutlined />,
+      label: "Control Panel",
+    },
+    { key: "assets", icon: <AppstoreOutlined />, label: "Assets" },
+    { key: "inventory", icon: <DatabaseOutlined />, label: "Inventory" },
+    { key: "work-orders", icon: <ToolOutlined />, label: "Work Orders" },
+    { key: "documents", icon: <FileTextOutlined />, label: "Documents" },
+    { key: "reports", icon: <BarChartOutlined />, label: "Reports" },
+    {
+      key: "material-transfer",
+      icon: <SwapOutlined />,
+      label: "Material Transfer",
+    },
+  ];
+
+  // Find the current item based on the current page
+  const currentItem =
+    items.find((item) => item.key === currentPage) || items[0];
 
   // Dark mode
   const { defaultAlgorithm, darkAlgorithm } = theme;
@@ -118,14 +151,17 @@ export default function Layout({ children }) {
           isDarkMode={isDarkMode}
           setIsDarkMode={setIsDarkMode}
         />
-        <div className="flex items-start mt-4">
+        <div className="flex items-start mt-7">
           <Sidebar
             openSidebar={openSidebar}
             setOpenSidebar={setOpenSidebar}
             params={`?location=${activeLocation}&system=${activeSystem}`}
           />
           <div className="w-full lg:w-[calc(100%-300px)]">
-            <div className="px-6 flex gap-3 mb-4">
+            <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
+              {currentItem.icon} {currentPage}
+            </h1>
+            <div className="px-5 md:px-10 flex gap-3 my-4">
               <Select
                 value={activeLocation}
                 onChange={(value) =>
@@ -135,7 +171,24 @@ export default function Layout({ children }) {
                 }
                 options={rigs.map((i) => ({ label: i.name, value: i.id }))}
                 placeholder="Select Parent Location"
-                className="w-full sm:w-40"
+                className="w-full sm:w-44 !h-10 shadow-custom"
+                dropdownRender={(menu) => (
+                  <div>
+                    <div
+                      style={{
+                        padding: "8px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <EnvironmentOutlined
+                        style={{ marginRight: "8px", fontSize: "16px" }}
+                      />
+                      <span>Locations</span>
+                    </div>
+                    {menu}
+                  </div>
+                )}
               />
               {activeLocation !== "12" && activeLocation !== "13" && (
                 <Select
@@ -148,8 +201,25 @@ export default function Layout({ children }) {
                   options={rigs
                     .find((i) => i.id === activeLocation)
                     .systems.map((i) => ({ label: i.name, value: i.id }))}
-                  placeholder="Select Child Location"
-                  className="w-full sm:w-40"
+                  placeholder="Select System"
+                  className="w-full sm:w-44 !h-10 shadow-custom"
+                  dropdownRender={(menu) => (
+                    <div>
+                      <div
+                        style={{
+                          padding: "8px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <ShareAltOutlined
+                          style={{ marginRight: "8px", fontSize: "16px" }}
+                        />
+                        <span>Systems</span>
+                      </div>
+                      {menu}
+                    </div>
+                  )}
                 />
               )}
             </div>

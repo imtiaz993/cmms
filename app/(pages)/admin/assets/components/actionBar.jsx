@@ -1,10 +1,21 @@
 import { useState } from "react";
-import { Checkbox, Dropdown, Input, Menu, message } from "antd";
 import {
+  Checkbox,
+  Dropdown,
+  Input,
+  Menu,
+  message,
+  Select,
+  Button as AntButton,
+} from "antd";
+import {
+  DownOutlined,
   ExportOutlined,
   FilterOutlined,
   PlusOutlined,
   SettingOutlined,
+  SwapOutlined,
+  ToolOutlined,
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import AssetFilter from "./filtersDropdown";
@@ -52,14 +63,66 @@ const ActionBar = ({
 
   return (
     <>
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3">
-        <Input.Search
-          placeholder="Search..."
-          onChange={handleSearchChange}
-          className="sm:!w-[300px] searchBar"
-        />
+      {/* <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3"> */}
+      <Input.Search
+        placeholder="Search..."
+        onChange={handleSearchChange}
+        className="sm:!w-[362px] searchBar"
+      />
+      <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mt-5">
+        <div className="flex gap-3">
+          <Checkbox className="!mx-2" />
+          <div className="sm:min-w-40 overflow-hidden">
+            <Select
+              name="actions"
+              placeholder="Actions"
+              style={{ height: "36px", width: "100%" }}
+              // onChange={handleActionsChange}
+              options={[
+                {
+                  label: (
+                    <>
+                      <ToolOutlined /> New Work Order
+                    </>
+                  ),
+                  value: "workorder",
+                },
+                {
+                  label: (
+                    <>
+                      <SwapOutlined /> Material Transfer
+                    </>
+                  ),
+                  value: "materialTransfer",
+                },
+              ]}
+            />
+          </div>
+          <div className="sm:min-w-36 overflow-hidden">
+            <Dropdown
+              open={filterDropdown}
+              onOpenChange={setFilterDropdown}
+              dropdownRender={() => (
+                <AssetFilter closeDropdown={() => setFilterDropdown(false)} />
+              )}
+              trigger={["click"]}
+              arrow
+              placement="bottomCenter"
+            >
+              <AntButton
+                text="Filter"
+                style={{ padding: "4px 0px", width: "144px", height: "36px" }}
+                className="flex !justify-between w-full !p-3"
+              >
+                <span> Filter</span>
+                <DownOutlined />
+              </AntButton>
+            </Dropdown>
+          </div>
+        </div>
+
         <div className="grid grid-cols-2 sm:grid-cols-4 md:flex items-center gap-2">
-          <Dropdown
+          {/* <Dropdown
             open={filterDropdown}
             onOpenChange={setFilterDropdown}
             dropdownRender={() => (
@@ -76,8 +139,8 @@ const ActionBar = ({
               prefix={<FilterOutlined />}
               onClick={() => setFilterDropdown(!filterDropdown)}
             />
-          </Dropdown>
-          <Dropdown
+          </Dropdown> */}
+          {/* <Dropdown
             dropdownRender={() => (
               <Menu>
                 <Menu.ItemGroup title="Select Columns">
@@ -111,7 +174,7 @@ const ActionBar = ({
               style={{ padding: "4px 24px" }}
               prefix={<SettingOutlined />}
             />
-          </Dropdown>
+          </Dropdown> */}
           <Dropdown
             dropdownRender={() => (
               <Menu>
@@ -145,9 +208,8 @@ const ActionBar = ({
             />
           </Dropdown>
           <Button
-            text="Add New Asset"
+            text="New Asset"
             onClick={showAddAssetModal}
-            outlined
             style={{ padding: "4px 24px" }}
             prefix={<PlusOutlined />}
           />
