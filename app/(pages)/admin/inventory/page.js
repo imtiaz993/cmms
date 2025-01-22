@@ -102,7 +102,7 @@ const Inventory = () => {
   }, [searchText, inventory, checkedList]);
 
   return (
-    <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
+    <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
       {console.log("selected inventory", selectedRowKeys)}
       {addInventoryVisible && (
         <CreateInventoryPopup
@@ -121,14 +121,14 @@ const Inventory = () => {
           setSearchText={setSearchText}
           // setInventory={setInventory}
         />
-        <div className="flex gap-3 justify-end">
+        {/* <div className="flex gap-3 justify-end">
           <p className="text-secondary">
             Total Inventory: <span>{"(" + inventory?.length + ")"}</span>
           </p>
           <p className="text-secondary">
             Parent Inventory: <span>{"(" + inventory?.length + ")"}</span>
           </p>
-        </div>
+        </div> */}
         <Table
           loading={isLoading}
           size={"large"}
@@ -149,6 +149,7 @@ const Inventory = () => {
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
             onChange: () => {},
+            className: "custom-pagination",
           }}
           style={{
             marginTop: 16,
