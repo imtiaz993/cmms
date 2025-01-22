@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { message, Table } from "antd";
+import { Checkbox, message, Table } from "antd";
 import { EyeFilled, PrinterOutlined } from "@ant-design/icons";
 import EarlyMaintenancePopup from "./components/earlyMaintenancePopup";
 import ActionBar from "./components/actionBar";
@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import PreviewPopup from "../../../../components/previewPopup";
 
 import { getWorkOrders } from "app/services/workOrders";
+import { EditPagePencil } from "@/icons/index";
 
 const data = [
   {
@@ -83,21 +84,44 @@ const Unplanned = () => {
   const [fetchingWorkOrders, setFetchingWorkOrders] = useState(true);
   const [addWOVisible, setAddWOVisible] = useState(false);
   const [checkedList, setCheckedList] = useState([
-    "asset",
-    "assetDescription",
     "workOrder",
-    // "workRequired",
+    "workRequired",
     "priorityLevel",
     "createdAt",
     "date",
     "status",
-    // "costCenter",
-    // "cost",
+    "costCenter",
+    "cost",
+    "asset",
+    "assetDescription",
+    "actions",
   ]);
   const [searchText, setSearchText] = useState("");
   const router = useRouter();
 
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (keys, rows) => {
+      setSelectedRowKeys(keys);
+    },
+  };
+
   const columns = [
+    {
+      title: "Work Order #",
+      dataIndex: "_id",
+      key: "workOrder",
+      render: (id) => <p className="text-[#017BFE] underline">{id}</p>,
+    },
+    // { title: "Work Required", dataIndex: "workRequired", key: "workRequired" },
+
+    { title: "Priority", dataIndex: "priorityLevel", key: "priorityLevel" },
+    { title: "Created Date", dataIndex: "createdAt", key: "createdAt" },
+    { title: "Due Date", dataIndex: "date", key: "date" },
+    { title: "Status", dataIndex: "status", key: "status" },
+    { title: "Cost Center", dataIndex: "costCenter", key: "costCenter" },
+    { title: "Cost", dataIndex: "cost", key: "cost" },
     {
       title: "Asset #",
       dataIndex: "asset",
@@ -110,14 +134,6 @@ const Unplanned = () => {
       key: "assetDescription",
       render: (asset) => asset?.description,
     },
-    { title: "Work Order #", dataIndex: "_id", key: "workOrder" },
-    // { title: "Work Required", dataIndex: "workRequired", key: "workRequired" },
-    { title: "Priority", dataIndex: "priorityLevel", key: "priorityLevel" },
-    { title: "Created Date", dataIndex: "createdAt", key: "createdAt" },
-    { title: "Due Date", dataIndex: "date", key: "date" },
-    { title: "Status", dataIndex: "status", key: "status" },
-    // { title: "Cost Center", dataIndex: "costCenter", key: "costCenter" },
-    // { title: "Cost", dataIndex: "cost", key: "cost" },
     {
       title: "Affected Equipment",
       dataIndex: "affectedEquipment",
@@ -125,16 +141,19 @@ const Unplanned = () => {
     },
     {
       title: "",
-      dataIndex: "print",
-      key: "print",
+      dataIndex: "actions",
+      key: "actions",
       render: () => (
-        <EyeFilled
-          onClick={(e) => {
-            e.stopPropagation();
-            setPreviewPopupVisible(true);
-          }}
-          style={{ fontSize: "20px", cursor: "pointer" }}
-        />
+        <div className="flex gap-3">
+          <EyeFilled
+            onClick={(e) => {
+              e.stopPropagation();
+              setPreviewPopupVisible(true);
+            }}
+            style={{ fontSize: "20px", cursor: "pointer" }}
+          />
+          <EditPagePencil />
+        </div>
       ),
     },
   ];
@@ -173,7 +192,7 @@ const Unplanned = () => {
   };
 
   return (
-    <div className="h-[calc(100dvh-220px)] overflow-auto mt-4 px-3 lg:px-6">
+    <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg rounded-tl-none shadow-custom">
       <PreviewPopup
         visible={previewPopupVisible}
         setVisible={setPreviewPopupVisible}
@@ -195,12 +214,12 @@ const Unplanned = () => {
         setFetchingWorkOrders={setFetchingWorkOrders}
       />
 
-      <div className="flex justify-end">
+      {/* <div className="flex justify-end">
         <p className="text-secondary">
           Total Unplanned Work Orders:{" "}
           <span>{"(" + workOrders.length + ")"}</span>
         </p>
-      </div>
+      </div> */}
 
       <Table
         rowClassName="cursor-pointer"
@@ -211,14 +230,16 @@ const Unplanned = () => {
         size="large"
         scroll={{ x: 1100 }}
         columns={filteredColumns}
+        rowSelection={rowSelection}
         dataSource={filteredData}
         pagination={{
-          total: workOrders.length,
+          total: filteredData.length,
           current: 1,
           pageSize: 10,
           showSizeChanger: true,
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} of ${total} items`,
+          className: "custom-pagination",
         }}
         style={{ marginTop: 16 }}
       />
