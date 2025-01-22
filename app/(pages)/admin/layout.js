@@ -171,7 +171,7 @@ export default function Layout({ children }) {
                 }
                 options={rigs.map((i) => ({ label: i.name, value: i.id }))}
                 placeholder="Select Parent Location"
-                className="w-full sm:w-44 !h-10"
+                className="w-full sm:w-44 !h-10 shadow-custom"
                 dropdownRender={(menu) => (
                   <div>
                     <div
@@ -202,7 +202,7 @@ export default function Layout({ children }) {
                     .find((i) => i.id === activeLocation)
                     .systems.map((i) => ({ label: i.name, value: i.id }))}
                   placeholder="Select System"
-                  className="w-full sm:w-44 !h-10"
+                  className="w-full sm:w-44 !h-10 shadow-custom"
                   dropdownRender={(menu) => (
                     <div>
                       <div

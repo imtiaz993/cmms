@@ -62,7 +62,7 @@ h6 {
 
 .searchBar button,
 .searchBar input {
-  height: 36px !important;
+  height: 42px !important;
 }
 
 .ant-message-notice-content {
@@ -133,19 +133,20 @@ h6 {
 .work-orders-tabs .ant-tabs-nav,
 .asset-tabs .ant-tabs-nav {
   margin: 0px !important;
+  z-index: 100 !important;
 }
 
 .reports-tabs .ant-tabs-nav-wrap,
 .work-orders-tabs .ant-tabs-nav-wrap,
 .asset-tabs .ant-tabs-nav-wrap {
-  margin-left: 24px;
+  margin-left: 39px;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 767px) {
   .reports-tabs .ant-tabs-nav-wrap,
   .work-orders-tabs .ant-tabs-nav-wrap,
   .asset-tabs .ant-tabs-nav-wrap {
-    margin-left: 12px;
+    margin-left: 19px;
   }
 }
 
@@ -165,7 +166,7 @@ h6 {
 .reports-tabs .ant-tabs-tab:nth-child(1),
 .work-orders-tabs .ant-tabs-tab:nth-child(1),
 .asset-tabs .ant-tabs-tab:nth-child(1) {
-  border-radius: 6px 0px 0px 6px !important;
+  border-radius: 6px 0px 0px 0px !important;
 }
 
 .reports-tabs .ant-tabs-tab:nth-child(4) {
@@ -200,4 +201,31 @@ h6 {
 
 .ant-spin {
   color: #000 !important;
+}
+
+.custom-pagination {
+  justify-content: space-between !important;
+  align-items: center;
+}
+
+.custom-pagination .ant-pagination-total-text {
+  flex: 0 0 auto !important;
+  margin-right: auto !important;
+}
+
+.custom-pagination .ant-pagination {
+  flex: 1 1 auto !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.custom-pagination .ant-pagination-options {
+  flex: 0 0 auto !important;
+  margin-left: auto !important;
+}
+
+/* Target the expand icon */
+.ant-table-row-expand-icon {
+  width: 19px !important;
+  height: 19px !important;
 }
