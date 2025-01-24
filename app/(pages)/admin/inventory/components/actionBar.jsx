@@ -26,6 +26,7 @@ import AddFieldPopup from "../../../../../components/addFieldPopup";
 import { exportInventory } from "app/services/inventory";
 import CreatePurchaseOrderPopup from "../purchase-order/createPurchaseOrderPopup";
 import ChangeToAssetPopup from "./changeToAssetPopup";
+import Link from "next/link";
 
 const ActionBar = ({
   showAddInventoryModal,
@@ -234,12 +235,13 @@ const ActionBar = ({
               style={{ padding: "4px 0px" }}
               prefix={<ExportOutlined />}
             />
-            <Button
-              text="Add New Inventory"
-              onClick={showAddInventoryModal}
-              style={{ padding: "4px 30px" }}
-              prefix={<PlusOutlined />}
-            />
+            <Link href="/admin/inventory/new">
+              <Button
+                text="Add New Inventory"
+                style={{ padding: "4px 30px" }}
+                prefix={<PlusOutlined />}
+              />
+            </Link>
           </div>
         </div>
         {/* <div className="flex justify-end">

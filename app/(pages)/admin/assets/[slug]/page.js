@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { deleteAsset, getAssetDetails } from "app/services/assets";
 import CreateAssetPopup from "../components/createAssetPopup";
 import ConfirmationPopup from "@/components/confirmationPopup";
+import Link from "next/link";
 
 const AssetDetail = () => {
   const [details, setDetails] = useState();
@@ -89,13 +90,14 @@ const AssetDetail = () => {
           outlined
         />
 
-        <Button
-          text="Edit Asset"
-          prefix={<EditOutlined />}
-          fullWidth={false}
-          className="md:ml-3"
-          onClick={() => setEditAssetPopup(true)}
-        />
+        <Link href={`/admin/assets/${slug}/edit`}>
+          <Button
+            text="Edit Asset"
+            prefix={<EditOutlined />}
+            fullWidth={false}
+            className="md:ml-3"
+          />
+        </Link>
       </div>
       {details && (
         <Tabs details={details} setDetails={setDetails} slug={slug} />

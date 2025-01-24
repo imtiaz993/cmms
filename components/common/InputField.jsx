@@ -4,6 +4,7 @@ import { Input } from "antd";
 const InputField = ({
   name,
   placeholder,
+  label,
   type,
   prefix,
   className,
@@ -14,6 +15,11 @@ const InputField = ({
 }) => {
   return (
     <div>
+      {label && (
+        <label htmlFor={name} className="text-sm text-[#30343F] ">
+          {label}
+        </label>
+      )}
       <Field
         name={name}
         placeholder={placeholder}
@@ -25,7 +31,10 @@ const InputField = ({
         disabled={readOnly}
         maxLength={maxLength}
         style={{
-          height: "36px",
+          height: "50px",
+          width: "100%",
+          marginTop: label ? "8px" : "0px",
+          fontSize: "16px",
           ...style,
         }}
         extra={prefix}
