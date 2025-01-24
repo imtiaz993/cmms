@@ -143,7 +143,7 @@ const AssetDetails = () => {
     setSubmitting(false);
   };
 
-  // if (loading || !details) return <div>Loading...</div>;
+  if ((slug && loading) || (slug && !details)) return <div className="ml-10 mt-20 text-center">Loading...</div>;
 
   return (
     <div className="ml-5 md:ml-10">

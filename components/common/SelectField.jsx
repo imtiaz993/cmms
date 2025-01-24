@@ -47,7 +47,7 @@ const SelectField = ({
         style={{
           height: "50px",
           width: "100%",
-          marginTop: "8px",
+          marginTop: label ? "8px" : 0,
           ...style,
         }}
       />

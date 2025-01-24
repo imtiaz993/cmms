@@ -49,7 +49,7 @@ export default function Layout({ children }) {
   const currentPage = pathname.split("/")[2] || "dashboard";
   const activeLocation = searchParams.get("location") || "1";
   const activeSystem = searchParams.get("system") || "1";
-  const { slug } = useParams();
+  const isNewEditDetails = pathname.split("/")[3];
 
   const items = [
     {
@@ -164,25 +164,55 @@ export default function Layout({ children }) {
             params={`?location=${activeLocation}&system=${activeSystem}`}
           />
           <div className="w-full lg:w-[calc(100%-300px)]">
-            {currentPage !== "new" &&
-              !slug && (
-                <>
-                  <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
-                    {currentItem.icon} {currentPage}
-                  </h1>
-                  <div className="px-5 md:px-10 flex gap-3 my-4">
+            {currentPage !== "new" && !isNewEditDetails && (
+              <>
+                <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
+                  {currentItem.icon} {currentPage}
+                </h1>
+                <div className="px-5 md:px-10 flex gap-3 my-4">
+                  <Select
+                    value={activeLocation}
+                    onChange={(value) =>
+                      router.push(
+                        `/admin/${currentPage}?location=${value}&system=${activeSystem}`
+                      )
+                    }
+                    options={rigs.map((i) => ({
+                      label: i.name,
+                      value: i.id,
+                    }))}
+                    placeholder="Select Parent Location"
+                    className="w-full sm:w-44 !h-10 shadow-custom"
+                    dropdownRender={(menu) => (
+                      <div>
+                        <div
+                          style={{
+                            padding: "8px",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <EnvironmentOutlined
+                            style={{ marginRight: "8px", fontSize: "16px" }}
+                          />
+                          <span>Locations</span>
+                        </div>
+                        {menu}
+                      </div>
+                    )}
+                  />
+                  {activeLocation !== "12" && activeLocation !== "13" && (
                     <Select
-                      value={activeLocation}
+                      value={activeSystem}
                       onChange={(value) =>
                         router.push(
-                          `/admin/${currentPage}?location=${value}&system=${activeSystem}`
+                          `/admin/${currentPage}?location=${activeLocation}&system=${value}`
                         )
                       }
-                      options={rigs.map((i) => ({
-                        label: i.name,
-                        value: i.id,
-                      }))}
-                      placeholder="Select Parent Location"
+                      options={rigs
+                        .find((i) => i.id === activeLocation)
+                        .systems.map((i) => ({ label: i.name, value: i.id }))}
+                      placeholder="Select System"
                       className="w-full sm:w-44 !h-10 shadow-custom"
                       dropdownRender={(menu) => (
                         <div>
@@ -193,50 +223,19 @@ export default function Layout({ children }) {
                               alignItems: "center",
                             }}
                           >
-                            <EnvironmentOutlined
+                            <ShareAltOutlined
                               style={{ marginRight: "8px", fontSize: "16px" }}
                             />
-                            <span>Locations</span>
+                            <span>Systems</span>
                           </div>
                           {menu}
                         </div>
                       )}
                     />
-                    {activeLocation !== "12" && activeLocation !== "13" && (
-                      <Select
-                        value={activeSystem}
-                        onChange={(value) =>
-                          router.push(
-                            `/admin/${currentPage}?location=${activeLocation}&system=${value}`
-                          )
-                        }
-                        options={rigs
-                          .find((i) => i.id === activeLocation)
-                          .systems.map((i) => ({ label: i.name, value: i.id }))}
-                        placeholder="Select System"
-                        className="w-full sm:w-44 !h-10 shadow-custom"
-                        dropdownRender={(menu) => (
-                          <div>
-                            <div
-                              style={{
-                                padding: "8px",
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <ShareAltOutlined
-                                style={{ marginRight: "8px", fontSize: "16px" }}
-                              />
-                              <span>Systems</span>
-                            </div>
-                            {menu}
-                          </div>
-                        )}
-                      />
-                    )}
-                  </div>
-                </>
-              )}
+                  )}
+                </div>
+              </>
+            )}
             {children}
           </div>
         </div>
