@@ -2,7 +2,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { getToken, getUser } from "@/utils/index";
 import { useDispatch } from "react-redux";
 import Appbar from "./appbar";
@@ -44,6 +49,7 @@ export default function Layout({ children }) {
   const currentPage = pathname.split("/")[2] || "dashboard";
   const activeLocation = searchParams.get("location") || "1";
   const activeSystem = searchParams.get("system") || "1";
+  const { slug } = useParams();
 
   const items = [
     {
@@ -158,71 +164,79 @@ export default function Layout({ children }) {
             params={`?location=${activeLocation}&system=${activeSystem}`}
           />
           <div className="w-full lg:w-[calc(100%-300px)]">
-            <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
-              {currentItem.icon} {currentPage}
-            </h1>
-            <div className="px-5 md:px-10 flex gap-3 my-4">
-              <Select
-                value={activeLocation}
-                onChange={(value) =>
-                  router.push(
-                    `/admin/${currentPage}?location=${value}&system=${activeSystem}`
-                  )
-                }
-                options={rigs.map((i) => ({ label: i.name, value: i.id }))}
-                placeholder="Select Parent Location"
-                className="w-full sm:w-44 !h-10 shadow-custom"
-                dropdownRender={(menu) => (
-                  <div>
-                    <div
-                      style={{
-                        padding: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <EnvironmentOutlined
-                        style={{ marginRight: "8px", fontSize: "16px" }}
+            {currentPage !== "new" &&
+              !slug && (
+                <>
+                  <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
+                    {currentItem.icon} {currentPage}
+                  </h1>
+                  <div className="px-5 md:px-10 flex gap-3 my-4">
+                    <Select
+                      value={activeLocation}
+                      onChange={(value) =>
+                        router.push(
+                          `/admin/${currentPage}?location=${value}&system=${activeSystem}`
+                        )
+                      }
+                      options={rigs.map((i) => ({
+                        label: i.name,
+                        value: i.id,
+                      }))}
+                      placeholder="Select Parent Location"
+                      className="w-full sm:w-44 !h-10 shadow-custom"
+                      dropdownRender={(menu) => (
+                        <div>
+                          <div
+                            style={{
+                              padding: "8px",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <EnvironmentOutlined
+                              style={{ marginRight: "8px", fontSize: "16px" }}
+                            />
+                            <span>Locations</span>
+                          </div>
+                          {menu}
+                        </div>
+                      )}
+                    />
+                    {activeLocation !== "12" && activeLocation !== "13" && (
+                      <Select
+                        value={activeSystem}
+                        onChange={(value) =>
+                          router.push(
+                            `/admin/${currentPage}?location=${activeLocation}&system=${value}`
+                          )
+                        }
+                        options={rigs
+                          .find((i) => i.id === activeLocation)
+                          .systems.map((i) => ({ label: i.name, value: i.id }))}
+                        placeholder="Select System"
+                        className="w-full sm:w-44 !h-10 shadow-custom"
+                        dropdownRender={(menu) => (
+                          <div>
+                            <div
+                              style={{
+                                padding: "8px",
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <ShareAltOutlined
+                                style={{ marginRight: "8px", fontSize: "16px" }}
+                              />
+                              <span>Systems</span>
+                            </div>
+                            {menu}
+                          </div>
+                        )}
                       />
-                      <span>Locations</span>
-                    </div>
-                    {menu}
+                    )}
                   </div>
-                )}
-              />
-              {activeLocation !== "12" && activeLocation !== "13" && (
-                <Select
-                  value={activeSystem}
-                  onChange={(value) =>
-                    router.push(
-                      `/admin/${currentPage}?location=${activeLocation}&system=${value}`
-                    )
-                  }
-                  options={rigs
-                    .find((i) => i.id === activeLocation)
-                    .systems.map((i) => ({ label: i.name, value: i.id }))}
-                  placeholder="Select System"
-                  className="w-full sm:w-44 !h-10 shadow-custom"
-                  dropdownRender={(menu) => (
-                    <div>
-                      <div
-                        style={{
-                          padding: "8px",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <ShareAltOutlined
-                          style={{ marginRight: "8px", fontSize: "16px" }}
-                        />
-                        <span>Systems</span>
-                      </div>
-                      {menu}
-                    </div>
-                  )}
-                />
+                </>
               )}
-            </div>
             {children}
           </div>
         </div>

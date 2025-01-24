@@ -20,6 +20,7 @@ import {
 import Button from "@/components/common/Button";
 import AssetFilter from "./filtersDropdown";
 import { exportAssets } from "app/services/assets";
+import Link from "next/link";
 
 const ActionBar = ({
   showAddAssetModal,
@@ -207,12 +208,13 @@ const ActionBar = ({
               prefix={<ExportOutlined />}
             />
           </Dropdown>
-          <Button
-            text="New Asset"
-            onClick={showAddAssetModal}
-            style={{ padding: "4px 24px" }}
-            prefix={<PlusOutlined />}
-          />
+          <Link href="/admin/new/asset">
+            <Button
+              text="New Asset"
+              style={{ padding: "4px 24px" }}
+              prefix={<PlusOutlined />}
+            />
+          </Link>
         </div>
       </div>
     </>
