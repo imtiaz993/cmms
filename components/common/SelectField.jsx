@@ -4,6 +4,7 @@ import { ErrorMessage, Field } from "formik";
 const SelectField = ({
   name,
   placeholder,
+  label,
   prefix,
   className,
   style,
@@ -23,12 +24,18 @@ const SelectField = ({
         onBlur={() => form.setFieldTouched(field.name, true)}
         options={options}
         disabled={readOnly} // Handle read-only state
+        size="large"
       />
     );
   };
 
   return (
     <div>
+      {label && (
+        <label htmlFor={name} className="text-sm text-[#30343F] ">
+          {label}
+        </label>
+      )}
       <Field
         component={FormikSelect}
         options={options}
@@ -38,8 +45,9 @@ const SelectField = ({
         className={className}
         disabled={readOnly} // Handle the read-only behavior
         style={{
-          height: "36px",
+          height: "50px",
           width: "100%",
+          marginTop: "8px",
           ...style,
         }}
       />

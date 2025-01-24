@@ -13,12 +13,25 @@ const FormikDatePicker = ({ field, form, readOnly, ...props }) => {
       onChange={handleChange}
       value={field.value ? dayjs(field.value) : null}
       disabled={readOnly}
+      size="large"
     />
   );
 };
 
-const DatePickerField = ({ name, placeholder, className, style, readOnly }) => (
+const DatePickerField = ({
+  name,
+  placeholder,
+  label,
+  className,
+  style,
+  readOnly,
+}) => (
   <div>
+    {label && (
+      <label htmlFor={name} className="text-sm text-[#30343F] ">
+        {label}
+      </label>
+    )}
     <Field
       name={name}
       component={FormikDatePicker}
@@ -26,8 +39,10 @@ const DatePickerField = ({ name, placeholder, className, style, readOnly }) => (
       readOnly={readOnly}
       className={className}
       style={{
-        height: "36px",
+        height: "50px",
         width: "100%",
+        fontSize: "16px",
+        marginTop: label ? "8px" : 0,
         ...style,
       }}
     />
