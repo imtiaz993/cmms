@@ -10,6 +10,7 @@ import MaintainanceSchedule from "./maintainance-schedule";
 import HistoryAssetDetail from "./history";
 import Readings from "./readings/page";
 import Cost from "./cost";
+import Details from "./details";
 
 const Tabs = ({ details, setDetails, slug }) => {
   const router = useRouter();
@@ -22,16 +23,38 @@ const Tabs = ({ details, setDetails, slug }) => {
   };
 
   const tabs = [
+    { key: "details", label: "Details", children: <Details /> },
+    { key: "events", label: "Events", children: <></> },
+    { key: "photos", label: "Photos", children: <></> },
     {
       key: "dashboard",
       label: "Dashboard",
       children: <Dashboard dashboardDetails={details?.dashboard} />,
     },
+    // {
+    //   key: "work-orders",
+    //   label: "Work Orders",
+    //   children: <WorkOrders />,
+    // },
+    // {
+    //   key: "history",
+    //   label: "History",
+    //   children: <HistoryAssetDetail />,
+    // },
+    // {
+    //   key: "cost",
+    //   label: "Cost",
+    //   children: <Cost setDetails={setDetails} />,
+    // },
     {
-      key: "work-orders",
-      label: "Work Orders",
-      children: <WorkOrders />,
+      key: "documents",
+      label: "Documents",
+      children: (
+        <Documents documentsData={details?.documents} setDetails={setDetails} />
+      ),
     },
+    { key: "mainHours", label: "Main Hours", children: <></> },
+
     {
       key: "maintenance-schedule",
       label: "Maintenance Schedule",
@@ -40,23 +63,6 @@ const Tabs = ({ details, setDetails, slug }) => {
     {
       key: "history",
       label: "History",
-      children: <HistoryAssetDetail />,
-    },
-    {
-      key: "cost",
-      label: "Cost",
-      children: <Cost setDetails={setDetails} />,
-    },
-    {
-      key: "documents",
-      label: "Documents",
-      children: (
-        <Documents documentsData={details?.documents} setDetails={setDetails} />
-      ),
-    },
-    {
-      key: "readings",
-      label: "Readings",
       children: <Readings />,
     },
     {
@@ -71,7 +77,7 @@ const Tabs = ({ details, setDetails, slug }) => {
     },
   ];
   return (
-    <div className="dashboard-tabs">
+    <div className="mt-5 bg-primary !mx-5 lg:!mx-10 p-3 pb-7 rounded-lg shadow-custom">
       <AntTabs
         activeKey={tabs.find((i) => i.key === activeTab)?.key || "dashboard"}
         animated
