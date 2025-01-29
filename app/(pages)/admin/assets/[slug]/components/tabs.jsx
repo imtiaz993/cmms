@@ -2,15 +2,15 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs as AntTabs } from "antd";
-import WorkOrders from "./work-orders";
 import Documents from "./documents";
 import MaterialTransfer from "./material-transfer";
 import Dashboard from "./dashboard";
-import MaintainanceSchedule from "./maintainance-schedule";
-import HistoryAssetDetail from "./history";
-import Readings from "./readings/page";
-import Cost from "./cost";
+import Maintainance from "./maintenance";
 import Details from "./details";
+import Events from "./events";
+import History from "./history";
+import ManHours from "./man-hours";
+import Photos from "./photos";
 
 const Tabs = ({ details, setDetails, slug }) => {
   const router = useRouter();
@@ -24,13 +24,13 @@ const Tabs = ({ details, setDetails, slug }) => {
 
   const tabs = [
     { key: "details", label: "Details", children: <Details /> },
-    { key: "events", label: "Events", children: <></> },
-    { key: "photos", label: "Photos", children: <></> },
-    {
-      key: "dashboard",
-      label: "Dashboard",
-      children: <Dashboard dashboardDetails={details?.dashboard} />,
-    },
+    { key: "events", label: "Events", children: <Events></Events> },
+    { key: "photos", label: "Photos", children: <Photos /> },
+    // {
+    //   key: "dashboard",
+    //   label: "Dashboard",
+    //   children: <Dashboard dashboardDetails={details?.dashboard} />,
+    // },
     // {
     //   key: "work-orders",
     //   label: "Work Orders",
@@ -53,17 +53,17 @@ const Tabs = ({ details, setDetails, slug }) => {
         <Documents documentsData={details?.documents} setDetails={setDetails} />
       ),
     },
-    { key: "mainHours", label: "Main Hours", children: <></> },
+    { key: "manHours", label: "Man Hours", children: <ManHours /> },
 
     {
       key: "maintenance-schedule",
       label: "Maintenance Schedule",
-      children: <MaintainanceSchedule />,
+      children: <Maintainance />,
     },
     {
       key: "history",
       label: "History",
-      children: <Readings />,
+      children: <History />,
     },
     {
       key: "material-transfer",
@@ -79,7 +79,7 @@ const Tabs = ({ details, setDetails, slug }) => {
   return (
     <div className="mt-5 bg-primary !mx-5 lg:!mx-10 p-3 pb-7 rounded-lg shadow-custom">
       <AntTabs
-        activeKey={tabs.find((i) => i.key === activeTab)?.key || "dashboard"}
+        activeKey={tabs.find((i) => i.key === activeTab)?.key || "details"}
         animated
         items={tabs}
         onChange={onChange}

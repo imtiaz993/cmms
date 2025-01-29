@@ -191,7 +191,7 @@ const ActionBar = ({
               prefix={<FilterOutlined />}
               onClick={() => setFilterDropdown(!filterDropdown)}
             />
-          </Dropdown>
+          </Dropdown> */}
           <Dropdown
             dropdownRender={() => (
               <Menu>
@@ -226,7 +226,7 @@ const ActionBar = ({
               style={{ padding: "4px 24px" }}
               prefix={<SettingOutlined />}
             />
-          </Dropdown> */}
+          </Dropdown>
 
             <Button
               text="Export"

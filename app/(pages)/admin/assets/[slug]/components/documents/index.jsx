@@ -1,102 +1,86 @@
 "use client";
+import { useState } from "react";
 import { Table } from "antd";
-import ActionBar from "./components/actionBar";
-import { DownloadOutlined } from "@ant-design/icons";
-import { useMemo, useState } from "react";
+import ActionBar from "./actionBar";
+import { EyeOutlined } from "@ant-design/icons";
 
 const columns = [
+  { title: "Document Name", dataIndex: "title", key: "title" },
   {
-    title: "Document Name",
-    dataIndex: "title",
-    key: "title",
-  },
-  {
-    title: "Asset",
+    title: "Asset #",
     dataIndex: "asset",
     key: "asset",
     render: (asset) => asset.id,
   },
-  {
-    title: "Document Type",
-    dataIndex: "type",
-    key: "type",
-  },
-  {
-    title: "Category",
-    dataIndex: "type",
-    key: "type",
-  },
-  {
-    title: "Uploaded By",
-    dataIndex: "uploadedBy",
-    key: "uploadedBy",
-  },
-  {
-    title: "Uploaded Date",
-    dataIndex: "createdAt",
-    key: "createdAt",
-  },
-  {
-    title: "Comments",
-    dataIndex: "comment",
-    key: "comment",
-  },
+  { title: "Document Type", dataIndex: "type", key: "type" },
+  { title: "Category", dataIndex: "type", key: "type" },
+  { title: "Uploaded By", dataIndex: "uploadedBy", key: "uploadedBy" },
+  { title: "Uploaded Date", dataIndex: "createdAt", key: "createdAt" },
   {
     title: "",
     dataIndex: "link",
     key: "link",
     render: (link) => (
       <a href={link} target="_blank">
-        <DownloadOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+        <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
       </a>
     ),
   },
 ];
 
-const Documents = ({ documentsData, setDetails }) => {
-  const [fetchingDocuments, setFetchingDocuments] = useState(false);
-  const [searchText, setSearchText] = useState("");
+const defaultCheckedList = columns.map((item) => item.key);
 
-  const filteredDocuments = useMemo(() => {
-    if (!documentsData) return [];
-    return documentsData.filter((document) => {
-      return (
-        !searchText ||
-        Object.values(document)
-          .join(" ")
-          .toLowerCase()
-          .includes(searchText.toLowerCase())
-      );
-    });
-  }, [searchText, documentsData]);
+const Documents = ({ documentsData, setDetails }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [checkedList, setCheckedList] = useState(defaultCheckedList);
+  const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (keys, rows) => {
+      setSelectedRowKeys(keys);
+    },
+  };
 
   return (
-    <div className="px-3 lg:px-6 pb-4 pt-3">
+    <div className="px-3 lg:px-5 pb-4 mt-1">
       <div>
         <ActionBar
-          setSearchText={setSearchText}
-          searchText={searchText}
-          setDetails={setDetails} //set Asset Details on Document add
-        />
-        <div className="flex justify-end">
-          <p className="text-secondary">
-            Total Documents: <span>({filteredDocuments.length})</span>
-          </p>
-        </div>
-        <Table
-          loading={fetchingDocuments}
-          size="large"
-          scroll={{ x: 1100 }}
+          checkedList={checkedList}
+          setCheckedList={setCheckedList}
           columns={columns}
-          dataSource={filteredDocuments}
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
+          setDetails={setDetails}
+        />
+
+        <Table
+          loading={isLoading}
+          size={"large"}
+          scroll={{ x: 1400 }}
+          columns={newColumns}
+          rowSelection={rowSelection}
+          rowKey="_id"
+          dataSource={
+            documentsData &&
+            documentsData.length > 0 &&
+            documentsData.map((i, index) => ({ ...i, key: index }))
+          }
           pagination={{
-            total: filteredDocuments.length,
+            total: documentsData?.length,
+            current: 1,
             pageSize: 10,
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
+            onChange: () => {},
+            className: "custom-pagination",
           }}
-          style={{ marginTop: 16, overflow: "auto" }}
+          style={{
+            marginTop: 16,
+            overflow: "auto",
+          }}
         />
       </div>
     </div>

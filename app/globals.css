@@ -218,3 +218,12 @@ h6 {
   width: 19px !important;
   height: 19px !important;
 }
+
+.secondary-select .ant-select-selector {
+  background-color: #f0bf60 !important;
+  border-color: #f0bf60 !important;
+  color: #fff !important;
+}
+.secondary-select .ant-select-selection-placeholder {
+  color: #fff !important;
+}

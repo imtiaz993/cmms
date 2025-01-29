@@ -4,18 +4,33 @@ import { message, Table } from "antd";
 import ActionBar from "./actionBar";
 
 const columns = [
-  { title: "Date", dataIndex: "date", key: "date" },
-  { title: "Event", dataIndex: "event", key: "event" },
-  { title: "Field", dataIndex: "field", key: "field" },
-  { title: "Changed From", dataIndex: "changedFrom", key: "changedFrom" },
-  { title: "Changed To", dataIndex: "changedTo", key: "changedTo" },
-  { title: "Action By", dataIndex: "actionBy", key: "actionBy" },
+  { title: "Asset #", dataIndex: "assetNumber", key: "assetNumber" },
+  { title: "Category", dataIndex: "category", key: "category" },
+  { title: "Start Date", dataIndex: "startDate", key: "startDate" },
+  {
+    title: "Criticality",
+    dataIndex: "criticality",
+    key: "criticality",
+    render: (criticality) =>
+      criticality === "critical" ? (
+        <p className="text-red-500">Critical</p>
+      ) : criticality === "high" ? (
+        <p className="text-orange-500">High</p>
+      ) : criticality === "medium" ? (
+        <p className="text-yellow-500">Medium</p>
+      ) : (
+        <p className="text-green-500 capitalize">{criticality}</p>
+      ),
+  },
+  { title: "Schedule", dataIndex: "schedule", key: "schedule" },
+  { title: "Status", dataIndex: "status", key: "status" },
+  { title: "Last Performed", dataIndex: "lastPerformed", key: "lastPerformed" },
 ];
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const History = () => {
-  const [history, setHistory] = useState([]);
+const Maintenance = () => {
+  const [maintenanceData, setMaintenanceData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
@@ -35,10 +50,12 @@ const History = () => {
       const status = null,
         data = null;
       if (status === 200) {
-        setHistory(data?.data);
-        message.success(data?.message || "History fetched successfully");
+        setMaintenanceData(data?.data);
+        message.success(
+          data?.message || "Maintenance Data fetched successfully"
+        );
       } else {
-        message.error(data?.message || "Failed to fetch History");
+        message.error(data?.message || "Failed to fetch maintenance data");
       }
       setIsLoading(false);
     };
@@ -64,12 +81,12 @@ const History = () => {
           rowSelection={rowSelection}
           rowKey="_id"
           dataSource={
-            history &&
-            history.length > 0 &&
-            history.map((i, index) => ({ ...i, key: index }))
+            maintenanceData &&
+            maintenanceData.length > 0 &&
+            maintenanceData.map((i, index) => ({ ...i, key: index }))
           }
           pagination={{
-            total: history?.length,
+            total: maintenanceData?.length,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,
@@ -88,4 +105,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default Maintenance;
