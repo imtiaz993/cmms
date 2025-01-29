@@ -127,7 +127,7 @@ const AnalyticsReports = () => {
       <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {filteredData.length > 0 &&
           filteredData.map((item, index) => (
-            <div className="bg-primary rounded-lg shadow-custom p-5">
+            <div className="bg-primary rounded-lg shadow-custom p-5" key={index}>
               <h2 className="text-sm font-semibold">{item.title}</h2>
               <div className="flex justify-between gap-2">
                 <p className="text-sm">{item.description}</p>

@@ -38,7 +38,7 @@ const Photos = ({ photos, setDetails }) => {
       {/* Photos */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 mt-5">
         {Array.from({ length: 10 }).map((key, index) => (
-          <div className="">
+          <div className="" key={index}>
             <Image
               src="/images/profile-image.jpg"
               alt="placeholder"

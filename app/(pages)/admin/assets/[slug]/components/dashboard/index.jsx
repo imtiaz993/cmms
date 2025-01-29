@@ -209,108 +209,108 @@ const ChildrenAssetsTab = () => {
   );
 };
 
-// const WorkOrderCard = ({ dashboardDetails }) => {
-//   const tabs = [
-//     {
-//       label: "Asset Info",
-//       children: <AssetInfoTab dashboardDetails={dashboardDetails} />,
-//     },
-//     {
-//       label: "Maintenance Info",
-//       children: <MaintenanceTab dashboardDetails={dashboardDetails} />,
-//     },
-//     {
-//       label: "Custom Fields",
-//       children: (
-//         <CustomAttributesTab customFields={dashboardDetails.customFields} />
-//       ),
-//     },
-//     {
-//       label: "Children Assets",
-//       children: <ChildrenAssetsTab dashboardDetails={dashboardDetails} />,
-//     },
-//   ];
-//   return (
-//     <Card
-//       loading={false}
-//       className="!bg-primary"
-//       title={
-//         <div className="flex items-center gap-2 text-sm md:text-base">
-//           <div className="relative flex">
-//             <span className="px-2 py-1 bg-secondary rounded-full">
-//               <FolderFilled />{" "}
-//             </span>
-//             <Tooltip title="Upload Image">
-//               <Badge className="absolute top-0 right-2 cursor-pointer">
-//                 <PlusSquareFilled />
-//               </Badge>
-//             </Tooltip>
-//           </div>
-//           {dashboardDetails.assetNumber}{" "}
-//           <p className="text-xs font-normal">(Rig Hpu) </p>
-//         </div>
-//       }
-//       extra={
-//         <p className="text-xs md:text-base">
-//           <span className="opacity-50 mr-2">Criticality: </span>
-//           {dashboardDetails.criticality} <WarningFilled />
-//         </p>
-//       }
-//     >
-//       <div className="grid md:grid-cols-2 mx-2 gap-3">
-//         <div>
-//           <div>
-//             <span className="opacity-70 mr-3">Cost Center</span>
-//             <span>
-//               {dashboardDetails.physicalLocation} -{" "}
-//               {dashboardDetails.parentAsset}
-//             </span>
-//           </div>
-//         </div>
-//         <div>
-//           <div>
-//             <span className="opacity-70 mr-3">Asset Class</span>
-//             <span>
-//               {dashboardDetails.parentAsset}-{dashboardDetails.part}
-//             </span>
-//           </div>
-//         </div>
-//         <div>
-//           <div>
-//             <span className="opacity-70 mr-3">Criticality</span>
-//             <span>{dashboardDetails.criticality}</span>
-//           </div>
-//         </div>
-//         <div>
-//           <div>
-//             <span className="opacity-70 mr-3">Maintenance Status</span>
-//             <span>{dashboardDetails.maintStatus}</span>
-//           </div>
-//         </div>
-//         <div>
-//           <div>
-//             <span className="opacity-70 mr-3">Installed Date</span>
-//             <span>{dashboardDetails.installedDate}</span>
-//           </div>
-//         </div>
-//       </div>
+const WorkOrderCard = ({ dashboardDetails }) => {
+  const tabs = [
+    {
+      label: "Asset Info",
+      children: <AssetInfoTab dashboardDetails={dashboardDetails} />,
+    },
+    {
+      label: "Maintenance Info",
+      children: <MaintenanceTab dashboardDetails={dashboardDetails} />,
+    },
+    {
+      label: "Custom Fields",
+      children: (
+        <CustomAttributesTab customFields={dashboardDetails.customFields} />
+      ),
+    },
+    {
+      label: "Children Assets",
+      children: <ChildrenAssetsTab dashboardDetails={dashboardDetails} />,
+    },
+  ];
+  return (
+    <Card
+      loading={false}
+      className="!bg-primary"
+      title={
+        <div className="flex items-center gap-2 text-sm md:text-base">
+          <div className="relative flex">
+            <span className="px-2 py-1 bg-secondary rounded-full">
+              <FolderFilled />{" "}
+            </span>
+            <Tooltip title="Upload Image">
+              <Badge className="absolute top-0 right-2 cursor-pointer">
+                <PlusSquareFilled />
+              </Badge>
+            </Tooltip>
+          </div>
+          {dashboardDetails.assetNumber}{" "}
+          <p className="text-xs font-normal">(Rig Hpu) </p>
+        </div>
+      }
+      extra={
+        <p className="text-xs md:text-base">
+          <span className="opacity-50 mr-2">Criticality: </span>
+          {dashboardDetails.criticality} <WarningFilled />
+        </p>
+      }
+    >
+      <div className="grid md:grid-cols-2 mx-2 gap-3">
+        <div>
+          <div>
+            <span className="opacity-70 mr-3">Cost Center</span>
+            <span>
+              {dashboardDetails.physicalLocation} -{" "}
+              {dashboardDetails.parentAsset}
+            </span>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span className="opacity-70 mr-3">Asset Class</span>
+            <span>
+              {dashboardDetails.parentAsset}-{dashboardDetails.part}
+            </span>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span className="opacity-70 mr-3">Criticality</span>
+            <span>{dashboardDetails.criticality}</span>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span className="opacity-70 mr-3">Maintenance Status</span>
+            <span>{dashboardDetails.maintStatus}</span>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span className="opacity-70 mr-3">Installed Date</span>
+            <span>{dashboardDetails.installedDate}</span>
+          </div>
+        </div>
+      </div>
 
-//       <Collapse style={{ marginTop: "20px" }}>
-//         <Collapse.Panel header="More Details" key="1">
-//           <div>
-//             <Tabs
-//               type="card"
-//               size={"small"}
-//               items={tabs.map((i, index) => ({ ...i, key: index }))}
-//               tabBarStyle={{ borderColor: "white" }}
-//               className="asset-tabs"
-//             />
-//           </div>
-//         </Collapse.Panel>
-//       </Collapse>
-//     </Card>
-//   );
-// };
+      <Collapse style={{ marginTop: "20px" }}>
+        <Collapse.Panel header="More Details" key="1">
+          <div>
+            <Tabs
+              type="card"
+              size={"small"}
+              items={tabs.map((i, index) => ({ ...i, key: index }))}
+              tabBarStyle={{ borderColor: "white" }}
+              className="asset-tabs"
+            />
+          </div>
+        </Collapse.Panel>
+      </Collapse>
+    </Card>
+  );
+};
 
 const CostCard = ({ dashboardDetails }) => {
   const router = useRouter();
