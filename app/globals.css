@@ -119,22 +119,19 @@ h6 {
   }
 }
 .reports-tabs .ant-tabs-nav,
-.work-orders-tabs .ant-tabs-nav,
-.asset-tabs .ant-tabs-nav {
+.work-orders-tabs .ant-tabs-nav {
   margin: 0px !important;
   z-index: 100 !important;
 }
 
 .reports-tabs .ant-tabs-nav-wrap,
-.work-orders-tabs .ant-tabs-nav-wrap,
-.asset-tabs .ant-tabs-nav-wrap {
+.work-orders-tabs .ant-tabs-nav-wrap {
   margin-left: 39px;
 }
 
 @media screen and (max-width: 767px) {
   .reports-tabs .ant-tabs-nav-wrap,
-  .work-orders-tabs .ant-tabs-nav-wrap,
-  .asset-tabs .ant-tabs-nav-wrap {
+  .work-orders-tabs .ant-tabs-nav-wrap {
     margin-left: 19px;
   }
 }
@@ -144,7 +141,7 @@ h6 {
 .asset-tabs .ant-tabs-nav::before {
   border-bottom: none !important;
 }
-
+/*
 .reports-tabs .ant-tabs-tab,
 .work-orders-tabs .ant-tabs-tab,
 .asset-tabs .ant-tabs-tab {
@@ -160,7 +157,7 @@ h6 {
 
 .reports-tabs .ant-tabs-tab:nth-child(4) {
   border-radius: 0px 6px 6px 0px !important;
-}
+} */
 
 .work-orders-tabs .ant-tabs-tab:nth-child(2) {
   border-radius: 0px 6px 6px 0px !important;

@@ -65,10 +65,10 @@ const AssetReports = () => {
 
   const [filteredData, setFilteredData] = useState(reportsData);
   return (
-    <div className="px-3 mt-2 h-[calc(100dvh-210px)] overflow-auto lg:px-6">
-      <div className="sticky top-0 z-10 !h-12 flex justify-end">
+    <div className="px-5 mt-2 h-[calc(100dvh-210px-60px)] overflow-auto lg:px-10">
+      <div className="mt-3">
         <Input.Search
-          placeholder="Search Reports"
+          placeholder="Search"
           onChange={(e) => {
             const value = e.target.value.toLowerCase();
             setFilteredData(
@@ -79,7 +79,6 @@ const AssetReports = () => {
               )
             );
           }}
-          style={{ height: "36px" }}
           className="sm:!w-[300px] searchBar"
         />
       </div>
@@ -157,27 +156,33 @@ const AssetReports = () => {
         title="Custom Attributes Report"
         type="asset"
       />
-      <div className="bg-primary px-2">
-        <List
-          itemLayout=""
-          dataSource={filteredData.map((i, index) => ({ ...i, key: index }))}
-          renderItem={(item) => (
-            <List.Item
-              actions={[
+      <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        {filteredData.length > 0 &&
+          filteredData.map((item, index) => (
+            <div className="bg-primary rounded-lg shadow-custom p-5">
+              <h2 className="text-sm font-semibold">{item.title}</h2>
+              <div className="flex justify-between gap-2">
+                <p className="text-sm">{item.description}</p>
                 <FileTextOutlined
                   key="file-text-icon"
                   style={{ fontSize: "24px", cursor: "pointer" }}
                   onClick={() => setPopup(item.title)}
-                />,
-              ]}
-            >
+                />
+              </div>
+            </div>
+          ))}
+        {/* <List
+          itemLayout=""
+          dataSource={filteredData.map((i, index) => ({ ...i, key: index }))}
+          renderItem={(item) => (
+            <List.Item actions={[,]}>
               <List.Item.Meta
                 title={<p>{item.title}</p>}
                 description={item.description}
               />
             </List.Item>
           )}
-        />
+        /> */}
       </div>
     </div>
   );

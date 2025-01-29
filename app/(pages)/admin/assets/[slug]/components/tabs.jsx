@@ -56,8 +56,8 @@ const Tabs = ({ details, setDetails, slug }) => {
     { key: "manHours", label: "Man Hours", children: <ManHours /> },
 
     {
-      key: "maintenance-schedule",
-      label: "Maintenance Schedule",
+      key: "maintenance",
+      label: "Maintenance",
       children: <Maintainance />,
     },
     {
@@ -83,7 +83,7 @@ const Tabs = ({ details, setDetails, slug }) => {
         animated
         items={tabs}
         onChange={onChange}
-        className="select-none"
+        className="select-none asset-tabs"
       />
     </div>
   );
