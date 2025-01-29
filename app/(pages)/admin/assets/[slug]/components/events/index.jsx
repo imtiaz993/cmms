@@ -2,20 +2,40 @@
 import { useEffect, useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./actionBar";
+import { EditPagePencil } from "@/icons/index";
 
 const columns = [
-  { title: "Date", dataIndex: "date", key: "date" },
-  { title: "Event", dataIndex: "event", key: "event" },
-  { title: "Field", dataIndex: "field", key: "field" },
-  { title: "Changed From", dataIndex: "changedFrom", key: "changedFrom" },
-  { title: "Changed To", dataIndex: "changedTo", key: "changedTo" },
-  { title: "Action By", dataIndex: "actionBy", key: "actionBy" },
+  {
+    title: "Date",
+    dataIndex: "date",
+    key: "date",
+  },
+  {
+    title: "Event",
+    dataIndex: "event",
+    key: "event",
+  },
+  {
+    title: "Notes",
+    dataIndex: "notes",
+    key: "notes",
+  },
+  {
+    title: "",
+    dataIndex: "action",
+    key: "action",
+    render: (text, record) => (
+      <div>
+        <EditPagePencil />
+      </div>
+    ),
+  },
 ];
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const History = () => {
-  const [history, setHistory] = useState([]);
+const Events = () => {
+  const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
@@ -29,20 +49,20 @@ const History = () => {
   };
 
   useEffect(() => {
-    const fetchHistory = async () => {
+    const fetchEvents = async () => {
       setIsLoading(true);
       // const { status, data } = null;
       const status = null,
         data = null;
       if (status === 200) {
-        setHistory(data?.data);
-        message.success(data?.message || "History fetched successfully");
+        setEvents(data?.data);
+        message.success(data?.message || "Events fetched successfully");
       } else {
-        message.error(data?.message || "Failed to fetch History");
+        message.error(data?.message || "Failed to fetch events");
       }
       setIsLoading(false);
     };
-    fetchHistory();
+    fetchEvents();
   }, []);
 
   return (
@@ -64,12 +84,12 @@ const History = () => {
           rowSelection={rowSelection}
           rowKey="_id"
           dataSource={
-            history &&
-            history.length > 0 &&
-            history.map((i, index) => ({ ...i, key: index }))
+            events &&
+            events.length > 0 &&
+            events.map((i, index) => ({ ...i, key: index }))
           }
           pagination={{
-            total: history?.length,
+            total: events?.length,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,
@@ -88,4 +108,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default Events;

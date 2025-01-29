@@ -6,6 +6,7 @@ import {
   Button as AntButton,
   message,
   Select,
+  Menu,
 } from "antd";
 import {
   AppstoreOutlined,
@@ -191,7 +192,7 @@ const ActionBar = ({
               prefix={<FilterOutlined />}
               onClick={() => setFilterDropdown(!filterDropdown)}
             />
-          </Dropdown>
+          </Dropdown> */}
           <Dropdown
             dropdownRender={() => (
               <Menu>
@@ -226,7 +227,7 @@ const ActionBar = ({
               style={{ padding: "4px 24px" }}
               prefix={<SettingOutlined />}
             />
-          </Dropdown> */}
+          </Dropdown>
 
             <Button
               text="Export"

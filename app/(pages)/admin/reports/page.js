@@ -27,10 +27,10 @@ const Reports = () => {
   return (
     <div className="pb-4 pt-3">
       <Tabs
-        type="card"
+      animated
         size={"small"}
         items={tabs.map((i, index) => ({ ...i, key: index }))}
-        tabBarStyle={{ borderColor: "white" }}
+        // tabBarStyle={{ borderColor: "white" }}
         className="reports-tabs"
       />
     </div>

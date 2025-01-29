@@ -554,7 +554,7 @@ const TotalOpenWorkOrdersCard = ({ dashboardDetails }) => {
 
 const Dashboard = ({ dashboardDetails }) => {
   return (
-    <div className="p-5">
+    <div className="p-5 pl-0">
       <WorkOrderCard dashboardDetails={dashboardDetails} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>

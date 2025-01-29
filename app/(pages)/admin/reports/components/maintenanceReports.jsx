@@ -117,10 +117,10 @@ const MaintenanceReports = () => {
   const [filteredData, setFilteredData] = useState(reportsData);
 
   return (
-    <div className="px-3 mt-2 h-[calc(100dvh-210px)] overflow-auto lg:px-6">
-      <div className="sticky top-0 z-10 !h-12 flex justify-end">
+    <div className="px-5 mt-2 h-[calc(100dvh-210px-60px)] overflow-auto lg:px-10">
+      <div className="mt-3">
         <Input.Search
-          placeholder="Search Reports"
+          placeholder="Search"
           onChange={(e) => {
             const value = e.target.value.toLowerCase();
             setFilteredData(
@@ -131,159 +131,174 @@ const MaintenanceReports = () => {
               )
             );
           }}
-          style={{ height: "36px" }}
           className="sm:!w-[300px] searchBar"
         />
       </div>
-      <ReportsPopup
-        visible={popup === "Daily Readings"}
-        setVisible={setPopup}
-        title="Daily Readings Report"
-        type="maintenance"
-        physicalLocation
-        dataOnly
-      />
+      <>
+        <ReportsPopup
+          visible={popup === "Daily Readings"}
+          setVisible={setPopup}
+          title="Daily Readings Report"
+          type="maintenance"
+          physicalLocation
+          dataOnly
+        />
 
-      <ReportsPopup
-        visible={popup === "Downtime Summary"}
-        setVisible={setPopup}
-        title="Downtime Summary Report"
-        type="maintenance"
-        physicalLocation
-        fromToDate
-        criticallyFactor
-        includeChildAssets
-      />
+        <ReportsPopup
+          visible={popup === "Downtime Summary"}
+          setVisible={setPopup}
+          title="Downtime Summary Report"
+          type="maintenance"
+          physicalLocation
+          fromToDate
+          criticallyFactor
+          includeChildAssets
+        />
 
-      <ReportsPopup
-        visible={popup === "End of Month"}
-        setVisible={setPopup}
-        title="End of Month Report"
-        type="maintenance"
-        date
-      />
+        <ReportsPopup
+          visible={popup === "End of Month"}
+          setVisible={setPopup}
+          title="End of Month Report"
+          type="maintenance"
+          date
+        />
 
-      <ReportsPopup
-        visible={popup === "Asset Downtime"}
-        setVisible={setPopup}
-        title="Asset Downtime Report"
-        type="maintenance"
-        fromToDate
-        includeChildAssets
-      />
+        <ReportsPopup
+          visible={popup === "Asset Downtime"}
+          setVisible={setPopup}
+          title="Asset Downtime Report"
+          type="maintenance"
+          fromToDate
+          includeChildAssets
+        />
 
-      <ReportsPopup
-        visible={popup === "Maintenance Forecast by Craft"}
-        setVisible={setPopup}
-        title="Maintenance Forecast by Craft Report"
-        type="maintenance"
-        fromToDate
-      />
+        <ReportsPopup
+          visible={popup === "Maintenance Forecast by Craft"}
+          setVisible={setPopup}
+          title="Maintenance Forecast by Craft Report"
+          type="maintenance"
+          fromToDate
+        />
 
-      <ReportsPopup
-        visible={popup === "Maintenance Forecast by Zone"}
-        setVisible={setPopup}
-        title="Maintenance Forecast by Zone Report"
-        type="maintenance"
-        fromToDate
-      />
+        <ReportsPopup
+          visible={popup === "Maintenance Forecast by Zone"}
+          setVisible={setPopup}
+          title="Maintenance Forecast by Zone Report"
+          type="maintenance"
+          fromToDate
+        />
 
-      <MaintenanceProceduresPopup
-        visible={popup === "Maintenance Procedures"}
-        setVisible={setPopup}
-      />
+        <MaintenanceProceduresPopup
+          visible={popup === "Maintenance Procedures"}
+          setVisible={setPopup}
+        />
 
-      <PlannedSummaryPopup
-        visible={popup === "Planned Maintenance Summary"}
-        setVisible={setPopup}
-      />
+        <PlannedSummaryPopup
+          visible={popup === "Planned Maintenance Summary"}
+          setVisible={setPopup}
+        />
 
-      <UnplannedDetailsPopup
-        visible={popup === "Unplanned Maintenance Details"}
-        setVisible={setPopup}
-      />
+        <UnplannedDetailsPopup
+          visible={popup === "Unplanned Maintenance Details"}
+          setVisible={setPopup}
+        />
 
-      <UnplannedSummaryPopup
-        visible={popup === "Unplanned Maintenance Summary"}
-        setVisible={setPopup}
-      />
+        <UnplannedSummaryPopup
+          visible={popup === "Unplanned Maintenance Summary"}
+          setVisible={setPopup}
+        />
 
-      <MaintenanceReusedPopup
-        visible={popup === "Unplanned Work Order Survey"}
-        setVisible={setPopup}
-        title="Unplanned Work Order Survey Report"
-        type="maintenance"
-        includeWO
-      />
+        <MaintenanceReusedPopup
+          visible={popup === "Unplanned Work Order Survey"}
+          setVisible={setPopup}
+          title="Unplanned Work Order Survey Report"
+          type="maintenance"
+          includeWO
+        />
 
-      <ReportsPopup
-        visible={popup === "Work Orders Past Due"}
-        setVisible={setPopup}
-        title="Work Order Past Due Report"
-        type="maintenance"
-        dataOnly
-      />
+        <ReportsPopup
+          visible={popup === "Work Orders Past Due"}
+          setVisible={setPopup}
+          title="Work Order Past Due Report"
+          type="maintenance"
+          dataOnly
+        />
 
-      <WOPersonnelSummaryPopup
-        visible={popup === "Work Order Personnel Summary"}
-        setVisible={setPopup}
-      />
+        <WOPersonnelSummaryPopup
+          visible={popup === "Work Order Personnel Summary"}
+          setVisible={setPopup}
+        />
 
-      <WOProcedurePopup
-        visible={popup === "Work Order Procedure"}
-        setVisible={setPopup}
-      />
+        <WOProcedurePopup
+          visible={popup === "Work Order Procedure"}
+          setVisible={setPopup}
+        />
 
-      <WOSummaryPopup
-        visible={popup === "Work Order Summary"}
-        setVisible={setPopup}
-      />
+        <WOSummaryPopup
+          visible={popup === "Work Order Summary"}
+          setVisible={setPopup}
+        />
 
-      <ReportsPopup
-        visible={popup === "Work Orders With Delay Reasons"}
-        setVisible={setPopup}
-        title="Work Orders With Delay Reasons Report"
-        type="maintenance"
-        dataOnly
-      />
+        <ReportsPopup
+          visible={popup === "Work Orders With Delay Reasons"}
+          setVisible={setPopup}
+          title="Work Orders With Delay Reasons Report"
+          type="maintenance"
+          dataOnly
+        />
 
-      <MaintenanceReusedPopup
-        visible={popup === "Maintenance Completion By Craft"}
-        setVisible={setPopup}
-        title="Maintenance Completion By Craft Report"
-        type="maintenance"
-        craft
-      />
+        <MaintenanceReusedPopup
+          visible={popup === "Maintenance Completion By Craft"}
+          setVisible={setPopup}
+          title="Maintenance Completion By Craft Report"
+          type="maintenance"
+          craft
+        />
 
-      <ReportsPopup
-        visible={popup === "MTBF MTTR"}
-        setVisible={setPopup}
-        title="MTBF MTTR Report"
-        type="maintenance"
-        date
-        criticallyFactor
-      />
+        <ReportsPopup
+          visible={popup === "MTBF MTTR"}
+          setVisible={setPopup}
+          title="MTBF MTTR Report"
+          type="maintenance"
+          date
+          criticallyFactor
+        />
 
-      <MaintenanceReusedPopup
-        visible={popup === "Top Offenders"}
-        setVisible={setPopup}
-        title="Top Offenders Report"
-        type="maintenance"
-        criticallyFactor
-        top
-      />
+        <MaintenanceReusedPopup
+          visible={popup === "Top Offenders"}
+          setVisible={setPopup}
+          title="Top Offenders Report"
+          type="maintenance"
+          criticallyFactor
+          top
+        />
 
-      <ReportsPopup
-        visible={popup === "Planned WOs vs Unplanned WOs"}
-        setVisible={setPopup}
-        title="Planned WOs vs Unplanned WOs Report"
-        type="maintenance"
-        criticallyFactor
-        fromToDate
-      />
+        <ReportsPopup
+          visible={popup === "Planned WOs vs Unplanned WOs"}
+          setVisible={setPopup}
+          title="Planned WOs vs Unplanned WOs Report"
+          type="maintenance"
+          criticallyFactor
+          fromToDate
+        />
+      </>
 
-      <div className="bg-primary px-2">
-        <List
+      <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        {filteredData.length > 0 &&
+          filteredData.map((item, index) => (
+            <div className="bg-primary rounded-lg shadow-custom p-5" key={index}>
+              <h2 className="text-sm font-semibold">{item.title}</h2>
+              <div className="flex justify-between gap-2">
+                <p className="text-sm">{item.description}</p>
+                <FileTextOutlined
+                  key="file-text-icon"
+                  style={{ fontSize: "24px", cursor: "pointer" }}
+                  onClick={() => setPopup(item.title)}
+                />
+              </div>
+            </div>
+          ))}
+        {/* <List
           itemLayout=""
           dataSource={filteredData.map((i, index) => ({ ...i, key: index }))}
           renderItem={(item) => (
@@ -302,7 +317,7 @@ const MaintenanceReports = () => {
               />
             </List.Item>
           )}
-        />
+        /> */}
       </div>
     </div>
   );

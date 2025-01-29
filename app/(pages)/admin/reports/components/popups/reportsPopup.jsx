@@ -25,7 +25,7 @@ const ReportsPopup = ({
 }) => {
   // Build the validation schema based on props
   const validationSchema = Yup.object({
-    costCenter: costCenter
+    location: costCenter
       ? Yup.string().required("Cost Center is required")
       : Yup.string(),
     assetNumber: assetNumber
@@ -76,7 +76,7 @@ const ReportsPopup = ({
     <div>
       <Formik
         initialValues={{
-          costCenter: "",
+          location: "",
           assetNumber: "",
           physicalLocation: "",
           date: null,
@@ -126,9 +126,10 @@ const ReportsPopup = ({
                 {costCenter && (
                   <div className="mt-4 flex flex-col md:flex-row gap-4 w-full items-end md:items-center">
                     <div className="w-full">
-                      <InputField
-                        name="costCenter"
-                        placeholder="Cost Center"
+                      <SelectField
+                        name="location"
+                        placeholder="Select Location"
+                        label="Location"
                         maxLength={128}
                       />
                     </div>
@@ -137,7 +138,8 @@ const ReportsPopup = ({
                       <div className="w-full">
                         <SelectField
                           name="assetNumber"
-                          placeholder="Asset Number"
+                          placeholder="Select Asset Number"
+                          label="Asset Number"
                           options={[]}
                         />
                       </div>
@@ -145,7 +147,7 @@ const ReportsPopup = ({
 
                     {date && (
                       <div className="w-full">
-                        <DatePickerField name="date" placeholder="Date" />
+                        <DatePickerField name="date" label="Date" />
                       </div>
                     )}
 
@@ -153,7 +155,8 @@ const ReportsPopup = ({
                       <div className="w-full">
                         <SelectField
                           name="year"
-                          placeholder="Year"
+                          placeholder="Select Year"
+                          label="Year"
                           options={[
                             { value: "2024", label: "2024" },
                             { value: "2023", label: "2023" },
@@ -179,7 +182,8 @@ const ReportsPopup = ({
                   <div className="mt-4 w-full">
                     <SelectField
                       name="physicalLocation"
-                      placeholder="Physical Location"
+                      placeholder="Select Physical Location"
+                      label="Physical Location"
                       options={rigs.map((i) => ({
                         label: i.name,
                         value: i.id,
@@ -190,8 +194,8 @@ const ReportsPopup = ({
 
                 {fromToDate && (
                   <div className="mt-4 flex flex-col md:flex-row gap-4 w-full">
-                    <DatePickerField name="fromDate" placeholder="From Date" />
-                    <DatePickerField name="toDate" placeholder="To Date" />
+                    <DatePickerField name="fromDate" label="From Date"  />
+                    <DatePickerField name="toDate" label="To Date" />
                   </div>
                 )}
 
@@ -200,7 +204,8 @@ const ReportsPopup = ({
                     <div className="w-full">
                       <SelectField
                         name="criticallyFactor"
-                        placeholder="Critically Factor"
+                        label="Critically Factor"
+                        placeholder="Select Critically Factor"
                         options={[]}
                       />
                     </div>

@@ -8,40 +8,34 @@ import { useState } from "react";
 import { message } from "antd";
 
 const validationSchema = Yup.object().shape({
-  assetNumber: Yup.string(),
+  event: Yup.string(),
 });
 
-const MaintenanceScheduleFilter = ({ closeDropdown }) => {
+const HistoryFilter = ({ closeDropdown }) => {
   const [isClearing, setIsClearing] = useState(false);
   const handleSubmit = async (values, setSubmitting) => {
-    console.log(values);
-    console.log(values);
     !setSubmitting && setIsClearing(true);
-    const status = 200;
+    const status = 404;
     const data = null;
     setSubmitting ? setSubmitting(false) : setIsClearing(false);
     if (status === 200) {
-      message.success(data?.message || "Assets fetched successfully");
+      message.success(data?.message || "History fetched successfully");
       closeDropdown();
     } else {
-      message.error(data?.message || "Failed to fetch assets");
+      message.error(data?.message || "Failed to fetch History");
     }
   };
 
   return (
-    <div
-      className="p-4 bg-primary rounded-md max-h-[400px] overflow-auto"
-      style={{
-        boxShadow:
-          "0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)",
-      }}
-    >
+    <div className="p-4 bg-primary rounded-md max-h-[400px] overflow-auto shadow-custom">
       <Formik
         initialValues={{
-          createdDateRange: "",
-          materialTranfser: "",
-          origination: "",
-          destination: "",
+          date: "",
+          event: "",
+          field: "",
+          changedFrom: "",
+          changedTo: "",
+          actionBy: "",
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -51,18 +45,12 @@ const MaintenanceScheduleFilter = ({ closeDropdown }) => {
         {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 gap-4">
-              <DatePickerField
-                name="createdDateRange"
-                placeholder="Created Date Range"
-              />
-
-              <InputField
-                name="materialTranfser"
-                placeholder="Material Transfer"
-              />
-              <SelectField name="origination" placeholder="Origination" />
-              <SelectField name="destination" placeholder="Destination" />
-
+              <DatePickerField name="date" placeholder="Date" />
+              <InputField name="event" placeholder="Event" />
+              <InputField name="field" placeholder="Field" />
+              <InputField name="changedFrom" placeholder="Changed From" />
+              <InputField name="changedTo" placeholder="Changed To" />
+              <InputField name="actionBy" placeholder="Action By" />
               <div className="sm:col-span-2 flex justify-end gap-4">
                 <div>
                   <Button
@@ -96,4 +84,4 @@ const MaintenanceScheduleFilter = ({ closeDropdown }) => {
   );
 };
 
-export default MaintenanceScheduleFilter;
+export default HistoryFilter;

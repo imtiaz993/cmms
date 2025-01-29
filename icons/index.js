@@ -51,3 +51,58 @@ export const EditPagePencil = () => {
     </svg>
   );
 };
+
+export const LinkBroken = () => {
+  return (
+    <svg
+      width="14"
+      height="15"
+      viewBox="0 0 14 15"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g clip-path="url(#clip0_2301_56979)">
+        <path
+          d="M3.14002 7.62988L1.27002 9.49988C0.775392 9.99654 0.497681 10.6689 0.497681 11.3699C0.497681 12.0708 0.775392 12.7432 1.27002 13.2399V13.2399C1.76668 13.7345 2.43908 14.0122 3.14002 14.0122C3.84097 14.0122 4.51337 13.7345 5.01002 13.2399L6.12002 12.1299"
+          stroke="#BEBEBE"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M8.99997 9.99973H10.86C11.5601 9.99973 12.2316 9.72158 12.7267 9.22649C13.2218 8.73139 13.5 8.0599 13.5 7.35973V7.35973C13.5 6.65956 13.2218 5.98806 12.7267 5.49296C12.2316 4.99787 11.5601 4.71973 10.86 4.71973H8.21997"
+          stroke="#BEBEBE"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M7 1L6.5 3"
+          stroke="#BEBEBE"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M0.5 4L2.5 5"
+          stroke="#BEBEBE"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M3 1L4 3"
+          stroke="#BEBEBE"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_2301_56979">
+          <rect
+            width="14"
+            height="14"
+            fill="white"
+            transform="translate(0 0.5)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
