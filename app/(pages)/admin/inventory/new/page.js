@@ -68,8 +68,8 @@ const CreateInventory = () => {
   }, {});
 
   const validationSchema = Yup.object().shape({
-    description: Yup.string().required("Description is required"),
-    part: Yup.string().required("Part number is required"),
+    details: Yup.string().required("Description is required"),
+    partItem: Yup.string().required("Part number is required"),
     // category: Yup.string().required("Category is required"),
     // details: Yup.string().required("Details is required"),
     quantity: Yup.string().required("Quantity is required"),
@@ -147,17 +147,14 @@ const CreateInventory = () => {
         {!loading && (
           <Formik
             initialValues={{
-              partName: "",
-              part: "",
-              category: "",
+              site: "",
+              location: "",
+              partItem: "",
+              tagId: "",
+              notes: "",
+              invoiceNumber: "",
               details: "",
               quantity: "",
-              price: "",
-              location: "",
-              PO: "",
-              SO: "",
-              invoiceNumber: "",
-              supplier: "",
               receivedDate: null,
               ...customFieldInitialValues,
             }}
@@ -211,7 +208,11 @@ const CreateInventory = () => {
                   <div className="md:col-span-2 font-semibold md:text-lg">
                     Inventory Information
                   </div>
-                  <InputField name="part" placeholder="Part #" label="Part #" />
+                  <InputField
+                    name="partItem"
+                    placeholder="Part #"
+                    label="Part #"
+                  />
                   <InputField
                     name="tagId"
                     placeholder="Tag ID"
@@ -219,7 +220,7 @@ const CreateInventory = () => {
                   />
                   <div className="md:col-span-2">
                     <TextAreaField
-                      name="description"
+                      name="details"
                       placeholder="Description"
                       label="Description"
                       className="!h-12"

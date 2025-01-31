@@ -30,7 +30,6 @@ import ChangeToAssetPopup from "./changeToAssetPopup";
 import Link from "next/link";
 
 const ActionBar = ({
-  showAddInventoryModal,
   columns,
   checkedList,
   setCheckedList,
