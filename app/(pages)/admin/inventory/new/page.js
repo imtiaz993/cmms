@@ -1,7 +1,7 @@
 "use client";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input, message } from "antd";
+import { Input, message, Table } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import { addInventory } from "app/services/inventory";
@@ -11,10 +11,44 @@ import TextAreaField from "@/components/common/TextAreaField";
 import { useEffect, useState } from "react";
 import { getFields } from "app/services/customFields";
 import AddFieldPopup from "@/components/addFieldPopup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateInventory } from "app/redux/slices/inventoriesSlice";
 import { useRouter } from "next/navigation";
 import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+
+const columns = [
+  {
+    title: "Part #",
+    dataIndex: "partItem",
+    key: "partItem",
+  },
+  {
+    title: "Description",
+    dataIndex: "details",
+    key: "details",
+  },
+  {
+    title: "Received Date",
+    dataIndex: "receivedDate",
+    key: "receivedDate",
+  },
+  {
+    title: "Quantity",
+    dataIndex: "quantity",
+    key: "quantity",
+  },
+  {
+    title: "tag ID",
+    dataIndex: "tagId",
+    key: "tagId",
+  },
+  {
+    title: "Location",
+    dataIndex: "location",
+    key: "location",
+  },
+];
+const defaultCheckedList = columns.map((item) => item.key);
 
 const CreateInventory = () => {
   const router = useRouter();
@@ -22,6 +56,20 @@ const CreateInventory = () => {
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
+  const {
+    inventory = [],
+    isLoading,
+    error,
+  } = useSelector((state) => state.inventory); // Get inventory from store
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [checkedList, setCheckedList] = useState(defaultCheckedList);
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (keys, rows) => {
+      setSelectedRowKeys(keys);
+    },
+  };
 
   useEffect(() => {
     const handleFetchFields = async () => {
@@ -164,9 +212,9 @@ const CreateInventory = () => {
             {({ isSubmitting }) => (
               <Form>
                 <div className="grid md:grid-cols-2 gap-4">
-                  <div className="md:col-span-2 font-semibold md:text-lg">
+                  <p className="md:col-span-2 font-semibold md:text-lg">
                     Inventory Information
-                  </div>
+                  </p>
                   <div className="flex items-center gap-3">
                     <InputField
                       name="site"
@@ -205,9 +253,35 @@ const CreateInventory = () => {
                   />
                   <DatePickerField name="receivedDate" label="Date Received" />
 
-                  <div className="md:col-span-2 font-semibold md:text-lg">
+                  <p className="md:col-span-2 font-semibold md:text-lg">
+                    Inventory Added
+                  </p>
+
+                  <Table
+                    loading={isLoading}
+                    size={"large"}
+                    scroll={{ x: 1400 }}
+                    columns={columns}
+                    rowSelection={rowSelection}
+                    rowKey="_id"
+                    dataSource={
+                      inventory &&
+                      inventory.length > 0 &&
+                      inventory.map((i, index) => ({
+                        ...i,
+                        key: index,
+                      }))
+                    }
+                    style={{
+                      marginTop: 16,
+                      overflow: "auto",
+                    }}
+                    className="md:col-span-2"
+                  />
+
+                  <p className="md:col-span-2 font-semibold md:text-lg">
                     Inventory Information
-                  </div>
+                  </p>
                   <InputField
                     name="partItem"
                     placeholder="Part #"
@@ -248,9 +322,9 @@ const CreateInventory = () => {
                     />
                   </div>
 
-                  <div className="md:col-span-2">
-                    <h1 className="font-semibold">Custom Fields:</h1>
-                  </div>
+                  <p className="md:col-span-2 font-semibold md:text-lg">
+                    Custom Fields:
+                  </p>
                   {fields.map((field) => {
                     switch (field.type) {
                       case "text":
