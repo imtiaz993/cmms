@@ -271,6 +271,7 @@ const CreatePurchaseOrderPopup = ({ visible, setVisible }) => {
                     placeholder="0%"
                     onChange={(e) => setDiscount(e.target.value)}
                     className="!w-20"
+                    labelOnTop
                   />
                 </div>
                 <div className="flex justify-between">
@@ -279,6 +280,7 @@ const CreatePurchaseOrderPopup = ({ visible, setVisible }) => {
                     name="tax"
                     type="number"
                     label="Tax (%)"
+                    labelOnTop
                     placeholder="0%"
                     onChange={(e) => setTax(e.target.value)}
                     className="!w-20"
@@ -290,6 +292,7 @@ const CreatePurchaseOrderPopup = ({ visible, setVisible }) => {
                     name="shipping"
                     type="number"
                     label="Shipping"
+                    labelOnTop
                     placeholder="0.00"
                     onChange={(e) => setShipping(e.target.value)}
                     className="!w-20"
