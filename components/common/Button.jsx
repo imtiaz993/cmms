@@ -28,7 +28,7 @@ const Button = ({
         border: outlined ? "1px solid #D6D6D6" : "",
         borderColor: outlined ? "none" : "#F0BF60",
         opacity: disabled ? "0.7" : "",
-        height: "36px",
+        height: "44px",
         fontWeight: "500",
         minWidth: "80px",
         ...style,

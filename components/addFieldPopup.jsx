@@ -184,7 +184,7 @@ const AddFieldPopup = ({ visible, setVisible, module, fields, setFields }) => {
       bodyProps={{ style: { minHeight: "200px" } }}
       // destroyOnClose
     >
-      <Tabs defaultActiveKey="1">
+      <Tabs defaultActiveKey="2">
         <TabPane tab="Existing Fields" key="1">
           <ExistingFields fields={fields} onDelete={handleDeleteField} />
         </TabPane>

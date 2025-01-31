@@ -4,71 +4,8 @@ import { Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateInventoryPopup from "./components/createInventoryPopup";
 import { useSelector } from "react-redux";
-
-const columns = [
-  {
-    title: "Part Name",
-    dataIndex: "partName",
-    key: "partName",
-  },
-  {
-    title: "Part Number",
-    dataIndex: "partItem",
-    key: "partItem",
-  },
-  {
-    title: "Category",
-    dataIndex: "category",
-    key: "category",
-  },
-  {
-    title: "Details",
-    dataIndex: "details",
-    key: "details",
-  },
-  {
-    title: "Quantity",
-    dataIndex: "quantity",
-    key: "quantity",
-  },
-  {
-    title: "Price",
-    dataIndex: "price",
-    key: "price",
-  },
-  {
-    title: "Location",
-    dataIndex: "location",
-    key: "location",
-  },
-  {
-    title: "PO",
-    dataIndex: "PO",
-    key: "PO",
-  },
-  {
-    title: "SO",
-    dataIndex: "SO",
-    key: "SO",
-  },
-  {
-    title: "Invoice number",
-    dataIndex: "invoiceNumber",
-    key: "invoiceNumber",
-  },
-  {
-    title: "Supplier",
-    dataIndex: "supplier",
-    key: "supplier",
-  },
-  {
-    title: "Received Date",
-    dataIndex: "receivedDate",
-    key: "receivedDate",
-  },
-];
-
-const defaultCheckedList = columns.map((item) => item.key);
+import { EyeOutlined } from "@ant-design/icons";
+import InventoryDetailsPopup from "./components/inventoryDetailsPopup";
 
 const Inventory = () => {
   const {
@@ -76,11 +13,56 @@ const Inventory = () => {
     isLoading,
     error,
   } = useSelector((state) => state.inventory); // Get inventory from store
-  const [checkedList, setCheckedList] = useState(defaultCheckedList);
-  const [addInventoryVisible, setAddInventoryVisible] = useState(false);
-  const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const [detailsPopup, setDetailsPopup] = useState();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState(""); // State for search text
+  const columns = [
+    {
+      title: "Part #",
+      dataIndex: "partItem",
+      key: "partItem",
+    },
+    {
+      title: "Description",
+      dataIndex: "details",
+      key: "details",
+    },
+    {
+      title: "Received Date",
+      dataIndex: "receivedDate",
+      key: "receivedDate",
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
+      title: "tag ID",
+      dataIndex: "tagId",
+      key: "tagId",
+    },
+    {
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
+    },
+    {
+      title: "",
+      dataIndex: "partItem",
+      key: "actions",
+      render: (part) => (
+        <EyeOutlined
+          style={{ fontSize: "20px", cursor: "pointer" }}
+          onClick={() => setDetailsPopup(part)}
+        />
+      ),
+    },
+  ];
+
+  const defaultCheckedList = columns.map((item) => item.key);
+  const [checkedList, setCheckedList] = useState(defaultCheckedList);
+  const newColumns = columns.filter((item) => checkedList.includes(item.key));
 
   const rowSelection = {
     selectedRowKeys,
@@ -104,15 +86,13 @@ const Inventory = () => {
   return (
     <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
       {console.log("selected inventory", selectedRowKeys)}
-      {addInventoryVisible && (
-        <CreateInventoryPopup
-          addInventoryVisible={addInventoryVisible}
-          setAddInventoryVisible={setAddInventoryVisible}
-        />
-      )}
+      <InventoryDetailsPopup
+        visible={detailsPopup}
+        setVisible={setDetailsPopup}
+        part={detailsPopup}
+      />
       <div>
         <ActionBar
-          showAddInventoryModal={() => setAddInventoryVisible(true)}
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}

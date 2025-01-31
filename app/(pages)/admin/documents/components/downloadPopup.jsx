@@ -9,13 +9,13 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required("File Name is Required"),
 });
 
-const DownloadPopup = ({ visible, setVisible, selectedCategories }) => {
+const DownloadPopup = ({ visible, setVisible, documents }) => {
   const handleSubmit = async (values, { setSubmitting }) => {
     setSubmitting(true);
     console.log(values);
     const { status, data } = await downloadAllDocuments(
       values,
-      selectedCategories
+      documents.map((item) => item.id)
     );
     setSubmitting(false);
     if (status === 200) {

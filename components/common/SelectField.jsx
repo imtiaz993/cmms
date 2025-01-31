@@ -10,6 +10,7 @@ const SelectField = ({
   style,
   readOnly,
   options,
+  labelOnTop,
 }) => {
   const FormikSelect = ({ field, form, options, ...props }) => {
     const handleChange = (value) => {
@@ -30,33 +31,44 @@ const SelectField = ({
   };
 
   return (
-    <div>
+    <div
+      className={`w-full ${
+        !labelOnTop && label && "sm:flex items-center gap-3"
+      }`}
+    >
       {label && (
-        <label htmlFor={name} className="text-sm text-[#30343F] ">
+        <label
+          htmlFor={name}
+          className={`text-sm text-[#30343F] ${
+            !labelOnTop && "sm:text-right sm:min-w-[115px]"
+          }`}
+        >
           {label}
         </label>
       )}
-      <Field
-        component={FormikSelect}
-        options={options}
-        name={name}
-        placeholder={placeholder}
-        prefix={prefix}
-        className={className}
-        disabled={readOnly} // Handle the read-only behavior
-        style={{
-          height: "50px",
-          width: "100%",
-          marginTop: label ? "8px" : 0,
-          ...style,
-        }}
-      />
+      <div className="w-full">
+        <Field
+          component={FormikSelect}
+          options={options}
+          name={name}
+          placeholder={placeholder}
+          prefix={prefix}
+          className={`${!labelOnTop && label && "mt-2 sm:mt-0 "}` + className}
+          disabled={readOnly} // Handle the read-only behavior
+          style={{
+            height: "44px",
+            width: "100%",
+            marginTop: labelOnTop ? "8px" : 0,
+            ...style,
+          }}
+        />
 
-      <ErrorMessage
-        name={name} // Dynamically handle error messages
-        component="div"
-        className="text-red-500 text-sm mt-1"
-      />
+        <ErrorMessage
+          name={name} // Dynamically handle error messages
+          component="div"
+          className="text-red-500 text-sm mt-1"
+        />
+      </div>
     </div>
   );
 };

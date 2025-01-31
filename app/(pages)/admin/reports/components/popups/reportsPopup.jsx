@@ -130,6 +130,7 @@ const ReportsPopup = ({
                         name="location"
                         placeholder="Select Location"
                         label="Location"
+                        labelOnTop
                         maxLength={128}
                       />
                     </div>
@@ -140,6 +141,7 @@ const ReportsPopup = ({
                           name="assetNumber"
                           placeholder="Select Asset Number"
                           label="Asset Number"
+                          labelOnTop
                           options={[]}
                         />
                       </div>
@@ -157,6 +159,7 @@ const ReportsPopup = ({
                           name="year"
                           placeholder="Select Year"
                           label="Year"
+                          labelOnTop
                           options={[
                             { value: "2024", label: "2024" },
                             { value: "2023", label: "2023" },
@@ -184,6 +187,7 @@ const ReportsPopup = ({
                       name="physicalLocation"
                       placeholder="Select Physical Location"
                       label="Physical Location"
+                      labelOnTop
                       options={rigs.map((i) => ({
                         label: i.name,
                         value: i.id,
@@ -194,8 +198,12 @@ const ReportsPopup = ({
 
                 {fromToDate && (
                   <div className="mt-4 flex flex-col md:flex-row gap-4 w-full">
-                    <DatePickerField name="fromDate" label="From Date"  />
-                    <DatePickerField name="toDate" label="To Date" />
+                    <DatePickerField
+                      name="fromDate"
+                      label="From Date"
+                      labelOnTop
+                    />
+                    <DatePickerField name="toDate" label="To Date" labelOnTop />
                   </div>
                 )}
 
@@ -205,6 +213,7 @@ const ReportsPopup = ({
                       <SelectField
                         name="criticallyFactor"
                         label="Critically Factor"
+                        labelOnTop
                         placeholder="Select Critically Factor"
                         options={[]}
                       />

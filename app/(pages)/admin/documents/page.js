@@ -75,12 +75,14 @@ const columns = [
     ),
   },
 ];
+const defaultCheckedList = columns.map((item) => item.key);
 
 const Documents = () => {
   const [documents, setDocuments] = useState([]);
   const [fetchingDocuments, setFetchingDocuments] = useState(true);
+  const [checkedList, setCheckedList] = useState(defaultCheckedList);
+  const newColumns = columns.filter((item) => checkedList.includes(item.key));
   const [searchText, setSearchText] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const rowSelection = {
@@ -105,20 +107,16 @@ const Documents = () => {
   }, []);
 
   const filteredDocuments = useMemo(() => {
-    if (!documents) return [];
-    return documents.filter((document) => {
-      const matchesCategory =
-        selectedCategories.length === 0 ||
-        selectedCategories.includes(document.type);
-      const matchesSearch =
-        !searchText ||
-        Object.values(document)
-          .join(" ")
-          .toLowerCase()
-          .includes(searchText.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
-  }, [searchText, selectedCategories, documents]);
+    if (!searchText) return documents; // Return full data if no search
+    return documents?.filter((document) =>
+      checkedList.some((key) =>
+        document[key]
+          ?.toString()
+          ?.toLowerCase()
+          ?.includes(searchText.toLowerCase())
+      )
+    );
+  }, [searchText, checkedList, documents]);
 
   return (
     <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
@@ -126,8 +124,14 @@ const Documents = () => {
         <ActionBar
           setSearchText={setSearchText}
           searchText={searchText}
-          selectedCategories={selectedCategories}
-          setSelectedCategories={setSelectedCategories}
+          checkedList={checkedList}
+          setCheckedList={setCheckedList}
+          columns={columns}
+          selectedRowKeys={selectedRowKeys}
+          setSelectedRowKeys={setSelectedRowKeys}
+          setDocuments={setDocuments}
+          documents={documents}
+          setIsLoading={setFetchingDocuments}
         />
         {/* <div className="flex justify-end">
           <p className="text-secondary">
@@ -138,7 +142,7 @@ const Documents = () => {
           loading={false}
           size="large"
           scroll={{ x: 1100 }}
-          columns={columns}
+          columns={newColumns}
           rowKey="_id"
           rowSelection={rowSelection}
           dataSource={filteredDocuments}

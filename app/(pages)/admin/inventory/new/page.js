@@ -1,7 +1,7 @@
 "use client";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input, message } from "antd";
+import { Input, message, Table } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import { addInventory } from "app/services/inventory";
@@ -11,10 +11,44 @@ import TextAreaField from "@/components/common/TextAreaField";
 import { useEffect, useState } from "react";
 import { getFields } from "app/services/customFields";
 import AddFieldPopup from "@/components/addFieldPopup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateInventory } from "app/redux/slices/inventoriesSlice";
 import { useRouter } from "next/navigation";
-import { LeftOutlined } from "@ant-design/icons";
+import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+
+const columns = [
+  {
+    title: "Part #",
+    dataIndex: "partItem",
+    key: "partItem",
+  },
+  {
+    title: "Description",
+    dataIndex: "details",
+    key: "details",
+  },
+  {
+    title: "Received Date",
+    dataIndex: "receivedDate",
+    key: "receivedDate",
+  },
+  {
+    title: "Quantity",
+    dataIndex: "quantity",
+    key: "quantity",
+  },
+  {
+    title: "tag ID",
+    dataIndex: "tagId",
+    key: "tagId",
+  },
+  {
+    title: "Location",
+    dataIndex: "location",
+    key: "location",
+  },
+];
+const defaultCheckedList = columns.map((item) => item.key);
 
 const CreateInventory = () => {
   const router = useRouter();
@@ -22,6 +56,20 @@ const CreateInventory = () => {
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
+  const {
+    inventory = [],
+    isLoading,
+    error,
+  } = useSelector((state) => state.inventory); // Get inventory from store
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [checkedList, setCheckedList] = useState(defaultCheckedList);
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (keys, rows) => {
+      setSelectedRowKeys(keys);
+    },
+  };
 
   useEffect(() => {
     const handleFetchFields = async () => {
@@ -68,18 +116,21 @@ const CreateInventory = () => {
   }, {});
 
   const validationSchema = Yup.object().shape({
-    partName: Yup.string().required("Part name is required"),
-    partItem: Yup.string().required("Part item is required"),
-    category: Yup.string().required("Category is required"),
-    details: Yup.string().required("Details is required"),
+    details: Yup.string().required("Description is required"),
+    partItem: Yup.string().required("Part number is required"),
+    // category: Yup.string().required("Category is required"),
+    // details: Yup.string().required("Details is required"),
     quantity: Yup.string().required("Quantity is required"),
-    price: Yup.string().required("Price is required"),
+    // price: Yup.string().required("Price is required"),
     location: Yup.string().required("Location is required"),
-    PO: Yup.string().required("PO is required"),
-    SO: Yup.string().required("SO is required"),
+    // PO: Yup.string().required("PO is required"),
+    // SO: Yup.string().required("SO is required"),
     invoiceNumber: Yup.string().required("Invoice number is required"),
-    supplier: Yup.string().required("Supplier is required"),
+    // supplier: Yup.string().required("Supplier is required"),
     receivedDate: Yup.date().required("Received Date is required"),
+    site: Yup.string().required("Site is required"),
+    tagId: Yup.string().required("Tag ID is required"),
+    notes: Yup.string().required("Notes is required"),
     ...customFieldValidations,
   });
 
@@ -131,30 +182,27 @@ const CreateInventory = () => {
           fullWidth={false}
           prefix={<LeftOutlined />}
         />
-        <Button
+        {/* <Button
           onClick={() => setAddFieldPopupVisible(true)}
           text="Manage Fields"
           outlined
           htmlType="button"
           fullWidth={false}
-        />
+        /> */}
       </div>
       <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto mt-5 bg-primary shadow-custom rounded-lg p-4">
         <p className="text-2xl font-semibold mb-5">New Inventory Form</p>
         {!loading && (
           <Formik
             initialValues={{
-              partName: "",
+              site: "",
+              location: "",
               partItem: "",
-              category: "",
+              tagId: "",
+              notes: "",
+              invoiceNumber: "",
               details: "",
               quantity: "",
-              price: "",
-              location: "",
-              PO: "",
-              SO: "",
-              invoiceNumber: "",
-              supplier: "",
               receivedDate: null,
               ...customFieldInitialValues,
             }}
@@ -163,100 +211,120 @@ const CreateInventory = () => {
           >
             {({ isSubmitting }) => (
               <Form>
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div className="md:col-span-3 font-semibold">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <p className="md:col-span-2 font-semibold md:text-lg">
                     Inventory Information
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <InputField
+                      name="site"
+                      placeholder="Site"
+                      className="!w-full"
+                      label="Site"
+                    />
+                    <Button
+                      text="New"
+                      className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                      // onClick={() => setAddSitePopupVisible(true)}
+                      fullWidth={false}
+                      prefix={<PlusOutlined />}
+                    />
                   </div>
+
+                  <div className="flex items-center gap-3">
+                    <InputField
+                      name="location"
+                      placeholder="Location"
+                      label="Location"
+                    />
+                    <Button
+                      text="New"
+                      className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                      // onClick={() => setAddSitePopupVisible(true)}
+                      fullWidth={false}
+                      prefix={<PlusOutlined />}
+                    />
+                  </div>
+
                   <InputField
-                    name="partName"
-                    placeholder="Part Name"
-                    label="Part Name"
-                    maxLength={128}
+                    name="invoiceNumber"
+                    placeholder="Invoice/PO #"
+                    label="Invoice/PO #"
                   />
+                  <DatePickerField name="receivedDate" label="Date Received" />
+
+                  <p className="md:col-span-2 font-semibold md:text-lg">
+                    Inventory Added
+                  </p>
+
+                  <Table
+                    loading={isLoading}
+                    size={"large"}
+                    scroll={{ x: 1400 }}
+                    columns={columns}
+                    rowSelection={rowSelection}
+                    rowKey="_id"
+                    dataSource={
+                      inventory &&
+                      inventory.length > 0 &&
+                      inventory.map((i, index) => ({
+                        ...i,
+                        key: index,
+                      }))
+                    }
+                    style={{
+                      marginTop: 16,
+                      overflow: "auto",
+                    }}
+                    className="md:col-span-2"
+                  />
+
+                  <p className="md:col-span-2 font-semibold md:text-lg">
+                    Inventory Information
+                  </p>
                   <InputField
                     name="partItem"
                     placeholder="Part #"
                     label="Part #"
-                    maxLength={128}
                   />
-                  <SelectField
-                    name="category"
-                    placeholder="Select Category"
-                    label="Category"
-                    options={[{ value: "Cat 1", label: "Cat 1" }]}
+                  <InputField
+                    name="tagId"
+                    placeholder="Tag ID"
+                    label="Tag ID"
                   />
+                  <div className="md:col-span-2">
+                    <TextAreaField
+                      name="details"
+                      placeholder="Description"
+                      label="Description"
+                      className="!h-12"
+                    />
+                  </div>
                   <InputField
                     name="quantity"
                     placeholder="00"
                     label="Quantity"
                     type="number"
-                    maxLength={50}
                   />
-                  <InputField
-                    name="price"
-                    placeholder="$ 0.00"
-                    label="Price"
-                    type="number"
-                    maxLength={128}
-                  />
-                  <SelectField
-                    name="location"
-                    placeholder="Select Location"
-                    label="Location"
-                    options={[{ value: "san-jose", label: "San Jose" }]}
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="PO"
-                    placeholder="PO #"
-                    label="PO #"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="SO"
-                    placeholder="SO #"
-                    label="SO #"
-                    maxLength={128}
-                  />
-                  <InputField
-                    name="invoiceNumber"
-                    placeholder="Inventory #"
-                    label="Inv. #"
-                    maxLength={128}
-                  />
-                  <SelectField
-                    name="supplier"
-                    placeholder="Select Vendor"
-                    label="Vendor"
-                    options={[
-                      { value: "supplier1", label: "Supplier 1" },
-                      { value: "supplier2", label: "Supplier 2" },
-                      { value: "supplier3", label: "Supplier 3" },
-                      { value: "supplier4", label: "Supplier 4" },
-                      { value: "supplier5", label: "Supplier 5" },
-                    ]}
-                  />
-                  <DatePickerField name="receivedDate" label="Receive Date" />
-                  <div className="md:col-span-3 font-semibold">
-                    Additional Information
-                  </div>
-                  <TextAreaField
-                    name="documents"
-                    placeholder="Select Documents to Upload"
-                    label="Documents"
-                    maxLength={150}
-                  />
-                  <div className="md:col-span-2">
-                    <TextAreaField
-                      name="description"
-                      placeholder="Add Description..."
-                      label="Description"
-                      maxLength={150}
+                  <InputField name="notes" placeholder="Model" label="Notes" />
+
+                  <div className={`w-full flex items-center gap-3`}>
+                    <label className="text-sm text-[#30343F] text-right min-w-[115px]">
+                      Upload Image
+                    </label>
+
+                    <Button
+                      className="!bg-green-600 !shadow-custom !border-white !h-11 mt-2"
+                      // onClick={() => setAddDocPopupVisible(true)}
+                      fullWidth={false}
+                      prefix={<UploadOutlined />}
+                      text="Choose Image"
                     />
                   </div>
-                  <div className="md:col-span-3">
-                    <h1 className="font-semibold">Custom Fields:</h1>
-                  </div>
+
+                  <p className="md:col-span-2 font-semibold md:text-lg">
+                    Custom Fields:
+                  </p>
                   {fields.map((field) => {
                     switch (field.type) {
                       case "text":
@@ -303,6 +371,15 @@ const CreateInventory = () => {
                         return null;
                     }
                   })}
+                  <div className="md:col-span-2 sm:ml-32">
+                    <Button
+                      className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-2"
+                      onClick={() => setAddFieldPopupVisible(true)}
+                      fullWidth={false}
+                      prefix={<PlusOutlined />}
+                      text="Add More"
+                    />
+                  </div>
                 </div>
                 <div className="flex justify-end mt-5">
                   <Button

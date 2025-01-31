@@ -28,12 +28,12 @@ export const getDocumentsByCategory = async (values) => {
   }
 };
 
-export const downloadAllDocuments = async (fileName, selectedCategories) => {
+export const downloadAllDocuments = async (fileName, documents) => {
   try {
     const { status, data } = await authRequest({
       url: `/documents/downloadAllDocuments`,
       method: "POST",
-      data: { fileName, selectedCategories },
+      data: { fileName, documents },
     });
     return { status, data };
   } catch (e) {
