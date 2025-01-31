@@ -25,24 +25,33 @@ const DatePickerField = ({
   className,
   style,
   readOnly,
+  labelOnTop,
 }) => (
-  <div>
+  <div
+    className={`w-full ${!labelOnTop && label && "sm:flex items-center gap-3"}`}
+  >
     {label && (
-      <label htmlFor={name} className="text-sm text-[#30343F] ">
+      <label
+        htmlFor={name}
+        className={`text-sm text-[#30343F] ${
+          !labelOnTop && "sm:text-right sm:min-w-[115px]"
+        }`}
+      >
         {label}
       </label>
     )}
+    <div className="w-full">
     <Field
       name={name}
       component={FormikDatePicker}
       placeholder={placeholder}
       readOnly={readOnly}
-      className={className}
+      className={`${!labelOnTop && label && "mt-2 sm:mt-0 "}` + className}
       style={{
-        height: "50px",
+        height: "44px",
         width: "100%",
         fontSize: "16px",
-        marginTop: label ? "8px" : 0,
+        marginTop: labelOnTop ? "8px" : 0,
         ...style,
       }}
     />
@@ -51,6 +60,7 @@ const DatePickerField = ({
       component="div"
       className="text-red-500 text-sm mt-1"
     />
+    </div>
   </div>
 );
 

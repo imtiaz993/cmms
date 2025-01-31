@@ -12,38 +12,50 @@ const InputField = ({
   readOnly,
   maxLength,
   suffix,
+  labelOnTop,
 }) => {
   return (
-    <div>
+    <div
+      className={`w-full ${
+        !labelOnTop && label && "sm:flex items-center gap-3"
+      }`}
+    >
       {label && (
-        <label htmlFor={name} className="text-sm text-[#30343F] ">
+        <label
+          htmlFor={name}
+          className={`text-sm text-[#30343F] ${
+            !labelOnTop && "sm:text-right sm:min-w-[115px]"
+          }`}
+        >
           {label}
         </label>
       )}
-      <Field
-        name={name}
-        placeholder={placeholder}
-        type={type}
-        as={Input}
-        prefix={prefix}
-        suffix={suffix}
-        className={className}
-        disabled={readOnly}
-        maxLength={maxLength}
-        style={{
-          height: "50px",
-          width: "100%",
-          marginTop: label ? "8px" : "0px",
-          fontSize: "16px",
-          ...style,
-        }}
-        extra={prefix}
-      />
-      <ErrorMessage
-        name={name}
-        component="div"
-        className="text-red-500 text-sm md:text-base mt-1"
-      />
+      <div className="w-full">
+        <Field
+          name={name}
+          placeholder={placeholder}
+          type={type}
+          as={Input}
+          prefix={prefix}
+          suffix={suffix}
+          className={`${!labelOnTop && label && "mt-2 sm:mt-0 "}` + className}
+          disabled={readOnly}
+          maxLength={maxLength}
+          style={{
+            height: "44px",
+            width: "100%",
+            marginTop: labelOnTop ? "8px" : "0px",
+            fontSize: "16px",
+            ...style,
+          }}
+          extra={prefix}
+        />
+        <ErrorMessage
+          name={name}
+          component="div"
+          className="text-red-500 text-sm md:text-base mt-1"
+        />
+      </div>
     </div>
   );
 };
