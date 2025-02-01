@@ -1,7 +1,7 @@
 "use client";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { message } from "antd";
+import { message, Radio, Table } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import { getAssetDetails, updateAsset } from "app/services/assets";
@@ -12,14 +12,39 @@ import { rigs } from "@/constants/rigsAndSystems";
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getFields } from "app/services/customFields";
-import { LeftOutlined } from "@ant-design/icons";
+import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
 
-const AssetDetails = () => {
+const columns = [
+  {
+    title: "Asset #",
+    dataIndex: "assetNumber",
+    key: "assetNumber",
+    render: (assetNumber) => (
+      <a className="text-[#017BFE] underline">{assetNumber}</a>
+    ),
+  },
+  { title: "Category", dataIndex: "category", key: "category" },
+  { title: "Start Date", dataIndex: "startDate", key: "startDate" },
+  { title: "Criticality", dataIndex: "criticality", key: "criticality" },
+  { title: "Status", dataIndex: "maintStatus", key: "maintStatus" },
+];
+
+const AssetForm = () => {
   const { slug } = useParams();
   const [details, setDetails] = useState(null);
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { assets, isLoading, error } = useSelector((state) => state.assets);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (keys, rows) => {
+      setSelectedRowKeys(keys);
+    },
+  };
 
   useEffect(() => {
     const getAsset = async () => {
@@ -143,7 +168,8 @@ const AssetDetails = () => {
     setSubmitting(false);
   };
 
-  if ((slug && loading) || (slug && !details)) return <div className="ml-10 mt-20 text-center">Loading...</div>;
+  if ((slug && loading) || (slug && !details))
+    return <div className="ml-10 mt-20 text-center">Loading...</div>;
 
   return (
     <div className="ml-5 md:ml-10">
@@ -190,166 +216,178 @@ const AssetDetails = () => {
         >
           {({ isSubmitting, handleSubmit }) => (
             <Form onSubmit={handleSubmit}>
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="md:col-span-3 font-semibold">Asset Summary</div>
+              <div className="grid md:grid-cols-2 gap-4 md:gap-8">
+                <p className="md:col-span-2 font-semibold md:text-lg">
+                  Asset Location
+                </p>
+                <div className="flex items-center gap-3">
+                  <SelectField
+                    name="site"
+                    placeholder="Site"
+                    className="!w-full"
+                    label="Site"
+                    options={rigs.map((i) => ({ label: i.name, value: i.id }))}
+                  />
+                  <Button
+                    text="New"
+                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                    // onClick={() => setAddSitePopupVisible(true)}
+                    fullWidth={false}
+                    prefix={<PlusOutlined />}
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <SelectField
+                    name="location"
+                    placeholder="Location"
+                    label="Location"
+                    options={
+                      details?.dashboard?.physicalLocation
+                        ? rigs
+                            .find(
+                              (i) => i.id === details.dashboard.physicalLocation
+                            )
+                            ?.systems.map((i) => ({
+                              label: i.name,
+                              value: i.id,
+                            }))
+                        : []
+                    }
+                  />
+                  <Button
+                    text="New"
+                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                    // onClick={() => setAddSitePopupVisible(true)}
+                    fullWidth={false}
+                    prefix={<PlusOutlined />}
+                  />
+                </div>
                 <SelectField
-                  name="physicalLocation"
-                  placeholder="Select Location"
-                  label="Physical Location"
-                  options={rigs.map((i) => ({ label: i.name, value: i.id }))}
+                  name="category"
+                  placeholder="Category"
+                  label="Category"
+                  options={[
+                    { value: "1", label: "Category 1" },
+                    { value: "2", label: "Category 2" },
+                    { value: "3", label: "Category 3" },
+                  ]}
                 />
                 <SelectField
-                  name="mainSystem"
-                  placeholder="Select System"
-                  label="Main System"
-                  options={
-                    details?.dashboard?.physicalLocation
-                      ? rigs
-                          .find(
-                            (i) => i.id === details.dashboard.physicalLocation
-                          )
-                          ?.systems.map((i) => ({ label: i.name, value: i.id }))
-                      : []
-                  }
+                  name="subCategory"
+                  placeholder="Sub Category"
+                  label="Sub Category"
+                  options={[
+                    { value: "1", label: "Sub Category 1" },
+                    { value: "2", label: "Sub Category 2" },
+                    { value: "3", label: "Sub Category 3" },
+                  ]}
                 />
+                <p className="md:col-span-2 font-semibold md:text-lg">
+                  Asset Details
+                </p>
                 <InputField
-                  name="accountingDept"
-                  placeholder="Accounting Dept."
-                  label="Accounting Dept."
+                  name="assetId"
+                  placeholder="Asset ID"
+                  label="Asset ID"
                 />
-                <SelectField
-                  name="parentAsset"
-                  placeholder="Select Parent"
-                  label="Parent Asset"
-                  options={[
-                    { value: "1", label: "Parent 1" },
-                    { value: "2", label: "Parent 2" },
-                    { value: "3", label: "Parent 3" },
-                  ]}
-                />
-                <SelectField
-                  name="childAsset"
-                  placeholder="Select Child"
-                  label="Child Asset"
-                  options={[
-                    { value: "1", label: "Child 1" },
-                    { value: "2", label: "Child 2" },
-                    { value: "3", label: "Child 3" },
-                  ]}
-                />
-                <div className="md:col-span-3 font-semibold">Asset Details</div>
+                <DatePickerField name="purchaseDate" label="Purchase Date" />
+                <div className="md:col-span-2">
+                  <TextAreaField
+                    name="details"
+                    placeholder="Description"
+                    label="Description"
+                    className="!h-12"
+                  />
+                </div>
+                <InputField name="brand" placeholder="Brand" label="Brand" />
+                <InputField name="model" placeholder="Model" label="Model" />
                 <InputField
                   name="serialNumber"
                   placeholder="Serial #"
                   label="Serial #"
                 />
-                <InputField
-                  name="assetNumber"
-                  placeholder="Asset #"
-                  label="Asset #"
+                <div className="md:col-span-2 font-semibold md:text-lg">
+                  Asset Maintenance
+                </div>
+                <Table
+                  loading={isLoading}
+                  size={"large"}
+                  scroll={{ x: 1400 }}
+                  columns={columns}
+                  rowSelection={rowSelection}
+                  rowKey="_id"
+                  dataSource={
+                    assets &&
+                    assets.length > 0 &&
+                    assets.map((i, index) => ({
+                      ...i,
+                      key: index,
+                    }))
+                  }
+                  style={{
+                    marginTop: 16,
+                    overflow: "auto",
+                  }}
+                  className="md:col-span-2"
                 />
-                <InputField
-                  name="specDetails"
-                  placeholder="Enter Details..."
-                  label="Spec Details"
-                />
-                <DatePickerField name="installedDate" label="Installed Date" />
                 <SelectField
-                  name="estimatedLife"
-                  placeholder="Select..."
-                  label="Estimated Life"
+                  name="category"
+                  placeholder="Category"
+                  label="Category"
                   options={[
-                    { value: "1month", label: "1 Month" },
-                    { value: "3month", label: "3 Month" },
-                    { value: "6month", label: "6 Month" },
-                    { value: "1year", label: "1 Year" },
-                    { value: "3year", label: "3 Year" },
-                    { value: "5year", label: "5 Year" },
+                    { value: "1", label: "Category 1" },
+                    { value: "2", label: "Category 2" },
+                    { value: "3", label: "Category 3" },
                   ]}
                 />
-                <div></div>
-                <TextAreaField
-                  name="rfidBarCode"
-                  placeholder="Generate Barcode"
-                  label="RFID/Barcode"
-                  maxLength={128}
-                />
-                <div className="md:col-span-2">
-                  <TextAreaField
-                    name="description"
-                    placeholder="Add Description..."
-                    label="Description"
-                    maxLength={150}
-                  />
+                <DatePickerField name="maintStartDate" label="Start Date" />
+                <div className="md:col-span-2 sm:flex items-center">
+                  <label className="text-sm text-[#30343F] sm:text-right sm:min-w-[115px]">
+                    Criticality
+                  </label>
+                  <Radio.Group name="criticality" className="">
+                    <Radio value="Critical" className="!ml-3">
+                      Critical
+                    </Radio>
+                    <Radio value="High" className="sm:!ml-7">
+                      High
+                    </Radio>
+                    <Radio value="Medium" className="sm:!ml-7">
+                      Medium
+                    </Radio>
+                    <Radio value="Low" className="sm:!ml-7">
+                      Low
+                    </Radio>
+                  </Radio.Group>
                 </div>
-                <div className="md:col-span-3 font-semibold">
-                  Asset Maintenance information
+                <div className="md:col-span-2 sm:flex items-center">
+                  <label className="text-sm text-[#30343F] sm:text-right sm:min-w-[115px]">
+                    Maint. Status
+                  </label>
+                  <Radio.Group name="maintStatus" className="">
+                    <Radio value="Active" className="!ml-3">
+                      Active
+                    </Radio>
+                    <Radio value="damagedBeyondRepair" className="sm:!ml-7">
+                      Damaged Beyond Repair
+                    </Radio>
+                    <Radio value="outForRepair" className="sm:!ml-7">
+                      Out for Repair
+                    </Radio>
+                    <Radio value="damaged" className="sm:!ml-7">
+                      Damaged
+                    </Radio>
+                    <Radio value="disposed" className="sm:!ml-7">
+                      Disposed
+                    </Radio>
+                  </Radio.Group>
                 </div>
 
-                {/* <InputField name="make" placeholder="Make" />
-                <InputField name="model" placeholder="Model" />
-                <InputField name="part" placeholder="Part #" />
-                <SelectField
-                  name="supplier"
-                  placeholder="Suppliers"
-                  options={[
-                    { value: "supplier1", label: "Supplier 1" },
-                    { value: "supplier2", label: "Supplier 2" },
-                  ]}
-                /> */}
-                <SelectField
-                  name="criticality"
-                  placeholder="Select Criticality"
-                  label="Criticality"
-                  options={[
-                    { value: "low", label: "Low" },
-                    { value: "medium", label: "Medium" },
-                    { value: "high", label: "High" },
-                  ]}
-                />
-                <DatePickerField
-                  name="originalMfrDate"
-                  label="Original Mfr. Date"
-                />
-                <SelectField
-                  name="condition"
-                  placeholder="Select Condition"
-                  label="Condition"
-                  options={[
-                    { value: "new", label: "New" },
-                    { value: "used", label: "Used" },
-                  ]}
-                />
-                <SelectField
-                  name="maintStatus"
-                  placeholder="Select Status"
-                  label="Maintenance Status"
-                  options={[
-                    { value: "active", label: "Active" },
-                    { value: "inactive", label: "Inactive" },
-                  ]}
-                />
-                <DatePickerField
-                  name="maintStartDate"
-                  label="Maintenance Start Date"
-                />
-                <div className="md:col-span-3 font-semibold">
-                  Additional Information
-                </div>
-                <TextAreaField
-                  name="documents"
-                  placeholder="Select Documents to Upload"
-                  label="Documents"
-                  maxLength={150}
-                />
-                <div className="md:col-span-2">
-                  <TextAreaField
-                    name="notes"
-                    placeholder="Add Additional Notes..."
-                    label="Notes"
-                    maxLength={150}
-                  />
-                </div>
+                {fields.length > 0 && (
+                  <p className="md:col-span-2 font-semibold md:text-lg">
+                    Custom Fields:
+                  </p>
+                )}
                 {fields.map((field) => {
                   switch (field.type) {
                     case "text":
@@ -396,6 +434,31 @@ const AssetDetails = () => {
                       return null;
                   }
                 })}
+                <div className="md:col-span-2 sm:ml-32">
+                  <Button
+                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-2"
+                    // onClick={() => setAddFieldPopupVisible(true)}
+                    fullWidth={false}
+                    prefix={<PlusOutlined />}
+                    text="Add More"
+                  />
+                </div>
+                <p className="md:col-span-2 font-semibold md:text-lg">
+                  Asset Image
+                </p>
+                <div className={`w-full flex items-center gap-3`}>
+                  <label className="text-sm text-[#30343F] text-right min-w-[115px]">
+                    Upload
+                  </label>
+
+                  <Button
+                    className="!bg-green-600 !shadow-custom !border-white !h-11 mt-2"
+                    // onClick={() => setAddDocPopupVisible(true)}
+                    fullWidth={false}
+                    prefix={<UploadOutlined />}
+                    text="Choose Image"
+                  />
+                </div>
               </div>
               <div className="text-right mt-5">
                 <Button
@@ -426,4 +489,4 @@ const AssetDetails = () => {
   );
 };
 
-export default AssetDetails;
+export default AssetForm;
