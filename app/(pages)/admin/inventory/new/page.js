@@ -211,7 +211,7 @@ const CreateInventory = () => {
           >
             {({ isSubmitting }) => (
               <Form>
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4 md:gap-8">
                   <p className="md:col-span-2 font-semibold md:text-lg">
                     Inventory Information
                   </p>
