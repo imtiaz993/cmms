@@ -152,8 +152,10 @@ const Documents = () => {
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
+            onChange: () => {},
+            className: "custom-pagination",
           }}
-          style={{ marginTop: 16, overflow: "auto", fontSize: "18px" }}
+          style={{ marginTop: 16, overflow: "auto" }}
         />
       </div>
     </div>

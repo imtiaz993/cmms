@@ -2,12 +2,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
-import { EyeFilled } from "@ant-design/icons";
+import { EyeFilled, EyeOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import PreviewPopup from "@/components/previewPopup";
 import { getMaterialTransferData } from "app/services/materialTransfer";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 import { rigs } from "@/constants/rigsAndSystems";
+import Link from "next/link";
+import { EditPagePencil } from "@/icons/index";
 
 const MaterialTransfer = () => {
   const [materialTransferData, setMaterialTransferData] = useState();
@@ -17,6 +19,36 @@ const MaterialTransfer = () => {
   const router = useRouter();
 
   const columns = [
+    {
+      title: "Asset #",
+      dataIndex: "assets",
+      key: "assetNumber",
+      render: (assets) => (
+        <Link
+          className="text-[#017BFE] underline"
+          href={`/admin/assets/${assets[0]._id}`}
+        >
+          {assets
+            ?.map((asset, index) =>
+              index === 0 ? asset._id : ", " + asset._id
+            )
+            .join("")}
+
+          {/*Assets has multiple assets but we are showing only one*/}
+        </Link>
+      ),
+    },
+    {
+      title: "Description",
+      dataIndex: "comments",
+      key: "description",
+    },
+    {
+      title: "Created Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+    },
+
     {
       title: "Origin",
       dataIndex: "origination",
@@ -30,43 +62,20 @@ const MaterialTransfer = () => {
       render: (destination) => rigs.find((i) => i.id === destination).name,
     },
     {
-      title: "Creator",
-      dataIndex: "createdBy",
-      key: "createdBy",
-    },
-    {
-      title: "Created Date",
-      dataIndex: "createdAt",
-      key: "createdAt",
-    },
-
-    {
-      title: "Transporter",
-      dataIndex: "transporter",
-      key: "transporter",
-    },
-    {
-      title: "Material Transfer Type",
-      dataIndex: "materialTransferType",
-      key: "materialTransferType",
-    },
-    {
-      title: "Comments",
-      dataIndex: "comments",
-      key: "comments",
-    },
-    {
       title: "",
-      dataIndex: "download",
-      key: "download",
+      dataIndex: "actions",
+      key: "actions",
       render: () => (
-        <EyeFilled
-          onClick={(e) => {
-            e.stopPropagation();
-            setPreviewPopupVisible(true);
-          }}
-          style={{ fontSize: "20px", cursor: "pointer" }}
-        />
+        <div className="flex gap-3">
+          <EyeOutlined
+            onClick={(e) => {
+              e.stopPropagation();
+              setPreviewPopupVisible(true);
+            }}
+            style={{ fontSize: "20px", cursor: "pointer" }}
+          />
+          <EditPagePencil />
+        </div>
       ),
     },
   ];
@@ -75,8 +84,15 @@ const MaterialTransfer = () => {
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-  const [selectedInventory, setSelectedInventory] = useState([]);
+  // const [selectedInventory, setSelectedInventory] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (keys, rows) => {
+      setSelectedRowKeys(keys);
+    },
+  };
 
   const handleFetchData = async () => {
     const { status, data } = await getMaterialTransferData();
@@ -102,12 +118,12 @@ const MaterialTransfer = () => {
   }, [searchText, materialTransferData, checkedList]);
 
   return (
-    <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
+    <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
       <PreviewPopup
         visible={previewPopupVisible}
         setVisible={setPreviewPopupVisible}
       />
-      {addMaterialTransferVisible && (
+      {/* {addMaterialTransferVisible && (
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
           setAddMaterialTransferVisible={setAddMaterialTransferVisible}
@@ -117,7 +133,7 @@ const MaterialTransfer = () => {
           setSelectedRowKeys={setSelectedRowKeys}
           setMaterialTransferData={setMaterialTransferData}
         />
-      )}
+      )} */}
       <div>
         <ActionBar
           showAddMaterialTransferModal={() =>
@@ -130,38 +146,35 @@ const MaterialTransfer = () => {
           setMaterialTransferData={setMaterialTransferData}
           setFetchingData={setFetchingData}
         />
-        <p className="text-secondary text-end">
-          Total Material Transfer:{" "}
-          <span>{"(" + materialTransferData?.length + ")"}</span>
-        </p>
         <Table
-          rowClassName="cursor-pointer"
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: () => {
-                console.log("record", record);
-                router.push(`/admin/material-transfer/${record?._id}`);
-              },
-            };
-          }}
+          // onRow={(record, rowIndex) => {
+          //   return {
+          //     onClick: () => {
+          //       console.log("record", record);
+          //       router.push(`/admin/material-transfer/${record?._id}`);
+          //     },
+          //   };
+          // }}
           loading={fetchingData}
           size={"large"}
           scroll={{ x: 1100 }}
           columns={newColumns}
+          rowSelection={rowSelection}
           dataSource={
             filteredData &&
             filteredData.length > 0 &&
             filteredData.map((i, index) => ({ ...i, key: index }))
           }
-          // pagination={{
-          //   total: filteredData?.length,
-          //   current: 1,
-          //   pageSize: 10,
-          //   showSizeChanger: true,
-          //   showTotal: (total, range) =>
-          //     `${range[0]}-${range[1]} of ${total} items`,
-          //   onChange: () => {},
-          // }}
+          pagination={{
+            total: filteredData?.length,
+            current: 1,
+            pageSize: 10,
+            showSizeChanger: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`,
+            onChange: () => {},
+            className: "custom-pagination",
+          }}
           style={{
             marginTop: 16,
             overflow: "auto",
