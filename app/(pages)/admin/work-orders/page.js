@@ -9,14 +9,17 @@ import EarlyMaintenancePopup from "./components/earlyMaintenancePopup";
 import ActionBar from "./components/actionBar";
 import PreviewPopup from "@/components/previewPopup";
 import Link from "next/link";
+import UnplannedPreviewPopup from "./components/UnplannedPreviewPopup";
+import PlannedPreviewPopup from "./components/PlannedPreviewPopup";
 
 const WorkOrders = () => {
   const [workOrders, setWorkOrders] = useState([]);
   const [addWOVisible, setAddWOVisible] = useState(false);
-  const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
+  const [previewPopup, setPreviewPopup] = useState(false);
+  const [previewIndex, setPreviewIndex] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [fetchingWorkOrders, setFetchingWorkOrders] = useState(true);
-  const [currentTab, setCurrentTab] = useState("Planned");
+  const [currentTab, setCurrentTab] = useState("Unplanned");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const rowSelection = {
@@ -110,14 +113,15 @@ const WorkOrders = () => {
     ...(currentTab === "Planned" ? plannedColumns : unplannedColumns),
     {
       title: "",
-      dataIndex: "actions",
+      dataIndex: "",
       key: "actions",
-      render: () => (
+      render: (_, record, index) => (
         <div className="flex gap-3">
           <EyeOutlined
             onClick={(e) => {
               e.stopPropagation();
-              setPreviewPopupVisible(true);
+              setPreviewPopup(true);
+              setPreviewIndex(index);
             }}
             style={{ fontSize: "20px", cursor: "pointer" }}
           />
@@ -167,7 +171,7 @@ const WorkOrders = () => {
 
   const tabs = [
     {
-      label: "Planned",
+      label: "Unplanned",
       children: (
         <WOtable
           filteredColumns={filteredColumns}
@@ -178,7 +182,7 @@ const WorkOrders = () => {
       ),
     },
     {
-      label: "Unplanned",
+      label: "Planned",
       children: (
         <WOtable
           filteredColumns={filteredColumns}
@@ -198,11 +202,19 @@ const WorkOrders = () => {
           setVisible={setAddWOVisible}
         />
       )}
-      {previewPopupVisible && (
-        <PreviewPopup
-          visible={previewPopupVisible}
-          setVisible={setPreviewPopupVisible}
-        />
+      {previewPopup && (
+        <>
+          <UnplannedPreviewPopup
+            visible={previewPopup && currentTab === "Unplanned"}
+            setVisible={setPreviewPopup}
+            workOrder={workOrders[previewIndex]}
+          />
+          <PlannedPreviewPopup
+            visible={previewPopup && currentTab === "Planned"}
+            setVisible={setPreviewPopup}
+            workOrder={workOrders[previewIndex]}
+          />
+        </>
       )}
       <div className="max-h-[calc(100dvh-140px-16px-60px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
         <ActionBar

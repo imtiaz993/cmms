@@ -107,8 +107,8 @@ const ActionBar = ({
           <Checkbox className="!mx-2" />
           <div className="w-full sm:min-w-56 overflow-hidden">
             <Select
-              name="status"
-              placeholder="Status"
+              name="actions"
+              placeholder="Actions"
               style={{ height: "44px", width: "100%" }}
               onChange={handleStatusChange}
               options={[
