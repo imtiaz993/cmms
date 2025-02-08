@@ -1,4 +1,3 @@
-"use client";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { message, Radio, Table } from "antd";
@@ -461,7 +460,7 @@ const AssetForm = () => {
                   </label>
 
                   <Button
-                    className="!bg-green-600 !shadow-custom !border-white !h-11 mt-2"
+                    className="!bg-green-600 !shadow-custom !border-white !h-11"
                     // onClick={() => setAddDocPopupVisible(true)}
                     fullWidth={false}
                     prefix={<UploadOutlined />}
@@ -469,7 +468,7 @@ const AssetForm = () => {
                   />
                 </div>
               </div>
-              <div className="text-right mt-5">
+              <div className="text-right mt-5 mb-5">
                 <Button
                   className="mr-2"
                   onClick={() => router.push("/admin/assets")}

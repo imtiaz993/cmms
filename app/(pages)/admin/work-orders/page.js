@@ -3,12 +3,10 @@ import { useEffect, useMemo, useState } from "react";
 import { message, Tabs } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import { getWorkOrders } from "app/services/workOrders";
-import { EditPagePencil } from "@/icons/index";
-import WOtable from "./planned";
+import Link from "next/link";
+import WOtable from "./workOrderTable";
 import EarlyMaintenancePopup from "./components/earlyMaintenancePopup";
 import ActionBar from "./components/actionBar";
-import PreviewPopup from "@/components/previewPopup";
-import Link from "next/link";
 import UnplannedPreviewPopup from "./components/UnplannedPreviewPopup";
 import PlannedPreviewPopup from "./components/PlannedPreviewPopup";
 
@@ -116,17 +114,14 @@ const WorkOrders = () => {
       dataIndex: "",
       key: "actions",
       render: (_, record, index) => (
-        <div className="flex gap-3">
-          <EyeOutlined
-            onClick={(e) => {
-              e.stopPropagation();
-              setPreviewPopup(true);
-              setPreviewIndex(index);
-            }}
-            style={{ fontSize: "20px", cursor: "pointer" }}
-          />
-          <EditPagePencil />
-        </div>
+        <EyeOutlined
+          onClick={(e) => {
+            e.stopPropagation();
+            setPreviewPopup(true);
+            setPreviewIndex(index);
+          }}
+          style={{ fontSize: "20px", cursor: "pointer" }}
+        />
       ),
     },
   ];
@@ -196,12 +191,13 @@ const WorkOrders = () => {
 
   return (
     <>
-      {addWOVisible && (
+      {addWOVisible && currentTab === "Planned" && (
         <EarlyMaintenancePopup
           visible={addWOVisible}
           setVisible={setAddWOVisible}
         />
       )}
+
       {previewPopup && (
         <>
           <UnplannedPreviewPopup

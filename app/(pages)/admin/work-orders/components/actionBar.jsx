@@ -8,22 +8,19 @@ import {
   Select,
   Button as AntButton,
 } from "antd";
+import { useRouter } from "next/navigation";
 import {
-  ArrowDownOutlined,
   DownOutlined,
   ExportOutlined,
-  FilterOutlined,
   PlusOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import Button from "@/components/common/Button";
-import WOFilter from "./filtersDropdown";
 import {
   exportWorkOrders,
-  getWorkOrders,
   getWorkOrdersByStatus,
-  getWorkOrdersByTimeRange,
 } from "app/services/workOrders";
+import Button from "@/components/common/Button";
+import WOFilter from "./filtersDropdown";
 
 const ActionBar = ({
   showAddWOModal,
@@ -35,6 +32,7 @@ const ActionBar = ({
   unplanned,
   setFetchingWorkOrders,
 }) => {
+  const router = useRouter();
   const [filterDropdown, setFilterDropdown] = useState(null);
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
@@ -61,21 +59,6 @@ const ActionBar = ({
       unplanned ? "unplanned" : "planned"
     );
 
-    if (status === 200) {
-      setWorkOrders(data);
-    } else {
-      message.error(data.error || "Failed to fetch data");
-    }
-    setFetchingWorkOrders(false);
-  };
-
-  const handleTimeRangeChange = async (value) => {
-    console.log(value);
-    // setFetchingData(true);
-    const { status, data } = await getWorkOrdersByTimeRange(
-      value,
-      unplanned ? "unplanned" : "planned"
-    );
     if (status === 200) {
       setWorkOrders(data);
     } else {
@@ -193,7 +176,11 @@ const ActionBar = ({
               text={`${
                 unplanned ? "New Work Order" : "New Maintenance Schedule"
               }`}
-              onClick={showAddWOModal}
+              onClick={
+                unplanned
+                  ? () => router.push("/admin/new/work-order")
+                  : showAddWOModal
+              }
               // outlined
               style={{ padding: "4px 10px" }}
               className="!text-xs md:!text-sm"

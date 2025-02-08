@@ -29,25 +29,49 @@ const FormikTimePicker = ({ field, form, readOnly, ...props }) => {
 };
 
 // Formik TimePicker Field with Error Handling
-const TimePickerField = ({ name, placeholder, className, style, readOnly }) => (
-  <div>
-    <Field
-      name={name}
-      component={FormikTimePicker}
-      placeholder={placeholder}
-      readOnly={readOnly}
-      className={className}
-      style={{
-        height: "36px",
-        width: "100%",
-        ...style,
-      }}
-    />
-    <ErrorMessage
-      name={name}
-      component="div"
-      className="text-red-500 text-sm mt-1"
-    />
+const TimePickerField = ({
+  name,
+  placeholder,
+  label,
+  className,
+  style,
+  readOnly,
+  labelOnTop,
+}) => (
+  <div
+    className={`w-full ${!labelOnTop && label && "sm:flex items-center gap-3"}`}
+  >
+    {label && (
+      <label
+        htmlFor={name}
+        className={`text-sm text-[#30343F] ${
+          !labelOnTop && "sm:text-right sm:min-w-[115px]"
+        }`}
+      >
+        {label}
+      </label>
+    )}
+    <div className="w-full">
+      <Field
+        name={name}
+        component={FormikTimePicker}
+        placeholder={placeholder}
+        readOnly={readOnly}
+        className={`${!labelOnTop && label && "mt-2 sm:mt-0 "}` + className}
+        style={{
+          height: "44px",
+          width: "100%",
+          fontSize: "16px",
+          marginTop: labelOnTop ? "8px" : 0,
+          ...style,
+        }}
+      />
+      <ErrorMessage
+        name={name}
+        component="div"
+        className="text-red-500 text-sm mt-1"
+      />
+    </div>
   </div>
 );
 
