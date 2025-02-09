@@ -27,7 +27,7 @@ const ActionBar = ({
   setSelectedRowKeys,
   setSearchText,
   setLoading,
-  setLocations,
+  setCategories,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
 
@@ -94,7 +94,7 @@ const ActionBar = ({
                 <FilterDropdown
                   closeDropdown={() => setFilterDropdown(false)}
                   setLoading={setLoading}
-                  setLocations={setLocations}
+                  setCategories={setCategories}
                 />
               )}
               trigger={["click"]}
@@ -156,7 +156,7 @@ const ActionBar = ({
             />
             {/* <Link href="/admin/inventory/new"> */}
             <Button
-              text="New Location"
+              text="New Category"
               style={{ padding: "4px 30px" }}
               prefix={<PlusOutlined />}
             />
