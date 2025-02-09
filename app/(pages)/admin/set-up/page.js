@@ -5,6 +5,7 @@ import Sites from "./sites";
 import Locations from "./locations";
 import Categories from "./categories";
 import SubCategories from "./sub-categories";
+import Events from "./events";
 
 const SetUp = () => {
   const tabs = [
@@ -17,7 +18,7 @@ const SetUp = () => {
     { key: "locations", label: "Locations", children: <Locations /> },
     { key: "categories", label: "Categories", children: <Categories /> },
     { key: "sub-categories", label: "Sub Categories", children: <SubCategories /> },
-    { key: "events", label: "Events" },
+    { key: "events", label: "Events", children: <Events /> },
   ];
   return (
     <div className="mt-5 bg-primary !mx-5 lg:!mx-10 rounded-lg shadow-custom pl-3">

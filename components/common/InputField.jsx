@@ -13,6 +13,8 @@ const InputField = ({
   maxLength,
   suffix,
   labelOnTop,
+  labelWidth,
+  required,
 }) => {
   return (
     <div
@@ -23,11 +25,13 @@ const InputField = ({
       {label && (
         <label
           htmlFor={name}
-          className={`text-sm text-[#30343F] ${
-            !labelOnTop && "sm:text-right sm:min-w-[115px]"
-          }`}
+          className={
+            `text-sm text-[#30343F] flex gap-1 items-center ${
+              !labelOnTop && !labelWidth && "sm:justify-end sm:min-w-[115px] "
+            }` + labelWidth
+          }
         >
-          {label}
+          {label} {required && <span className="text-red-600 text-xl">*</span>}
         </label>
       )}
       <div className="w-full">
