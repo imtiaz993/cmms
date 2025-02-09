@@ -1,16 +1,15 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { message } from "antd";
-import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import { useState } from "react";
 import SelectField from "@/components/common/SelectField";
 
 const validationSchema = Yup.object().shape({
-  siteName: Yup.string(),
+  location: Yup.string(),
 });
 
-const FilterDropdown = ({ closeDropdown, setLoading, setSites }) => {
+const FilterDropdown = ({ closeDropdown, setLoading, setLocations }) => {
   const [isClearing, setIsClearing] = useState(false);
 
   const submit = async (values, setSubmitting) => {
@@ -45,14 +44,8 @@ const FilterDropdown = ({ closeDropdown, setLoading, setSites }) => {
       >
         {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <InputField name="siteName" placeholder="Site Name" />
-              <InputField name="address" placeholder="Address" />
-              <InputField name="apartment" placeholder="Apt./Suite #" />
-              <InputField name="city" placeholder="City" />
-              <SelectField name="state" placeholder="State" />
-              <InputField name="zip" placeholder="Zip Code" />
-              <InputField name="country" placeholder="Country" />
+            <div className="grid grid-cols-1 w-full md:w-60 gap-4">
+              <SelectField name="location" placeholder="Location" />
 
               <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
                 <div>

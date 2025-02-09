@@ -5,76 +5,34 @@ import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 
 const columns = [
   {
-    title: "Site Name",
-    dataIndex: "siteName",
-    key: "siteName",
-    render: (siteName) => (
-      <span className="text-[#017BFE] underline">{siteName}</span>
+    title: "location",
+    dataIndex: "location",
+    key: "location",
+    render: (location) => (
+      <span className="text-[#017BFE] underline">{location}</span>
     ),
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Apt./Suite #",
-    dataIndex: "apartment",
-    key: "apartment",
-  },
-  {
-    title: "City",
-    dataIndex: "city",
-    key: "city",
-  },
-  {
-    title: "State",
-    dataIndex: "state",
-    key: "state",
-  },
-  {
-    title: "Zip Code",
-    dataIndex: "zip",
-    key: "zip",
-  },
-  {
-    title: "Country",
-    dataIndex: "country",
-    key: "country",
   },
   {
     title: "",
     dataIndex: "actions",
     key: "actions",
     render: () => (
-      <>
+      <div className="text-right">
         <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
         <DeleteOutlined
           style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
         />
-      </>
+      </div>
     ),
   },
 ];
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const Sites = () => {
-  const [sites, setSites] = useState([
+const Locations = () => {
+  const [locations, setLocations] = useState([
     {
-      siteName: "Rig 20",
-      description: "Description 1",
-      address: "Address 1",
-      apartment: "Apt 1",
-      city: "City 1",
-      state: "State 1",
-      zip: "Zip 1",
-      country: "Country 1",
+      location: "Rig 20",
     },
   ]);
   const [loading, setLoading] = useState(false);
@@ -105,17 +63,17 @@ const Sites = () => {
   }, []);
 
   const filteredData = useMemo(() => {
-    if (!searchText) return sites; // Return full data if no search
-    return sites?.filter((site) =>
+    if (!searchText) return locations; // Return full data if no search
+    return locations?.filter((site) =>
       checkedList.some((key) =>
         site[key]?.toString()?.toLowerCase()?.includes(searchText.toLowerCase())
       )
     );
-  }, [searchText, sites, checkedList]);
+  }, [searchText, locations, checkedList]);
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
-      <h3 className="font-semibold text-lg pb-8">List of Sites</h3>
+      <h3 className="font-semibold text-lg pb-8">List of Locations</h3>
       <ActionBar
         checkedList={checkedList}
         setCheckedList={setCheckedList}
@@ -124,12 +82,12 @@ const Sites = () => {
         setSelectedRowKeys={setSelectedRowKeys}
         setSearchText={setSearchText}
         setLoading={setLoading}
-        setSites={setSites}
+        setLocations={setLocations}
       />
       <Table
         loading={loading}
         size="large"
-        scroll={{ x: 1200 }}
+        // scroll={{ x: 300 }}
         columns={newColumns}
         rowSelection={rowSelection}
         rowKey="_id"
@@ -157,4 +115,4 @@ const Sites = () => {
   );
 };
 
-export default Sites;
+export default Locations;

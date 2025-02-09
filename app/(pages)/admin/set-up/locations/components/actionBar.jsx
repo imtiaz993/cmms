@@ -27,7 +27,7 @@ const ActionBar = ({
   setSelectedRowKeys,
   setSearchText,
   setLoading,
-  setSites,
+  setLocations,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
 
@@ -94,7 +94,7 @@ const ActionBar = ({
                 <FilterDropdown
                   closeDropdown={() => setFilterDropdown(false)}
                   setLoading={setLoading}
-                  setSites={setSites}
+                  setLocations={setLocations}
                 />
               )}
               trigger={["click"]}

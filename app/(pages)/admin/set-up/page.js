@@ -2,6 +2,7 @@
 import { Tabs } from "antd";
 import CompanyDetails from "./company-details";
 import Sites from "./sites";
+import Locations from "./locations";
 
 const SetUp = () => {
   const tabs = [
@@ -11,7 +12,7 @@ const SetUp = () => {
       children: <CompanyDetails />,
     },
     { key: "sites", label: "Sites", children: <Sites /> },
-    { key: "locations", label: "Locations" },
+    { key: "locations", label: "Locations" , children: <Locations /> },
     { key: "categories", label: "Categories" },
     { key: "sub-categories", label: "Sub Categories" },
     { key: "events", label: "Events" },
