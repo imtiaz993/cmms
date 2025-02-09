@@ -4,6 +4,7 @@ import CompanyDetails from "./company-details";
 import Sites from "./sites";
 import Locations from "./locations";
 import Categories from "./categories";
+import SubCategories from "./sub-categories";
 
 const SetUp = () => {
   const tabs = [
@@ -15,7 +16,7 @@ const SetUp = () => {
     { key: "sites", label: "Sites", children: <Sites /> },
     { key: "locations", label: "Locations", children: <Locations /> },
     { key: "categories", label: "Categories", children: <Categories /> },
-    { key: "sub-categories", label: "Sub Categories" },
+    { key: "sub-categories", label: "Sub Categories", children: <SubCategories /> },
     { key: "events", label: "Events" },
   ];
   return (
