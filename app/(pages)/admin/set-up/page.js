@@ -1,0 +1,30 @@
+"use client";
+import { Tabs } from "antd";
+import CompanyDetails from "./company-details";
+
+const SetUp = () => {
+  const tabs = [
+    {
+      key: "company-details",
+      label: "Company Details",
+      children: <CompanyDetails />,
+    },
+    { key: "sites", label: "Sites" },
+    { key: "locations", label: "Locations" },
+    { key: "categories", label: "Categories" },
+    { key: "sub-categories", label: "Sub Categories" },
+    { key: "events", label: "Events" },
+  ];
+  return (
+    <div className="mt-5 bg-primary !mx-5 lg:!mx-10 rounded-lg shadow-custom pl-3">
+      <Tabs
+        defaultActiveKey="1"
+        animated
+        items={tabs}
+        className="select-none asset-tabs"
+      />
+    </div>
+  );
+};
+
+export default SetUp;

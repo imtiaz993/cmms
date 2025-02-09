@@ -444,7 +444,7 @@ const AssetForm = () => {
                 })}
                 <div className="md:col-span-2 sm:ml-32">
                   <Button
-                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-2"
+                    className="!bg-[#4C4C51] !shadow-custom !border-white mt-2"
                     onClick={() => setAddFieldPopupVisible(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}
@@ -460,7 +460,7 @@ const AssetForm = () => {
                   </label>
 
                   <Button
-                    className="!bg-green-600 !shadow-custom !border-white !h-11"
+                    className="!bg-green-600 !shadow-custom !border-white"
                     // onClick={() => setAddDocPopupVisible(true)}
                     fullWidth={false}
                     prefix={<UploadOutlined />}
