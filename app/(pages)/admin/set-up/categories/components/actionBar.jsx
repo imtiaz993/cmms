@@ -18,6 +18,7 @@ import {
 import Button from "@/components/common/Button";
 import FilterDropdown from "./filtersDropdown";
 import { exportInventory } from "app/services/inventory";
+import AddCategoryPopup from "./addCategoryPopup";
 
 const ActionBar = ({
   columns,
@@ -30,6 +31,7 @@ const ActionBar = ({
   setCategories,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
+  const [addCategoryPopup, setAddCategoryPopup] = useState(false);
 
   const options = columns.map(({ key, title }, index) => ({
     label: title,
@@ -60,6 +62,10 @@ const ActionBar = ({
 
   return (
     <>
+      <AddCategoryPopup
+        visible={addCategoryPopup}
+        setVisible={setAddCategoryPopup}
+      />
       <div className="">
         <Input.Search
           placeholder="Search..."
@@ -154,13 +160,12 @@ const ActionBar = ({
               onClick={handleExport}
               prefix={<ExportOutlined />}
             />
-            {/* <Link href="/admin/inventory/new"> */}
             <Button
               text="New Category"
               style={{ padding: "4px 30px" }}
               prefix={<PlusOutlined />}
+              onClick={() => setAddCategoryPopup(true)}
             />
-            {/* </Link> */}
           </div>
         </div>
       </div>

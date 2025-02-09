@@ -3,7 +3,7 @@ import InputField from "@/components/common/InputField";
 import { Form, Modal } from "antd";
 import { Formik } from "formik";
 
-const AddEventPopup = ({ visible, setVisible }) => {
+const AddCategoryPopup = ({ visible, setVisible }) => {
   const handleSubmit = () => {
     console.log("Submitted");
   };
@@ -14,7 +14,9 @@ const AddEventPopup = ({ visible, setVisible }) => {
           <Form onSubmit={handleSubmit}>
             <Modal
               maskClosable={false}
-              title={<h1 className="text-lg md:text-2xl mb-5">Add a Event</h1>}
+              title={
+                <h1 className="text-lg md:text-2xl mb-5">Add a Category</h1>
+              }
               open={visible}
               onCancel={() => setVisible(false)}
               footer={
@@ -42,9 +44,9 @@ const AddEventPopup = ({ visible, setVisible }) => {
               width={600}
             >
               <InputField
-                name="event"
-                placeholder="Enter event name"
-                label="Event"
+                name="category"
+                placeholder="Enter category name"
+                label="Category"
                 labelWidth
                 required
               />
@@ -56,4 +58,4 @@ const AddEventPopup = ({ visible, setVisible }) => {
   );
 };
 
-export default AddEventPopup;
+export default AddCategoryPopup;
