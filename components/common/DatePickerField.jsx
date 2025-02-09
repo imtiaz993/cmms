@@ -41,25 +41,25 @@ const DatePickerField = ({
       </label>
     )}
     <div className="w-full">
-    <Field
-      name={name}
-      component={FormikDatePicker}
-      placeholder={placeholder}
-      readOnly={readOnly}
-      className={`${!labelOnTop && label && "mt-2 sm:mt-0 "}` + className}
-      style={{
-        height: "44px",
-        width: "100%",
-        fontSize: "16px",
-        marginTop: labelOnTop ? "8px" : 0,
-        ...style,
-      }}
-    />
-    <ErrorMessage
-      name={name}
-      component="div"
-      className="text-red-500 text-sm mt-1"
-    />
+      <Field
+        name={name}
+        component={FormikDatePicker}
+        placeholder={placeholder}
+        readOnly={readOnly}
+        className={`${!labelOnTop && label && "mt-2 sm:mt-0 "}` + className}
+        style={{
+          height: "44px",
+          width: "100%",
+          fontSize: "16px",
+          marginTop: labelOnTop ? "8px" : 0,
+          ...style,
+        }}
+      />
+      <ErrorMessage
+        name={name}
+        component="div"
+        className="text-red-500 text-sm mt-1"
+      />
     </div>
   </div>
 );

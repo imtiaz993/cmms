@@ -35,6 +35,7 @@ import {
   DatabaseOutlined,
   EnvironmentOutlined,
   FileTextOutlined,
+  SettingOutlined,
   ShareAltOutlined,
   SwapOutlined,
   ToolOutlined,
@@ -67,6 +68,7 @@ export default function Layout({ children }) {
       icon: <SwapOutlined />,
       label: "Material Transfer",
     },
+    { key: "set-up", icon: <SettingOutlined />, label: "Set Up" },
   ];
 
   // Find the current item based on the current page
@@ -167,52 +169,22 @@ export default function Layout({ children }) {
             {currentPage !== "new" && !isNewEditDetails && (
               <>
                 <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
-                  {currentItem.icon} {currentPage}
+                  {currentItem.icon} {currentItem.label}
                 </h1>
-                <div className="px-5 md:px-10 flex gap-3 my-4">
-                  <Select
-                    value={activeLocation}
-                    onChange={(value) =>
-                      router.push(
-                        `/admin/${currentPage}?location=${value}&system=${activeSystem}`
-                      )
-                    }
-                    options={rigs.map((i) => ({
-                      label: i.name,
-                      value: i.id,
-                    }))}
-                    placeholder="Select Parent Location"
-                    className="w-full sm:w-44 !h-10 shadow-custom"
-                    dropdownRender={(menu) => (
-                      <div>
-                        <div
-                          style={{
-                            padding: "8px",
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          <EnvironmentOutlined
-                            style={{ marginRight: "8px", fontSize: "16px" }}
-                          />
-                          <span>Locations</span>
-                        </div>
-                        {menu}
-                      </div>
-                    )}
-                  />
-                  {activeLocation !== "12" && activeLocation !== "13" && (
+                {currentPage !== "set-up" && (
+                  <div className="px-5 md:px-10 flex gap-3 my-4">
                     <Select
-                      value={activeSystem}
+                      value={activeLocation}
                       onChange={(value) =>
                         router.push(
-                          `/admin/${currentPage}?location=${activeLocation}&system=${value}`
+                          `/admin/${currentPage}?location=${value}&system=${activeSystem}`
                         )
                       }
-                      options={rigs
-                        .find((i) => i.id === activeLocation)
-                        .systems.map((i) => ({ label: i.name, value: i.id }))}
-                      placeholder="Select System"
+                      options={rigs.map((i) => ({
+                        label: i.name,
+                        value: i.id,
+                      }))}
+                      placeholder="Select Parent Location"
                       className="w-full sm:w-44 !h-10 shadow-custom"
                       dropdownRender={(menu) => (
                         <div>
@@ -223,17 +195,49 @@ export default function Layout({ children }) {
                               alignItems: "center",
                             }}
                           >
-                            <ShareAltOutlined
+                            <EnvironmentOutlined
                               style={{ marginRight: "8px", fontSize: "16px" }}
                             />
-                            <span>Systems</span>
+                            <span>Locations</span>
                           </div>
                           {menu}
                         </div>
                       )}
                     />
-                  )}
-                </div>
+                    {activeLocation !== "12" && activeLocation !== "13" && (
+                      <Select
+                        value={activeSystem}
+                        onChange={(value) =>
+                          router.push(
+                            `/admin/${currentPage}?location=${activeLocation}&system=${value}`
+                          )
+                        }
+                        options={rigs
+                          .find((i) => i.id === activeLocation)
+                          .systems.map((i) => ({ label: i.name, value: i.id }))}
+                        placeholder="Select System"
+                        className="w-full sm:w-44 !h-10 shadow-custom"
+                        dropdownRender={(menu) => (
+                          <div>
+                            <div
+                              style={{
+                                padding: "8px",
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <ShareAltOutlined
+                                style={{ marginRight: "8px", fontSize: "16px" }}
+                              />
+                              <span>Systems</span>
+                            </div>
+                            {menu}
+                          </div>
+                        )}
+                      />
+                    )}
+                  </div>
+                )}
               </>
             )}
             {children}

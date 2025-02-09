@@ -11,6 +11,7 @@ const SelectField = ({
   readOnly,
   options,
   labelOnTop,
+  required,
 }) => {
   const FormikSelect = ({ field, form, options, ...props }) => {
     const handleChange = (value) => {
@@ -39,11 +40,11 @@ const SelectField = ({
       {label && (
         <label
           htmlFor={name}
-          className={`text-sm text-[#30343F] ${
-            !labelOnTop && "sm:text-right sm:min-w-[115px]"
+          className={`text-sm text-[#30343F] flex gap-1 items-center ${
+            !labelOnTop && "sm:justify-end sm:min-w-[115px]"
           }`}
         >
-          {label}
+          {label} {required && <span className="text-red-600 text-xl">*</span>}
         </label>
       )}
       <div className="w-full">

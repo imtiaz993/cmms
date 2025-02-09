@@ -119,7 +119,7 @@ const Documents = () => {
   }, [searchText, checkedList, documents]);
 
   return (
-    <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
+    <div className="max-h-[calc(100dvh-140px-16px-60px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
       <div>
         <ActionBar
           setSearchText={setSearchText}
@@ -152,8 +152,10 @@ const Documents = () => {
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
+            onChange: () => {},
+            className: "custom-pagination",
           }}
-          style={{ marginTop: 16, overflow: "auto", fontSize: "18px" }}
+          style={{ marginTop: 16, overflow: "auto" }}
         />
       </div>
     </div>

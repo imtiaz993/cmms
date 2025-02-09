@@ -1,4 +1,3 @@
-"use client";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { message, Radio, Table } from "antd";
@@ -14,6 +13,7 @@ import { useParams, useRouter } from "next/navigation";
 import { getFields } from "app/services/customFields";
 import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
+import AddFieldPopup from "@/components/addFieldPopup";
 
 const columns = [
   {
@@ -38,6 +38,7 @@ const AssetForm = () => {
   const router = useRouter();
   const { assets, isLoading, error } = useSelector((state) => state.assets);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
 
   const rowSelection = {
     selectedRowKeys,
@@ -173,6 +174,13 @@ const AssetForm = () => {
 
   return (
     <div className="ml-5 md:ml-10">
+      <AddFieldPopup
+        visible={addFieldPopupVisible}
+        setVisible={setAddFieldPopupVisible}
+        module="assets"
+        fields={fields}
+        setFields={setFields}
+      />
       <p className="text-sm text-[#828282]">
         Asset {" > "} {slug ? slug + " > Edit" : "Add New Asset"}
       </p>
@@ -436,8 +444,8 @@ const AssetForm = () => {
                 })}
                 <div className="md:col-span-2 sm:ml-32">
                   <Button
-                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-2"
-                    // onClick={() => setAddFieldPopupVisible(true)}
+                    className="!bg-[#4C4C51] !shadow-custom !border-white mt-2"
+                    onClick={() => setAddFieldPopupVisible(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}
                     text="Add More"
@@ -452,7 +460,7 @@ const AssetForm = () => {
                   </label>
 
                   <Button
-                    className="!bg-green-600 !shadow-custom !border-white !h-11 mt-2"
+                    className="!bg-green-600 !shadow-custom !border-white"
                     // onClick={() => setAddDocPopupVisible(true)}
                     fullWidth={false}
                     prefix={<UploadOutlined />}
@@ -460,7 +468,7 @@ const AssetForm = () => {
                   />
                 </div>
               </div>
-              <div className="text-right mt-5">
+              <div className="text-right mt-5 mb-5">
                 <Button
                   className="mr-2"
                   onClick={() => router.push("/admin/assets")}

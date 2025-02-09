@@ -9,6 +9,7 @@ import {
   ToolOutlined,
   DatabaseOutlined,
   SwapOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 
 const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
@@ -51,6 +52,11 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
       key: "material-transfer",
       icon: <SwapOutlined style={{ fontSize: "18px" }} />,
       label: <span style={{ fontSize: "18px" }}>Material Transfer</span>,
+    },
+    {
+      key: "set-up",
+      icon: <SettingOutlined style={{ fontSize: "18px" }} />,
+      label: <span style={{ fontSize: "18px" }}>Set Up</span>,
     },
   ];
 
