@@ -1,6 +1,7 @@
 "use client";
 import { Tabs } from "antd";
 import CompanyDetails from "./company-details";
+import Sites from "./sites";
 
 const SetUp = () => {
   const tabs = [
@@ -9,7 +10,7 @@ const SetUp = () => {
       label: "Company Details",
       children: <CompanyDetails />,
     },
-    { key: "sites", label: "Sites" },
+    { key: "sites", label: "Sites", children: <Sites /> },
     { key: "locations", label: "Locations" },
     { key: "categories", label: "Categories" },
     { key: "sub-categories", label: "Sub Categories" },

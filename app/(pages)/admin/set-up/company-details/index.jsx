@@ -8,7 +8,7 @@ import { useState } from "react";
 const CompanyDetails = () => {
   const [rigManagers, setRigManagers] = useState(1);
   return (
-    <div className="h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto pb-7 p-3 pl-0">
+    <div className="h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
       <Formik initialValues={{}}>
         {({ isSubmitting, handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
