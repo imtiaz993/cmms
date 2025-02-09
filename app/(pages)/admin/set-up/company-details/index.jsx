@@ -58,11 +58,13 @@ const CompanyDetails = () => {
                   label="Email Address"
                 />
                 {[...Array(rigManagers)].map((_, i) => (
-                  <InputField
-                    name={"rigManager" + i}
-                    placeholder="First Name Last Name"
-                    label="Rig Manager"
-                  />
+                  <div key={i}>
+                    <InputField
+                      name={"rigManager" + i}
+                      placeholder="First Name Last Name"
+                      label="Rig Manager"
+                    />
+                  </div>
                 ))}
                 <div className="sm:ml-32 flex flex-wrap gap-5">
                   <Button
