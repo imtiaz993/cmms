@@ -63,6 +63,7 @@ const Schedule = ({ schedule, loadingSchedule }) => {
       <Calendar
         cellRender={cellRender}
         onSelect={(date) => setSelectedDate(date.format("YYYY-MM-DD"))}
+        // headerRender={() => <h2>January 2025</h2>}
       />
     </div>
   );
