@@ -10,6 +10,8 @@ import {
 } from "antd";
 import {
   AppstoreOutlined,
+  DeleteOutlined,
+  DollarCircleOutlined,
   DownOutlined,
   ExclamationCircleFilled,
   ExportOutlined,
@@ -17,6 +19,7 @@ import {
   LogoutOutlined,
   PlusOutlined,
   SettingOutlined,
+  ShoppingCartOutlined,
   SwapOutlined,
   WarningFilled,
 } from "@ant-design/icons";
@@ -28,6 +31,7 @@ import { exportInventory } from "app/services/inventory";
 import CreatePurchaseOrderPopup from "../purchase-order/createPurchaseOrderPopup";
 import ChangeToAssetPopup from "./changeToAssetPopup";
 import Link from "next/link";
+import { LinkBroken } from "@/icons/index";
 
 const ActionBar = ({
   columns,
@@ -100,15 +104,23 @@ const ActionBar = ({
           className="sm:!w-[362px] searchBar"
         />
         <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mt-5">
-          <div className="flex gap-3">
+          <div className="flex gap-3 w-full md:w-auto">
             <Checkbox className="!mx-2" />
-            <div className="sm:min-w-56 overflow-hidden">
+            <div className="w-full sm:min-w-56 overflow-hidden">
               <Select
                 name="actions"
                 placeholder="Actions"
-                style={{ height: "36px", width: "100%" }}
+                style={{ height: "44px", width: "100%" }}
                 // onChange={handleActionsChange}
                 options={[
+                  {
+                    label: (
+                      <>
+                        <AppstoreOutlined /> Assign to Asset
+                      </>
+                    ),
+                    value: "assign_to_asset",
+                  },
                   {
                     label: (
                       <>
@@ -116,6 +128,22 @@ const ActionBar = ({
                       </>
                     ),
                     value: "damaged",
+                  },
+                  {
+                    label: (
+                      <>
+                        <LinkBroken /> Broken
+                      </>
+                    ),
+                    value: "broken",
+                  },
+                  {
+                    label: (
+                      <>
+                        <DeleteOutlined /> Dispose
+                      </>
+                    ),
+                    value: "dispose",
                   },
                   {
                     label: (
@@ -128,10 +156,19 @@ const ActionBar = ({
                   {
                     label: (
                       <>
-                        <AppstoreOutlined /> Assign to Asset
+                        <DollarCircleOutlined /> Sell
                       </>
                     ),
-                    value: "assign_to_asset",
+                    value: "sell",
+                  },
+                  {
+                    label: (
+                      <>
+                        <ShoppingCartOutlined />
+                        Add to Shipping Cart
+                      </>
+                    ),
+                    value: "shipping_cart",
                   },
                   {
                     label: (
@@ -144,31 +181,29 @@ const ActionBar = ({
                 ]}
               />
             </div>
-            <div className="sm:min-w-36 overflow-hidden">
-              <Dropdown
-                open={filterDropdown}
-                onOpenChange={setFilterDropdown}
-                dropdownRender={() => (
-                  <InventoryFilter
-                    closeDropdown={() => setFilterDropdown(false)}
-                  />
-                )}
-                trigger={["click"]}
-                arrow
-                placement="bottomCenter"
+            <Dropdown
+              open={filterDropdown}
+              onOpenChange={setFilterDropdown}
+              dropdownRender={() => (
+                <InventoryFilter
+                  closeDropdown={() => setFilterDropdown(false)}
+                />
+              )}
+              trigger={["click"]}
+              arrow
+              placement="bottomCenter"
+            >
+              <AntButton
+                text="Filter"
+                style={{ padding: "4px 0px", height: "44px" }}
+                className="flex !justify-between w-full md:min-w-36 !p-3"
               >
-                <AntButton
-                  text="Filter"
-                  style={{ padding: "4px 0px", width: "144px", height: "36px" }}
-                  className="flex !justify-between w-full !p-3"
-                >
-                  <span> Filter</span>
-                  <DownOutlined />
-                </AntButton>
-              </Dropdown>
-            </div>
+                <span> Filter</span>
+                <DownOutlined />
+              </AntButton>
+            </Dropdown>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:flex items-center gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:flex items-center gap-2 md:gap-3">
             {/* <Button
             text="Purchase Order"
             outlined
@@ -192,41 +227,41 @@ const ActionBar = ({
               onClick={() => setFilterDropdown(!filterDropdown)}
             />
           </Dropdown> */}
-          <Dropdown
-            dropdownRender={() => (
-              <Menu>
-                <Menu.ItemGroup title="Select Columns">
-                  {options.map((option) => (
-                    <Menu.Item
-                      key={option.value}
-                      style={{ display: "flex", alignItems: "center" }}
-                      onClick={(e) => e?.stopPropagation()}
-                    >
-                      <Checkbox
-                        value={option.value}
-                        checked={checkedList.includes(option.value)}
-                        onChange={() => {
-                          handleCheckboxChange(option.value);
-                        }}
+            <Dropdown
+              dropdownRender={() => (
+                <Menu>
+                  <Menu.ItemGroup title="Select Columns">
+                    {options.map((option) => (
+                      <Menu.Item
+                        key={option.value}
+                        style={{ display: "flex", alignItems: "center" }}
+                        onClick={(e) => e?.stopPropagation()}
                       >
-                        {option.label}
-                      </Checkbox>
-                    </Menu.Item>
-                  ))}
-                </Menu.ItemGroup>
-              </Menu>
-            )}
-            trigger={["click"]}
-            arrow
-            placement="bottomCenter"
-          >
-            <Button
-              text="Column Settings"
-              outlined
-              style={{ padding: "4px 24px" }}
-              prefix={<SettingOutlined />}
-            />
-          </Dropdown>
+                        <Checkbox
+                          value={option.value}
+                          checked={checkedList.includes(option.value)}
+                          onChange={() => {
+                            handleCheckboxChange(option.value);
+                          }}
+                        >
+                          {option.label}
+                        </Checkbox>
+                      </Menu.Item>
+                    ))}
+                  </Menu.ItemGroup>
+                </Menu>
+              )}
+              trigger={["click"]}
+              arrow
+              placement="bottomCenter"
+            >
+              <Button
+                text="Column Settings"
+                outlined
+                style={{ padding: "4px 24px" }}
+                prefix={<SettingOutlined />}
+              />
+            </Dropdown>
 
             <Button
               text="Export"
