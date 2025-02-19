@@ -314,9 +314,9 @@ const AssetForm = () => {
                   placeholder="Serial #"
                   label="Serial #"
                 />
-                <div className="md:col-span-2 font-semibold md:text-lg">
+                <p className="md:col-span-2 font-semibold md:text-lg">
                   Asset Maintenance
-                </div>
+                </p>
                 <Table
                   loading={isLoading}
                   size={"large"}
@@ -350,7 +350,7 @@ const AssetForm = () => {
                 />
                 <DatePickerField name="maintStartDate" label="Start Date" />
                 <div className="md:col-span-2 sm:flex items-center">
-                  <label className="text-sm text-[#30343F] sm:text-right sm:min-w-[115px]">
+                  <label className="text-sm sm:text-right sm:min-w-[115px]">
                     Criticality
                   </label>
                   <Radio.Group name="criticality" className="">
@@ -369,7 +369,7 @@ const AssetForm = () => {
                   </Radio.Group>
                 </div>
                 <div className="md:col-span-2 sm:flex items-center">
-                  <label className="text-sm text-[#30343F] sm:text-right sm:min-w-[115px]">
+                  <label className="text-sm sm:text-right sm:min-w-[115px]">
                     Maint. Status
                   </label>
                   <Radio.Group name="maintStatus" className="">
@@ -455,7 +455,7 @@ const AssetForm = () => {
                   Asset Image
                 </p>
                 <div className={`w-full flex items-center gap-3`}>
-                  <label className="text-sm text-[#30343F] text-right min-w-[115px]">
+                  <label className="text-sm text-right min-w-[115px]">
                     Upload
                   </label>
 

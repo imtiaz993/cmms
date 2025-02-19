@@ -309,7 +309,7 @@ const CreateInventory = () => {
                   <InputField name="notes" placeholder="Model" label="Notes" />
 
                   <div className={`w-full flex items-center gap-3`}>
-                    <label className="text-sm text-[#30343F] text-right min-w-[115px]">
+                    <label className="text-right min-w-[115px]">
                       Upload Image
                     </label>
 

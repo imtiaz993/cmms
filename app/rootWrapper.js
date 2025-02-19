@@ -24,6 +24,26 @@ export default function RootWrapper({ children }) {
               Select: {
                 colorPrimary: "#efbf60",
                 controlOutline: "#efbf60",
+                hoverBorderColor: "#efbf60",
+                colorBgElevated: "var(--background-secondary-color)",
+                optionSelectedBg: "#efbf60",
+              },
+              Input: {
+                colorPrimary: "#efbf60",
+                controlOutline: "#efbf60",
+                hoverBorderColor: "#efbf60",
+              },
+              DatePicker: {
+                colorPrimary: "#efbf60",
+                controlOutline: "#efbf60",
+                hoverBorderColor: "#efbf60",
+                colorBgElevated: "var(--background-secondary-color)",
+              },
+              TimePicker: {
+                colorPrimary: "#efbf60",
+                controlOutline: "#efbf60",
+                hoverBorderColor: "#efbf60",
+                colorBgElevated: "var(--background-secondary-color)",
               },
               Tabs: {
                 colorPrimary: "#efbf60",
@@ -32,14 +52,36 @@ export default function RootWrapper({ children }) {
               Menu: {
                 itemSelectedBg: "#efbf60",
               },
+              Dropdown: {
+                colorBgElevated: "var(--background-secondary-color)",
+              },
               Radio: {
                 colorPrimary: "#efbf60",
                 colorPrimaryHover: "#efbf60",
               },
               Table: {
-                colorBgContainer: "var(--background-color)",
-                headerBg : "#1D1C1F"
-              }
+                colorPrimary: "var(--background-color)",
+                headerBg: "var(--background-secondary-color)",
+                rowHoverBg: "var(--background-secondary-color)",
+              },
+              Pagination: {
+                colorPrimary: "#efbf60",
+                colorPrimaryHover: "#efbf60",
+              },
+              Modal: {
+                colorPrimary: "var(--background-color)",
+                colorBgElevated: "var(--background-color)",
+                colorPrimaryHover: "#efbf60",
+              },
+              Calendar: {
+                colorPrimary: "#efbf60",
+                colorPrimaryHover: "#efbf60",
+                itemActiveBg: "var(--background-secondary-color)",
+              },
+              Checkbox: {
+                colorPrimary: "#efbf60",
+                colorPrimaryHover: "#efbf60",
+              },
             },
           }}
         >
