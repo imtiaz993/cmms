@@ -108,7 +108,7 @@ const AddFieldForm = ({ onAddField }) => {
               placeholder="Select field type"
               value={values.type || undefined}
               onChange={(value) => setFieldValue("type", value)}
-              style={{ height: "36px", width: "100%", marginTop: "12px" }}
+              style={{ height: "44px", width: "100%", marginTop: "12px" }}
             >
               <Option value="text">Text</Option>
               <Option value="number">Number</Option>

@@ -25,41 +25,41 @@ const InventoryDetailsPopup = ({ visible, setVisible, part }) => {
         }
       >
         <div className="mt-5 grid grid-cols-2">
-          <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
             Site
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>
-          <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
             Location
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">-</p>
-          <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
             Date Received
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">-</p>
-          <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
             Part #
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>
-          <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-b-0">
             Tag ID
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>{" "}
-          <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
             Quantity
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>{" "}
-          <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
             Description
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0 truncate">
             {"-"}
           </p>
-          <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
             Notes
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>
-          <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border">Image</p>
+          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0">Image</p>
           <p className="p-2 md:px-3 md:py-2 border">
             <a className="underline"> View Image </a> <EyeOutlined />
           </p>

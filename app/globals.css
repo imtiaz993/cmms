@@ -27,6 +27,7 @@ textarea:focus {
   --secondary-text: #282828;
   --tertiary-text: #3f3f3f;
   --shadow-custom: 0px 5px 20px 0px #0000000d;
+  --border-color: #d6d6d6;
 }
 
 .dark-mode {
@@ -36,6 +37,7 @@ textarea:focus {
   --secondary-text: #d6d6d6;
   --tertiary-text: #bebebe;
   --shadow-custom: 0px 4px 20px 0px #efbf6026;
+  --border-color: #4c4c51;
 }
 
 html,
@@ -50,7 +52,12 @@ label {
 }
 
 p {
-color: var(--secondary-text);
+  color: var(--secondary-text);
+  border-color: var(--border-color);
+}
+
+div {
+  border-color:  var(--border-color);
 }
 
 h1,

@@ -3,10 +3,12 @@
 import Button from "@/components/common/Button";
 import Tabs from "./components/tabs";
 import {
+  ArrowDownOutlined,
   ArrowLeftOutlined,
   CheckCircleOutlined,
   DeleteOutlined,
   DollarOutlined,
+  DownOutlined,
   EditOutlined,
   ExclamationCircleFilled,
   LeftOutlined,
@@ -125,6 +127,7 @@ const AssetDetail = () => {
                 name="actions"
                 placeholder="Actions"
                 className="!h-11 md:!min-w-52 secondary-select !text-white"
+                suffixIcon={<DownOutlined style={{ color: "white" }} />}
                 // onChange={handleActionsChange}
                 options={[
                   {
@@ -198,34 +201,34 @@ const AssetDetail = () => {
           <div className="mt-5 flex flex-col md:flex-row gap-3 md:gap-5">
             <div className="border w-full min-h-10 md:w-2/12"></div>
             <div className="md:w-5/12 grid grid-cols-2">
-              <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Asset ID
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
                 {details?.dashboard?.assetNumber || "-"}
               </p>
-              <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Purchase Date
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">-</p>
-              <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Cost
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">-</p>
-              <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Brand
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
                 {details?.dashboard.make || "-"}
               </p>
-              <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Model
               </p>
 
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
                 {details?.dashboard.model || "-"}
               </p>
-              <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border">
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border">
                 Description
               </p>
               <p className="p-2 md:px-3 md:py-2 border truncate">
@@ -233,7 +236,7 @@ const AssetDetail = () => {
               </p>
             </div>
             <div className="md:w-5/12 grid grid-cols-2">
-              <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Site
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
@@ -241,24 +244,26 @@ const AssetDetail = () => {
                   (rig) => rig.id === details?.dashboard?.physicalLocation
                 )?.name || "-"}
               </p>
-              <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Location
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">-</p>
-              <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
-                Caregory
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
+                Category
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">-</p>
-              <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Sub-Category
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>
-              <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border border-b-0">
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Assigned to
               </p>
 
               <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>
-              <p className="p-2 md:px-3 md:py-2 bg-[#4C4C51] border">Status</p>
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border">
+                Status
+              </p>
               <p className="p-2 md:px-3 md:py-2 border truncate">
                 {details?.dashboard.maintStatus || "-"}
               </p>

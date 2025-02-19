@@ -105,7 +105,7 @@ const WorkOrderForm = () => {
                   />
                 </div>
                 <div className="md:col-span-2 sm:flex items-center">
-                  <label className="text-sm text-[#30343F] sm:text-right sm:min-w-[115px]">
+                  <label className="text-sm sm:text-right sm:min-w-[115px]">
                     Priority Level
                   </label>
                   <Radio.Group name="priorityLevel" className="">
@@ -197,7 +197,7 @@ const WorkOrderForm = () => {
                   Upload Image
                 </p>
                 <div className={`w-full flex items-center gap-3`}>
-                  <label className="text-sm text-[#30343F] text-right min-w-[115px]">
+                  <label className="text-sm text-right min-w-[115px]">
                     Upload
                   </label>
 
@@ -213,7 +213,7 @@ const WorkOrderForm = () => {
                   Upload Document
                 </p>
                 <div className={`w-full flex items-center gap-3`}>
-                  <label className="text-sm text-[#30343F] text-right min-w-[115px]">
+                  <label className="text-sm text-right min-w-[115px]">
                     Upload
                   </label>
 

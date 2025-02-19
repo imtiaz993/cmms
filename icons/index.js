@@ -38,13 +38,13 @@ export const EditPagePencil = () => {
     >
       <path
         d="M6.875 3H2.5C2.16848 3 1.85054 3.1317 1.61612 3.36612C1.3817 3.60054 1.25 3.91848 1.25 4.25V13C1.25 13.3315 1.3817 13.6495 1.61612 13.8839C1.85054 14.1183 2.16848 14.25 2.5 14.25H11.25C11.5815 14.25 11.8995 14.1183 12.1339 13.8839C12.3683 13.6495 12.5 13.3315 12.5 13V8.625"
-        stroke="#282828"
+        stroke="var(--primary-text)"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
       <path
         d="M11.5625 2.06215C11.8111 1.81351 12.1484 1.67383 12.5 1.67383C12.8516 1.67383 13.1889 1.81351 13.4375 2.06215C13.6861 2.31079 13.8258 2.64802 13.8258 2.99965C13.8258 3.35128 13.6861 3.68851 13.4375 3.93715L7.5 9.87465L5 10.4997L5.625 7.99965L11.5625 2.06215Z"
-        stroke="#282828"
+        stroke="var(--primary-text)"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
@@ -64,31 +64,31 @@ export const LinkBroken = () => {
       <g clip-path="url(#clip0_2301_56979)">
         <path
           d="M3.14002 7.62988L1.27002 9.49988C0.775392 9.99654 0.497681 10.6689 0.497681 11.3699C0.497681 12.0708 0.775392 12.7432 1.27002 13.2399V13.2399C1.76668 13.7345 2.43908 14.0122 3.14002 14.0122C3.84097 14.0122 4.51337 13.7345 5.01002 13.2399L6.12002 12.1299"
-          stroke="#BEBEBE"
+          stroke="var(--primary-text)"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
         <path
           d="M8.99997 9.99973H10.86C11.5601 9.99973 12.2316 9.72158 12.7267 9.22649C13.2218 8.73139 13.5 8.0599 13.5 7.35973V7.35973C13.5 6.65956 13.2218 5.98806 12.7267 5.49296C12.2316 4.99787 11.5601 4.71973 10.86 4.71973H8.21997"
-          stroke="#BEBEBE"
+          stroke="var(--primary-text)"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
         <path
           d="M7 1L6.5 3"
-          stroke="#BEBEBE"
+          stroke="var(--primary-text)"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
         <path
           d="M0.5 4L2.5 5"
-          stroke="#BEBEBE"
+          stroke="var(--primary-text)"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
         <path
           d="M3 1L4 3"
-          stroke="#BEBEBE"
+          stroke="var(--primary-text)"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
