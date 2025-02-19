@@ -14,38 +14,52 @@ textarea::placeholder {
   color: #ffffff40 !important;
 }
 textarea:hover {
-  border: 1px solid #f0bf60 !important;
+  border: 1px solid #efbf60 !important;
 }
 textarea:focus {
-  border: 1px solid #f0bf60 !important;
+  border: 1px solid #efbf60 !important;
 }
 
 :root {
-  --background-color: #f3f3f3;
-  --background-secondary-color: #ffffff;
-  --text-color: #000000;
+  --background-color: #ffffff;
+  --background-secondary-color: #f3f3f3;
+  --primary-text: #000000;
+  --secondary-text: #282828;
+  --tertiary-text: #3f3f3f;
+  --shadow-custom: 0px 5px 20px 0px #0000000d;
 }
 
 .dark-mode {
-  --background-color: #000000; /* #141414; */
-  --background-secondary-color: #141414;
-  --text-color: #ffffff;
+  --background-color: #0f0e13; /* #141414; */
+  --background-secondary-color: #1d1c1f;
+  --primary-text: #ffffff;
+  --secondary-text: #d6d6d6;
+  --tertiary-text: #bebebe;
+  --shadow-custom: 0px 4px 20px 0px #efbf6026;
 }
 
 html,
 body {
   height: 100% !important;
-  background-color: var(--background-color);
+  background-color: var(--background-secondary-color);
+  z-index: -10;
+  /* background-image: url("/images/body-background.png"); */
 }
-label,
-p,
+label {
+  color: var(--tertiary-text);
+}
+
+p {
+color: var(--secondary-text);
+}
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  color: var(--text-color);
+  color: var(--primary-text);
 }
 ::-webkit-scrollbar {
   width: 10px;
@@ -107,8 +121,8 @@ h6 {
 .ant-card-body {
   padding-left: 10px !important;
   padding-right: 10px !important;
-  background-color: var(--background-secondary-color) !important;
-  border-color: var(--text-color) !important;
+  background-color: var(--background-color) !important;
+  border-color: var(--primary-text) !important;
 }
 .ant-drawer-content-wrapper {
   width: 300px !important;
@@ -217,8 +231,8 @@ h6 {
 }
 
 .secondary-select .ant-select-selector {
-  background-color: #f0bf60 !important;
-  border-color: #f0bf60 !important;
+  background-color: #efbf60 !important;
+  border-color: #efbf60 !important;
   color: #fff !important;
 }
 .secondary-select .ant-select-selection-placeholder {

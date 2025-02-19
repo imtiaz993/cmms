@@ -9,16 +9,19 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "var(--background-secondary-color)",
-        secondary: "#F0BF60",
+        primary: "var(--background-color)",
+        bg_secondary: "var(--background-secondary-color)",
+        secondary: "#EFBF60",
         tertiary: "#FFF",
         quaternary: "",
         quinary: "",
         senary: "",
       },
-      backgroundImage: {},
+      backgroundImage: {
+        body: "url('/images/body-background.png')",
+      },
       boxShadow: {
-        custom: "0px 5px 20px 0px #0000000D",
+        custom: "var(--shadow-custom)",
       },
     },
   },

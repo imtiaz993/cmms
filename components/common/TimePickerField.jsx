@@ -44,7 +44,7 @@ const TimePickerField = ({
     {label && (
       <label
         htmlFor={name}
-        className={`text-sm text-[#30343F] ${
+        className={`text-sm ${
           !labelOnTop && "sm:text-right sm:min-w-[115px]"
         }`}
       >

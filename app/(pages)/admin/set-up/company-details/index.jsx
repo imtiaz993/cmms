@@ -127,7 +127,7 @@ const CompanyDetails = () => {
                 <div>
                   <Button
                     text="Delete Company, User Accounts & All Data"
-                    className="!bg-red-500 w-full sm:w-auto"
+                    className="!bg-red-500 !border-none w-full sm:w-auto"
                     fullWidth={false}
                     prefix={<CloseOutlined />}
                   />
