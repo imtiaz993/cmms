@@ -28,7 +28,7 @@ const ColumnChart = ({ data }) => {
           fontSize: "14px",
           fontWeight: "400",
           labels: {
-            colors: ["var(--text-color)", "var(--text-color)"],
+            colors: ["var(--primary-text)", "var(--primary-text)"],
           },
           markers: {
             offsetX: -5,
@@ -59,7 +59,7 @@ const ColumnChart = ({ data }) => {
         xaxis: {
           labels: {
             style: {
-              colors: "var(--text-color)",
+              colors: "var(--primary-text)",
             },
           },
           categories: months, // Dynamically set categories
@@ -70,7 +70,7 @@ const ColumnChart = ({ data }) => {
         yaxis: {
           labels: {
             style: {
-              colors: "var(--text-color)",
+              colors: "var(--primary-text)",
             },
           },
         },

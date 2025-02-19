@@ -151,7 +151,9 @@ export default function Layout({ children }) {
 
   return (
     <ConfigProvider
-      theme={{ algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm }}
+      theme={{
+        algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
+      }}
     >
       <div>
         <Appbar

@@ -32,7 +32,7 @@ const BarChart = ({ categories, data }) => (
       xaxis: {
         labels: {
           style: {
-            colors: "var(--text-color)",
+            colors: "var(--primary-text)",
           },
         },
         categories: categories, // Categories dynamically passed from the parent
@@ -40,7 +40,7 @@ const BarChart = ({ categories, data }) => (
       yaxis: {
         labels: {
           style: {
-            colors: "var(--text-color)",
+            colors: "var(--primary-text)",
           },
         },
       },
