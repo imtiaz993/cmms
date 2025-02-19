@@ -26,7 +26,7 @@ const InputField = ({
         <label
           htmlFor={name}
           className={
-            `text-sm text-[#30343F] flex gap-1 items-center ${
+            `text-sm flex gap-1 items-center ${
               !labelOnTop && !labelWidth && "sm:justify-end sm:min-w-[115px] "
             }` + labelWidth
           }

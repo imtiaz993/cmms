@@ -86,7 +86,7 @@ const Dashboard = () => {
           >
             <div className="overflow-auto">
               <div className="mx-6 font-medium text-sm py-2">
-                <p className="bg-[#EFBF60] px-2 py-1">
+                <p className="bg-secondary px-2 py-1">
                   <strong>Today</strong> 2/27/2021
                 </p>
                 <div className="flex gap-1 mt-2 px-2">

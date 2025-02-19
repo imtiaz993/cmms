@@ -40,7 +40,7 @@ const SelectField = ({
       {label && (
         <label
           htmlFor={name}
-          className={`text-sm text-[#30343F] flex gap-1 items-center ${
+          className={`text-sm flex gap-1 items-center ${
             !labelOnTop && "sm:justify-end sm:min-w-[115px]"
           }`}
         >
