@@ -9,11 +9,7 @@ const ColumnChart = ({ data }) => {
       series={[
         {
           name: "Created",
-          data: created,
-        },
-        {
-          name: "Completed",
-          data: completed,
+          data: [3500, 2500, 2000, 3000, 3200, 3900],
         },
       ]}
       options={{
@@ -23,7 +19,7 @@ const ColumnChart = ({ data }) => {
             show: false,
           },
         },
-        colors: ["#009E60", "#40E0D0"],
+        colors: ["#FBBF24"],
         legend: {
           fontSize: "14px",
           fontWeight: "400",
@@ -44,14 +40,11 @@ const ColumnChart = ({ data }) => {
         plotOptions: {
           bar: {
             horizontal: false,
-            columnWidth: "50%",
-            endingShape: "rounded",
+            columnWidth: "15%",
           },
         },
         stroke: {
-          show: true,
-          width: 10,
-          colors: ["transparent"],
+          show: false,
         },
         dataLabels: {
           enabled: false,
@@ -62,7 +55,20 @@ const ColumnChart = ({ data }) => {
               colors: "var(--primary-text)",
             },
           },
-          categories: months, // Dynamically set categories
+          categories: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            // "July",
+            // "Aug",
+            // "Sep",
+            // "Oct",
+            // "Nov",
+            // "Dec",
+          ], // Dynamically set categories
           crosshairs: {
             show: false,
           },
@@ -77,62 +83,62 @@ const ColumnChart = ({ data }) => {
         tooltip: {
           theme: "dark",
         },
-        responsive: [
-          {
-            breakpoint: 1600,
-            options: {
-              chart: {
-                width: 370,
-              },
-              plotOptions: {
-                bar: {
-                  columnWidth: "60%",
-                },
-              },
-              stroke: {
-                width: 5,
-              },
-            },
-          },
-          {
-            breakpoint: 1500,
-            options: {
-              chart: {
-                width: 310,
-              },
-            },
-          },
-          {
-            breakpoint: 1280,
-            options: {
-              chart: {
-                width: 500,
-              },
-            },
-          },
-          {
-            breakpoint: 768,
-            options: {
-              chart: {
-                width: 370,
-              },
-              legend: {
-                fontSize: "12px",
-              },
-            },
-          },
-          {
-            breakpoint: 430,
-            options: {
-              chart: {
-                width: 300,
-              },
-            },
-          },
-        ],
+        // responsive: [
+        //   {
+        //     breakpoint: 1600,
+        //     options: {
+        //       chart: {
+        //         width: 370,
+        //       },
+        //       plotOptions: {
+        //         bar: {
+        //           columnWidth: "60%",
+        //         },
+        //       },
+        //       stroke: {
+        //         width: 5,
+        //       },
+        //     },
+        //   },
+        //   {
+        //     breakpoint: 1500,
+        //     options: {
+        //       chart: {
+        //         width: 310,
+        //       },
+        //     },
+        //   },
+        //   {
+        //     breakpoint: 1280,
+        //     options: {
+        //       chart: {
+        //         width: 500,
+        //       },
+        //     },
+        //   },
+        //   {
+        //     breakpoint: 768,
+        //     options: {
+        //       chart: {
+        //         width: 370,
+        //       },
+        //       legend: {
+        //         fontSize: "12px",
+        //       },
+        //     },
+        //   },
+        //   {
+        //     breakpoint: 430,
+        //     options: {
+        //       chart: {
+        //         width: 300,
+        //       },
+        //     },
+        //   },
+        // ],
       }}
       type="bar"
-      width={400}
+      width={"100%"}
       height={350}
     />
   );

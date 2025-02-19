@@ -1,5 +1,5 @@
 "use client";
-import { Card, message, Segmented, Skeleton } from "antd";
+import { Card, message } from "antd";
 import Schedule from "./components/schedule";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
@@ -8,10 +8,11 @@ import {
   getDashboardStats,
 } from "app/services/dashboard";
 import { Octagon } from "@/icons/index";
-const BarChart = dynamic(() => import("./components/barChart"), {
+
+const ColumnChart = dynamic(() => import("./components/columnChart"), {
   ssr: false,
 });
-const ColumnChart = dynamic(() => import("./components/columnChart"), {
+const LineChart = dynamic(() => import("./components/lineChart"), {
   ssr: false,
 });
 
@@ -57,7 +58,19 @@ const Dashboard = () => {
           loading={false}
           title={<h2 className="text-center">Asset Costs</h2>}
         >
-          Chart Here...
+          <div className="flex justify-center w-full">
+            {stats ? (
+              <div>
+                <ColumnChart data={stats?.unPlanned} />
+                <p className="mt-2 text-center">
+                  Lorem ipsum dolor sit amet consectetur. Mauris nisl amet est
+                  elit eu amet cursus.
+                </p>
+              </div>
+            ) : (
+              <p className="text-center my-5"> Loading... </p>
+            )}
+          </div>
         </Card>
         <div className="xl:w-7/12 flex flex-col xl:flex-row gap-6">
           <Card
@@ -67,13 +80,17 @@ const Dashboard = () => {
               <h2 className="text-center">Planned & Unplanned Work Orders</h2>
             }
           >
-            <div className="flex justify-center">
-              {stats ? (
-                <ColumnChart data={stats?.unPlanned} />
-              ) : (
-                <p className="text-center my-5"> Loading... </p>
-              )}
-            </div>
+            {stats ? (
+              <div>
+                <LineChart />
+                <p className="mt-2 text-center">
+                  Lorem ipsum dolor sit amet consectetur. Mauris nisl amet est
+                  elit eu amet cursus.
+                </p>
+              </div>
+            ) : (
+              <p className="text-center my-5"> Loading... </p>
+            )}
           </Card>
           <Card
             loading={false}
@@ -175,14 +192,25 @@ const Dashboard = () => {
             className="!bg-primary h-96"
             title={<h2 className="text-center">Inventory Cost</h2>}
           >
-            Chart Here...
+            <div className="flex justify-center">
+              {stats ? (
+                <div>
+                  <ColumnChart data={stats?.unPlanned} />
+                  <p className="mt-2">
+                    Lorem ipsum dolor sit amet consectetur. Mauris nisl amet est
+                    elit eu amet cursus.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-center my-5"> Loading... </p>
+              )}
+            </div>
           </Card>
         </div>
         <div className="grid gap-6 xl:w-7/12">
           <Card
             loading={false}
             className="!bg-primary"
-            // title={<p className="text-sm md:text-base">Schedule</p>}
             style={{ overflow: "hidden" }}
           >
             <div>
@@ -198,52 +226,6 @@ const Dashboard = () => {
           </Card>
         </div>
       </div>
-      {/* <div className="grid xl:grid-cols-3 gap-6">
-        <Card
-          loading={false}
-          className="!bg-primary"
-          title={
-            <p className="text-sm md:text-base">
-              Planned Work Orders{" "}
-              <sup className="text-xs font-normal">(Last 3 months)</sup>
-            </p>
-          }
-        >
-          <div className="flex justify-center">
-            {stats ? (
-              <ColumnChart data={stats?.planned} />
-            ) : (
-              <p className="text-center my-5"> Loading... </p>
-            )}
-          </div>
-        </Card>
-        <Card
-          loading={false}
-          className="!bg-primary"
-          title={<p className="text-sm md:text-base">Projected Man Hours</p>}
-        >
-          <div className="flex justify-center">
-            <Segmented
-              options={["30 Days", "60 Days", "90 Days"]}
-              defaultValue="30 Days"
-              onChange={(value) => {
-                const range = value.replace(" ", ""); // Converts "30 Days" to "30Days"
-                setActiveManHoursTab(range);
-              }}
-            />
-          </div>
-          <div className="flex justify-center">
-            {stats ? (
-              <BarChart
-                categories={stats[activeManHoursTab]?.Categories || []}
-                data={stats[activeManHoursTab]?.data || []}
-              />
-            ) : (
-              <p className="text-center my-5"> Loading... </p>
-            )}
-          </div>
-        </Card>
-      </div> */}
     </div>
   );
 };
