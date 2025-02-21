@@ -48,8 +48,8 @@ export default function Layout({ children }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const currentPage = pathname.split("/")[2] || "dashboard";
-  const activeLocation = searchParams.get("location") || "1";
-  const activeSystem = searchParams.get("system") || "1";
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const isNewEditDetails = pathname.split("/")[3];
 
   const items = [
@@ -214,9 +214,12 @@ export default function Layout({ children }) {
                             `/admin/${currentPage}?location=${activeLocation}&system=${value}`
                           )
                         }
-                        options={rigs
-                          .find((i) => i.id === activeLocation)
-                          .systems.map((i) => ({ label: i.name, value: i.id }))}
+                        options={activeLocation && rigs
+                          .find((i) => i?.id === activeLocation)
+                          .systems?.map((i) => ({
+                            label: i.name,
+                            value: i.id,
+                          }))}
                         placeholder="Select System"
                         className="w-full sm:w-44 !h-10 shadow-custom"
                         dropdownRender={(menu) => (
