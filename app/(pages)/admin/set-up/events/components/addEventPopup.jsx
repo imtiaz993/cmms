@@ -1,27 +1,56 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import { Form, Modal } from "antd";
+import { createEvent } from "app/services/setUp/events";
 import { Formik } from "formik";
+import * as Yup from "yup";
 
 const AddEventPopup = ({ visible, setVisible }) => {
-  const handleSubmit = () => {
+  const initialValues = {
+    event: "",
+  };
+  const validationSchema = Yup.object({
+    event: Yup.string().required("Event Name is required"),
+  });
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log("Submitted");
+    const { status, data } = await createEvent(values);
+    setSubmitting(false);
+    if (status === 200) {
+      message.success(data.message);
+      resetForm();
+      setVisible(false);
+    } else {
+      message.error(data.error);
+    }
   };
   return (
     <div className="">
-      <Formik initialValues={{}} onSubmit={handleSubmit}>
-        {({ isSubmitting, handleSubmit }) => (
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          handleSubmit(values, setSubmitting, resetForm);
+        }}
+      >
+        {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
             <Modal
               maskClosable={false}
               title={<h1 className="text-lg md:text-2xl mb-5">Add a Event</h1>}
               open={visible}
-              onCancel={() => setVisible(false)}
+              onCancel={() => {
+                setVisible(false);
+                resetForm();
+              }}
               footer={
                 <div>
                   <Button
                     className="mr-4"
-                    onClick={() => setVisible(false)}
+                    onClick={() => {
+                      setVisible(false);
+                      resetForm();
+                    }}
                     outlined
                     size="small"
                     text="Cancel"
