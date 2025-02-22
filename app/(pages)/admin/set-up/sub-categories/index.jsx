@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./components/actionBar";
 import { Table } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { useSearchParams } from "next/navigation";
+import { filterSubCategories, getSubCategories } from "app/services/setUp/subCategories";
 
 const columns = [
   {
@@ -30,6 +32,9 @@ const columns = [
 const defaultCheckedList = columns.map((item) => item.key);
 
 const SubCategories = () => {
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const [subCategories, setSubCategories] = useState([
     {
       subCategory: "Sub Category 1",
@@ -50,14 +55,15 @@ const SubCategories = () => {
 
   useEffect(() => {
     const handleFetch = async () => {
-      // const { status, data } = await getDocuments();
-      // if (status === 200) {
-      //   setFetchingDocuments(false);
-      //   setDocuments(data.data);
-      // } else {
-      //   setFetchingDocuments(false);
-      //   message.error(data.error);
-      // }
+      setLoading(true);
+      const { status, data } = await getSubCategories();
+      if (status === 200) {
+        setLoading(false);
+        setSubCategories(data.data);
+      } else {
+        setLoading(false);
+        message.error(data.error);
+      }
     };
     handleFetch();
   }, []);
@@ -70,6 +76,36 @@ const SubCategories = () => {
       )
     );
   }, [searchText, subCategories, checkedList]);
+
+  useEffect(() => {
+    if (activeLocation) {
+      const fetchFilteredSubCategories = async () => {
+        setLoading(true);
+        try {
+          const { status, data } = await filterSubCategories({
+            location: activeLocation,
+            system: activeSystem ? activeSystem : "",
+          });
+
+          if (status === 200) {
+            setSubCategories(data.data);
+          } else {
+            message.error(
+              data?.message || "Failed to fetch filtered sub categories"
+            );
+          }
+        } catch (error) {
+          message.error("Error fetching filtered sub categories");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchFilteredSubCategories();
+    } else {
+      setSubCategories(subCategories);
+    }
+  }, [activeLocation, activeSystem, subCategories]);
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">

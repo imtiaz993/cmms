@@ -2,27 +2,63 @@ import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
 import { Form, Modal } from "antd";
+import { createSite } from "app/services/setUp/sites";
 import { Formik } from "formik";
+import * as Yup from "yup";
 
 const AddSitePopup = ({ visible, setVisible }) => {
-  const handleSubmit = () => {
-    console.log("Submitted");
+  const initialValues = {
+    site: "",
+    description: "",
+    address: "",
+    apartment: "",
+    city: "",
+    state: "",
+    zip: "",
+    country: "",
+  };
+  const validationSchema = Yup.object({
+    site: Yup.string().required("Site name is required"),
+  });
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
+    console.log("Submitted", values);
+    const { status, data } = await createSite(values);
+    setSubmitting(false);
+    if (status === 200) {
+      message.success(data.message);
+      resetForm();
+      setVisible(false);
+    } else {
+      message.error(data.error);
+    }
   };
   return (
     <div className="">
-      <Formik initialValues={{}} onSubmit={handleSubmit}>
-        {({ isSubmitting, handleSubmit }) => (
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          handleSubmit(values, setSubmitting, resetForm);
+        }}
+      >
+        {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
             <Modal
               maskClosable={false}
               title={<h1 className="text-lg md:text-2xl mb-5">Add a Site</h1>}
               open={visible}
-              onCancel={() => setVisible(false)}
+              onCancel={() => {
+                setVisible(false);
+                resetForm();
+              }}
               footer={
                 <div>
                   <Button
                     className="mr-4"
-                    onClick={() => setVisible(false)}
+                    onClick={() => {
+                      setVisible(false);
+                      resetForm();
+                    }}
                     outlined
                     size="small"
                     text="Cancel"

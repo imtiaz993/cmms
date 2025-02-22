@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateInventoryPopup from "./components/createInventoryPopup";
@@ -7,9 +7,13 @@ import { useSelector } from "react-redux";
 import { EyeOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import InventoryDetailsPopup from "./components/inventoryDetailsPopup";
 import Button from "@/components/common/Button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { getFilteredInventory } from "app/services/inventory";
 
 const Inventory = () => {
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const {
     inventory = [],
     isLoading,
@@ -65,6 +69,8 @@ const Inventory = () => {
   const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
+  const [filteredInventory, setFilteredInventory] = useState([]);
+  const [isFiltering, setIsFiltering] = useState(false);
   const router = useRouter();
 
   const rowSelection = {
@@ -74,8 +80,8 @@ const Inventory = () => {
     },
   };
 
-  const filteredInventory = useMemo(() => {
-    if (!searchText) return inventory; // Return full data if no search
+  const displayedInventory = useMemo(() => {
+    if (!searchText) return filteredInventory;
     return inventory?.filter((inventoryItem) =>
       checkedList.some((key) =>
         inventoryItem[key]
@@ -84,7 +90,37 @@ const Inventory = () => {
           ?.includes(searchText.toLowerCase())
       )
     );
-  }, [searchText, inventory, checkedList]);
+  }, [searchText, filteredInventory, checkedList]);
+
+  useEffect(() => {
+    if (activeLocation) {
+      const fetchFilteredInventory = async () => {
+        setIsFiltering(true);
+        try {
+          const { status, data } = await getFilteredInventory({
+            location: activeLocation,
+            system: activeSystem ? activeSystem : "",
+          });
+
+          if (status === 200) {
+            setFilteredInventory(data.data);
+          } else {
+            message.error(
+              data?.message || "Failed to fetch filtered inventory"
+            );
+          }
+        } catch (error) {
+          message.error("Error fetching filtered inventory");
+        } finally {
+          setIsFiltering(false);
+        }
+      };
+
+      fetchFilteredInventory();
+    } else {
+      setFilteredInventory(inventory); // If no filters, use full assets list
+    }
+  }, [activeLocation, activeSystem, inventory]);
 
   return (
     <>
@@ -126,19 +162,19 @@ const Inventory = () => {
           </p>
         </div> */}
           <Table
-            loading={isLoading}
+            loading={isLoading || isFiltering}
             size={"large"}
             scroll={{ x: 1400 }}
             columns={newColumns}
             rowSelection={rowSelection}
             rowKey="_id"
             dataSource={
-              filteredInventory &&
-              filteredInventory.length > 0 &&
-              filteredInventory.map((i, index) => ({ ...i, key: index }))
+              displayedInventory &&
+              displayedInventory.length > 0 &&
+              displayedInventory.map((i, index) => ({ ...i, key: index }))
             }
             pagination={{
-              total: filteredInventory?.length,
+              total: displayedInventory?.length,
               current: 1,
               pageSize: 10,
               showSizeChanger: true,
