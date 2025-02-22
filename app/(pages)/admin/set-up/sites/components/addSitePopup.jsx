@@ -18,7 +18,7 @@ const AddSitePopup = ({ visible, setVisible }) => {
     country: "",
   };
   const validationSchema = Yup.object({
-    site: Yup.string().required("Site is required"),
+    site: Yup.string().required("Site name is required"),
   });
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log("Submitted", values);

@@ -13,7 +13,7 @@ const AddSubCategoryPopup = ({ visible, setVisible }) => {
   };
   const validationSchema = Yup.object({
     category: Yup.string().required("Category is required"),
-    subCategory: Yup.string().required("Sub Category is required"),
+    subCategory: Yup.string().required("Sub Category name is required"),
   });
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log("Submitted");

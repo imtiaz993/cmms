@@ -13,7 +13,7 @@ const AddLocationPopup = ({ visible, setVisible }) => {
   };
   const validationSchema = Yup.object({
     site: Yup.string().required("Site is required"),
-    location: Yup.string().required("Location is required"),
+    location: Yup.string().required("Location name is required"),
   });
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log("Submitted");
