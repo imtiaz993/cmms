@@ -8,6 +8,7 @@ import {
   getDashboardStats,
 } from "app/services/dashboard";
 import { Octagon } from "@/icons/index";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const ColumnChart = dynamic(() => import("./components/columnChart"), {
   ssr: false,
@@ -17,17 +18,21 @@ const LineChart = dynamic(() => import("./components/lineChart"), {
 });
 
 const Dashboard = () => {
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const [stats, setStats] = useState();
   const [loadingStats, setLoadingStats] = useState(true);
   const [schedule, setSchedule] = useState();
   const [loadingSchedule, setLoadingSchedule] = useState(true);
   const [activeManHoursTab, setActiveManHoursTab] = useState("30 Days");
 
-  console.log(stats);
-
   useEffect(() => {
     const getStats = async () => {
-      const { status, data } = await getDashboardStats();
+      const { status, data } = await getDashboardStats(
+        activeLocation,
+        activeSystem
+      );
       if (status === 200) {
         setStats(data.data);
         setLoadingStats(false);
@@ -37,7 +42,10 @@ const Dashboard = () => {
       }
     };
     const getSchedule = async () => {
-      const { status, data } = await getDashboardSchedule();
+      const { status, data } = await getDashboardSchedule(
+        activeLocation,
+        activeSystem
+      );
       if (status === 200) {
         setSchedule(data.data);
         setLoadingSchedule(false);
@@ -46,9 +54,10 @@ const Dashboard = () => {
         message.error(data?.message || "Failed to get schedule");
       }
     };
+
     getStats();
     getSchedule();
-  }, []);
+  }, [activeLocation, activeSystem]);
 
   return (
     <div className="flex flex-col gap-6 h-[calc(100dvh-140px-40px-40px)] overflow-auto px-3 lg:px-6 pt-3">

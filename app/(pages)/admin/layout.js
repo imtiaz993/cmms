@@ -179,7 +179,15 @@ export default function Layout({ children }) {
                       value={activeLocation}
                       onChange={(value) =>
                         router.push(
-                          `/admin/${currentPage}?location=${value}&system=${activeSystem}`
+                          `/admin/${currentPage}${
+                            value || activeSystem
+                              ? `?${value ? `location=${value}` : ""}${
+                                  value && activeSystem ? "&" : ""
+                                }${
+                                  activeSystem ? `system=${activeSystem}` : ""
+                                }`
+                              : ""
+                          }`
                         )
                       }
                       options={rigs.map((i) => ({
@@ -214,12 +222,15 @@ export default function Layout({ children }) {
                             `/admin/${currentPage}?location=${activeLocation}&system=${value}`
                           )
                         }
-                        options={activeLocation && rigs
-                          .find((i) => i?.id === activeLocation)
-                          .systems?.map((i) => ({
-                            label: i.name,
-                            value: i.id,
-                          }))}
+                        options={
+                          activeLocation &&
+                          rigs
+                            .find((i) => i?.id === activeLocation)
+                            .systems?.map((i) => ({
+                              label: i.name,
+                              value: i.id,
+                            }))
+                        }
                         placeholder="Select System"
                         className="w-full sm:w-44 !h-10 shadow-custom"
                         dropdownRender={(menu) => (

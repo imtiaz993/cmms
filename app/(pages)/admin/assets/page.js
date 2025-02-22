@@ -3,8 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateAssetPopup from "./components/createAssetPopup";
-import { useRouter } from "next/navigation";
-import { getAssets } from "app/services/assets";
+import { useRouter, useSearchParams } from "next/navigation";
+import { getAssets, getFilteredAssets } from "app/services/assets";
 import { useSelector } from "react-redux";
 import { rigs, systems } from "@/constants/rigsAndSystems";
 import { EditPagePencil } from "@/icons/index";
@@ -41,6 +41,9 @@ const defaultCheckedList = [
 ];
 
 const Assets = () => {
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   // const [assets, setAssets] = useState();
   const { assets, isLoading, error } = useSelector((state) => state.assets);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
@@ -49,6 +52,8 @@ const Assets = () => {
   const [searchText, setSearchText] = useState(""); // State for search text
   const router = useRouter();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [filteredAssets, setFilteredAssets] = useState([]);
+  const [isFiltering, setIsFiltering] = useState(false);
 
   const rowSelection = {
     selectedRowKeys,
@@ -130,10 +135,10 @@ const Assets = () => {
     setAddAssetVisible(true);
   };
 
-  // Function to filter the assets based on search text
-  const filteredAssets = useMemo(() => {
-    if (!searchText) return assets; // Return full data if no search
-    return assets?.filter((asset) =>
+  // Function to filter assets based on search text
+  const displayedAssets = useMemo(() => {
+    if (!searchText) return filteredAssets;
+    return filteredAssets?.filter((asset) =>
       checkedList.some((key) =>
         asset[key]
           ?.toString()
@@ -141,7 +146,9 @@ const Assets = () => {
           ?.includes(searchText.toLowerCase())
       )
     );
-  }, [searchText, assets, checkedList]);
+  }, [searchText, filteredAssets, checkedList]);
+
+  console.log(filteredAssets, "filteredAssets");
 
   // Render expanded row content<
   const expandedRowRender = (record) => (
@@ -174,6 +181,34 @@ const Assets = () => {
     setExpandedRowKeys(newExpandedRowKeys);
   };
 
+  useEffect(() => {
+    if (activeLocation) {
+      const fetchFilteredAssets = async () => {
+        setIsFiltering(true);
+        try {
+          const { status, data } = await getFilteredAssets({
+            location: activeLocation,
+            system: activeSystem ? activeSystem : "",
+          });
+
+          if (status === 200) {
+            setFilteredAssets(data.data);
+          } else {
+            message.error(data?.message || "Failed to fetch filtered assets");
+          }
+        } catch (error) {
+          message.error("Error fetching filtered assets");
+        } finally {
+          setIsFiltering(false);
+        }
+      };
+
+      fetchFilteredAssets();
+    } else {
+      setFilteredAssets(assets); // If no filters, use full assets list
+    }
+  }, [activeLocation, activeSystem, assets]);
+
   return (
     <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
       {addAssetVisible && (
@@ -202,15 +237,15 @@ const Assets = () => {
         onRow={(record) => ({
           onClick: () => router.push(`/admin/assets/${record._id}`),
         })}
-        loading={isLoading}
+        loading={isFiltering || isLoading}
         size="large"
         scroll={{ x: 1100 }}
         columns={mainColumns}
         rowSelection={rowSelection}
         // rowKey="_id"
-        dataSource={filteredAssets}
+        dataSource={displayedAssets}
         pagination={{
-          total: filteredAssets?.length,
+          total: displayedAssets?.length,
           pageSize: 10,
           showSizeChanger: true,
           showTotal: (total, range) =>
