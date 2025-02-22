@@ -79,7 +79,8 @@ h6 {
   width: 10px;
 }
 
-::-webkit-scrollbar-track {}
+::-webkit-scrollbar-track {
+}
 
 ::-webkit-scrollbar-thumb {
   background: lightgray;
@@ -92,9 +93,11 @@ h6 {
   height: 42px !important;
 }
 
-.ant-message-notice-content {}
+.ant-message-notice-content {
+}
 
-.ant-input-outlined {}
+.ant-input-outlined {
+}
 
 .ant-input-textarea {
   border-color: #d9d9d9 !important;
@@ -108,9 +111,11 @@ h6 {
   opacity: 0.6;
 }
 
-.ant-modal-content {}
+.ant-modal-content {
+}
 
-.ant-modal-title {}
+.ant-modal-title {
+}
 
 .custom-tree .ant-tree-treenode {
   width: 100%;
@@ -124,7 +129,8 @@ h6 {
   padding-left: 0 !important;
 }
 
-.custom-tree .ant-tree-treenode-selected .ant-tree-node-content-wrapper {}
+.custom-tree .ant-tree-treenode-selected .ant-tree-node-content-wrapper {
+}
 
 .ant-card-head,
 .ant-card-body {
@@ -156,7 +162,6 @@ h6 {
 }
 
 @media screen and (max-width: 767px) {
-
   .reports-tabs .ant-tabs-nav-wrap,
   .work-orders-tabs .ant-tabs-nav-wrap {
     margin-left: 19px;
@@ -196,7 +201,8 @@ h6 {
   border-radius: 0px 6px 6px 0px !important;
 }
 
-.schdeule .ant-picker-panel {}
+.schdeule .ant-picker-panel {
+}
 
 @media screen and (max-width: 1280px) {
   .schdeule .ant-picker-body {
@@ -253,4 +259,18 @@ h6 {
 
 .secondary-select .ant-select-selection-placeholder {
   color: #fff !important;
+}
+
+.rounded-checkbox .ant-checkbox-inner {
+  height: 24px !important;
+  width: 24px !important;
+  border-radius: 50% !important;
+}
+
+.rounded-checkbox .ant-checkbox-checked .ant-checkbox-inner::after {
+  top: 45%;
+  left: 50%;
+  width: 6px; /* Adjust size of the tick */
+  height: 12px; /* Adjust size of the tick */
+  transform: translate(-50%, -50%) rotate(45deg);
 }
