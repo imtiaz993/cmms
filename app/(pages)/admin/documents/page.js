@@ -3,8 +3,9 @@ import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import { DownloadOutlined, EyeOutlined } from "@ant-design/icons";
 import { useEffect, useMemo, useState } from "react";
-import { getDocuments } from "app/services/document";
+import { getDocuments, getDocumentsByCategory } from "app/services/document";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 const columns = [
   {
@@ -78,6 +79,9 @@ const columns = [
 const defaultCheckedList = columns.map((item) => item.key);
 
 const Documents = () => {
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const [documents, setDocuments] = useState([]);
   const [fetchingDocuments, setFetchingDocuments] = useState(true);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
@@ -94,6 +98,7 @@ const Documents = () => {
 
   useEffect(() => {
     const handleFetchDocuments = async () => {
+      setFetchingDocuments(true);
       const { status, data } = await getDocuments();
       if (status === 200) {
         setFetchingDocuments(false);
@@ -106,8 +111,8 @@ const Documents = () => {
     handleFetchDocuments();
   }, []);
 
-  const filteredDocuments = useMemo(() => {
-    if (!searchText) return documents; // Return full data if no search
+  const displayedDocuments = useMemo(() => {
+    if (!searchText) return documents;
     return documents?.filter((document) =>
       checkedList.some((key) =>
         document[key]
@@ -116,7 +121,35 @@ const Documents = () => {
           ?.includes(searchText.toLowerCase())
       )
     );
-  }, [searchText, checkedList, documents]);
+  }, [searchText, documents, checkedList]);
+
+  useEffect(() => {
+    if (activeLocation) {
+      const fetchFilteredDocuments = async () => {
+        setFetchingDocuments(true);
+        try {
+          const { status, data } = await getDocumentsByCategory({
+            location: activeLocation,
+            system: activeSystem ? activeSystem : "",
+          });
+
+          if (status === 200) {
+            setDocuments(data.data);
+          } else {
+            message.error(data?.message || "Failed to fetch filtered assets");
+          }
+        } catch (error) {
+          message.error("Error fetching filtered assets");
+        } finally {
+          setFetchingDocuments(false);
+        }
+      };
+
+      fetchFilteredDocuments();
+    } else {
+      setDocuments(documents); // If no filters, use full assets list
+    }
+  }, [activeLocation, activeSystem, documents]);
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
@@ -139,15 +172,15 @@ const Documents = () => {
           </p>
         </div> */}
         <Table
-          loading={false}
+          loading={fetchingDocuments}
           size="large"
           scroll={{ x: 1100 }}
           columns={newColumns}
           rowKey="_id"
           rowSelection={rowSelection}
-          dataSource={filteredDocuments}
+          dataSource={displayedDocuments}
           pagination={{
-            total: filteredDocuments.length,
+            total: displayedDocuments.length,
             pageSize: 10,
             showSizeChanger: true,
             showTotal: (total, range) =>

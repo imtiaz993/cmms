@@ -26,7 +26,7 @@ const ReportsPopup = ({
   // Build the validation schema based on props
   const validationSchema = Yup.object({
     location: costCenter
-      ? Yup.string().required("Cost Center is required")
+      ? Yup.string().required("Location is required")
       : Yup.string(),
     assetNumber: assetNumber
       ? Yup.string().required("Asset Number is required")
@@ -91,7 +91,7 @@ const ReportsPopup = ({
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, isSubmitting, submitForm, errors }) => (
+        {({ values, isSubmitting, submitForm, errors, resetForm }) => (
           <Form>
             <Modal
               maskClosable={false}
@@ -101,7 +101,10 @@ const ReportsPopup = ({
                 <div>
                   <Button
                     className="mr-2"
-                    onClick={() => setVisible(false)}
+                    onClick={() => {
+                      setVisible(false);
+                      resetForm();
+                    }}
                     outlined
                     size="small"
                     text="Cancel"
@@ -110,7 +113,6 @@ const ReportsPopup = ({
                   />
                   <Button
                     onClick={() => {
-                      console.log("errors: ", errors);
                       submitForm();
                     }}
                     size="small"
@@ -132,6 +134,10 @@ const ReportsPopup = ({
                         label="Location"
                         labelOnTop
                         maxLength={128}
+                        options={rigs.map((i) => ({
+                          label: i.name,
+                          value: i.id,
+                        }))}
                       />
                     </div>
 

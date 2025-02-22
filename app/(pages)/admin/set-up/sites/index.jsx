@@ -2,12 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./components/actionBar";
 import { Table } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { filterSites, getSites } from "app/services/setUp/sites";
+import { useSearchParams } from "next/navigation";
 
 const columns = [
   {
     title: "Site Name",
-    dataIndex: "siteName",
-    key: "siteName",
+    dataIndex: "site",
+    key: "site",
     render: (siteName) => (
       <span className="text-[#017BFE] underline">{siteName}</span>
     ),
@@ -65,9 +67,12 @@ const columns = [
 const defaultCheckedList = columns.map((item) => item.key);
 
 const Sites = () => {
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const [sites, setSites] = useState([
     {
-      siteName: "Rig 20",
+      site: "Rig 20",
       description: "Description 1",
       address: "Address 1",
       apartment: "Apt 1",
@@ -91,20 +96,21 @@ const Sites = () => {
   };
 
   useEffect(() => {
-    const handleFetchDocuments = async () => {
-      // const { status, data } = await getDocuments();
-      // if (status === 200) {
-      //   setFetchingDocuments(false);
-      //   setDocuments(data.data);
-      // } else {
-      //   setFetchingDocuments(false);
-      //   message.error(data.error);
-      // }
+    const handleFetchSites = async () => {
+      setLoading(true);
+      const { status, data } = await getSites();
+      if (status === 200) {
+        setLoading(false);
+        setSites(data.data);
+      } else {
+        setLoading(false);
+        message.error(data.error);
+      }
     };
-    handleFetchDocuments();
+    handleFetchSites();
   }, []);
 
-  const filteredData = useMemo(() => {
+  const displayedSites = useMemo(() => {
     if (!searchText) return sites; // Return full data if no search
     return sites?.filter((site) =>
       checkedList.some((key) =>
@@ -112,6 +118,34 @@ const Sites = () => {
       )
     );
   }, [searchText, sites, checkedList]);
+
+  useEffect(() => {
+    if (activeLocation) {
+      const fetchFilteredSites = async () => {
+        setLoading(true);
+        try {
+          const { status, data } = await filterSites({
+            location: activeLocation,
+            system: activeSystem ? activeSystem : "",
+          });
+
+          if (status === 200) {
+            setSites(data.data);
+          } else {
+            message.error(data?.message || "Failed to fetch filtered sites");
+          }
+        } catch (error) {
+          message.error("Error fetching filtered sites");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchFilteredSites();
+    } else {
+      setSites(sites);
+    }
+  }, [activeLocation, activeSystem, sites]);
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
@@ -134,12 +168,12 @@ const Sites = () => {
         rowSelection={rowSelection}
         rowKey="_id"
         dataSource={
-          filteredData &&
-          filteredData.length > 0 &&
-          filteredData.map((i, index) => ({ ...i, key: index }))
+          displayedSites &&
+          displayedSites.length > 0 &&
+          displayedSites.map((i, index) => ({ ...i, key: index }))
         }
         pagination={{
-          total: filteredData?.length,
+          total: displayedSites?.length,
           current: 1,
           pageSize: 10,
           showSizeChanger: true,

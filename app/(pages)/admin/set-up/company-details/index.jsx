@@ -4,12 +4,58 @@ import SelectField from "@/components/common/SelectField";
 import { CloseOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Form, Formik } from "formik";
 import { useState } from "react";
+import * as Yup from "yup";
 
 const CompanyDetails = () => {
+  const initialValues = {
+    companyName: "",
+    country: "",
+    address: "",
+    apartment: "",
+    state: "",
+    zip: "",
+    phone: "",
+    email: "",
+    timezone: "",
+    currency: "",
+    dateFormat: "",
+    financialYearMonth: "",
+    financialYearDay: "",
+    rigManagers: [
+      {
+        email: "",
+        name: "",
+        phone: "",
+        password: "",
+      },
+    ],
+  };
+  const validationSchema = Yup.object({
+    email: Yup.string().email("Invalid email").required("Email is required"),
+  });
   const [rigManagers, setRigManagers] = useState(1);
+
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
+    console.log("Submitted", values);
+    // const { status, data } = await createSite(values);
+    // setSubmitting(false);
+    // if (status === 200) {
+    //   message.success(data.message);
+    //   resetForm();
+    //   setVisible(false);
+    // } else {
+    //   message.error(data.error);
+    // }
+  };
   return (
     <div className="h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
-      <Formik initialValues={{}}>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          handleSubmit(values, setSubmitting, resetForm);
+        }}
+      >
         {({ isSubmitting, handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid md:grid-cols-2 gap-4 md:gap-8">

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import { EyeFilled, EyeOutlined } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import PreviewPopup from "@/components/previewPopup";
 import { getMaterialTransferData } from "app/services/materialTransfer";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
@@ -12,6 +12,9 @@ import Link from "next/link";
 import { EditPagePencil } from "@/icons/index";
 
 const MaterialTransfer = () => {
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const [materialTransferData, setMaterialTransferData] = useState();
   const [fetchingData, setFetchingData] = useState(true);
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);

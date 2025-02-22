@@ -1,8 +1,16 @@
 import { authRequest } from "../requestHandler";
 
-export const getDashboardStats = async () => {
+export const getDashboardStats = async (activeLocation, activeSystem) => {
   try {
-    const { status, data } = await authRequest({ url: "/dashboard/get" });
+    const { status, data } = await authRequest({
+      url: `/dashboard/get${
+        activeLocation || activeSystem
+          ? `?${activeLocation ? `activeLocation=${activeLocation}` : ""}${
+              activeLocation && activeSystem ? "&" : ""
+            }${activeSystem ? `activeSystem=${activeSystem}` : ""}`
+          : ""
+      }`,
+    });
     return { status, data };
   } catch (e) {
     if (e.data) {
@@ -11,9 +19,17 @@ export const getDashboardStats = async () => {
   }
 };
 
-export const getDashboardSchedule = async () => {
+export const getDashboardSchedule = async (activeLocation, activeSystem) => {
   try {
-    const { status, data } = await authRequest({ url: "/dashboard/schedule" });
+    const { status, data } = await authRequest({
+      url: `/dashboard/schedule${
+        activeLocation || activeSystem
+          ? `?${activeLocation ? `activeLocation=${activeLocation}` : ""}${
+              activeLocation && activeSystem ? "&" : ""
+            }${activeSystem ? `activeSystem=${activeSystem}` : ""}`
+          : ""
+      }`,
+    });
     return { status, data };
   } catch (e) {
     if (e.data) {

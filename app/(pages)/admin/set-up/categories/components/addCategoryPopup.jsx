@@ -1,15 +1,38 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import { Form, Modal } from "antd";
+import { createCategory } from "app/services/setUp/categories";
 import { Formik } from "formik";
+import * as Yup from "yup";
 
 const AddCategoryPopup = ({ visible, setVisible }) => {
-  const handleSubmit = () => {
+  const initialValues = {
+    category: "",
+  };
+  const validationSchema = Yup.object({
+    category: Yup.string().required("Category name is required"),
+  });
+  const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log("Submitted");
+    const { status, data } = await createCategory(values);
+    setSubmitting(false);
+    if (status === 200) {
+      message.success(data.message);
+      resetForm();
+      setVisible(false);
+    } else {
+      message.error(data.error);
+    }
   };
   return (
     <div className="">
-      <Formik initialValues={{}} onSubmit={handleSubmit}>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          handleSubmit(values, setSubmitting, resetForm);
+        }}
+      >
         {({ isSubmitting, handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
             <Modal

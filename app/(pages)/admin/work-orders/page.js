@@ -9,8 +9,12 @@ import EarlyMaintenancePopup from "./components/earlyMaintenancePopup";
 import ActionBar from "./components/actionBar";
 import UnplannedPreviewPopup from "./components/UnplannedPreviewPopup";
 import PlannedPreviewPopup from "./components/PlannedPreviewPopup";
+import { useSearchParams } from "next/navigation";
 
 const WorkOrders = () => {
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const [workOrders, setWorkOrders] = useState([]);
   const [addWOVisible, setAddWOVisible] = useState(false);
   const [previewPopup, setPreviewPopup] = useState(false);
@@ -155,7 +159,7 @@ const WorkOrders = () => {
   );
 
   // Filter data based on searchText
-  const filteredData = useMemo(() => {
+  const displayedData = useMemo(() => {
     if (!searchText) return workOrders; // Return all data if no search text
     return workOrders?.filter((item) =>
       checkedList.some((key) =>
@@ -164,13 +168,41 @@ const WorkOrders = () => {
     );
   }, [searchText, workOrders]);
 
+  useEffect(() => {
+    if (activeLocation) {
+      const fetchFilteredWorkOrders = async () => {
+        setFetchingWorkOrders(true);
+        try {
+          const { status, data } = await getDocumentsByCategory({
+            location: activeLocation,
+            system: activeSystem ? activeSystem : "",
+          });
+
+          if (status === 200) {
+            setWorkOrders(data.data);
+          } else {
+            message.error(data?.message || "Failed to fetch filtered assets");
+          }
+        } catch (error) {
+          message.error("Error fetching filtered assets");
+        } finally {
+          setFetchingWorkOrders(false);
+        }
+      };
+
+      fetchFilteredWorkOrders();
+    } else {
+      setWorkOrders(workOrders); // If no filters, use full assets list
+    }
+  }, [activeLocation, activeSystem, workOrders]);
+
   const tabs = [
     {
       label: "Unplanned",
       children: (
         <WOtable
           filteredColumns={filteredColumns}
-          filteredData={filteredData}
+          filteredData={displayedData}
           fetchingWorkOrders={fetchingWorkOrders}
           rowSelection={rowSelection}
         />
@@ -181,7 +213,7 @@ const WorkOrders = () => {
       children: (
         <WOtable
           filteredColumns={filteredColumns}
-          filteredData={filteredData}
+          filteredData={displayedData}
           fetchingWorkOrders={fetchingWorkOrders}
           rowSelection={rowSelection}
         />

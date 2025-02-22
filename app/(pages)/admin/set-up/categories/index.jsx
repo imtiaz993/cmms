@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./components/actionBar";
 import { Table } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { filterCategories, getCategories } from "app/services/setUp/categories";
+import { useSearchParams } from "next/navigation";
 
 const columns = [
   {
@@ -30,6 +32,9 @@ const columns = [
 const defaultCheckedList = columns.map((item) => item.key);
 
 const Categories = () => {
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const [categories, setCategories] = useState([
     {
       category: "Crown",
@@ -50,19 +55,20 @@ const Categories = () => {
 
   useEffect(() => {
     const handleFetchCategories = async () => {
-      // const { status, data } = await getDocuments();
-      // if (status === 200) {
-      //   setFetchingDocuments(false);
-      //   setDocuments(data.data);
-      // } else {
-      //   setFetchingDocuments(false);
-      //   message.error(data.error);
-      // }
+      setLoading(true);
+      const { status, data } = await getCategories();
+      if (status === 200) {
+        setLoading(false);
+        setCategories(data.data);
+      } else {
+        setLoading(false);
+        message.error(data.error);
+      }
     };
     handleFetchCategories();
   }, []);
 
-  const filteredData = useMemo(() => {
+  const displayCategories = useMemo(() => {
     if (!searchText) return categories; // Return full data if no search
     return categories?.filter((site) =>
       checkedList.some((key) =>
@@ -70,6 +76,36 @@ const Categories = () => {
       )
     );
   }, [searchText, categories, checkedList]);
+
+  useEffect(() => {
+    if (activeLocation) {
+      const fetchFilteredCategories = async () => {
+        setLoading(true);
+        try {
+          const { status, data } = await filterCategories({
+            location: activeLocation,
+            system: activeSystem ? activeSystem : "",
+          });
+
+          if (status === 200) {
+            setCategories(data.data);
+          } else {
+            message.error(
+              data?.message || "Failed to fetch filtered categories"
+            );
+          }
+        } catch (error) {
+          message.error("Error fetching filtered categories");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchFilteredCategories();
+    } else {
+      setCategories(categories);
+    }
+  }, [activeLocation, activeSystem, categories]);
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
@@ -92,12 +128,12 @@ const Categories = () => {
         rowSelection={rowSelection}
         rowKey="_id"
         dataSource={
-          filteredData &&
-          filteredData.length > 0 &&
-          filteredData.map((i, index) => ({ ...i, key: index }))
+          displayCategories &&
+          displayCategories.length > 0 &&
+          displayCategories.map((i, index) => ({ ...i, key: index }))
         }
         pagination={{
-          total: filteredData?.length,
+          total: displayCategories?.length,
           current: 1,
           pageSize: 10,
           showSizeChanger: true,

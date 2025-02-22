@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./components/actionBar";
 import { Table } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { useSearchParams } from "next/navigation";
+import { filterEvents, getEvents } from "app/services/setUp/events";
 
 const columns = [
   {
@@ -30,6 +32,9 @@ const columns = [
 const defaultCheckedList = columns.map((item) => item.key);
 
 const Events = () => {
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const [events, setEvents] = useState([
     {
       event: "Event 1",
@@ -50,14 +55,15 @@ const Events = () => {
 
   useEffect(() => {
     const handleFetch = async () => {
-      // const { status, data } = await getDocuments();
-      // if (status === 200) {
-      //   setFetchingDocuments(false);
-      //   setDocuments(data.data);
-      // } else {
-      //   setFetchingDocuments(false);
-      //   message.error(data.error);
-      // }
+      setLoading(true);
+      const { status, data } = await getEvents();
+      if (status === 200) {
+        setLoading(false);
+        setEvents(data.data);
+      } else {
+        setLoading(false);
+        message.error(data.error);
+      }
     };
     handleFetch();
   }, []);
@@ -70,6 +76,35 @@ const Events = () => {
       )
     );
   }, [searchText, events, checkedList]);
+  useEffect(() => {
+    if (activeLocation) {
+      const fetchFilteredEvents = async () => {
+        setLoading(true);
+        try {
+          const { status, data } = await filterEvents({
+            location: activeLocation,
+            system: activeSystem ? activeSystem : "",
+          });
+
+          if (status === 200) {
+            setEvents(data.data);
+          } else {
+            message.error(
+              data?.message || "Failed to fetch filtered sub categories"
+            );
+          }
+        } catch (error) {
+          message.error("Error fetching filtered sub categories");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchFilteredEvents();
+    } else {
+      setEvents(events);
+    }
+  }, [activeLocation, activeSystem, events]);
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
