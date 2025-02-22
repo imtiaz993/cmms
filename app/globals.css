@@ -57,7 +57,7 @@ p {
 }
 
 div {
-  border-color:  var(--border-color);
+  border-color: var(--border-color);
 }
 
 h1,
@@ -244,4 +244,18 @@ h6 {
 }
 .secondary-select .ant-select-selection-placeholder {
   color: #fff !important;
+}
+
+.rounded-checkbox .ant-checkbox-inner {
+  height: 24px !important;
+  width: 24px !important;
+  border-radius: 50% !important;
+}
+
+.rounded-checkbox .ant-checkbox-checked .ant-checkbox-inner::after {
+  top: 45%;
+  left: 50%;
+  width: 6px; /* Adjust size of the tick */
+  height: 12px; /* Adjust size of the tick */
+  transform: translate(-50%, -50%) rotate(45deg);
 }

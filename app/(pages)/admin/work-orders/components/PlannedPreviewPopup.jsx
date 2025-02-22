@@ -25,9 +25,9 @@ const PlannedPreviewPopup = ({ visible, setVisible, workOrder }) => {
               text="Close"
               fullWidth={false}
             />
-            {/* <Link href={`/admin/work-orders/${workOrder?._id}`}> */}
-            <Button className="" text="More Details" fullWidth={false} />
-            {/* </Link> */}
+            <Link href={`/admin/work-orders/${workOrder?._id}`}>
+              <Button className="" text="More Details" fullWidth={false} />
+            </Link>
           </div>
         }
       >
