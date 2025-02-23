@@ -8,19 +8,22 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import { Card, message } from "antd";
-import { getCompany } from "app/services/setUp/company";
+import { getCompany, updateCompany } from "app/services/setUp/company";
 import { FieldArray, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import AddRigManagerPopup from "./components/addRigManagerPopup";
+import { deleteManager } from "app/services/rigManager";
 
 const CompanyDetails = () => {
   const [companyData, setCompanyData] = useState();
   const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
   // const initialValues = ;
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Email is required"),
   });
-  const [rigManagers, setRigManagers] = useState(1);
+  const [rigManagerData, setRigManagerData] = useState(null);
 
   useEffect(() => {
     const handleFetchCategories = async () => {
@@ -38,26 +41,35 @@ const CompanyDetails = () => {
   }, []);
 
   const handleSubmit = async (values, setSubmitting, resetForm) => {
-    console.log("Submitted", values);
-    // const { status, data } = await createSite(values);
-    // setSubmitting(false);
-    // if (status === 200) {
-    //   message.success(data.message);
-    //   resetForm();
-    //   setVisible(false);
-    // } else {
-    //   message.error(data.error);
-    // }
+    const { rigManagers, ...filteredValues } = values; // Exclude rigManagers
+    const { status, data } = await updateCompany(filteredValues);
+    setSubmitting(false);
+    if (status === 200) {
+      message.success(data.message);
+      resetForm();
+    } else {
+      message.error(data.error);
+    }
+  };
+
+  const handleDeleteManager = async (managerId) => {
+    const { status, data } = await deleteManager(managerId);
+    if (status === 200) {
+      message.success("Rig Manager Deleted Successfully");
+    } else {
+      message.error(data.error);
+    }
   };
 
   return (
     <div className="h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
       <Formik
         initialValues={{
+          _id: companyData?._id || "",
           companyName: companyData?.companyName || "",
           country: companyData?.country || "",
           address: companyData?.address || "",
-          apartment: "",
+          apartment: companyData?.apartment || "",
           state: companyData?.state || "",
           zip: companyData?.zip || "",
           phone: companyData?.phone || "",
@@ -67,14 +79,7 @@ const CompanyDetails = () => {
           dateFormat: companyData?.dateFormat || "",
           financialYearMonth: companyData?.financialYearMonth || "",
           financialYearDay: companyData?.financialYearDay || "",
-          rigManagers: [
-            {
-              email: "",
-              name: "",
-              phone: "",
-              password: "",
-            },
-          ],
+          rigManagers: companyData?.rigManager || [],
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -84,9 +89,27 @@ const CompanyDetails = () => {
       >
         {({ isSubmitting, handleSubmit, values, setValues }) => (
           <Form onSubmit={handleSubmit}>
+            <AddRigManagerPopup
+              visible={visible}
+              setVisible={setVisible}
+              setOuterValues={setValues}
+              rigManagerData={rigManagerData}
+              setRigManagerData={setRigManagerData}
+              outerValues={values}
+            />
             <div className="grid md:grid-cols-2 gap-4 md:gap-8">
               <div className="grid grid-cols-1 gap-4 md:gap-8">
-                <p className="font-semibold md:text-lg">Company Information</p>
+                <div className="flex justify-between items-center">
+                  <p className="font-semibold md:text-lg">
+                    Company Information
+                  </p>
+                  <Button
+                    text="Save Changes"
+                    className="!bg-yellow-500 !shadow-custom !border-white w-full sm:w-32"
+                    fullWidth={false}
+                    onClick={handleSubmit}
+                  />
+                </div>
                 <InputField
                   name="companyName"
                   placeholder="Company Name"
@@ -153,9 +176,14 @@ const CompanyDetails = () => {
                                     }}
                                   />
                                 }
-                                onClick={() =>
-                                  console.log("Edit Rig Manager", i)
-                                }
+                                onClick={() => {
+                                  setVisible(true);
+                                  setRigManagerData({
+                                    ...values.rigManagers[i],
+                                    index: i,
+                                    company: values._id,
+                                  });
+                                }}
                                 outlined
                               />
                               {/* <Button
@@ -169,7 +197,10 @@ const CompanyDetails = () => {
                                 <Button
                                   className="!bg-yellow-500"
                                   outlined
-                                  onClick={() => remove(i)}
+                                  onClick={() => {
+                                    handleDeleteManager(manager?._id);
+                                    remove(i);
+                                  }}
                                   fullWidth={false}
                                   text="Remove"
                                   prefix={<DeleteOutlined />}
@@ -201,13 +232,14 @@ const CompanyDetails = () => {
                   <Button
                     className="!bg-[#4C4C51] !shadow-custom !border-white w-full sm:w-52"
                     onClick={() =>
-                      setValues({
-                        ...values,
-                        rigManagers: [
-                          ...values.rigManagers,
-                          { email: "", name: "", phone: "", password: "" },
-                        ],
-                      })
+                      // setValues({
+                      //   ...values,
+                      //   rigManagers: [
+                      //     ...values.rigManagers,
+                      //     { email: "", name: "", phone: "", password: "" },
+                      //   ],
+                      // })
+                      setVisible(true)
                     }
                     fullWidth={false}
                     prefix={<PlusOutlined />}

@@ -2,11 +2,14 @@ import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
 import { Form, message, Modal } from "antd";
+import { updateLocation } from "app/redux/slices/locationsSlice";
 import { createSite } from "app/services/setUp/sites";
 import { Formik } from "formik";
+import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 
 const AddSitePopup = ({ visible, setSites, setVisible }) => {
+  const dispatch = useDispatch();
   const initialValues = {
     site: "",
     description: "",
@@ -25,6 +28,7 @@ const AddSitePopup = ({ visible, setSites, setVisible }) => {
     setSubmitting(false);
     if (status === 200) {
       setSites((prev) => [...prev, data.data]);
+      dispatch(updateLocation(data?.data));
       message.success(data.message);
       resetForm();
       setVisible(false);
