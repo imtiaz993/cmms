@@ -198,7 +198,7 @@ const Dashboard = () => {
         <div className="xl:w-5/12">
           <Card
             loading={false}
-            className="!bg-primary h-96"
+            className="!bg-primary xl:h-[500px] shadow-custom"
             title={<h2 className="text-center">Inventory Cost</h2>}
           >
             <div className="flex justify-center">
@@ -219,7 +219,7 @@ const Dashboard = () => {
         <div className="grid gap-6 xl:w-7/12">
           <Card
             loading={false}
-            className="!bg-primary"
+            className="!bg-primary shadow-custom"
             style={{ overflow: "hidden" }}
           >
             <div>

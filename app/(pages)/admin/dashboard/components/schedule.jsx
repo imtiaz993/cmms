@@ -21,7 +21,6 @@ const Schedule = ({ schedule, loadingSchedule }) => {
 
       // Log only when data is found
       if (data) {
-        
         return (
           <div className="m-0 p-0">
             <Badge
@@ -63,6 +62,7 @@ const Schedule = ({ schedule, loadingSchedule }) => {
       <Calendar
         cellRender={cellRender}
         onSelect={(date) => setSelectedDate(date.format("YYYY-MM-DD"))}
+        className="[&_.ant-picker-content]:!min-w-[800px] overflow-auto" 
         // headerRender={() => <h2>January 2025</h2>}
       />
     </div>
