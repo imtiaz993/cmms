@@ -3,7 +3,7 @@ import ActionBar from "./components/actionBar";
 import { Table } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { useSearchParams } from "next/navigation";
-import { filterLocations, getLocations } from "app/services/setUp/locations";
+import { filterLocations, filterSystems, getLocations, getSystems } from "app/services/setUp/systems";
 
 const columns = [
   {
@@ -56,7 +56,7 @@ const Locations = () => {
   useEffect(() => {
     const handleFetchLocations = async () => {
       setLoading(true);
-      const { status, data } = await getLocations();
+      const { status, data } = await getSystems();
       if (status === 200) {
         setLoading(false);
         setLocations(data.data);
@@ -82,7 +82,7 @@ const Locations = () => {
       const fetchFilteredLocations = async () => {
         setLoading(true);
         try {
-          const { status, data } = await filterLocations({
+          const { status, data } = await filterSystems({
             location: activeLocation,
             system: activeSystem ? activeSystem : "",
           });
@@ -91,11 +91,11 @@ const Locations = () => {
             setLocations(data.data);
           } else {
             message.error(
-              data?.message || "Failed to fetch filtered locations"
+              data?.message || "Failed to fetch filtered systems"
             );
           }
         } catch (error) {
-          message.error("Error fetching filtered locations");
+          message.error("Error fetching filtered systems");
         } finally {
           setLoading(false);
         }
@@ -109,7 +109,7 @@ const Locations = () => {
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
-      <h3 className="font-semibold text-lg pb-8">List of Locations</h3>
+      <h3 className="font-semibold text-lg pb-8">List of Systems</h3>
       <ActionBar
         checkedList={checkedList}
         setCheckedList={setCheckedList}

@@ -9,12 +9,11 @@ import {
   useSearchParams,
 } from "next/navigation";
 import { getToken, getUser } from "@/utils/index";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Appbar from "./appbar";
 import Sidebar from "./sidebar";
 import { message, Select } from "antd";
 import { ConfigProvider, theme } from "antd";
-import { rigs } from "@/constants/rigsAndSystems";
 import {
   setInventory,
   setInventoryLoading,
@@ -40,6 +39,18 @@ import {
   SwapOutlined,
   ToolOutlined,
 } from "@ant-design/icons";
+import {
+  setlocation,
+  setLocationError,
+  setLocationLoading,
+} from "app/redux/slices/locationsSlice";
+import { getSites } from "app/services/setUp/sites";
+import {
+  setSystem,
+  setSystemError,
+  setSystemLoading,
+} from "app/redux/slices/systemsSlice";
+import { getSystems } from "app/services/setUp/systems";
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -51,6 +62,8 @@ export default function Layout({ children }) {
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
   const isNewEditDetails = pathname.split("/")[3];
+  const locations = useSelector((state) => state.location.location);
+  const systems = useSelector((state) => state.system.system);
 
   const items = [
     {
@@ -111,9 +124,31 @@ export default function Layout({ children }) {
       }
       dispatch(setAssetsLoading(false));
     };
+    const handleFetchLocations = async () => {
+      dispatch(setLocationLoading(true));
+      const { status, data } = await getSites();
+      if (status === 200) {
+        dispatch(setlocation(data?.data));
+      } else {
+        dispatch(setLocationError(data?.error));
+      }
+      dispatch(setLocationLoading(false));
+    };
+    const handleFetchSystems = async () => {
+      dispatch(setSystemLoading(true));
+      const { status, data } = await getSystems();
+      if (status === 200) {
+        dispatch(setSystem(data?.data));
+      } else {
+        dispatch(setSystemError(data?.error));
+      }
+      dispatch(setSystemLoading(false));
+    };
 
     handleFetchAssets();
     handleFetchInventory();
+    handleFetchLocations();
+    handleFetchSystems();
   }, [dispatch]);
 
   useEffect(() => {
@@ -134,7 +169,6 @@ export default function Layout({ children }) {
       const userToken = getToken();
       const userData = getUser();
       const isValid = checkTokenExpiration(userToken);
-      console.log("Token valid:", isValid);
 
       if (!userToken) {
         router.replace("/login");
@@ -190,7 +224,7 @@ export default function Layout({ children }) {
                           }`
                         )
                       }
-                      options={rigs.map((i) => ({
+                      options={locations.map((i) => ({
                         label: i.name,
                         value: i.id,
                       }))}
@@ -224,9 +258,9 @@ export default function Layout({ children }) {
                         }
                         options={
                           activeLocation &&
-                          rigs
+                          systems
                             .find((i) => i?.id === activeLocation)
-                            .systems?.map((i) => ({
+                            ?.map((i) => ({
                               label: i.name,
                               value: i.id,
                             }))

@@ -1,9 +1,9 @@
 import { authRequest } from "app/services/requestHandler";
 
-export const getLocations = async () => {
+export const getSystems = async () => {
   try {
     const { status, data } = await authRequest({
-      url: "/location/get",
+      url: "/system/get",
     });
     return { status, data };
   } catch (e) {
@@ -13,10 +13,10 @@ export const getLocations = async () => {
   }
 };
 
-export const createLocation = async (values) => {
+export const createSystem = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: "/location/create",
+      url: "/system/create",
       method: "POST",
       data: values,
     });
@@ -28,10 +28,10 @@ export const createLocation = async (values) => {
   }
 };
 
-export const filterLocations = async (values) => {
+export const filterSystems = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: "/location/filter",
+      url: "/system/filter",
       method: "POST",
       data: values,
     });
@@ -43,10 +43,10 @@ export const filterLocations = async (values) => {
   }
 };
 
-export const exportLocations = async (values) => {
+export const exportSystems = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: "/location/export",
+      url: "/system/export",
       method: "POST",
       data: values,
     });

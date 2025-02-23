@@ -2,7 +2,7 @@ import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
 import { Form, Modal } from "antd";
-import { createLocation } from "app/services/setUp/locations";
+import { createSystem } from "app/services/setUp/systems";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
@@ -17,7 +17,7 @@ const AddLocationPopup = ({ visible, setVisible }) => {
   });
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log("Submitted");
-    const { status, data } = await createLocation(values);
+    const { status, data } = await createSystem(values);
     setSubmitting(false);
     if (status === 200) {
       message.success(data.message);
