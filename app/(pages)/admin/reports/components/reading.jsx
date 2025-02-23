@@ -81,7 +81,7 @@ const Readings = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState("");
   const filteredData = useMemo(() => {
-    if (!readings) return [];
+    if (!searchText) return readings;
     return readings.filter((reading) => {
       const matchesSearch =
         !searchText ||

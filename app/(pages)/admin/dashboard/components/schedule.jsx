@@ -21,7 +21,7 @@ const Schedule = ({ schedule, loadingSchedule }) => {
 
       // Log only when data is found
       if (data) {
-        console.log("Data found for date:", current.format("YYYY-MM-DD"), data);
+        
         return (
           <div className="m-0 p-0">
             <Badge

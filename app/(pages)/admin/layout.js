@@ -211,22 +211,27 @@ export default function Layout({ children }) {
                   <div className="px-5 md:px-10 flex gap-3 my-4">
                     <Select
                       value={activeLocation}
-                      onChange={(value) =>
-                        router.push(
-                          `/admin/${currentPage}${
-                            value || activeSystem
-                              ? `?${value ? `location=${value}` : ""}${
-                                  value && activeSystem ? "&" : ""
-                                }${
-                                  activeSystem ? `system=${activeSystem}` : ""
-                                }`
-                              : ""
-                          }`
-                        )
-                      }
+                      onChange={(value) => {
+                        if (value) {
+                          router.push(
+                            `/admin/${currentPage}${
+                              value || activeSystem
+                                ? `?${value ? `location=${value}` : ""}${
+                                    value && activeSystem ? "&" : ""
+                                  }${
+                                    activeSystem ? `system=${activeSystem}` : ""
+                                  }`
+                                : ""
+                            }`
+                          );
+                        } else {
+                          router.push(`/admin/${currentPage}`);
+                        }
+                      }}
+                      allowClear={true}
                       options={locations.map((i) => ({
-                        label: i.name,
-                        value: i.id,
+                        label: i.site,
+                        value: i._id,
                       }))}
                       placeholder="Select Parent Location"
                       className="w-full sm:w-44 !h-10 shadow-custom"
@@ -259,10 +264,10 @@ export default function Layout({ children }) {
                         options={
                           activeLocation &&
                           systems
-                            .find((i) => i?.id === activeLocation)
+                            .filter((i) => i?.rig?.id === activeLocation)
                             ?.map((i) => ({
                               label: i.name,
-                              value: i.id,
+                              value: i._id,
                             }))
                         }
                         placeholder="Select System"
