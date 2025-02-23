@@ -54,9 +54,9 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
       label: <span style={{ fontSize: "18px" }}>Material Transfer</span>,
     },
     {
-      key: "set-up",
+      key: "settings",
       icon: <SettingOutlined style={{ fontSize: "18px" }} />,
-      label: <span style={{ fontSize: "18px" }}>Set Up</span>,
+      label: <span style={{ fontSize: "18px" }}>Settings</span>,
     },
   ];
 
@@ -73,7 +73,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
           defaultSelectedKeys={[currentPage || "dashboard"]}
           onClick={onClick}
           items={items}
-          style={{ border: "none" }}
+          className="[&_.ant-menu-item]:!pl-3 !border-none"
         />
       </div>
       <Drawer

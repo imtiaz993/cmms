@@ -81,7 +81,7 @@ export default function Layout({ children }) {
       icon: <SwapOutlined />,
       label: "Material Transfer",
     },
-    { key: "set-up", icon: <SettingOutlined />, label: "Set Up" },
+    { key: "settings", icon: <SettingOutlined />, label: "Settings" },
   ];
 
   // Find the current item based on the current page

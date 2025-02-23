@@ -57,7 +57,8 @@ label {
   color: var(--tertiary-text);
 }
 
-p {
+p,
+span {
   color: var(--secondary-text);
   border-color: var(--border-color);
 }
