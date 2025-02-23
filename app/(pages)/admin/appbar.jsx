@@ -57,8 +57,11 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
     <div
       className={`bg-primary h-16 flex justify-between items-center px-3 md:px-11 shadow-custom`}
     >
-      <Link href="/admin/dashboard">
+      <Link href="/admin/dashboard" className="flex gap-3 items-center">
         <Image src="/images/hive-logo.png" alt="logo" width={50} height={50} />
+        <h1 className="text-2xl md:text-3xl headerLogo text-[#0F0E13] dark:text-[#D8A444]">
+          Hive Solutions
+        </h1>
       </Link>
       <div className="flex flex-row">
         <DarkModeToggle
@@ -68,7 +71,9 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
           className="mr-2 md:mr-4"
         />
         <div className="flex items-center">
-          <BellOutlined className="mr-2 md:mr-4 text-2xl" />
+          <span>
+            <BellOutlined className="mr-2 md:mr-4 text-2xl" />
+          </span>
           <Dropdown
             menu={{
               items: dropdownItems.map((i, index) => ({ ...i, key: index })),
@@ -85,8 +90,12 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
                 height={40}
                 className="rounded-full h-6 w-6 object-top"
               />
-              <p className={`dark:text-white text-lg hidden md:block`}>{userName}</p>
-              <DownOutlined style={{ fontSize: "10px" }} />
+              <p className={`dark:text-white text-lg hidden md:block`}>
+                {userName}
+              </p>
+              <span>
+                <DownOutlined style={{ fontSize: "10px" }} />
+              </span>
             </div>
           </Dropdown>
           <div className="ml-3 lg:hidden">

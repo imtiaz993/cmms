@@ -62,7 +62,7 @@ const CompanyDetails = () => {
   };
 
   return (
-    <div className="h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
+    <div className="max-h-[calc(100dvh-140px-16px-60px-60px)] overflow-auto p-[12px_12px_28px_0px]">
       <Formik
         initialValues={{
           _id: companyData?._id || "",
