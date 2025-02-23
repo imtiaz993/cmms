@@ -2,7 +2,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { message, Tabs } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
-import { getWorkOrders } from "app/services/workOrders";
+import {
+  getFilteredWorkOrders,
+  getWorkOrders,
+  getWorkOrdersByStatus,
+} from "app/services/workOrders";
 import Link from "next/link";
 import WOtable from "./workOrderTable";
 import EarlyMaintenancePopup from "./components/earlyMaintenancePopup";
@@ -150,7 +154,7 @@ const WorkOrders = () => {
       }
       setFetchingWorkOrders(false);
     };
-    fetchWorkOrders();
+    if (!activeLocation) fetchWorkOrders();
   }, [currentTab]);
 
   // Dynamically filter columns based on the checkedList
@@ -169,32 +173,33 @@ const WorkOrders = () => {
   }, [searchText, workOrders]);
 
   useEffect(() => {
-    if (activeLocation) {
+    if (activeLocation || activeLocation === "") {
       const fetchFilteredWorkOrders = async () => {
         setFetchingWorkOrders(true);
         try {
-          const { status, data } = await getDocumentsByCategory({
-            location: activeLocation,
-            system: activeSystem ? activeSystem : "",
+          const { status, data } = await getWorkOrdersByStatus(currentTab, {
+            location: activeLocation ? activeLocation : null,
+            system: activeSystem ? activeSystem : null,
           });
 
           if (status === 200) {
             setWorkOrders(data.data);
           } else {
-            message.error(data?.message || "Failed to fetch filtered assets");
+            message.error(
+              data?.message || "Failed to fetch filtered workorders"
+            );
           }
         } catch (error) {
-          message.error("Error fetching filtered assets");
+          message.error("Error fetching filtered workorders");
         } finally {
           setFetchingWorkOrders(false);
         }
       };
-
       fetchFilteredWorkOrders();
     } else {
       setWorkOrders(workOrders); // If no filters, use full assets list
     }
-  }, [activeLocation, activeSystem, workOrders]);
+  }, [activeLocation, activeSystem, currentTab]);
 
   const tabs = [
     {

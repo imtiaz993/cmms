@@ -1,25 +1,27 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
-import { Form, Modal } from "antd";
+import { Form, message, Modal } from "antd";
 import { createSystem } from "app/services/setUp/systems";
 import { Formik } from "formik";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
-const AddLocationPopup = ({ visible, setVisible }) => {
+const AddLocationPopup = ({ visible, setLocations, setVisible }) => {
+  const locations = useSelector((state) => state.location.location);
   const initialValues = {
     site: "",
-    location: "",
+    system: "",
   };
   const validationSchema = Yup.object({
     site: Yup.string().required("Site is required"),
-    location: Yup.string().required("Location name is required"),
+    system: Yup.string().required("System name is required"),
   });
   const handleSubmit = async (values, setSubmitting, resetForm) => {
-    console.log("Submitted");
     const { status, data } = await createSystem(values);
     setSubmitting(false);
     if (status === 200) {
+      setLocations((prev) => [...prev, data.data]);
       message.success(data.message);
       resetForm();
       setVisible(false);
@@ -80,12 +82,16 @@ const AddLocationPopup = ({ visible, setVisible }) => {
                 placeholder="Select site"
                 label="Site"
                 required
+                options={locations.map((i) => ({
+                  label: i.site,
+                  value: i._id,
+                }))}
               />
               <div className="mt-5">
                 <InputField
-                  name="location"
-                  placeholder="Enter location name"
-                  label="Location"
+                  name="system"
+                  placeholder="Enter system name"
+                  label="System"
                   required
                 />
               </div>

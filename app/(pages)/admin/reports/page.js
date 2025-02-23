@@ -27,7 +27,7 @@ const Reports = () => {
   return (
     <div className="pb-4 pt-3">
       <Tabs
-      animated
+        animated
         size={"small"}
         items={tabs.map((i, index) => ({ ...i, key: index }))}
         // tabBarStyle={{ borderColor: "white" }}

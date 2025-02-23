@@ -27,6 +27,19 @@ export const createEvent = async (values) => {
     }
   }
 };
+export const deleteEvent = async (eventId) => {
+  try {
+    const { status, data } = await authRequest({
+      url: `/event/delete?id=${eventId}`,
+      method: "DELETE",
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
 
 export const filterEvents = async (values) => {
   try {

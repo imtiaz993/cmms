@@ -27,6 +27,19 @@ export const createSystem = async (values) => {
     }
   }
 };
+export const deleteSystem = async (siteId) => {
+  try {
+    const { status, data } = await authRequest({
+      url: `/system/delete?id=${siteId}`,
+      method: "DELETE",
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
 
 export const filterSystems = async (values) => {
   try {

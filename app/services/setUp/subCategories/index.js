@@ -28,6 +28,20 @@ export const createSubCategory = async (values) => {
   }
 };
 
+export const deleteSubCategory = async (siteId) => {
+  try {
+    const { status, data } = await authRequest({
+      url: `/subCategory/delete?id=${siteId}`,
+      method: "DELETE",
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const filterSubCategories = async (values) => {
   try {
     const { status, data } = await authRequest({

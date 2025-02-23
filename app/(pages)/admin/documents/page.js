@@ -5,7 +5,7 @@ import { DownloadOutlined, EyeOutlined } from "@ant-design/icons";
 import { useEffect, useMemo, useState } from "react";
 import { getDocuments, getDocumentsByCategory } from "app/services/document";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const columns = [
   {
@@ -124,13 +124,13 @@ const Documents = () => {
   }, [searchText, documents, checkedList]);
 
   useEffect(() => {
-    if (activeLocation) {
+    if (activeLocation || activeLocation === "") {
       const fetchFilteredDocuments = async () => {
         setFetchingDocuments(true);
         try {
           const { status, data } = await getDocumentsByCategory({
-            location: activeLocation,
-            system: activeSystem ? activeSystem : "",
+            location: activeLocation ? activeLocation : null,
+            system: activeSystem ? activeSystem : null,
           });
 
           if (status === 200) {
@@ -149,7 +149,7 @@ const Documents = () => {
     } else {
       setDocuments(documents); // If no filters, use full assets list
     }
-  }, [activeLocation, activeSystem, documents]);
+  }, [activeLocation, activeSystem]);
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">

@@ -93,13 +93,13 @@ const Inventory = () => {
   }, [searchText, filteredInventory, checkedList]);
 
   useEffect(() => {
-    if (activeLocation) {
+    if (activeLocation || activeLocation == "") {
       const fetchFilteredInventory = async () => {
         setIsFiltering(true);
         try {
           const { status, data } = await getFilteredInventory({
-            location: activeLocation,
-            system: activeSystem ? activeSystem : "",
+            location: activeLocation ? activeLocation : null,
+            system: activeSystem ? activeSystem : null,
           });
 
           if (status === 200) {

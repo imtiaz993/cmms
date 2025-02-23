@@ -65,6 +65,7 @@ const ActionBar = ({
       <AddLocationPopup
         visible={addLocationPopup}
         setVisible={setAddLocationPopup}
+        setLocations={setLocations}
       />
       <div className="">
         <Input.Search

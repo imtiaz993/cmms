@@ -29,6 +29,7 @@ const ActionBar = ({
   setSearchText,
   setLoading,
   setSubCategories,
+  categories
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const [addSubCategory, setAddSubCategory] = useState(false);
@@ -65,6 +66,8 @@ const ActionBar = ({
       <AddSubCategoryPopup
         visible={addSubCategory}
         setVisible={setAddSubCategory}
+        setSubCategories={setSubCategories}
+        categories={categories}
       />
       <div className="">
         <Input.Search

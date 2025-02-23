@@ -27,9 +27,16 @@ export const exportWorkOrders = async (query) => {
 };
 
 export const getWorkOrdersByStatus = async (status, query) => {
+  // Convert query object into query parameters
+  const queryString = new URLSearchParams(
+    Object.entries(query).filter(([_, value]) => value) // Remove empty values
+  ).toString();
   try {
+    const url = `/work-orders/getByStatus?status=${status}${
+      queryString ? `&${queryString}` : ""
+    }`;
     const { status: s, data } = await authRequest({
-      url: "/work-orders/getByStatus?status=" + status + "&query=" + query,
+      url,
     });
     return { status: s, data };
   } catch (e) {

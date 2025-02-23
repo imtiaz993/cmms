@@ -1,45 +1,45 @@
 import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./components/actionBar";
-import { Table } from "antd";
+import { message, Table } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { useSearchParams } from "next/navigation";
-import { filterLocations, filterSystems, getLocations, getSystems } from "app/services/setUp/systems";
-
-const columns = [
-  {
-    title: "location",
-    dataIndex: "location",
-    key: "location",
-    render: (location) => (
-      <span className="text-[#017BFE] underline">{location}</span>
-    ),
-  },
-  {
-    title: "",
-    dataIndex: "actions",
-    key: "actions",
-    render: () => (
-      <div className="text-right">
-        <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
-        <DeleteOutlined
-          style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
-        />
-      </div>
-    ),
-  },
-];
-
-const defaultCheckedList = columns.map((item) => item.key);
+import {
+  deleteSystem,
+  filterLocations,
+  filterSystems,
+  getLocations,
+  getSystems,
+} from "app/services/setUp/systems";
 
 const Locations = () => {
-  const searchParams = useSearchParams();
-  const activeLocation = searchParams.get("location") || "";
-  const activeSystem = searchParams.get("system") || "";
-  const [locations, setLocations] = useState([
+  const columns = [
     {
-      location: "Rig 20",
+      title: "System",
+      dataIndex: "system",
+      key: "system",
+      render: (system) => (
+        <span className="text-[#017BFE] underline">{system}</span>
+      ),
     },
-  ]);
+    {
+      title: "",
+      dataIndex: "actions",
+      key: "actions",
+      render: (_, record) => (
+        <div className="text-right">
+          <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+          <DeleteOutlined
+            style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
+            onClick={() => handleDelete(record)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const defaultCheckedList = columns.map((item) => item.key);
+
+  const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [searchText, setSearchText] = useState("");
@@ -77,35 +77,18 @@ const Locations = () => {
     );
   }, [searchText, locations, checkedList]);
 
-  useEffect(() => {
-    if (activeLocation) {
-      const fetchFilteredLocations = async () => {
-        setLoading(true);
-        try {
-          const { status, data } = await filterSystems({
-            location: activeLocation,
-            system: activeSystem ? activeSystem : "",
-          });
-
-          if (status === 200) {
-            setLocations(data.data);
-          } else {
-            message.error(
-              data?.message || "Failed to fetch filtered systems"
-            );
-          }
-        } catch (error) {
-          message.error("Error fetching filtered systems");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchFilteredLocations();
+  const handleDelete = async (system) => {
+    setLoading(true);
+    const { status, data } = await deleteSystem(system._id);
+    if (status === 200) {
+      setLoading(false);
+      setLocations((prev) => prev.filter((i) => i._id !== system._id));
+      message.success(data.message);
     } else {
-      setLocations(locations);
+      setLoading(false);
+      message.error(data.error);
     }
-  }, [activeLocation, activeSystem, locations]);
+  };
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">

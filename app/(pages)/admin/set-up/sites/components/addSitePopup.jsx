@@ -1,12 +1,12 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
-import { Form, Modal } from "antd";
+import { Form, message, Modal } from "antd";
 import { createSite } from "app/services/setUp/sites";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-const AddSitePopup = ({ visible, setVisible }) => {
+const AddSitePopup = ({ visible, setSites, setVisible }) => {
   const initialValues = {
     site: "",
     description: "",
@@ -21,10 +21,10 @@ const AddSitePopup = ({ visible, setVisible }) => {
     site: Yup.string().required("Site name is required"),
   });
   const handleSubmit = async (values, setSubmitting, resetForm) => {
-    console.log("Submitted", values);
     const { status, data } = await createSite(values);
     setSubmitting(false);
     if (status === 200) {
+      setSites((prev) => [...prev, data.data]);
       message.success(data.message);
       resetForm();
       setVisible(false);

@@ -1,12 +1,17 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
-import { Form, Modal } from "antd";
+import { Form, message, Modal } from "antd";
 import { createSubCategory } from "app/services/setUp/subCategories";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-const AddSubCategoryPopup = ({ visible, setVisible }) => {
+const AddSubCategoryPopup = ({
+  visible,
+  setVisible,
+  setSubCategories,
+  categories,
+}) => {
   const initialValues = {
     category: "",
     subCategory: "",
@@ -20,6 +25,7 @@ const AddSubCategoryPopup = ({ visible, setVisible }) => {
     const { status, data } = await createSubCategory(values);
     setSubmitting(false);
     if (status === 200) {
+      setSubCategories((prev) => [...prev, data.data]);
       message.success(data.message);
       resetForm();
       setVisible(false);
@@ -80,6 +86,10 @@ const AddSubCategoryPopup = ({ visible, setVisible }) => {
                 placeholder="Select category"
                 label="Category"
                 required
+                options={categories.map((cat) => ({
+                  label: cat.category,
+                  value: cat._id,
+                }))}
               />
               <div className="mt-5">
                 <InputField
