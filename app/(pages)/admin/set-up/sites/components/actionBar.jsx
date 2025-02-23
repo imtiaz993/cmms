@@ -62,7 +62,11 @@ const ActionBar = ({
 
   return (
     <>
-      <AddSitePopup visible={addSitePopup} setSites={setSites} setVisible={setAddSitePopup} />
+      <AddSitePopup
+        visible={addSitePopup}
+        setSites={setSites}
+        setVisible={setAddSitePopup}
+      />
       <div className="">
         <Input.Search
           placeholder="Search..."

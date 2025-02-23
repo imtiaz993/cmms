@@ -80,31 +80,31 @@ const Events = () => {
     if (activeLocation) {
       const fetchFilteredEvents = async () => {
         setLoading(true);
-        try {
-          const { status, data } = await filterEvents({
-            location: activeLocation,
-            system: activeSystem ? activeSystem : "",
-          });
+        // try {
+        //   const { status, data } = await filterEvents({
+        //     location: activeLocation,
+        //     system: activeSystem ? activeSystem : "",
+        //   });
 
-          if (status === 200) {
-            setEvents(data.data);
-          } else {
-            message.error(
-              data?.message || "Failed to fetch filtered sub categories"
-            );
-          }
-        } catch (error) {
-          message.error("Error fetching filtered sub categories");
-        } finally {
-          setLoading(false);
-        }
+        //   if (status === 200) {
+        //     setEvents(data.data);
+        //   } else {
+        //     message.error(
+        //       data?.message || "Failed to fetch filtered sub categories"
+        //     );
+        //   }
+        // } catch (error) {
+        //   message.error("Error fetching filtered sub categories");
+        // } finally {
+        //   setLoading(false);
+        // }
       };
 
       fetchFilteredEvents();
     } else {
       setEvents(events);
     }
-  }, [activeLocation, activeSystem]);
+  }, []);
 
   const handleDelete = async (event) => {
     setLoading(true);

@@ -2,15 +2,22 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { message } from "antd";
 import Button from "@/components/common/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectField from "@/components/common/SelectField";
+import { getSites } from "app/services/setUp/sites";
 
 const validationSchema = Yup.object().shape({
-  location: Yup.string(),
+  site: Yup.string(),
 });
 
-const FilterDropdown = ({ closeDropdown, setLoading, setLocations }) => {
+const FilterDropdown = ({
+  closeDropdown,
+  setLoading,
+  setLocations,
+  handleFetchFilteredSystems,
+}) => {
   const [isClearing, setIsClearing] = useState(false);
+  const [sites, setSites] = useState([]);
 
   const submit = async (values, setSubmitting) => {
     console.log(values);
@@ -27,6 +34,19 @@ const FilterDropdown = ({ closeDropdown, setLoading, setLocations }) => {
     // setLoading(false);
   };
 
+  useEffect(() => {
+    const handleFetchSites = async () => {
+      const { status, data } = await getSites();
+      if (status === 200) {
+        setLoading(false);
+        setSites(data.data);
+      } else {
+        message.error(data.error);
+      }
+    };
+    handleFetchSites();
+  }, []);
+
   return (
     <div
       className="p-4 bg-primary rounded-md max-h-[400px] overflow-auto"
@@ -36,16 +56,28 @@ const FilterDropdown = ({ closeDropdown, setLoading, setLocations }) => {
       }}
     >
       <Formik
-        initialValues={{}}
+        initialValues={{ site: "" }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          submit(values, setSubmitting);
+          {
+            setSubmitting(true);
+            handleFetchFilteredSystems(values);
+            setSubmitting(false);
+            closeDropdown();
+          }
         }}
       >
         {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 w-full md:w-60 gap-4">
-              <SelectField name="location" placeholder="Location" />
+              <SelectField
+                name="site"
+                placeholder="Site"
+                options={sites.map((site) => ({
+                  value: site._id,
+                  label: site.site,
+                }))}
+              />
 
               <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
                 <div>
@@ -57,7 +89,7 @@ const FilterDropdown = ({ closeDropdown, setLoading, setLocations }) => {
                     isLoading={isClearing}
                     onClick={() => {
                       resetForm();
-                      submit({});
+                      handleFetchFilteredSystems({});
                     }}
                     style={{ width: "fit-content" }}
                     className="mr-2"

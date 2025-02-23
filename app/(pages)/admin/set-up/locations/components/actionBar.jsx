@@ -29,6 +29,7 @@ const ActionBar = ({
   setSearchText,
   setLoading,
   setLocations,
+  handleFetchFilteredSystems,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const [addLocationPopup, setAddLocationPopup] = useState(false);
@@ -102,6 +103,7 @@ const ActionBar = ({
                   closeDropdown={() => setFilterDropdown(false)}
                   setLoading={setLoading}
                   setLocations={setLocations}
+                  handleFetchFilteredSystems={handleFetchFilteredSystems}
                 />
               )}
               trigger={["click"]}

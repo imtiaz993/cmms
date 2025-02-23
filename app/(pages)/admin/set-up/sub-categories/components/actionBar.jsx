@@ -29,7 +29,8 @@ const ActionBar = ({
   setSearchText,
   setLoading,
   setSubCategories,
-  categories
+  categories,
+  fetchFilteredSubCategories,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const [addSubCategory, setAddSubCategory] = useState(false);
@@ -104,6 +105,7 @@ const ActionBar = ({
                   closeDropdown={() => setFilterDropdown(false)}
                   setLoading={setLoading}
                   setSubCategories={setSubCategories}
+                  fetchFilteredSubCategories={fetchFilteredSubCategories}
                 />
               )}
               trigger={["click"]}

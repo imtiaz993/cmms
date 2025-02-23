@@ -108,34 +108,6 @@ const Sites = () => {
     );
   }, [searchText, sites, checkedList]);
 
-  useEffect(() => {
-    if (activeLocation || activeLocation === "") {
-      const fetchFilteredSites = async () => {
-        setLoading(true);
-        try {
-          const { status, data } = await filterSites({
-            location: activeLocation ? activeLocation : null,
-            system: activeSystem ? activeSystem : null,
-          });
-
-          if (status === 200) {
-            setSites(data.data);
-          } else {
-            message.error(data?.message || "Failed to fetch filtered sites");
-          }
-        } catch (error) {
-          message.error("Error fetching filtered sites");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchFilteredSites();
-    } else {
-      setSites(sites);
-    }
-  }, [activeLocation, activeSystem]);
-
   const handleDelete = async (site) => {
     setLoading(true);
     const { status, data } = await deleteSite(site._id);

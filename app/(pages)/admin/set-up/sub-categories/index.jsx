@@ -21,6 +21,16 @@ const SubCategories = () => {
       ),
     },
     {
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
+      render: (_, record) => (
+        <span className="text-[#017BFE] underline">
+          {record.category?.category}
+        </span>
+      ),
+    },
+    {
       title: "",
       dataIndex: "actions",
       key: "actions",
@@ -88,35 +98,17 @@ const SubCategories = () => {
     );
   }, [searchText, subCategories, checkedList]);
 
-  useEffect(() => {
-    if (activeLocation) {
-      const fetchFilteredSubCategories = async () => {
-        setLoading(true);
-        try {
-          const { status, data } = await filterSubCategories({
-            location: activeLocation,
-            system: activeSystem ? activeSystem : "",
-          });
-
-          if (status === 200) {
-            setSubCategories(data.data);
-          } else {
-            message.error(
-              data?.message || "Failed to fetch filtered sub categories"
-            );
-          }
-        } catch (error) {
-          message.error("Error fetching filtered sub categories");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchFilteredSubCategories();
+  const fetchFilteredSubCategories = async (values) => {
+    setLoading(true);
+    const { status, data } = await filterSubCategories(values);
+    if (status === 200) {
+      setLoading(false);
+      setSubCategories(data.data);
     } else {
-      setSubCategories(subCategories);
+      setLoading(false);
+      message.error(data.error);
     }
-  }, [activeLocation, activeSystem]);
+  };
 
   const handleDelete = async (subcategory) => {
     setLoading(true);
@@ -144,6 +136,7 @@ const SubCategories = () => {
         setLoading={setLoading}
         setSubCategories={setSubCategories}
         categories={categories}
+        fetchFilteredSubCategories={fetchFilteredSubCategories}
       />
       <Table
         loading={loading}

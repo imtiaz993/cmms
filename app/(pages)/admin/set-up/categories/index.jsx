@@ -39,8 +39,7 @@ const Categories = () => {
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
-  const [categories, setCategories] = useState([
-  ]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [searchText, setSearchText] = useState("");
@@ -81,32 +80,31 @@ const Categories = () => {
   useEffect(() => {
     if (activeLocation) {
       const fetchFilteredCategories = async () => {
-        setLoading(true);
-        try {
-          const { status, data } = await filterCategories({
-            location: activeLocation,
-            system: activeSystem ? activeSystem : "",
-          });
-
-          if (status === 200) {
-            setCategories(data.data);
-          } else {
-            message.error(
-              data?.message || "Failed to fetch filtered categories"
-            );
-          }
-        } catch (error) {
-          message.error("Error fetching filtered categories");
-        } finally {
-          setLoading(false);
-        }
+        // setLoading(true);
+        // try {
+        //   const { status, data } = await filterCategories({
+        //     location: activeLocation,
+        //     system: activeSystem ? activeSystem : "",
+        //   });
+        //   if (status === 200) {
+        //     setCategories(data.data);
+        //   } else {
+        //     message.error(
+        //       data?.message || "Failed to fetch filtered categories"
+        //     );
+        //   }
+        // } catch (error) {
+        //   message.error("Error fetching filtered categories");
+        // } finally {
+        //   setLoading(false);
+        // }
       };
 
       fetchFilteredCategories();
     } else {
       setCategories(categories);
     }
-  }, [activeLocation, activeSystem, categories]);
+  }, []);
 
   const handleDelete = async (category) => {
     setLoading(true);
