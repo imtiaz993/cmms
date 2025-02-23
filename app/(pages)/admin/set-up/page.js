@@ -15,7 +15,7 @@ const SetUp = () => {
       children: <CompanyDetails />,
     },
     { key: "sites", label: "Sites", children: <Sites /> },
-    { key: "locations", label: "Locations", children: <Locations /> },
+    { key: "locations", label: "Systems", children: <Locations /> },
     { key: "categories", label: "Categories", children: <Categories /> },
     { key: "sub-categories", label: "Sub Categories", children: <SubCategories /> },
     { key: "events", label: "Events", children: <Events /> },

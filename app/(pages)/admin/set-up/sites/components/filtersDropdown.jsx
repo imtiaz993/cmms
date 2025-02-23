@@ -5,6 +5,7 @@ import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import { useState } from "react";
 import SelectField from "@/components/common/SelectField";
+import { filterSites } from "app/services/setUp/sites";
 
 const validationSchema = Yup.object().shape({
   siteName: Yup.string(),
@@ -14,18 +15,18 @@ const FilterDropdown = ({ closeDropdown, setLoading, setSites }) => {
   const [isClearing, setIsClearing] = useState(false);
 
   const submit = async (values, setSubmitting) => {
-    console.log(values);
-    // setLoading(true);
-    // !setSubmitting && setIsClearing(true);
-    // const { status, data } = await getFilteredInventory(values);
+    setLoading(true);
+    !setSubmitting && setIsClearing(true);
+    const { status, data } = await filterSites(values);
     setSubmitting ? setSubmitting(false) : setIsClearing(false);
-    // if (status === 200) {
-    //   message.success(data?.message || "Fetched successfully");
-    closeDropdown();
-    // } else {
-    //   message.error(data?.message || "Failed to fetch");
-    // }
-    // setLoading(false);
+    if (status === 200) {
+      setSites(data.data);
+      message.success(data?.message || "Fetched successfully");
+      closeDropdown();
+    } else {
+      message.error(data?.message || "Failed to fetch");
+    }
+    setLoading(false);
   };
 
   return (
@@ -37,7 +38,15 @@ const FilterDropdown = ({ closeDropdown, setLoading, setSites }) => {
       }}
     >
       <Formik
-        initialValues={{}}
+        initialValues={{
+          site: "",
+          address: "",
+          apartment: "",
+          city: "",
+          state: "",
+          zip: "",
+          country: "",
+        }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           submit(values, setSubmitting);
@@ -46,7 +55,7 @@ const FilterDropdown = ({ closeDropdown, setLoading, setSites }) => {
         {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <InputField name="siteName" placeholder="Site Name" />
+              <InputField name="site" placeholder="Site Name" />
               <InputField name="address" placeholder="Address" />
               <InputField name="apartment" placeholder="Apt./Suite #" />
               <InputField name="city" placeholder="City" />

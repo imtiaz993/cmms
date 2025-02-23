@@ -29,6 +29,8 @@ const ActionBar = ({
   setSearchText,
   setLoading,
   setSubCategories,
+  categories,
+  fetchFilteredSubCategories,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const [addSubCategory, setAddSubCategory] = useState(false);
@@ -65,6 +67,8 @@ const ActionBar = ({
       <AddSubCategoryPopup
         visible={addSubCategory}
         setVisible={setAddSubCategory}
+        setSubCategories={setSubCategories}
+        categories={categories}
       />
       <div className="">
         <Input.Search
@@ -101,6 +105,7 @@ const ActionBar = ({
                   closeDropdown={() => setFilterDropdown(false)}
                   setLoading={setLoading}
                   setSubCategories={setSubCategories}
+                  fetchFilteredSubCategories={fetchFilteredSubCategories}
                 />
               )}
               trigger={["click"]}

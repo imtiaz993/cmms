@@ -28,6 +28,20 @@ export const createSite = async (values) => {
   }
 };
 
+export const deleteSite = async (siteId) => {
+  try {
+    const { status, data } = await authRequest({
+      url: `/site/delete?id=${siteId}`,
+      method: "DELETE",
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const filterSites = async (values) => {
   try {
     const { status, data } = await authRequest({

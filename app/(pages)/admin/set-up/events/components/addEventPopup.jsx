@@ -1,11 +1,11 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
-import { Form, Modal } from "antd";
+import { Form, message, Modal } from "antd";
 import { createEvent } from "app/services/setUp/events";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-const AddEventPopup = ({ visible, setVisible }) => {
+const AddEventPopup = ({ visible, setEvents, setVisible }) => {
   const initialValues = {
     event: "",
   };
@@ -17,6 +17,7 @@ const AddEventPopup = ({ visible, setVisible }) => {
     const { status, data } = await createEvent(values);
     setSubmitting(false);
     if (status === 200) {
+      setEvents((prev) => [...prev, data.data]);
       message.success(data.message);
       resetForm();
       setVisible(false);

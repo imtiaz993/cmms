@@ -1,45 +1,57 @@
 import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./components/actionBar";
-import { Table } from "antd";
+import { message, Table } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { useSearchParams } from "next/navigation";
-import { filterSubCategories, getSubCategories } from "app/services/setUp/subCategories";
-
-const columns = [
-  {
-    title: "Sub Category",
-    dataIndex: "subCategory",
-    key: "subCategory",
-    render: (subCategory) => (
-      <span className="text-[#017BFE] underline">{subCategory}</span>
-    ),
-  },
-  {
-    title: "",
-    dataIndex: "actions",
-    key: "actions",
-    render: () => (
-      <div className="text-right">
-        <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
-        <DeleteOutlined
-          style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
-        />
-      </div>
-    ),
-  },
-];
-
-const defaultCheckedList = columns.map((item) => item.key);
+import {
+  deleteSubCategory,
+  filterSubCategories,
+  getSubCategories,
+} from "app/services/setUp/subCategories";
+import { getCategories } from "app/services/setUp/categories";
 
 const SubCategories = () => {
+  const columns = [
+    {
+      title: "Sub Category",
+      dataIndex: "subCategory",
+      key: "subCategory",
+      render: (subCategory) => (
+        <span className="text-[#017BFE] underline">{subCategory}</span>
+      ),
+    },
+    {
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
+      render: (_, record) => (
+        <span className="text-[#017BFE] underline">
+          {record.category?.category}
+        </span>
+      ),
+    },
+    {
+      title: "",
+      dataIndex: "actions",
+      key: "actions",
+      render: (_, record) => (
+        <div className="text-right">
+          <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+          <DeleteOutlined
+            style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
+            onClick={() => handleDelete(record)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const defaultCheckedList = columns.map((item) => item.key);
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
-  const [subCategories, setSubCategories] = useState([
-    {
-      subCategory: "Sub Category 1",
-    },
-  ]);
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [searchText, setSearchText] = useState("");
@@ -65,6 +77,15 @@ const SubCategories = () => {
         message.error(data.error);
       }
     };
+    const handleFetchCategories = async () => {
+      const { status, data } = await getCategories();
+      if (status === 200) {
+        setCategories(data.data);
+      } else {
+        message.error(data.error);
+      }
+    };
+    handleFetchCategories();
     handleFetch();
   }, []);
 
@@ -77,35 +98,30 @@ const SubCategories = () => {
     );
   }, [searchText, subCategories, checkedList]);
 
-  useEffect(() => {
-    if (activeLocation) {
-      const fetchFilteredSubCategories = async () => {
-        setLoading(true);
-        try {
-          const { status, data } = await filterSubCategories({
-            location: activeLocation,
-            system: activeSystem ? activeSystem : "",
-          });
-
-          if (status === 200) {
-            setSubCategories(data.data);
-          } else {
-            message.error(
-              data?.message || "Failed to fetch filtered sub categories"
-            );
-          }
-        } catch (error) {
-          message.error("Error fetching filtered sub categories");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchFilteredSubCategories();
+  const fetchFilteredSubCategories = async (values) => {
+    setLoading(true);
+    const { status, data } = await filterSubCategories(values);
+    if (status === 200) {
+      setLoading(false);
+      setSubCategories(data.data);
     } else {
-      setSubCategories(subCategories);
+      setLoading(false);
+      message.error(data.error);
     }
-  }, [activeLocation, activeSystem, subCategories]);
+  };
+
+  const handleDelete = async (subcategory) => {
+    setLoading(true);
+    const { status, data } = await deleteSubCategory(subcategory._id);
+    if (status === 200) {
+      setLoading(false);
+      setSubCategories((prev) => prev.filter((i) => i._id !== subcategory._id));
+      message.success(data.message);
+    } else {
+      setLoading(false);
+      message.error(data.error);
+    }
+  };
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
@@ -119,6 +135,8 @@ const SubCategories = () => {
         setSearchText={setSearchText}
         setLoading={setLoading}
         setSubCategories={setSubCategories}
+        categories={categories}
+        fetchFilteredSubCategories={fetchFilteredSubCategories}
       />
       <Table
         loading={loading}

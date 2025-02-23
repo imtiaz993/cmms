@@ -1,9 +1,9 @@
 import { authRequest } from "app/services/requestHandler";
 
-export const getCategories = async () => {
+export const getSystems = async () => {
   try {
     const { status, data } = await authRequest({
-      url: "/category/get",
+      url: "/system/get",
     });
     return { status, data };
   } catch (e) {
@@ -13,10 +13,10 @@ export const getCategories = async () => {
   }
 };
 
-export const createCategory = async (values) => {
+export const createSystem = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: "/category/create",
+      url: "/system/create",
       method: "POST",
       data: values,
     });
@@ -27,11 +27,10 @@ export const createCategory = async (values) => {
     }
   }
 };
-
-export const deleteCategory = async (siteId) => {
+export const deleteSystem = async (siteId) => {
   try {
     const { status, data } = await authRequest({
-      url: `/category/delete?id=${siteId}`,
+      url: `/system/delete?id=${siteId}`,
       method: "DELETE",
     });
     return { status, data };
@@ -42,10 +41,10 @@ export const deleteCategory = async (siteId) => {
   }
 };
 
-export const filterCategories = async (values) => {
+export const filterSystems = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: "/category/filter",
+      url: "/system/filter",
       method: "POST",
       data: values,
     });
@@ -57,10 +56,10 @@ export const filterCategories = async (values) => {
   }
 };
 
-export const exportCategories = async (values) => {
+export const exportSystems = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: "/category/export",
+      url: "/system/export",
       method: "POST",
       data: values,
     });

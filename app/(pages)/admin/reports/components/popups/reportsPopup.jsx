@@ -6,6 +6,7 @@ import { rigs } from "@/constants/rigsAndSystems";
 import { Checkbox, message, Modal, Radio } from "antd";
 import { generateReport } from "app/services/reports";
 import { Field, Form, Formik } from "formik";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
 const ReportsPopup = ({
@@ -23,6 +24,7 @@ const ReportsPopup = ({
   date,
   year,
 }) => {
+  const locations = useSelector((state) => state.location.location);
   // Build the validation schema based on props
   const validationSchema = Yup.object({
     location: costCenter
@@ -36,9 +38,9 @@ const ReportsPopup = ({
       : Yup.date().notRequired(),
     year: year ? Yup.string().required("Year is required") : Yup.string(),
     dataOnly: dataOnly ? Yup.boolean() : Yup.boolean(),
-    physicalLocation: physicalLocation
-      ? Yup.string().required("Physical Location is required")
-      : Yup.string(),
+    // physicalLocation: physicalLocation
+    //   ? Yup.string().required("Physical Location is required")
+    //   : Yup.string(),
 
     // Only apply validation for `fromDate` and `toDate` if `fromToDate` prop is true
     fromDate: fromToDate
@@ -71,6 +73,7 @@ const ReportsPopup = ({
     setSubmitting(false);
     setVisible(false);
   };
+console.log(locations);
 
   return (
     <div>
@@ -134,9 +137,9 @@ const ReportsPopup = ({
                         label="Location"
                         labelOnTop
                         maxLength={128}
-                        options={rigs.map((i) => ({
-                          label: i.name,
-                          value: i.id,
+                        options={locations.map((i) => ({
+                          label: i.site,
+                          value: i._id,
                         }))}
                       />
                     </div>
@@ -189,16 +192,16 @@ const ReportsPopup = ({
 
                 {physicalLocation && (
                   <div className="mt-4 w-full">
-                    <SelectField
+                    {/* <SelectField
                       name="physicalLocation"
                       placeholder="Select Physical Location"
                       label="Physical Location"
                       labelOnTop
-                      options={rigs.map((i) => ({
+                      options={locations.map((i) => ({
                         label: i.name,
                         value: i.id,
                       }))}
-                    />
+                    /> */}
                   </div>
                 )}
 

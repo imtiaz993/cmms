@@ -12,6 +12,7 @@ const SelectField = ({
   options,
   labelOnTop,
   required,
+  mode = "default",
 }) => {
   const FormikSelect = ({ field, form, options, ...props }) => {
     const handleChange = (value) => {
@@ -27,6 +28,7 @@ const SelectField = ({
         options={options}
         disabled={readOnly} // Handle read-only state
         size="large"
+        mode={mode}
       />
     );
   };

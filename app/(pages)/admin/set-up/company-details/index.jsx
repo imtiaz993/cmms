@@ -1,66 +1,115 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
-import { CloseOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { Form, Formik } from "formik";
-import { useState } from "react";
+import {
+  CloseOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import { Card, message } from "antd";
+import { getCompany, updateCompany } from "app/services/setUp/company";
+import { FieldArray, Form, Formik } from "formik";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import AddRigManagerPopup from "./components/addRigManagerPopup";
+import { deleteManager } from "app/services/rigManager";
 
 const CompanyDetails = () => {
-  const initialValues = {
-    companyName: "",
-    country: "",
-    address: "",
-    apartment: "",
-    state: "",
-    zip: "",
-    phone: "",
-    email: "",
-    timezone: "",
-    currency: "",
-    dateFormat: "",
-    financialYearMonth: "",
-    financialYearDay: "",
-    rigManagers: [
-      {
-        email: "",
-        name: "",
-        phone: "",
-        password: "",
-      },
-    ],
-  };
+  const [companyData, setCompanyData] = useState();
+  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  // const initialValues = ;
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Email is required"),
   });
-  const [rigManagers, setRigManagers] = useState(1);
+  const [rigManagerData, setRigManagerData] = useState(null);
+
+  useEffect(() => {
+    const handleFetchCategories = async () => {
+      setLoading(true);
+      const { status, data } = await getCompany();
+      if (status === 200) {
+        setLoading(false);
+        setCompanyData(data?.data[0]);
+      } else {
+        setLoading(false);
+        message.error(data.error);
+      }
+    };
+    handleFetchCategories();
+  }, []);
 
   const handleSubmit = async (values, setSubmitting, resetForm) => {
-    console.log("Submitted", values);
-    // const { status, data } = await createSite(values);
-    // setSubmitting(false);
-    // if (status === 200) {
-    //   message.success(data.message);
-    //   resetForm();
-    //   setVisible(false);
-    // } else {
-    //   message.error(data.error);
-    // }
+    const { rigManagers, ...filteredValues } = values; // Exclude rigManagers
+    const { status, data } = await updateCompany(filteredValues);
+    setSubmitting(false);
+    if (status === 200) {
+      message.success(data.message);
+      resetForm();
+    } else {
+      message.error(data.error);
+    }
   };
+
+  const handleDeleteManager = async (managerId) => {
+    const { status, data } = await deleteManager(managerId);
+    if (status === 200) {
+      message.success("Rig Manager Deleted Successfully");
+    } else {
+      message.error(data.error);
+    }
+  };
+
   return (
     <div className="h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
       <Formik
-        initialValues={initialValues}
+        initialValues={{
+          _id: companyData?._id || "",
+          companyName: companyData?.companyName || "",
+          country: companyData?.country || "",
+          address: companyData?.address || "",
+          apartment: companyData?.apartment || "",
+          state: companyData?.state || "",
+          zip: companyData?.zip || "",
+          phone: companyData?.phone || "",
+          email: companyData?.email || "",
+          timezone: companyData?.timezone || "",
+          currency: companyData?.currency || "",
+          dateFormat: companyData?.dateFormat || "",
+          financialYearMonth: companyData?.financialYearMonth || "",
+          financialYearDay: companyData?.financialYearDay || "",
+          rigManagers: companyData?.rigManager || [],
+        }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           handleSubmit(values, setSubmitting, resetForm);
         }}
+        enableReinitialize={true}
       >
-        {({ isSubmitting, handleSubmit }) => (
+        {({ isSubmitting, handleSubmit, values, setValues }) => (
           <Form onSubmit={handleSubmit}>
+            <AddRigManagerPopup
+              visible={visible}
+              setVisible={setVisible}
+              setOuterValues={setValues}
+              rigManagerData={rigManagerData}
+              setRigManagerData={setRigManagerData}
+              outerValues={values}
+            />
             <div className="grid md:grid-cols-2 gap-4 md:gap-8">
               <div className="grid grid-cols-1 gap-4 md:gap-8">
-                <p className="font-semibold md:text-lg">Company Information</p>
+                <div className="flex justify-between items-center">
+                  <p className="font-semibold md:text-lg">
+                    Company Information
+                  </p>
+                  <Button
+                    text="Save Changes"
+                    className="!bg-yellow-500 !shadow-custom !border-white w-full sm:w-32"
+                    fullWidth={false}
+                    onClick={handleSubmit}
+                  />
+                </div>
                 <InputField
                   name="companyName"
                   placeholder="Company Name"
@@ -103,24 +152,100 @@ const CompanyDetails = () => {
                   placeholder="Email@email.com"
                   label="Email Address"
                 />
-                {[...Array(rigManagers)].map((_, i) => (
-                  <div key={i}>
-                    <InputField
-                      name={"rigManager" + i}
-                      placeholder="First Name Last Name"
-                      label="Rig Manager"
-                    />
-                  </div>
-                ))}
-                <div className="sm:ml-32 flex flex-wrap gap-5">
+                <p className="font-semibold md:text-lg">Rig Managers</p>
+                <FieldArray name="rigManagers">
+                  {({ push, remove }) => (
+                    <>
+                      {values.rigManagers.map((manager, i) => (
+                        <Card
+                          key={i}
+                          loading={false}
+                          className="!bg-white shadow-md"
+                          title={`Rig Manager ${i + 1}`}
+                          style={{ marginTop: "", border: "1px solid #d9d9d9" }}
+                          extra={
+                            <div className="flex gap-2">
+                              <Button
+                                text="Edit"
+                                fullWidth={false}
+                                icon={
+                                  <EyeOutlined
+                                    style={{
+                                      fontSize: "20px",
+                                      cursor: "pointer",
+                                    }}
+                                  />
+                                }
+                                onClick={() => {
+                                  setVisible(true);
+                                  setRigManagerData({
+                                    ...values.rigManagers[i],
+                                    index: i,
+                                    company: values._id,
+                                  });
+                                }}
+                                outlined
+                              />
+                              {/* <Button
+                                text=""
+                                fullWidth={false}
+                                icon={<DeleteOutlined />}
+                                onClick={() => remove(i)}
+                                outlined
+                              /> */}
+                              {values.rigManagers.length > 1 && (
+                                <Button
+                                  className="!bg-yellow-500"
+                                  outlined
+                                  onClick={() => {
+                                    handleDeleteManager(manager?._id);
+                                    remove(i);
+                                  }}
+                                  fullWidth={false}
+                                  text="Remove"
+                                  prefix={<DeleteOutlined />}
+                                />
+                              )}
+                            </div>
+                          }
+                        >
+                          <div className="space-y-2">
+                            <p>
+                              <strong>Name:</strong>{" "}
+                              {values.rigManagers[i].name}
+                            </p>
+                            <p>
+                              <strong>Email:</strong>{" "}
+                              {values.rigManagers[i].email}
+                            </p>
+                            <p>
+                              <strong>Phone:</strong>{" "}
+                              {values.rigManagers[i].phone}
+                            </p>
+                          </div>
+                        </Card>
+                      ))}
+                    </>
+                  )}
+                </FieldArray>
+                <div className="sm:ml-32 flex flex-wrap justify-end gap-5">
                   <Button
                     className="!bg-[#4C4C51] !shadow-custom !border-white w-full sm:w-52"
-                    onClick={() => setRigManagers(rigManagers + 1)}
+                    onClick={() =>
+                      // setValues({
+                      //   ...values,
+                      //   rigManagers: [
+                      //     ...values.rigManagers,
+                      //     { email: "", name: "", phone: "", password: "" },
+                      //   ],
+                      // })
+                      setVisible(true)
+                    }
                     fullWidth={false}
                     prefix={<PlusOutlined />}
                     text="Add More Rig Managers"
                   />
-                  {rigManagers > 1 && (
+                  {/* {rigManagers > 1 && (
                     <Button
                       className="w-full sm:w-52"
                       outlined
@@ -129,7 +254,7 @@ const CompanyDetails = () => {
                       text="Remove Rig Manager"
                       prefix={<DeleteOutlined />}
                     />
-                  )}
+                  )} */}
                 </div>
 
                 <p className="font-semibold md:text-lg">

@@ -29,6 +29,7 @@ const ActionBar = ({
   setSearchText,
   setLoading,
   setLocations,
+  handleFetchFilteredSystems,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const [addLocationPopup, setAddLocationPopup] = useState(false);
@@ -65,6 +66,7 @@ const ActionBar = ({
       <AddLocationPopup
         visible={addLocationPopup}
         setVisible={setAddLocationPopup}
+        setLocations={setLocations}
       />
       <div className="">
         <Input.Search
@@ -101,6 +103,7 @@ const ActionBar = ({
                   closeDropdown={() => setFilterDropdown(false)}
                   setLoading={setLoading}
                   setLocations={setLocations}
+                  handleFetchFilteredSystems={handleFetchFilteredSystems}
                 />
               )}
               trigger={["click"]}

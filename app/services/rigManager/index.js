@@ -1,9 +1,9 @@
 import { authRequest } from "app/services/requestHandler";
 
-export const getLocations = async () => {
+export const getManagers = async () => {
   try {
     const { status, data } = await authRequest({
-      url: "/location/get",
+      url: "/manager/get",
     });
     return { status, data };
   } catch (e) {
@@ -13,10 +13,10 @@ export const getLocations = async () => {
   }
 };
 
-export const createLocation = async (values) => {
+export const createManager = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: "/location/create",
+      url: "/manager/create",
       method: "POST",
       data: values,
     });
@@ -27,13 +27,11 @@ export const createLocation = async (values) => {
     }
   }
 };
-
-export const filterLocations = async (values) => {
+export const deleteManager = async (managerId) => {
   try {
     const { status, data } = await authRequest({
-      url: "/location/filter",
-      method: "POST",
-      data: values,
+      url: `/manager/delete?id=${managerId}`,
+      method: "DELETE",
     });
     return { status, data };
   } catch (e) {
@@ -43,10 +41,10 @@ export const filterLocations = async (values) => {
   }
 };
 
-export const exportLocations = async (values) => {
+export const updateManager = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: "/location/export",
+      url: "/manager/update",
       method: "POST",
       data: values,
     });

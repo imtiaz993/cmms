@@ -65,6 +65,7 @@ const ActionBar = ({
       <AddCategoryPopup
         visible={addCategoryPopup}
         setVisible={setAddCategoryPopup}
+        setCategories={setCategories}
       />
       <div className="">
         <Input.Search

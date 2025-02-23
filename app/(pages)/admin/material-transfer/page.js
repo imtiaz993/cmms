@@ -5,7 +5,10 @@ import ActionBar from "./components/actionBar";
 import { EyeFilled, EyeOutlined } from "@ant-design/icons";
 import { useRouter, useSearchParams } from "next/navigation";
 import PreviewPopup from "@/components/previewPopup";
-import { getMaterialTransferData } from "app/services/materialTransfer";
+import {
+  getFilteredMT,
+  getMaterialTransferData,
+} from "app/services/materialTransfer";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 import { rigs } from "@/constants/rigsAndSystems";
 import Link from "next/link";
@@ -19,7 +22,6 @@ const MaterialTransfer = () => {
   const [fetchingData, setFetchingData] = useState(true);
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
   const [searchText, setSearchText] = useState(""); // State for search text
-  const router = useRouter();
 
   const columns = [
     {
@@ -108,7 +110,7 @@ const MaterialTransfer = () => {
     }
   };
   useEffect(() => {
-    handleFetchData();
+    if (!activeLocation) handleFetchData();
   }, []);
 
   const filteredData = useMemo(() => {
@@ -119,6 +121,36 @@ const MaterialTransfer = () => {
       )
     );
   }, [searchText, materialTransferData, checkedList]);
+
+  useEffect(() => {
+    if (activeLocation || activeLocation == "") {
+      const fetchFilteredMaterials = async () => {
+        setFetchingData(true);
+        try {
+          const { status, data } = await getFilteredMT({
+            location: activeLocation ? activeLocation : null,
+            system: activeSystem ? activeSystem : null,
+          });
+
+          if (status === 200) {
+            setMaterialTransferData(data.data);
+          } else {
+            message.error(
+              data?.message || "Failed to fetch filtered materials transfer"
+            );
+          }
+        } catch (error) {
+          message.error("Error fetching filtered materials transfer");
+        } finally {
+          setFetchingData(false);
+        }
+      };
+
+      fetchFilteredMaterials();
+    } else {
+      setMaterialTransferData(materialTransferData); // If no filters, use full assets list
+    }
+  }, [activeLocation, activeSystem]);
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">

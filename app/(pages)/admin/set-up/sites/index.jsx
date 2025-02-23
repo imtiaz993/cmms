@@ -1,87 +1,76 @@
 import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./components/actionBar";
-import { Table } from "antd";
+import { message, Table } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import { filterSites, getSites } from "app/services/setUp/sites";
+import { deleteSite, filterSites, getSites } from "app/services/setUp/sites";
 import { useSearchParams } from "next/navigation";
 
-const columns = [
-  {
-    title: "Site Name",
-    dataIndex: "site",
-    key: "site",
-    render: (siteName) => (
-      <span className="text-[#017BFE] underline">{siteName}</span>
-    ),
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Apt./Suite #",
-    dataIndex: "apartment",
-    key: "apartment",
-  },
-  {
-    title: "City",
-    dataIndex: "city",
-    key: "city",
-  },
-  {
-    title: "State",
-    dataIndex: "state",
-    key: "state",
-  },
-  {
-    title: "Zip Code",
-    dataIndex: "zip",
-    key: "zip",
-  },
-  {
-    title: "Country",
-    dataIndex: "country",
-    key: "country",
-  },
-  {
-    title: "",
-    dataIndex: "actions",
-    key: "actions",
-    render: () => (
-      <>
-        <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
-        <DeleteOutlined
-          style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
-        />
-      </>
-    ),
-  },
-];
-
-const defaultCheckedList = columns.map((item) => item.key);
-
 const Sites = () => {
+  const columns = [
+    {
+      title: "Site Name",
+      dataIndex: "site",
+      key: "site",
+      render: (siteName) => (
+        <span className="text-[#017BFE] underline">{siteName}</span>
+      ),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+    {
+      title: "Apt./Suite #",
+      dataIndex: "apartment",
+      key: "apartment",
+    },
+    {
+      title: "City",
+      dataIndex: "city",
+      key: "city",
+    },
+    {
+      title: "State",
+      dataIndex: "state",
+      key: "state",
+    },
+    {
+      title: "Zip Code",
+      dataIndex: "zip",
+      key: "zip",
+    },
+    {
+      title: "Country",
+      dataIndex: "country",
+      key: "country",
+    },
+    {
+      title: "",
+      dataIndex: "actions",
+      key: "actions",
+      render: (_, record) => (
+        <>
+          <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+          <DeleteOutlined
+            style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
+            onClick={() => handleDelete(record)}
+          />
+        </>
+      ),
+    },
+  ];
+  const defaultCheckedList = columns.map((item) => item.key);
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
-  const [sites, setSites] = useState([
-    {
-      site: "Rig 20",
-      description: "Description 1",
-      address: "Address 1",
-      apartment: "Apt 1",
-      city: "City 1",
-      state: "State 1",
-      zip: "Zip 1",
-      country: "Country 1",
-    },
-  ]);
+  const [sites, setSites] = useState([]);
+  const [siteData, setSiteData] = useState({});
   const [loading, setLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [searchText, setSearchText] = useState("");
@@ -107,7 +96,7 @@ const Sites = () => {
         message.error(data.error);
       }
     };
-    handleFetchSites();
+    if (!activeLocation) handleFetchSites();
   }, []);
 
   const displayedSites = useMemo(() => {
@@ -119,33 +108,18 @@ const Sites = () => {
     );
   }, [searchText, sites, checkedList]);
 
-  useEffect(() => {
-    if (activeLocation) {
-      const fetchFilteredSites = async () => {
-        setLoading(true);
-        try {
-          const { status, data } = await filterSites({
-            location: activeLocation,
-            system: activeSystem ? activeSystem : "",
-          });
-
-          if (status === 200) {
-            setSites(data.data);
-          } else {
-            message.error(data?.message || "Failed to fetch filtered sites");
-          }
-        } catch (error) {
-          message.error("Error fetching filtered sites");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchFilteredSites();
+  const handleDelete = async (site) => {
+    setLoading(true);
+    const { status, data } = await deleteSite(site._id);
+    if (status === 200) {
+      setLoading(false);
+      setSites((prev) => prev.filter((i) => i._id !== site._id));
+      message.success(data.message);
     } else {
-      setSites(sites);
+      setLoading(false);
+      message.error(data.error);
     }
-  }, [activeLocation, activeSystem, sites]);
+  };
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">

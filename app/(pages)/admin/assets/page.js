@@ -148,8 +148,6 @@ const Assets = () => {
     );
   }, [searchText, filteredAssets, checkedList]);
 
-  console.log(filteredAssets, "filteredAssets");
-
   // Render expanded row content<
   const expandedRowRender = (record) => (
     <Table
@@ -182,13 +180,13 @@ const Assets = () => {
   };
 
   useEffect(() => {
-    if (activeLocation) {
+    if (activeLocation || activeLocation === "") {
       const fetchFilteredAssets = async () => {
         setIsFiltering(true);
         try {
           const { status, data } = await getFilteredAssets({
-            location: activeLocation,
-            system: activeSystem ? activeSystem : "",
+            location: activeLocation ? activeLocation : null,
+            system: activeSystem ? activeSystem : null,
           });
 
           if (status === 200) {

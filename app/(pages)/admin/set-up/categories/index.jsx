@@ -1,45 +1,45 @@
 import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./components/actionBar";
-import { Table } from "antd";
+import { message, Table } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import { filterCategories, getCategories } from "app/services/setUp/categories";
+import {
+  deleteCategory,
+  filterCategories,
+  getCategories,
+} from "app/services/setUp/categories";
 import { useSearchParams } from "next/navigation";
 
-const columns = [
-  {
-    title: "Category",
-    dataIndex: "category",
-    key: "category",
-    render: (category) => (
-      <span className="text-[#017BFE] underline">{category}</span>
-    ),
-  },
-  {
-    title: "",
-    dataIndex: "actions",
-    key: "actions",
-    render: () => (
-      <div className="text-right">
-        <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
-        <DeleteOutlined
-          style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
-        />
-      </div>
-    ),
-  },
-];
-
-const defaultCheckedList = columns.map((item) => item.key);
-
 const Categories = () => {
+  const columns = [
+    {
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
+      render: (category) => (
+        <span className="text-[#017BFE] underline">{category}</span>
+      ),
+    },
+    {
+      title: "",
+      dataIndex: "actions",
+      key: "actions",
+      render: (_, record) => (
+        <div className="text-right">
+          <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+          <DeleteOutlined
+            style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
+            onClick={() => handleDelete(record)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const defaultCheckedList = columns.map((item) => item.key);
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
-  const [categories, setCategories] = useState([
-    {
-      category: "Crown",
-    },
-  ]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [searchText, setSearchText] = useState("");
@@ -80,32 +80,44 @@ const Categories = () => {
   useEffect(() => {
     if (activeLocation) {
       const fetchFilteredCategories = async () => {
-        setLoading(true);
-        try {
-          const { status, data } = await filterCategories({
-            location: activeLocation,
-            system: activeSystem ? activeSystem : "",
-          });
-
-          if (status === 200) {
-            setCategories(data.data);
-          } else {
-            message.error(
-              data?.message || "Failed to fetch filtered categories"
-            );
-          }
-        } catch (error) {
-          message.error("Error fetching filtered categories");
-        } finally {
-          setLoading(false);
-        }
+        // setLoading(true);
+        // try {
+        //   const { status, data } = await filterCategories({
+        //     location: activeLocation,
+        //     system: activeSystem ? activeSystem : "",
+        //   });
+        //   if (status === 200) {
+        //     setCategories(data.data);
+        //   } else {
+        //     message.error(
+        //       data?.message || "Failed to fetch filtered categories"
+        //     );
+        //   }
+        // } catch (error) {
+        //   message.error("Error fetching filtered categories");
+        // } finally {
+        //   setLoading(false);
+        // }
       };
 
       fetchFilteredCategories();
     } else {
       setCategories(categories);
     }
-  }, [activeLocation, activeSystem, categories]);
+  }, []);
+
+  const handleDelete = async (category) => {
+    setLoading(true);
+    const { status, data } = await deleteCategory(category._id);
+    if (status === 200) {
+      setLoading(false);
+      setCategories((prev) => prev.filter((i) => i._id !== category._id));
+      message.success(data.message);
+    } else {
+      setLoading(false);
+      message.error(data.error);
+    }
+  };
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
