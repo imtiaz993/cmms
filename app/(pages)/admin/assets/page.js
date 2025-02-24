@@ -8,9 +8,10 @@ import { getAssets, getFilteredAssets } from "app/services/assets";
 import { useSelector } from "react-redux";
 import { rigs, systems } from "@/constants/rigsAndSystems";
 import { EditPagePencil } from "@/icons/index";
-import { EyeOutlined } from "@ant-design/icons";
+import { EyeOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import AssetDetailsPopup from "./components/assetDetailsPoup";
+import Button from "@/components/common/Button";
 
 // Common column structure
 // const baseColumns = [
@@ -219,26 +220,39 @@ const Assets = () => {
   }, [activeLocation, activeSystem, assets]);
 
   return (
-    <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
-      {/* {addAssetVisible && (
+    <>
+      <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
+        <Button
+          text={
+            selectedRowKeys.length > 0
+              ? "Shipping Cart (" + selectedRowKeys.length + ")"
+              : "Shipping Cart"
+          }
+          fullWidth={false}
+          prefix={<ShoppingCartOutlined />}
+          onClick={() => router.push("/admin/new/material-transfer")}
+        />
+      </div>
+      <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
+        {/* {addAssetVisible && (
         <CreateAssetPopup
           visible={addAssetVisible}
           setVisible={setAddAssetVisible}
         />
       )} */}
-      <AssetDetailsPopup
-        visible={assetDetailsPopup}
-        setVisible={setAssetDetailsPopup}
-        asset={assetDetailsPopup}
-      />
-      <ActionBar
-        showAddAssetModal={() => setAddAssetVisible(true)}
-        checkedList={checkedList}
-        setCheckedList={setCheckedList}
-        columns={mainColumns}
-        setSearchText={setSearchText}
-      />
-      {/* <div className="flex gap-3 justify-end">
+        <AssetDetailsPopup
+          visible={assetDetailsPopup}
+          setVisible={setAssetDetailsPopup}
+          asset={assetDetailsPopup}
+        />
+        <ActionBar
+          showAddAssetModal={() => setAddAssetVisible(true)}
+          checkedList={checkedList}
+          setCheckedList={setCheckedList}
+          columns={mainColumns}
+          setSearchText={setSearchText}
+        />
+        {/* <div className="flex gap-3 justify-end">
         <p className="text-secondary">
           Total Assets: <span>{`(${assets?.length})`}</span>
         </p>
@@ -246,31 +260,32 @@ const Assets = () => {
           Parent Assets: <span>{`(${assets?.length})`}</span>
         </p>
       </div> */}
-      <Table
-        loading={isFiltering || isLoading}
-        size="large"
-        scroll={{ x: 1100 }}
-        columns={newMainColumns}
-        rowSelection={rowSelection}
-        // rowKey="_id"
-        dataSource={displayedAssets}
-        pagination={{
-          total: displayedAssets?.length,
-          pageSize: 10,
-          showSizeChanger: true,
-          showTotal: (total, range) =>
-            `${range[0]}-${range[1]} of ${total} items`,
-          className: "custom-pagination",
-        }}
-        style={{ marginTop: 16 }}
-        rowKey="key"
-        expandable={{
-          expandedRowRender,
-          expandedRowKeys,
-          onExpand: handleRowExpand,
-        }}
-      />
-    </div>
+        <Table
+          loading={isFiltering || isLoading}
+          size="large"
+          scroll={{ x: 1100 }}
+          columns={newMainColumns}
+          rowSelection={rowSelection}
+          // rowKey="_id"
+          dataSource={displayedAssets}
+          pagination={{
+            total: displayedAssets?.length,
+            pageSize: 10,
+            showSizeChanger: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`,
+            className: "custom-pagination",
+          }}
+          style={{ marginTop: 16 }}
+          rowKey="key"
+          expandable={{
+            expandedRowRender,
+            expandedRowKeys,
+            onExpand: handleRowExpand,
+          }}
+        />
+      </div>
+    </>
   );
 };
 

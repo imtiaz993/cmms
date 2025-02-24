@@ -62,7 +62,7 @@ const WorkOrderForm = () => {
   };
 
   return (
-    <div className="ml-5 md:ml-10">
+    <div className="px-5 md:px-10">
       <p className="text-sm text-[#828282]">
         Work Order {" > "} Unplanned Work Order
       </p>
@@ -133,38 +133,36 @@ const WorkOrderForm = () => {
                   placeholder="Select Parts..."
                 />
                 <></>
-                <div className="md:col-span-2 md:pl-32">
-                  <div className="flex gap-4 pl-2">
-                    <Checkbox />
-                    <Button
-                      text="Remove"
-                      prefix={<DeleteOutlined />}
-                      fullWidth={false}
-                      outlined
-                    />
-                  </div>
-                  <Table
-                    loading={partsLoading}
-                    size={"large"}
-                    scroll={{ x: 1400 }}
-                    columns={columns}
-                    rowSelection={rowSelection}
-                    rowKey="_id"
-                    dataSource={
-                      parts &&
-                      parts.length > 0 &&
-                      parts.map((i, index) => ({
-                        ...i,
-                        key: index,
-                      }))
-                    }
-                    style={{
-                      marginTop: 16,
-                      overflow: "auto",
-                    }}
-                    className="md:col-span-2"
+                <div className="md:col-span-2 md:pl-32 flex gap-4 pl-2">
+                  <Checkbox />
+                  <Button
+                    text="Remove"
+                    prefix={<DeleteOutlined />}
+                    fullWidth={false}
+                    outlined
                   />
                 </div>
+                <Table
+                  loading={partsLoading}
+                  size={"large"}
+                  scroll={{ x: 700 }}
+                  columns={columns}
+                  rowSelection={rowSelection}
+                  rowKey="_id"
+                  dataSource={
+                    parts &&
+                    parts.length > 0 &&
+                    parts.map((i, index) => ({
+                      ...i,
+                      key: index,
+                    }))
+                  }
+                  style={{
+                    overflow: "auto",
+                  }}
+                  className="md:col-span-2 md:pl-32"
+                />
+
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Closure & Documentation
                 </p>
