@@ -94,7 +94,7 @@ const ActionBar = ({
                 ]}
               />
             </div>
-            <Dropdown
+            {/* <Dropdown
               open={filterDropdown}
               onOpenChange={setFilterDropdown}
               dropdownRender={() => (
@@ -116,7 +116,7 @@ const ActionBar = ({
                 <span> Filter</span>
                 <DownOutlined />
               </AntButton>
-            </Dropdown>
+            </Dropdown> */}
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:flex items-center gap-2">
             <Dropdown

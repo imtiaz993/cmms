@@ -10,7 +10,7 @@ import {
 } from "app/services/setUp/subCategories";
 import { getCategories } from "app/services/setUp/categories";
 
-const SubCategories = () => {
+const SubCategories = ({activeTab}) => {
   const columns = [
     {
       title: "Sub Category",
@@ -47,9 +47,6 @@ const SubCategories = () => {
   ];
 
   const defaultCheckedList = columns.map((item) => item.key);
-  const searchParams = useSearchParams();
-  const activeLocation = searchParams.get("location") || "";
-  const activeSystem = searchParams.get("system") || "";
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -87,7 +84,7 @@ const SubCategories = () => {
     };
     handleFetchCategories();
     handleFetch();
-  }, []);
+  }, [activeTab]);
 
   const filteredData = useMemo(() => {
     if (!searchText) return subCategories; // Return full data if no search
@@ -137,6 +134,7 @@ const SubCategories = () => {
         setSubCategories={setSubCategories}
         categories={categories}
         fetchFilteredSubCategories={fetchFilteredSubCategories}
+        activeTab={activeTab}
       />
       <Table
         loading={loading}

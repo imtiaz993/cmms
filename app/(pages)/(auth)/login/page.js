@@ -36,9 +36,10 @@ const Login = () => {
       if (data?.data?.role === "supervisor") {
         router?.replace("/supervisor/dashboard");
       }
-      if (data?.data?.role === "admin") {
+      if (data?.data?.role === "admin" || data?.data?.role === "rigManager") {
         router?.replace("/admin/dashboard");
       }
+      
       resetForm();
     } else {
       message.error(data.error);

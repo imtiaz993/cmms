@@ -5,7 +5,7 @@ import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { deleteSite, filterSites, getSites } from "app/services/setUp/sites";
 import { useSearchParams } from "next/navigation";
 
-const Sites = () => {
+const Sites = ({activeTab}) => {
   const columns = [
     {
       title: "Site Name",
@@ -97,7 +97,7 @@ const Sites = () => {
       }
     };
     if (!activeLocation) handleFetchSites();
-  }, []);
+  }, [activeTab]);
 
   const displayedSites = useMemo(() => {
     if (!searchText) return sites; // Return full data if no search
