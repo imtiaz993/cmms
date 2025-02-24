@@ -29,6 +29,75 @@ import { EditPagePencil } from "@/icons/index";
 //   { title: "Installed Date", dataIndex: "installedDate", key: "installedDate" },
 // ];
 
+// Filter columns dynamically based on checkedList
+const mainColumns = [
+  {
+    title: "Asset #",
+    dataIndex: "assetNumber",
+    key: "assetNumber",
+    render: (assetNumber) => (
+      <a className="text-[#017BFE] underline">{assetNumber}</a>
+    ),
+  },
+  {
+    title: "Main System",
+    dataIndex: "mainSystem",
+    key: "mainSystem",
+    render: (mainSystem) => systems.find((i) => i.id === mainSystem).name,
+  },
+  { title: "Serial #", dataIndex: "serialNumber", key: "serialNumber" },
+  { title: "Model", dataIndex: "model", key: "model" },
+  { title: "Priority", dataIndex: "criticality", key: "criticality" },
+  { title: "Status", dataIndex: "maintStatus", key: "maintStatus" },
+  {
+    title: "Installed Date",
+    dataIndex: "installedDate",
+    key: "installedDate",
+  },
+  {
+    title: "",
+    dataIndex: "actions",
+    key: "actions",
+    render: () => <EditPagePencil />,
+  },
+  // ...baseColumns.filter((col) => checkedList.includes(col.key)),
+];
+
+const parentColumns = [
+  // { title: "Parent Asset", dataIndex: "parentAsset", key: "parentAsset" },
+  // ...baseColumns.filter((col) => checkedList.includes(col.key)),
+  {
+    title: "Part Name",
+    dataIndex: "partName",
+    key: "partName",
+  },
+  {
+    title: "Part #",
+    dataIndex: "part",
+    key: "part",
+  },
+  {
+    title: "Category",
+    dataIndex: "category",
+    key: "category",
+  },
+  {
+    title: "Details",
+    dataIndex: "details",
+    key: "details",
+  },
+  {
+    title: "Installed Date",
+    dataIndex: "installedDate",
+    key: "installedDate",
+  },
+];
+
+// const childColumns = [
+//   { title: "Child Asset", dataIndex: "childAsset", key: "childAsset" },
+//   ...baseColumns.filter((col) => checkedList.includes(col.key)),
+// ];
+
 const defaultCheckedList = [
   "mainSystem",
   "physicalLocation",
@@ -47,6 +116,9 @@ const Assets = () => {
   // const [assets, setAssets] = useState();
   const { assets, isLoading, error } = useSelector((state) => state.assets);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
+  const newMainColumns = mainColumns.filter((item) =>
+    checkedList.includes(item.key)
+  );
   const [addAssetVisible, setAddAssetVisible] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState(""); // State for search text
@@ -61,75 +133,6 @@ const Assets = () => {
       setSelectedRowKeys(keys);
     },
   };
-
-  // Filter columns dynamically based on checkedList
-  const mainColumns = [
-    {
-      title: "Asset #",
-      dataIndex: "assetNumber",
-      key: "assetNumber",
-      render: (assetNumber) => (
-        <a className="text-[#017BFE] underline">{assetNumber}</a>
-      ),
-    },
-    {
-      title: "Main System",
-      dataIndex: "mainSystem",
-      key: "mainSystem",
-      render: (mainSystem) => systems.find((i) => i.id === mainSystem).name,
-    },
-    { title: "Serial #", dataIndex: "serialNumber", key: "serialNumber" },
-    { title: "Model", dataIndex: "model", key: "model" },
-    { title: "Priority", dataIndex: "criticality", key: "criticality" },
-    { title: "Status", dataIndex: "maintStatus", key: "maintStatus" },
-    {
-      title: "Installed Date",
-      dataIndex: "installedDate",
-      key: "installedDate",
-    },
-    {
-      title: "",
-      dataIndex: "actions",
-      key: "actions",
-      render: () => <EditPagePencil />,
-    },
-    // ...baseColumns.filter((col) => checkedList.includes(col.key)),
-  ];
-
-  const parentColumns = [
-    // { title: "Parent Asset", dataIndex: "parentAsset", key: "parentAsset" },
-    // ...baseColumns.filter((col) => checkedList.includes(col.key)),
-    {
-      title: "Part Name",
-      dataIndex: "partName",
-      key: "partName",
-    },
-    {
-      title: "Part #",
-      dataIndex: "part",
-      key: "part",
-    },
-    {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-    },
-    {
-      title: "Details",
-      dataIndex: "details",
-      key: "details",
-    },
-    {
-      title: "Installed Date",
-      dataIndex: "installedDate",
-      key: "installedDate",
-    },
-  ];
-
-  // const childColumns = [
-  //   { title: "Child Asset", dataIndex: "childAsset", key: "childAsset" },
-  //   ...baseColumns.filter((col) => checkedList.includes(col.key)),
-  // ];
 
   const showAddAssetModal = () => {
     setAddAssetVisible(true);
@@ -151,7 +154,7 @@ const Assets = () => {
   // Render expanded row content<
   const expandedRowRender = (record) => (
     <Table
-      columns={parentColumns}
+      columns={newMainColumns}
       dataSource={[record]} // Single parent data for nested table
       pagination={false}
       size="small"
@@ -238,7 +241,7 @@ const Assets = () => {
         loading={isFiltering || isLoading}
         size="large"
         scroll={{ x: 1100 }}
-        columns={mainColumns}
+        columns={newMainColumns}
         rowSelection={rowSelection}
         // rowKey="_id"
         dataSource={displayedAssets}

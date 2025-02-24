@@ -143,7 +143,7 @@ const ActionBar = ({
               onClick={() => setFilterDropdown(!filterDropdown)}
             />
           </Dropdown> */}
-          {/* <Dropdown
+          <Dropdown
             dropdownRender={() => (
               <Menu>
                 <Menu.ItemGroup title="Select Columns">
@@ -172,12 +172,12 @@ const ActionBar = ({
             placement="bottomCenter"
           >
             <Button
-              text="Column Settings"
+              text="Settings"
               outlined
-              style={{ padding: "4px 24px" }}
+              style={{ padding: "0px 15px" }}
               prefix={<SettingOutlined />}
             />
-          </Dropdown> */}
+          </Dropdown>
           <Dropdown
             dropdownRender={() => (
               <Menu>
