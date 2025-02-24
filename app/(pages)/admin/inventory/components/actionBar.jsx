@@ -31,7 +31,7 @@ import { exportInventory } from "app/services/inventory";
 import CreatePurchaseOrderPopup from "../purchase-order/createPurchaseOrderPopup";
 import ChangeToAssetPopup from "./changeToAssetPopup";
 import Link from "next/link";
-import { LinkBroken } from "@/icons/index";
+import { LinkBroken, SearchIcon } from "@/icons/index";
 
 const ActionBar = ({
   columns,
@@ -98,10 +98,12 @@ const ActionBar = ({
       />
 
       <div className="">
-        <Input.Search
-          placeholder="Search..."
+        <Input
+          placeholder="Search"
+          prefix={<SearchIcon />}
           onChange={handleSearchChange}
           className="sm:!w-[362px] searchBar"
+          allowClear
         />
         <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mt-5">
           <div className="flex gap-3 w-full md:w-auto">

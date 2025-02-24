@@ -2,6 +2,7 @@ import { Input, List } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import ReportsPopup from "./popups/reportsPopup";
+import { SearchIcon } from "@/icons/index";
 
 const AnalyticsReports = () => {
   const [popup, setPopup] = useState(false);
@@ -49,8 +50,9 @@ const AnalyticsReports = () => {
   return (
     <div className="px-5 mt-2 h-[calc(100dvh-210px-60px)] overflow-auto lg:px-10">
       <div className="mt-3">
-        <Input.Search
-          placeholder="Search Reports"
+        <Input
+          placeholder="Search"
+          prefix={<SearchIcon />}
           onChange={(e) => {
             const value = e.target.value.toLowerCase();
             setFilteredData(
@@ -61,7 +63,8 @@ const AnalyticsReports = () => {
               )
             );
           }}
-          className="sm:!w-[300px] searchBar"
+          className="sm:!w-[362px] searchBar"
+          allowClear
         />
       </div>
       <>
@@ -127,7 +130,10 @@ const AnalyticsReports = () => {
       <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {filteredData.length > 0 &&
           filteredData.map((item, index) => (
-            <div className="bg-primary rounded-lg shadow-custom p-5" key={index}>
+            <div
+              className="bg-primary rounded-lg shadow-custom p-5"
+              key={index}
+            >
               <h2 className="text-sm font-semibold">{item.title}</h2>
               <div className="flex justify-between gap-2">
                 <p className="text-sm">{item.description}</p>

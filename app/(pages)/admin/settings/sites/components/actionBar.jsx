@@ -19,6 +19,7 @@ import Button from "@/components/common/Button";
 import FilterDropdown from "./filtersDropdown";
 import { exportInventory } from "app/services/inventory";
 import AddSitePopup from "./addSitePopup";
+import { SearchIcon } from "@/icons/index";
 
 const ActionBar = ({
   columns,
@@ -68,11 +69,13 @@ const ActionBar = ({
         setVisible={setAddSitePopup}
       />
       <div className="">
-        <Input.Search
-          placeholder="Search..."
-          onChange={handleSearchChange}
-          className="sm:!w-[362px] searchBar"
-        />
+      <Input
+        placeholder="Search"
+        prefix={<SearchIcon />}
+        onChange={handleSearchChange}
+        className="sm:!w-[362px] searchBar"
+        allowClear
+      />
         <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mt-5">
           <div className="flex gap-3 w-full md:w-auto">
             <Checkbox className="!mx-2" />

@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import WOFilter from "./filtersDropdown";
+import { SearchIcon } from "@/icons/index";
 
 const ActionBar = ({
   showAddWOModal,
@@ -35,10 +36,12 @@ const ActionBar = ({
 
   return (
     <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mb-3">
-      <Input.Search
-        placeholder="Search..."
+      <Input
+        placeholder="Search"
+        prefix={<SearchIcon />}
         onChange={(e) => setSearchText(e.target.value)}
-        className="sm:!w-[300px] searchBar"
+        className="sm:!w-[362px] searchBar"
+        allowClear
       />
       <div className="grid grid-cols-2 sm:grid-cols-3 md:flex items-center gap-2">
         <div className="sm:min-w-28 overflow-hidden">
