@@ -27,7 +27,7 @@ const AddSitePopup = ({ visible, setSites, setVisible }) => {
     const { status, data } = await createSite(values);
     setSubmitting(false);
     if (status === 200) {
-      setSites((prev) => [...prev, data.data]);
+      setSites && setSites((prev) => [...prev, data.data]);
       dispatch(updateLocation(data?.data));
       message.success(data.message);
       resetForm();

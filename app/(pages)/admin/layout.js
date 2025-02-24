@@ -264,9 +264,9 @@ export default function Layout({ children }) {
                         options={
                           activeLocation &&
                           systems
-                            .filter((i) => i?.rig?.id === activeLocation)
+                            .filter((i) => i?.site?._id === activeLocation)
                             ?.map((i) => ({
-                              label: i.name,
+                              label: i.system,
                               value: i._id,
                             }))
                         }
