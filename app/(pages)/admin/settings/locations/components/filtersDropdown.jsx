@@ -15,9 +15,9 @@ const FilterDropdown = ({
   setLoading,
   setLocations,
   handleFetchFilteredSystems,
+  sites,
 }) => {
   const [isClearing, setIsClearing] = useState(false);
-  const [sites, setSites] = useState([]);
 
   const submit = async (values, setSubmitting) => {
     console.log(values);
@@ -33,19 +33,6 @@ const FilterDropdown = ({
     // }
     // setLoading(false);
   };
-
-  useEffect(() => {
-    const handleFetchSites = async () => {
-      const { status, data } = await getSites();
-      if (status === 200) {
-        setLoading(false);
-        setSites(data.data);
-      } else {
-        message.error(data.error);
-      }
-    };
-    handleFetchSites();
-  }, []);
 
   return (
     <div

@@ -32,6 +32,7 @@ const ActionBar = ({
   setSubCategories,
   categories,
   fetchFilteredSubCategories,
+  activeTab
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const [addSubCategory, setAddSubCategory] = useState(false);
@@ -109,6 +110,7 @@ const ActionBar = ({
                   setLoading={setLoading}
                   setSubCategories={setSubCategories}
                   fetchFilteredSubCategories={fetchFilteredSubCategories}
+                  categories={categories}
                 />
               )}
               trigger={["click"]}

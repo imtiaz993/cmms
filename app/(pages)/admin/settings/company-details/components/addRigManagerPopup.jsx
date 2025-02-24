@@ -22,7 +22,7 @@ const AddRigManagerPopup = ({
     email: rigManagerData?.email || "",
     name: rigManagerData?.name || "",
     phone: rigManagerData?.phone || "",
-    rigs: [],
+    rigs: rigManagerData?.rigs || [],
   };
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Required"),
@@ -142,7 +142,7 @@ const AddRigManagerPopup = ({
                   label="Email"
                   className="w-full"
                   required
-                  disabled={rigManagerData}
+                  readOnly={!!rigManagerData}
                 />
                 <InputField
                   name="name"
