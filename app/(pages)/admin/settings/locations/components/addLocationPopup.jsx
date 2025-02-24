@@ -24,7 +24,7 @@ const AddLocationPopup = ({ visible, setLocations, setVisible }) => {
     const { status, data } = await createSystem(values);
     setSubmitting(false);
     if (status === 200) {
-      setLocations((prev) => [...prev, data.data]);
+      setLocations && setLocations((prev) => [...prev, data.data]);
       dispatch(updateSystem(data?.data));
       message.success(data.message);
       resetForm();

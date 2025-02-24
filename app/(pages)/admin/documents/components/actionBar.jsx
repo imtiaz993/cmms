@@ -18,6 +18,7 @@ import {
 import UploadDocPopup from "@/components/uploadDocPopup";
 import UploadLinkDocPopup from "@/components/uploadLinkDocPopup";
 import DocumentsFilter from "./filtersDropdown";
+import { SearchIcon } from "@/icons/index";
 
 const ActionBar = ({
   setSearchText,
@@ -66,11 +67,12 @@ const ActionBar = ({
         // setDetails={setWorkOrder}
       />
       {/* Search Bar */}
-      <Input.Search
-        placeholder="Search..."
-        value={searchText}
+      <Input
+        placeholder="Search"
+        prefix={<SearchIcon />}
         onChange={(e) => setSearchText(e.target.value)}
-        className="sm:!w-[300px] searchBar"
+        className="sm:!w-[362px] searchBar"
+        allowClear
       />
       <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mt-5">
         <div className="flex gap-3 w-full md:w-auto">

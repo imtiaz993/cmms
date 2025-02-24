@@ -201,7 +201,7 @@ export default function Layout({ children }) {
             setOpenSidebar={setOpenSidebar}
             params={`?location=${activeLocation}&system=${activeSystem}`}
           />
-          <div className="w-full">
+          <div className="w-full lg:w-[calc(100%-251px)]">
             {currentPage !== "new" && !isNewEditDetails && (
               <>
                 <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
@@ -264,9 +264,9 @@ export default function Layout({ children }) {
                         options={
                           activeLocation &&
                           systems
-                            .filter((i) => i?.rig?.id === activeLocation)
+                            .filter((i) => i?.site?._id === activeLocation)
                             ?.map((i) => ({
-                              label: i.name,
+                              label: i.system,
                               value: i._id,
                             }))
                         }

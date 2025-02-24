@@ -94,9 +94,17 @@ h6 {
   border: 1px solid lightgray;
 }
 
-.searchBar button,
-.searchBar input {
+.searchBar {
   height: 42px !important;
+  padding: 0 11px;
+  font-size: 16px !important;
+}
+
+.searchBar input {
+  padding-left: 8px !important;
+}
+.searchBar ::placeholder{
+  color: var(--tertiary-text) !important;
 }
 
 .ant-message-notice-content {

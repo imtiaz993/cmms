@@ -13,6 +13,7 @@ import {
   ExportOutlined,
   FilterOutlined,
   PlusOutlined,
+  SearchOutlined,
   SettingOutlined,
   SwapOutlined,
   ToolOutlined,
@@ -21,6 +22,7 @@ import Button from "@/components/common/Button";
 import AssetFilter from "./filtersDropdown";
 import { exportAssets } from "app/services/assets";
 import Link from "next/link";
+import { SearchIcon } from "@/icons/index";
 
 const ActionBar = ({
   showAddAssetModal,
@@ -65,10 +67,12 @@ const ActionBar = ({
   return (
     <>
       {/* <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3"> */}
-      <Input.Search
-        placeholder="Search..."
+      <Input
+        placeholder="Search"
+        prefix={<SearchIcon />}
         onChange={handleSearchChange}
         className="sm:!w-[362px] searchBar"
+        allowClear
       />
       <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mt-5">
         <div className="flex gap-3 w-full md:w-auto">
@@ -139,7 +143,7 @@ const ActionBar = ({
               onClick={() => setFilterDropdown(!filterDropdown)}
             />
           </Dropdown> */}
-          {/* <Dropdown
+          <Dropdown
             dropdownRender={() => (
               <Menu>
                 <Menu.ItemGroup title="Select Columns">
@@ -168,12 +172,12 @@ const ActionBar = ({
             placement="bottomCenter"
           >
             <Button
-              text="Column Settings"
+              text="Settings"
               outlined
-              style={{ padding: "4px 24px" }}
+              style={{ padding: "0px 15px" }}
               prefix={<SettingOutlined />}
             />
-          </Dropdown> */}
+          </Dropdown>
           <Dropdown
             dropdownRender={() => (
               <Menu>
@@ -199,11 +203,7 @@ const ActionBar = ({
             arrow
             placement="bottomCenter"
           >
-            <Button
-              text="Export"
-              outlined
-              prefix={<ExportOutlined />}
-            />
+            <Button text="Export" outlined prefix={<ExportOutlined />} />
           </Dropdown>
           <Link href="/admin/new/asset" className="w-full">
             <Button

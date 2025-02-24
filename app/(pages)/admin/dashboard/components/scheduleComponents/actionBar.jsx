@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import AssetFilter from "./filtersDropdown";
+import { SearchIcon } from "@/icons/index";
 
 const ActionBar = ({ columns, checkedList, setCheckedList, unplanned }) => {
   const [searchText, setSearchText] = useState("");
@@ -28,10 +29,12 @@ const ActionBar = ({ columns, checkedList, setCheckedList, unplanned }) => {
 
   return (
     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-3">
-      <Input.Search
-        placeholder="Search..."
+      <Input
+        placeholder="Search"
+        prefix={<SearchIcon />}
         onChange={(e) => setSearchText(e.target.value)}
-        className="sm:!w-[300px] searchBar"
+        className="sm:!w-[362px] searchBar"
+        allowClear
       />
       <div className="grid grid-cols-2 sm:flex items-center gap-2 sm:mt-0">
         <Dropdown

@@ -11,6 +11,7 @@ import WOPersonnelSummaryPopup from "./popups/woPersonnelSummaryPopup";
 import WOProcedurePopup from "./popups/woProcedurePopup";
 import WOSummaryPopup from "./popups/woSummaryPopup";
 import { useSearchParams } from "next/navigation";
+import { SearchIcon } from "@/icons/index";
 
 const reportsData = [
   {
@@ -124,8 +125,9 @@ const MaintenanceReports = () => {
   return (
     <div className="px-5 mt-2 h-[calc(100dvh-210px-60px)] overflow-auto lg:px-10">
       <div className="mt-3">
-        <Input.Search
+        <Input
           placeholder="Search"
+          prefix={<SearchIcon />}
           onChange={(e) => {
             const value = e.target.value.toLowerCase();
             setFilteredData(
@@ -136,7 +138,8 @@ const MaintenanceReports = () => {
               )
             );
           }}
-          className="sm:!w-[300px] searchBar"
+          className="sm:!w-[362px] searchBar"
+          allowClear
         />
       </div>
       <>

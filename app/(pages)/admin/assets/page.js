@@ -8,6 +8,10 @@ import { getAssets, getFilteredAssets } from "app/services/assets";
 import { useSelector } from "react-redux";
 import { rigs, systems } from "@/constants/rigsAndSystems";
 import { EditPagePencil } from "@/icons/index";
+import { EyeOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import Link from "next/link";
+import AssetDetailsPopup from "./components/assetDetailsPoup";
+import Button from "@/components/common/Button";
 
 // Common column structure
 // const baseColumns = [
@@ -29,24 +33,12 @@ import { EditPagePencil } from "@/icons/index";
 //   { title: "Installed Date", dataIndex: "installedDate", key: "installedDate" },
 // ];
 
-const defaultCheckedList = [
-  "mainSystem",
-  "physicalLocation",
-  "assetNumber",
-  "make",
-  "model",
-  "criticality",
-  "maintStatus",
-  "installedDate",
-];
-
 const Assets = () => {
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
   // const [assets, setAssets] = useState();
   const { assets, isLoading, error } = useSelector((state) => state.assets);
-  const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState(""); // State for search text
@@ -54,13 +46,7 @@ const Assets = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [filteredAssets, setFilteredAssets] = useState([]);
   const [isFiltering, setIsFiltering] = useState(false);
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys, rows) => {
-      setSelectedRowKeys(keys);
-    },
-  };
+  const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
 
   // Filter columns dynamically based on checkedList
   const mainColumns = [
@@ -68,8 +54,13 @@ const Assets = () => {
       title: "Asset #",
       dataIndex: "assetNumber",
       key: "assetNumber",
-      render: (assetNumber) => (
-        <a className="text-[#017BFE] underline">{assetNumber}</a>
+      render: (_, record) => (
+        <Link
+          href={"/admin/assets/" + record._id}
+          className="text-[#017BFE] underline"
+        >
+          {record.assetNumber}
+        </Link>
       ),
     },
     {
@@ -83,15 +74,23 @@ const Assets = () => {
     { title: "Priority", dataIndex: "criticality", key: "criticality" },
     { title: "Status", dataIndex: "maintStatus", key: "maintStatus" },
     {
-      title: "Installed Date",
-      dataIndex: "installedDate",
-      key: "installedDate",
+      title: "Purchase Date",
+      dataIndex: "purchaseDate",
+      key: "purchaseDate",
     },
     {
       title: "",
-      dataIndex: "actions",
+      dataIndex: "_id",
       key: "actions",
-      render: () => <EditPagePencil />,
+      render: (id, record) => (
+        <p className="flex gap-5 text-tertiary">
+          <EyeOutlined
+            style={{ fontSize: "20px", cursor: "pointer" }}
+            onClick={() => setAssetDetailsPopup(record)}
+          />
+          <EditPagePencil />
+        </p>
+      ),
     },
     // ...baseColumns.filter((col) => checkedList.includes(col.key)),
   ];
@@ -131,6 +130,19 @@ const Assets = () => {
   //   ...baseColumns.filter((col) => checkedList.includes(col.key)),
   // ];
 
+  const defaultCheckedList = mainColumns.map((item) => item.key);
+  const [checkedList, setCheckedList] = useState(defaultCheckedList);
+  const newMainColumns = mainColumns.filter((item) =>
+    checkedList.includes(item.key)
+  );
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (keys, rows) => {
+      setSelectedRowKeys(keys);
+    },
+  };
+
   const showAddAssetModal = () => {
     setAddAssetVisible(true);
   };
@@ -151,7 +163,7 @@ const Assets = () => {
   // Render expanded row content<
   const expandedRowRender = (record) => (
     <Table
-      columns={parentColumns}
+      columns={newMainColumns}
       dataSource={[record]} // Single parent data for nested table
       pagination={false}
       size="small"
@@ -208,21 +220,39 @@ const Assets = () => {
   }, [activeLocation, activeSystem, assets]);
 
   return (
-    <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
-      {addAssetVisible && (
+    <>
+      <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
+        <Button
+          text={
+            selectedRowKeys.length > 0
+              ? "Shipping Cart (" + selectedRowKeys.length + ")"
+              : "Shipping Cart"
+          }
+          fullWidth={false}
+          prefix={<ShoppingCartOutlined />}
+          onClick={() => router.push("/admin/new/material-transfer")}
+        />
+      </div>
+      <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
+        {/* {addAssetVisible && (
         <CreateAssetPopup
           visible={addAssetVisible}
           setVisible={setAddAssetVisible}
         />
-      )}
-      <ActionBar
-        showAddAssetModal={() => setAddAssetVisible(true)}
-        checkedList={checkedList}
-        setCheckedList={setCheckedList}
-        columns={mainColumns}
-        setSearchText={setSearchText}
-      />
-      {/* <div className="flex gap-3 justify-end">
+      )} */}
+        <AssetDetailsPopup
+          visible={assetDetailsPopup}
+          setVisible={setAssetDetailsPopup}
+          asset={assetDetailsPopup}
+        />
+        <ActionBar
+          showAddAssetModal={() => setAddAssetVisible(true)}
+          checkedList={checkedList}
+          setCheckedList={setCheckedList}
+          columns={mainColumns}
+          setSearchText={setSearchText}
+        />
+        {/* <div className="flex gap-3 justify-end">
         <p className="text-secondary">
           Total Assets: <span>{`(${assets?.length})`}</span>
         </p>
@@ -230,35 +260,32 @@ const Assets = () => {
           Parent Assets: <span>{`(${assets?.length})`}</span>
         </p>
       </div> */}
-      <Table
-        rowClassName="cursor-pointer"
-        onRow={(record) => ({
-          onClick: () => router.push(`/admin/assets/${record._id}`),
-        })}
-        loading={isFiltering || isLoading}
-        size="large"
-        scroll={{ x: 1100 }}
-        columns={mainColumns}
-        rowSelection={rowSelection}
-        // rowKey="_id"
-        dataSource={displayedAssets}
-        pagination={{
-          total: displayedAssets?.length,
-          pageSize: 10,
-          showSizeChanger: true,
-          showTotal: (total, range) =>
-            `${range[0]}-${range[1]} of ${total} items`,
-          className: "custom-pagination",
-        }}
-        style={{ marginTop: 16 }}
-        rowKey="key"
-        expandable={{
-          expandedRowRender,
-          expandedRowKeys,
-          onExpand: handleRowExpand,
-        }}
-      />
-    </div>
+        <Table
+          loading={isFiltering || isLoading}
+          size="large"
+          scroll={{ x: 1100 }}
+          columns={newMainColumns}
+          rowSelection={rowSelection}
+          // rowKey="_id"
+          dataSource={displayedAssets}
+          pagination={{
+            total: displayedAssets?.length,
+            pageSize: 10,
+            showSizeChanger: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`,
+            className: "custom-pagination",
+          }}
+          style={{ marginTop: 16 }}
+          rowKey="key"
+          expandable={{
+            expandedRowRender,
+            expandedRowKeys,
+            onExpand: handleRowExpand,
+          }}
+        />
+      </div>
+    </>
   );
 };
 
