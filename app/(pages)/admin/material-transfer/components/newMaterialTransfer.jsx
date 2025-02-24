@@ -6,6 +6,10 @@ import { DeleteOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
 import { Table } from "antd";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import AddSitePopup from "../../settings/sites/components/addSitePopup";
+import AddLocationPopup from "../../settings/locations/components/addLocationPopup";
 
 const columns = [
   {
@@ -42,6 +46,11 @@ const columns = [
 ];
 const NewMaterialTransfer = () => {
   const router = useRouter();
+  const locations = useSelector((state) => state.location.location);
+  const systems = useSelector((state) => state.system.system);
+  const [addSitePopup, setAddSitePopup] = useState(false);
+  const [addSystemPopup, setAddSystemPopup] = useState(false);
+
   const data = [
     {
       id: 1,
@@ -63,6 +72,11 @@ const NewMaterialTransfer = () => {
 
   return (
     <div className="ml-5 md:ml-10">
+      <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
+      <AddLocationPopup
+        visible={addSystemPopup}
+        setVisible={setAddSystemPopup}
+      />
       <p className="text-sm text-[#828282]">
         Material Transfer {" > "} Add Material Transfer
       </p>
@@ -90,7 +104,7 @@ const NewMaterialTransfer = () => {
         />
 
         <Formik initialValues={{}} onSubmit={() => {}}>
-          {({ handleSubmit, isSubmitting }) => (
+          {({values, handleSubmit, isSubmitting }) => (
             <Form onSubmit={handleSubmit}>
               <div className="mt-8 grid md:grid-cols-2 gap-4 md:gap-8">
                 <p className="md:col-span-2 font-semibold md:text-lg">
@@ -102,27 +116,38 @@ const NewMaterialTransfer = () => {
                     placeholder="Site"
                     className="!w-full"
                     label="Site"
-                    options={rigs.map((i) => ({ label: i.name, value: i.id }))}
+                    options={locations.map((i) => ({
+                      label: i.site,
+                      value: i._id,
+                    }))}
                   />
                   <Button
                     text="New"
                     className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
-                    // onClick={() => setAddSitePopupVisible(true)}
+                    onClick={() => setAddSitePopup(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}
                   />
                 </div>
                 <div className="flex items-center gap-3">
                   <SelectField
-                    name="location"
-                    placeholder="Location"
-                    label="Location"
-                    options={[]}
+                    name="system"
+                    placeholder="System"
+                    label="System"
+                    options={
+                      values.site &&
+                      systems
+                        .filter((i) => i?.site?._id === values.site)
+                        ?.map((i) => ({
+                          label: i.system,
+                          value: i._id,
+                        }))
+                    }
                   />
                   <Button
                     text="New"
                     className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
-                    // onClick={() => setAddSitePopupVisible(true)}
+                    onClick={() => setAddSystemPopup(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}
                   />

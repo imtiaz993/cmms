@@ -125,7 +125,7 @@ const AssetDetail = () => {
               />
               <Select
                 name="actions"
-                placeholder="Actions"
+                placeholder="More Actions"
                 className="!h-11 md:!min-w-52 secondary-select !text-white"
                 suffixIcon={<DownOutlined style={{ color: "white" }} />}
                 // onChange={handleActionsChange}

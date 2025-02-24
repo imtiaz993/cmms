@@ -2,6 +2,7 @@ import { Input, message, Table } from "antd";
 import { getReadings } from "app/services/reports";
 import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./readingComponents/actionBar";
+import { SearchIcon } from "@/icons/index";
 
 const columns = [
   {
@@ -82,15 +83,18 @@ const Readings = () => {
   const [searchText, setSearchText] = useState("");
   const filteredData = useMemo(() => {
     if (!searchText) return readings;
-    return readings.filter((reading) => {
-      const matchesSearch =
-        !searchText ||
-        Object.values(reading)
-          .join(" ")
-          .toLowerCase()
-          .includes(searchText.toLowerCase());
-      return matchesSearch;
-    });
+    return (
+      readings &&
+      readings.filter((reading) => {
+        const matchesSearch =
+          !searchText ||
+          Object.values(reading)
+            .join(" ")
+            .toLowerCase()
+            .includes(searchText.toLowerCase());
+        return matchesSearch;
+      })
+    );
   }, [searchText, readings]);
 
   const rowSelection = {
@@ -116,11 +120,12 @@ const Readings = () => {
   return (
     <div className="px-5 mt-2 h-[calc(100dvh-210px-60px)] overflow-auto lg:px-10">
       <div className="mt-3">
-        <Input.Search
+        <Input
           placeholder="Search"
-          value={searchText}
+          prefix={<SearchIcon />}
           onChange={(e) => setSearchText(e.target.value)}
-          className="sm:!w-[300px] searchBar"
+          className="sm:!w-[362px] searchBar"
+          allowClear
         />
       </div>
 

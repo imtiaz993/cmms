@@ -27,23 +27,28 @@ export default function RootWrapper({ children }) {
                 hoverBorderColor: "#efbf60",
                 colorBgElevated: "var(--background-secondary-color)",
                 optionSelectedBg: "#efbf60",
+                colorTextPlaceholder: "#717171",
               },
               Input: {
                 colorPrimary: "#efbf60",
                 controlOutline: "#efbf60",
-                hoverBorderColor: "#efbf60",
+                hoverBorderColor: "#efbf60 !important",
+                activeBorderColor: "#efbf60 !important",
+                colorTextPlaceholder: "#717171",
               },
               DatePicker: {
                 colorPrimary: "#efbf60",
                 controlOutline: "#efbf60",
                 hoverBorderColor: "#efbf60",
                 colorBgElevated: "var(--background-secondary-color)",
+                colorTextPlaceholder: "#717171",
               },
               TimePicker: {
                 colorPrimary: "#efbf60",
                 controlOutline: "#efbf60",
                 hoverBorderColor: "#efbf60",
                 colorBgElevated: "var(--background-secondary-color)",
+                colorTextPlaceholder: "#717171",
               },
               Tabs: {
                 colorPrimary: "#efbf60",
@@ -63,6 +68,8 @@ export default function RootWrapper({ children }) {
                 colorPrimary: "var(--background-color)",
                 headerBg: "var(--background-secondary-color)",
                 rowHoverBg: "var(--background-secondary-color)",
+                rowSelectedBg: "var(--background-secondary-color)",
+                rowSelectedHoverBg: "var(--background-secondary-color)",
               },
               Pagination: {
                 colorPrimary: "#efbf60",

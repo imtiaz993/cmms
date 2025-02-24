@@ -1,13 +1,14 @@
 import Button from "@/components/common/Button";
 import { EyeOutlined } from "@ant-design/icons";
 import { Modal } from "antd";
+import Link from "next/link";
 
-const InventoryDetailsPopup = ({ visible, setVisible, part }) => {
+const AssetDetailsPopup = ({ visible, setVisible, asset }) => {
   return (
     <div>
       <Modal
         maskClosable={false}
-        title={<h1 className="text-lg md:text-2xl">{part}</h1>}
+        title={<h1 className="text-lg md:text-2xl">{asset.assetNumber}</h1>}
         open={visible}
         onCancel={() => setVisible(false)}
         footer={
@@ -19,11 +20,13 @@ const InventoryDetailsPopup = ({ visible, setVisible, part }) => {
               text="Close"
               fullWidth={false}
             />
-
-            <Button className="" text="More Details" fullWidth={false} />
+            <Link href={"/admin/assets/" + asset._id}>
+              <Button className="" text="More Details" fullWidth={false} />
+            </Link>
           </div>
         }
       >
+        <p className="font-semibold mt-3">NAME OF ASSET</p>
         <div className="mt-5 grid grid-cols-2">
           <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
             Site
@@ -34,39 +37,39 @@ const InventoryDetailsPopup = ({ visible, setVisible, part }) => {
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">-</p>
           <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
-            Date Received
+            Category
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">-</p>
           <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
-            Part #
+            Sub-Category
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>
           <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-b-0">
-            Tag ID
+            Purchase Date
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>{" "}
           <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
-            Quantity
+            Brand
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>{" "}
           <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
-            Description
+            Model
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0 truncate">
             {"-"}
           </p>
           <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
-            Notes
+            Serial #
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>
-          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0">Image</p>
-          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border">
-            <a className="underline"> View Image </a> <EyeOutlined />
+          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0">
+            Status
           </p>
+          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border">{"-"}</p>
         </div>
       </Modal>
     </div>
   );
 };
 
-export default InventoryDetailsPopup;
+export default AssetDetailsPopup;
