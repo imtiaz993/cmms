@@ -23,10 +23,10 @@ const Button = ({
         outlined && "!shadow-none"
       }`}
       style={{
-        background: outlined ? "white" : "#EFBF60",
-        color: outlined ? "black" : "white",
+        background: outlined ? "var(--background-secondary-color)" : "#EFBF60",
+        color: outlined ? "var(--tertiary-text)" : "white",
         border: outlined ? "1px solid #D6D6D6" : "",
-        borderColor: outlined ? "none" : "#EFBF60",
+        borderColor: outlined ? "var(--border-color)" : "#EFBF60",
         opacity: disabled ? "0.7" : "",
         height: "44px",
         fontWeight: "500",
