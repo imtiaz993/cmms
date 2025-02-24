@@ -70,7 +70,7 @@ const columns = [
     dataIndex: "link",
     key: "link",
     render: (link) => (
-      <a href={link} target="_blank">
+      <a href={link} target="_blank" className="text-tertiary">
         <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
       </a>
     ),

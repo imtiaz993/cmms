@@ -12,7 +12,7 @@ module.exports = {
         primary: "var(--background-color)",
         bg_secondary: "var(--background-secondary-color)",
         secondary: "#EFBF60",
-        tertiary: "#FFF",
+        tertiary: "var(--tertiary-text)",
         quaternary: "",
         quinary: "",
         senary: "",

@@ -8,6 +8,8 @@ import { getAssets, getFilteredAssets } from "app/services/assets";
 import { useSelector } from "react-redux";
 import { rigs, systems } from "@/constants/rigsAndSystems";
 import { EditPagePencil } from "@/icons/index";
+import { EyeOutlined } from "@ant-design/icons";
+import Link from "next/link";
 
 // Common column structure
 // const baseColumns = [
@@ -35,8 +37,13 @@ const mainColumns = [
     title: "Asset #",
     dataIndex: "assetNumber",
     key: "assetNumber",
-    render: (assetNumber) => (
-      <a className="text-[#017BFE] underline">{assetNumber}</a>
+    render: (_, record) => (
+      <Link
+        href={"/admin/assets/" + record._id}
+        className="text-[#017BFE] underline"
+      >
+        {record.assetNumber}
+      </Link>
     ),
   },
   {
@@ -50,15 +57,20 @@ const mainColumns = [
   { title: "Priority", dataIndex: "criticality", key: "criticality" },
   { title: "Status", dataIndex: "maintStatus", key: "maintStatus" },
   {
-    title: "Installed Date",
-    dataIndex: "installedDate",
-    key: "installedDate",
+    title: "Purchase Date",
+    dataIndex: "purchaseDate",
+    key: "purchaseDate",
   },
   {
     title: "",
-    dataIndex: "actions",
+    dataIndex: "_id",
     key: "actions",
-    render: () => <EditPagePencil />,
+    render: (id) => (
+      <Link href={"/admin/assets/" + id} className="flex gap-5 text-tertiary">
+        <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+        <EditPagePencil />
+      </Link>
+    ),
   },
   // ...baseColumns.filter((col) => checkedList.includes(col.key)),
 ];
@@ -98,16 +110,7 @@ const parentColumns = [
 //   ...baseColumns.filter((col) => checkedList.includes(col.key)),
 // ];
 
-const defaultCheckedList = [
-  "mainSystem",
-  "physicalLocation",
-  "assetNumber",
-  "make",
-  "model",
-  "criticality",
-  "maintStatus",
-  "installedDate",
-];
+const defaultCheckedList = mainColumns.map((item) => item.key);
 
 const Assets = () => {
   const searchParams = useSearchParams();
@@ -234,10 +237,6 @@ const Assets = () => {
         </p>
       </div> */}
       <Table
-        rowClassName="cursor-pointer"
-        onRow={(record) => ({
-          onClick: () => router.push(`/admin/assets/${record._id}`),
-        })}
         loading={isFiltering || isLoading}
         size="large"
         scroll={{ x: 1100 }}
