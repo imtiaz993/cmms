@@ -14,6 +14,10 @@ import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import AddRigManagerPopup from "./components/addRigManagerPopup";
 import { deleteManager } from "app/services/rigManager";
+import { countries } from "@/constants/countries";
+import { currencies } from "@/constants/currencies";
+import { months } from "@/constants/monthsAndYears";
+import { timeZones } from "@/constants/timezones";
 
 const CompanyDetails = ({ activeTab }) => {
   const [companyData, setCompanyData] = useState();
@@ -119,6 +123,7 @@ const CompanyDetails = ({ activeTab }) => {
                   name="country"
                   placeholder="Select Country"
                   label="Country"
+                  options={countries}
                 />
                 <InputField
                   name="address"
@@ -131,11 +136,7 @@ const CompanyDetails = ({ activeTab }) => {
                   label="Apt./Suite #"
                 />
                 <InputField name="city" placeholder="City" label="City" />
-                <SelectField
-                  name="state"
-                  placeholder="Select State"
-                  label="State"
-                />
+                <InputField name="state" placeholder="State" label="State" />
                 <InputField
                   name="zip"
                   placeholder="xxxxx-xxxx"
@@ -276,11 +277,13 @@ const CompanyDetails = ({ activeTab }) => {
                   name="timezone"
                   placeholder="Select Timezone"
                   label="Timezone"
+                  options={timeZones}
                 />
                 <SelectField
                   name="currency"
                   placeholder="Select Currency"
                   label="Currency"
+                  options={currencies}
                 />
                 <SelectField
                   name="dateFormat"
@@ -297,11 +300,12 @@ const CompanyDetails = ({ activeTab }) => {
                     name="financialYearMonth"
                     placeholder="Select Month"
                     label="Financial Year Start"
+                    options={months.map((i) => ({ label: i, value: i }))}
                   />
-                  <SelectField
+                  <InputField
+                    type="number"
                     name="financialYearDay"
-                    placeholder="Select Day"
-                    // label="Financial Year Start"
+                    placeholder="Day"
                   />
                 </div>
                 <p className="font-semibold md:text-lg">
