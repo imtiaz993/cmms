@@ -43,6 +43,34 @@ export const getFilteredInventory = async (values) => {
   }
 };
 
+export const updateInventoryApi = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/inventory/update",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const getInventoryDetails = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: `/inventory/get/${id}`,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const exportInventory = async () => {
   try {
     const { status, data } = await authRequest({

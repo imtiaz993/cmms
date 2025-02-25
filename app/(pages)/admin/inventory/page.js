@@ -9,6 +9,7 @@ import InventoryDetailsPopup from "./components/inventoryDetailsPopup";
 import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getFilteredInventory } from "app/services/inventory";
+import { EditPagePencil } from "@/icons/index";
 
 const Inventory = () => {
   const searchParams = useSearchParams();
@@ -25,13 +26,13 @@ const Inventory = () => {
   const columns = [
     {
       title: "Part #",
-      dataIndex: "partItem",
-      key: "partItem",
+      dataIndex: "partNumber",
+      key: "partNumber",
     },
     {
       title: "Description",
-      dataIndex: "details",
-      key: "details",
+      dataIndex: "description",
+      key: "description",
     },
     {
       title: "Received Date",
@@ -50,18 +51,26 @@ const Inventory = () => {
     },
     {
       title: "Location",
-      dataIndex: "location",
-      key: "location",
+      dataIndex: "system",
+      key: "system",
     },
     {
       title: "",
-      dataIndex: "partItem",
+      dataIndex: "_id",
       key: "actions",
-      render: (part) => (
-        <EyeOutlined
-          style={{ fontSize: "20px", cursor: "pointer" }}
-          onClick={() => setDetailsPopup(part)}
-        />
+      render: (id, record) => (
+        <p className="flex gap-5 text-tertiary">
+          <EyeOutlined
+            style={{ fontSize: "20px", cursor: "pointer" }}
+            onClick={() => setDetailsPopup(record.partNumber)}
+          />
+          <span
+            className="cursor-pointer"
+            onClick={() => router.push("/admin/inventory/" + id + "/edit")}
+          >
+            <EditPagePencil />
+          </span>
+        </p>
       ),
     },
   ];
