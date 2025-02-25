@@ -113,7 +113,7 @@ const reportsData = [
       "Display the pie charts of planned vs unplanned WOs in a time range.",
   },
 ];
-const MaintenanceReports = () => {
+const MaintenanceReports = ({categories}) => {
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
@@ -199,6 +199,7 @@ const MaintenanceReports = () => {
         <MaintenanceProceduresPopup
           visible={popup === "Maintenance Procedures"}
           setVisible={setPopup}
+          categories={categories}
         />
 
         <PlannedSummaryPopup
@@ -240,11 +241,13 @@ const MaintenanceReports = () => {
         <WOProcedurePopup
           visible={popup === "Work Order Procedure"}
           setVisible={setPopup}
+          categories={categories}
         />
 
         <WOSummaryPopup
           visible={popup === "Work Order Summary"}
           setVisible={setPopup}
+          categories={categories}
         />
 
         <ReportsPopup

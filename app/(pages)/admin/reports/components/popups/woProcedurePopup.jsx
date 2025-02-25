@@ -8,11 +8,14 @@ import * as Yup from "yup";
 
 // Example of a report generation function (replace with your actual logic)
 import { generateReport } from "app/services/reports";
+import { useSelector } from "react-redux";
 
-const WOProcedurePopup = ({ visible, setVisible }) => {
+const WOProcedurePopup = ({ visible, setVisible , categories }) => {
+  const locations = useSelector((state) => state.location.location);
+  const systems = useSelector((state) => state.system.system);
   // Validation schema using Yup
   const validationSchema = Yup.object({
-    costCenter: Yup.string().required("Cost Center is required"),
+    location: Yup.string().required("Location is required"),
     assetNumber: Yup.string().required("Asset Number is required"),
     createdFrom: Yup.date().required("Created Between From is required"),
     createdTo: Yup.date().required("Created Between To is required"),
@@ -56,7 +59,7 @@ const WOProcedurePopup = ({ visible, setVisible }) => {
     <div>
       <Formik
         initialValues={{
-          costCenter: "",
+          location: "",
           assetNumber: "",
           createdFrom: null,
           createdTo: null,
@@ -107,11 +110,21 @@ const WOProcedurePopup = ({ visible, setVisible }) => {
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
-                  <div className="w-full">
+                  {/* <div className="w-full">
                     <InputField
                       name="costCenter"
                       placeholder="Cost Center"
                       maxLength={128}
+                    />
+                  </div> */}
+                  <div className="w-full">
+                    <SelectField
+                      name="location"
+                      placeholder="Location"
+                      options={locations.map((i) => ({
+                        label: i.site,
+                        value: i._id,
+                      }))}
                     />
                   </div>
 
@@ -163,7 +176,10 @@ const WOProcedurePopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="category"
                       placeholder="Category"
-                      options={[]}
+                      options={categories && categories?.map((i) => ({
+                        value: i._id,
+                        label: i.category,
+                      }))}
                     />
                   </div>
 
@@ -171,7 +187,17 @@ const WOProcedurePopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="system"
                       placeholder="System"
-                      options={[]}
+                      options={
+                        values.location &&
+                        systems
+                          .filter(
+                            (i) => i?.site?._id === values.location
+                          )
+                          ?.map((i) => ({
+                            label: i.system,
+                            value: i._id,
+                          }))
+                      }
                     />
                   </div>
 

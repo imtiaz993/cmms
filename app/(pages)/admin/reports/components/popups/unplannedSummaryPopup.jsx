@@ -9,11 +9,14 @@ import * as Yup from "yup";
 // Example for generating the report (adjust this to your actual function)
 import { generateReport } from "app/services/reports";
 import { rigs } from "@/constants/rigsAndSystems";
+import { useSelector } from "react-redux";
 
 const UnplannedSummaryPopup = ({ visible, setVisible }) => {
+  const locations = useSelector((state) => state.location.location);
+  const systems = useSelector((state) => state.system.system);
   // Validation schema for the form
   const validationSchema = Yup.object({
-    costCenter: Yup.string().required("Cost Center is required"),
+    // costCenter: Yup.string().required("Cost Center is required"),
     assetNumber: Yup.string().required("Asset Number is required"),
     physicalLocation: Yup.string().required("Physical Location is required"),
     createdFrom: Yup.date().required("Created Between From is required"),
@@ -52,7 +55,7 @@ const UnplannedSummaryPopup = ({ visible, setVisible }) => {
     <div>
       <Formik
         initialValues={{
-          costCenter: "",
+          // costCenter: "",
           assetNumber: "",
           physicalLocation: "",
           createdFrom: null,
@@ -98,13 +101,13 @@ const UnplannedSummaryPopup = ({ visible, setVisible }) => {
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
-                  <div className="w-full">
+                  {/* <div className="w-full">
                     <InputField
                       name="costCenter"
                       placeholder="Cost Center"
                       maxLength={128}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="w-full">
                     <InputField
@@ -118,9 +121,9 @@ const UnplannedSummaryPopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="physicalLocation"
                       placeholder="Physical Location"
-                      options={rigs.map((i) => ({
-                        label: i.name,
-                        value: i.id,
+                      options={locations.map((i) => ({
+                        label: i.site,
+                        value: i._id,
                       }))}
                     />
                   </div>

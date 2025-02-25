@@ -8,11 +8,13 @@ import * as Yup from "yup";
 
 // Example of a report generation function (replace with your actual logic)
 import { generateReport } from "app/services/reports";
+import { useSelector } from "react-redux";
 
 const WOPersonnelSummaryPopup = ({ visible, setVisible }) => {
+  const locations = useSelector((state) => state.location.location);
   // Validation schema using Yup
   const validationSchema = Yup.object({
-    costCenter: Yup.string().required("Cost Center is required"),
+    location: Yup.string().required("Location is required"),
     createdFrom: Yup.date().required("Created Between From is required"),
     createdTo: Yup.date().required("Created Between To is required"),
     closesdFrom: Yup.date().required("Closed Between From is required"),
@@ -55,7 +57,7 @@ const WOPersonnelSummaryPopup = ({ visible, setVisible }) => {
     <div>
       <Formik
         initialValues={{
-          costCenter: "",
+          location: "",
           createdFrom: null,
           createdTo: null,
           closesdFrom: null,
@@ -102,11 +104,22 @@ const WOPersonnelSummaryPopup = ({ visible, setVisible }) => {
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
-                  <div className="w-full md:col-span-2">
+                  {/* <div className="w-full md:col-span-2">
                     <InputField
                       name="costCenter"
                       placeholder="Cost Center"
                       maxLength={128}
+                    />
+                  </div> */}
+
+                  <div className="w-full">
+                    <SelectField
+                      name="location"
+                      placeholder="Location"
+                      options={locations.map((i) => ({
+                        label: i.site,
+                        value: i._id,
+                      }))}
                     />
                   </div>
 

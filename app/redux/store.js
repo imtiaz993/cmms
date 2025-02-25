@@ -3,6 +3,7 @@ import assetsReducer from "./slices/assetsSlice";
 import inventoriesReducer from "./slices/inventoriesSlice";
 import locationsReducer from "./slices/locationsSlice";
 import systemsReducer from "./slices/systemsSlice";
+import categoriesReducer from "./slices/categoriesSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
     inventory: inventoriesReducer,
     location: locationsReducer,
     system: systemsReducer,
+    categories: categoriesReducer,
   },
 });
