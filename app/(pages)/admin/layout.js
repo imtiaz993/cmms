@@ -211,83 +211,45 @@ export default function Layout({ children }) {
           <Sidebar
             openSidebar={openSidebar}
             setOpenSidebar={setOpenSidebar}
-            params={`?location=${activeLocation}&system=${activeSystem}`}
+            params={`?location=${activeLocation || ""}&system=${
+              activeSystem || ""
+            }`}
           />
           <div className="w-full lg:w-[calc(100%-251px)]">
-            {currentPage !== "new" && !isNewEditDetails && (
-              <>
-                <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
-                  {currentItem.icon} {currentItem.label}
-                </h1>
-                {currentPage !== "set-up" && (
-                  <div className="px-5 md:px-10 flex gap-3 my-4">
-                    <Select
-                      value={activeLocation}
-                      onChange={(value) => {
-                        if (value) {
-                          router.push(
-                            `/admin/${currentPage}${
-                              value || activeSystem
-                                ? `?${value ? `location=${value}` : ""}
-                                ${value && activeSystem ? "&" : ""}${
-                                    activeSystem ? `system=` : ""
-                                  }`
-                                : ""
-                            }`
-                          );
-                        } else {
-                          router.push(`/admin/${currentPage}`);
-                        }
-                      }}
-                      allowClear={true}
-                      options={locations.map((i) => ({
-                        label: i.site,
-                        value: i._id,
-                      }))}
-                      placeholder={
-                        <p>
-                          <EnvironmentOutlined /> Location
-                        </p>
-                      }
-                      className="w-full sm:w-44 !h-10 shadow-custom"
-                      dropdownRender={(menu) => (
-                        <div>
-                          <div
-                            style={{
-                              padding: "8px",
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <EnvironmentOutlined
-                              style={{ marginRight: "8px", fontSize: "16px" }}
-                            />
-                            <span>Locations</span>
-                          </div>
-                          {menu}
-                        </div>
-                      )}
-                    />
-                    {activeLocation !== "12" && activeLocation !== "13" && (
+            {!["new", "profile", "change-password"].includes(currentPage) &&
+              !isNewEditDetails && (
+                <>
+                  <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
+                    {currentItem.icon} {currentItem.label}
+                  </h1>
+                  {currentPage !== "settings" && (
+                    <div className="px-5 md:px-10 flex gap-3 my-4">
                       <Select
-                        value={activeSystem}
-                        onChange={(value) =>
-                          router.push(
-                            `/admin/${currentPage}?location=${activeLocation}&system=${value}`
-                          )
-                        }
-                        options={
-                          activeLocation &&
-                          systems
-                            .filter((i) => i?.site?._id === activeLocation)
-                            ?.map((i) => ({
-                              label: i.system,
-                              value: i._id,
-                            }))
-                        }
+                        value={activeLocation}
+                        onChange={(value) => {
+                          if (value) {
+                            router.push(
+                              `/admin/${currentPage}${
+                                value || activeSystem
+                                  ? `?${value ? `location=${value}` : ""}
+                                ${value && activeSystem ? "&" : ""}${
+                                      activeSystem ? `system=` : ""
+                                    }`
+                                  : ""
+                              }`
+                            );
+                          } else {
+                            router.push(`/admin/${currentPage}`);
+                          }
+                        }}
+                        allowClear={true}
+                        options={locations.map((i) => ({
+                          label: i.site,
+                          value: i._id,
+                        }))}
                         placeholder={
                           <p>
-                            <ShareAltOutlined /> System
+                            <EnvironmentOutlined /> Location
                           </p>
                         }
                         className="w-full sm:w-44 !h-10 shadow-custom"
@@ -300,20 +262,65 @@ export default function Layout({ children }) {
                                 alignItems: "center",
                               }}
                             >
-                              <ShareAltOutlined
+                              <EnvironmentOutlined
                                 style={{ marginRight: "8px", fontSize: "16px" }}
                               />
-                              <span>Systems</span>
+                              <span>Locations</span>
                             </div>
                             {menu}
                           </div>
                         )}
                       />
-                    )}
-                  </div>
-                )}
-              </>
-            )}
+                      {activeLocation !== "12" && activeLocation !== "13" && (
+                        <Select
+                          value={activeSystem}
+                          allowClear={true}
+                          onChange={(value) =>
+                            router.push(
+                              `/admin/${currentPage}?location=${activeLocation}&system=${value}`
+                            )
+                          }
+                          options={
+                            activeLocation &&
+                            systems
+                              .filter((i) => i?.site?._id === activeLocation)
+                              ?.map((i) => ({
+                                label: i.system,
+                                value: i._id,
+                              }))
+                          }
+                          placeholder={
+                            <p>
+                              <ShareAltOutlined /> System
+                            </p>
+                          }
+                          className="w-full sm:w-44 !h-10 shadow-custom"
+                          dropdownRender={(menu) => (
+                            <div>
+                              <div
+                                style={{
+                                  padding: "8px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <ShareAltOutlined
+                                  style={{
+                                    marginRight: "8px",
+                                    fontSize: "16px",
+                                  }}
+                                />
+                                <span>Systems</span>
+                              </div>
+                              {menu}
+                            </div>
+                          )}
+                        />
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
             {children}
           </div>
         </div>
