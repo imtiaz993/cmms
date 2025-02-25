@@ -38,7 +38,7 @@ const TextAreaField = ({
                 placeholder={placeholder}
                 maxLength={maxLength}
                 readOnly={readOnly}
-                className={`${className} !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F] resize-none ${
+                className={`${className} !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#717171] resize-none ${
                   !labelOnTop && label && "mt-2 sm:mt-0 "
                 }`}
                 style={{

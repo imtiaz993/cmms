@@ -1,9 +1,9 @@
-import { Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { message, Radio, Table } from "antd";
+import { message, Radio, Table, Upload } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-import { getAssetDetails, updateAsset } from "app/services/assets";
+import { addAsset, getAssetDetails, updateAsset } from "app/services/assets";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
@@ -16,6 +16,12 @@ import { useSelector } from "react-redux";
 import AddFieldPopup from "@/components/addFieldPopup";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
 import AddLocationPopup from "../../settings/locations/components/addLocationPopup";
+import AddCategoryPopup from "../../settings/categories/components/addCategoryPopup";
+import AddSubCategoryPopup from "../../settings/sub-categories/components/addSubCategoryPopup";
+import { getCategories } from "app/services/setUp/categories";
+import { getSubCategories } from "app/services/setUp/subCategories";
+import { editAsset, updateAssets } from "app/redux/slices/assetsSlice";
+import dayjs from "dayjs";
 
 const columns = [
   {
@@ -45,6 +51,10 @@ const AssetForm = () => {
   const systems = useSelector((state) => state.system.system);
   const [addSitePopup, setAddSitePopup] = useState(false);
   const [addSystemPopup, setAddSystemPopup] = useState(false);
+  const [addCategoryPopup, setAddCategoryPopup] = useState(false);
+  const [addSubCategoryPopup, setAddSubCategoryPopup] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
 
   const rowSelection = {
     selectedRowKeys,
@@ -77,6 +87,27 @@ const AssetForm = () => {
     slug && getAsset();
     slug && handleFetchFields();
   }, [slug]);
+
+  useEffect(() => {
+    const handleFetchSubCategories = async () => {
+      const { status, data } = await getSubCategories();
+      if (status === 200) {
+        setSubCategories(data.data);
+      } else {
+        message.error(data.error);
+      }
+    };
+    const handleFetchCategories = async () => {
+      const { status, data } = await getCategories();
+      if (status === 200) {
+        setCategories(data.data);
+      } else {
+        message.error(data.error);
+      }
+    };
+    handleFetchCategories();
+    handleFetchSubCategories();
+  }, []);
 
   const customFieldInitialValues = useMemo(() => {
     return fields.reduce((acc, field) => {
@@ -114,64 +145,80 @@ const AssetForm = () => {
   }, [fields]);
 
   const validationSchema = Yup.object().shape({
-    physicalLocation: Yup.string().required("Physical Location is required"),
-    mainSystem: Yup.string().required("Main System is required"),
-    rfidBarCode: Yup.string().required("RFID/Barcode is required"),
-    accountingDept: Yup.string().required("Accounting Dept. is required"),
-    parentAsset: Yup.string().required("Parent Asset is required"),
-    childAsset: Yup.string().required("Child Asset is required"),
-    assetNumber: Yup.string().required("Asset # is required"),
-    serialNumber: Yup.string().required("Serial # is required"),
-    make: Yup.string().required("Make is required"),
+    site: Yup.string().required("Site is required"),
+    system: Yup.string().required("System is required"),
+    category: Yup.string().required("Category is required"),
+    subCategory: Yup.string().required("Sub-category is required"),
+    assetID: Yup.string().required("Asset number is required"),
+    purchaseDate: Yup.date().required("Purchase date is required"),
+    description: Yup.string().required("Description is required"),
+    brand: Yup.string().required("Brand is required"),
     model: Yup.string().required("Model is required"),
-    part: Yup.string().required("Part # is required"),
-    description: Yup.string()
-      .max(150, "Max 150 characters allowed")
-      .required("Description is required"),
-    specDetails: Yup.string()
-      .max(500, "Max 500 characters allowed")
-      .required("Spec Details are required"),
-    installedDate: Yup.date()
-      .typeError("Installed Date must be a valid date")
-      .required("Installed Date is required"),
-    supplier: Yup.string().required("Suppliers are required"),
+    serialNumber: Yup.string().required("Serial number is required"),
+    maintCategory: Yup.string().required("Maintenance category is required"),
+    startDate: Yup.date().required("Start date is required"),
     criticality: Yup.string().required("Criticality is required"),
-    originalMfrDate: Yup.date()
-      .typeError("Original Mfr. Date must be a valid date")
-      .required("Original Mfr. Date is required"),
-    condition: Yup.string().required("Condition is required"),
-    maintStatus: Yup.string().required("Maint. Status is required"),
-    maintStartDate: Yup.date()
-      .typeError("Maint. Start Date must be a valid date")
-      .required("Maint. Start Date is required"),
+    maintStatus: Yup.string().required("Maintenance status is required"),
     ...customFieldValidations,
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    const customFields = fields.map((field) => ({
-      uniqueKey: field.uniqueKey,
-      value: values[field.uniqueKey],
-    }));
+    try {
+      const formData = new FormData();
 
-    const standardValues = { ...values };
-    fields.forEach((field) => {
-      delete standardValues[field.uniqueKey];
-    });
+      // Append all standard form values except the file
+      Object.entries(values).forEach(([key, value]) => {
+        if (key !== "assetImage" && value) {
+          formData.append(key, value);
+        }
+      });
 
-    const payload = {
-      ...standardValues,
-      customFields,
-    };
+      // Append custom fields
+      fields.forEach((field) => {
+        const fieldValue = values[field.uniqueKey];
+        if (fieldValue) {
+          formData.append(`customFields[${field.uniqueKey}]`, fieldValue);
+        }
+      });
 
-    const { status, data } = await updateAsset({ ...payload, asset: slug });
-    if (status === 200) {
-      message.success(data?.message || "Asset Updated successfully");
-      setDetails((prev) => ({ ...prev, dashboard: data.data }));
-    } else {
-      message.error(data.error);
+      // Append the image separately if it exists
+      if (values.assetImage instanceof File) {
+        formData.append("assetImage", values.assetImage); // Ensure it's a File object
+      }
+
+      let response;
+      if (slug) {
+        // Update asset
+        response = await updateAsset(formData, slug);
+      } else {
+        // Add new asset
+        response = await addAsset(formData);
+      }
+
+      const { status, data } = response;
+
+      if (status === 200) {
+        message.success(
+          data?.message ||
+            (slug ? "Asset Updated successfully" : "Asset Added successfully")
+        );
+
+        // Update Redux store accordingly
+        if (slug) {
+          dispatch(editAsset(data.data));
+          setDetails((prev) => ({ ...prev, dashboard: data.data }));
+        } else {
+          dispatch(updateAssets(data.data));
+        }
+        resetForm();
+      } else {
+        message.error(data.error || "Failed to process request");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      message.error("Something went wrong!");
     }
 
-    resetForm();
     setSubmitting(false);
   };
 
@@ -179,7 +226,7 @@ const AssetForm = () => {
     return <div className="ml-10 mt-20 text-center">Loading...</div>;
 
   return (
-    <div className="ml-5 md:ml-10">
+    <div className="mx-5 md:mx-10">
       <AddFieldPopup
         visible={addFieldPopupVisible}
         setVisible={setAddFieldPopupVisible}
@@ -191,6 +238,17 @@ const AssetForm = () => {
       <AddLocationPopup
         visible={addSystemPopup}
         setVisible={setAddSystemPopup}
+      />
+      <AddCategoryPopup
+        visible={addCategoryPopup}
+        setVisible={setAddCategoryPopup}
+        setCategories={setCategories}
+      />
+      <AddSubCategoryPopup
+        visible={addSubCategoryPopup}
+        setVisible={setAddSubCategoryPopup}
+        setSubCategories={setSubCategories}
+        categories={categories}
       />
       <p className="text-sm text-[#828282]">
         Asset {" > "} {slug ? slug + " > Edit" : "Add New Asset"}
@@ -208,33 +266,28 @@ const AssetForm = () => {
         </p>
         <Formik
           initialValues={{
-            physicalLocation: details?.dashboard?.physicalLocation || "",
-            mainSystem: details?.dashboard?.mainSystem || "",
-            rfidBarCode: details?.dashboard?.rfidBarCode || "",
-            accountingDept: details?.dashboard?.accountingDept || "",
-            parentAsset: details?.dashboard?.parentAsset || "",
-            childAsset: details?.dashboard?.childAsset || "",
-            assetNumber: details?.dashboard?.assetNumber || "",
-            serialNumber: details?.dashboard?.serialNumber || "",
-            make: details?.dashboard?.make || "",
-            model: details?.dashboard?.model || "",
-            part: details?.dashboard?.part || "",
+            site: details?.dashboard?.site?._id || "",
+            system: details?.dashboard?.system?._id || "",
+            category: details?.dashboard?.category?._id || "",
+            subCategory: details?.dashboard?.subCategory?._id || "",
+            assetID: details?.dashboard?.assetID || "",
+            purchaseDate: details?.dashboard?.purchaseDate || "",
             description: details?.dashboard?.description || "",
-            specDetails: details?.dashboard?.specDetails || "",
-            installedDate: details?.dashboard?.installedDate || "",
-            supplier: details?.dashboard?.supplier || "",
+            brand: details?.dashboard?.brand || "",
+            model: details?.dashboard?.model || "",
+            serialNumber: details?.dashboard?.serialNumber || "",
+            maintCategory: details?.dashboard?.maintCategory?._id || "",
+            startDate: details?.dashboard?.startDate || "",
             criticality: details?.dashboard?.criticality || "",
-            originalMfrDate: details?.dashboard?.originalMfrDate || "",
-            condition: details?.dashboard?.condition || "",
             maintStatus: details?.dashboard?.maintStatus || "",
-            maintStartDate: details?.dashboard?.maintStartDate || "",
             ...customFieldInitialValues,
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values, isSubmitting, handleSubmit }) => (
+          {({ values, isSubmitting, handleSubmit, setFieldValue, errors }) => (
             <Form onSubmit={handleSubmit}>
+              {console.log("errors", errors)}
               <div className="grid md:grid-cols-2 gap-4 md:gap-8">
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Asset Location
@@ -281,38 +334,59 @@ const AssetForm = () => {
                     prefix={<PlusOutlined />}
                   />
                 </div>
-                <SelectField
-                  name="category"
-                  placeholder="Category"
-                  label="Category"
-                  options={[
-                    { value: "1", label: "Category 1" },
-                    { value: "2", label: "Category 2" },
-                    { value: "3", label: "Category 3" },
-                  ]}
-                />
-                <SelectField
-                  name="subCategory"
-                  placeholder="Sub Category"
-                  label="Sub Category"
-                  options={[
-                    { value: "1", label: "Sub Category 1" },
-                    { value: "2", label: "Sub Category 2" },
-                    { value: "3", label: "Sub Category 3" },
-                  ]}
-                />
+                <div className="flex items-center gap-3">
+                  <SelectField
+                    name="category"
+                    placeholder="Category"
+                    label="Category"
+                    options={categories.map((i) => ({
+                      label: i.category,
+                      value: i._id,
+                    }))}
+                  />
+                  <Button
+                    text="New"
+                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                    onClick={() => setAddCategoryPopup(true)}
+                    fullWidth={false}
+                    prefix={<PlusOutlined />}
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <SelectField
+                    name="subCategory"
+                    placeholder="Sub Category"
+                    label="Sub Category"
+                    options={
+                      values.category &&
+                      subCategories
+                        .filter((i) => i?.category?._id === values.category)
+                        ?.map((i) => ({
+                          label: i.subCategory,
+                          value: i._id,
+                        }))
+                    }
+                  />
+                  <Button
+                    text="New"
+                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                    onClick={() => setAddSubCategoryPopup(true)}
+                    fullWidth={false}
+                    prefix={<PlusOutlined />}
+                  />
+                </div>
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Asset Details
                 </p>
                 <InputField
-                  name="assetId"
+                  name="assetID"
                   placeholder="Asset ID"
                   label="Asset ID"
                 />
                 <DatePickerField name="purchaseDate" label="Purchase Date" />
                 <div className="md:col-span-2">
                   <TextAreaField
-                    name="details"
+                    name="description"
                     placeholder="Description"
                     label="Description"
                     className="!h-12"
@@ -348,58 +422,67 @@ const AssetForm = () => {
                     overflow: "auto",
                   }}
                   className="md:col-span-2"
+                  pagination={false}
                 />
                 <SelectField
-                  name="category"
+                  name="maintCategory"
                   placeholder="Category"
                   label="Category"
-                  options={[
-                    { value: "1", label: "Category 1" },
-                    { value: "2", label: "Category 2" },
-                    { value: "3", label: "Category 3" },
-                  ]}
+                  options={categories.map((i) => ({
+                    label: i.category,
+                    value: i._id,
+                  }))}
                 />
-                <DatePickerField name="maintStartDate" label="Start Date" />
+                <DatePickerField name="startDate" label="Start Date" />
+                {console.log("values:", values)}
                 <div className="md:col-span-2 sm:flex items-center">
                   <label className="text-sm sm:text-right sm:min-w-[115px]">
                     Criticality
                   </label>
-                  <Radio.Group name="criticality" className="">
-                    <Radio value="Critical" className="!ml-3">
-                      Critical
-                    </Radio>
-                    <Radio value="High" className="sm:!ml-7">
-                      High
-                    </Radio>
-                    <Radio value="Medium" className="sm:!ml-7">
-                      Medium
-                    </Radio>
-                    <Radio value="Low" className="sm:!ml-7">
-                      Low
-                    </Radio>
-                  </Radio.Group>
+                  <Field name="criticality">
+                    {({ field, form }) => (
+                      <Radio.Group {...field} className="">
+                        <Radio value="Critical" className="!ml-3">
+                          Critical
+                        </Radio>
+                        <Radio value="High" className="sm:!ml-7">
+                          High
+                        </Radio>
+                        <Radio value="Medium" className="sm:!ml-7">
+                          Medium
+                        </Radio>
+                        <Radio value="Low" className="sm:!ml-7">
+                          Low
+                        </Radio>
+                      </Radio.Group>
+                    )}
+                  </Field>
                 </div>
                 <div className="md:col-span-2 sm:flex items-center">
                   <label className="text-sm sm:text-right sm:min-w-[115px]">
                     Maint. Status
                   </label>
-                  <Radio.Group name="maintStatus" className="">
-                    <Radio value="Active" className="!ml-3">
-                      Active
-                    </Radio>
-                    <Radio value="damagedBeyondRepair" className="sm:!ml-7">
-                      Damaged Beyond Repair
-                    </Radio>
-                    <Radio value="outForRepair" className="sm:!ml-7">
-                      Out for Repair
-                    </Radio>
-                    <Radio value="damaged" className="sm:!ml-7">
-                      Damaged
-                    </Radio>
-                    <Radio value="disposed" className="sm:!ml-7">
-                      Disposed
-                    </Radio>
-                  </Radio.Group>
+                  <Field name="maintStatus">
+                    {({ field, form }) => (
+                      <Radio.Group {...field} className="">
+                        <Radio value="Active" className="!ml-3">
+                          Active
+                        </Radio>
+                        <Radio value="damagedBeyondRepair" className="sm:!ml-7">
+                          Damaged Beyond Repair
+                        </Radio>
+                        <Radio value="outForRepair" className="sm:!ml-7">
+                          Out for Repair
+                        </Radio>
+                        <Radio value="damaged" className="sm:!ml-7">
+                          Damaged
+                        </Radio>
+                        <Radio value="disposed" className="sm:!ml-7">
+                          Disposed
+                        </Radio>
+                      </Radio.Group>
+                    )}
+                  </Field>
                 </div>
 
                 {fields.length > 0 && (
@@ -465,18 +548,25 @@ const AssetForm = () => {
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Asset Image
                 </p>
-                <div className={`w-full flex items-center gap-3`}>
-                  <label className="text-sm text-right min-w-[115px]">
+                <div className={`w-full flex gap-3`}>
+                  <label className="text-sm text-right min-w-[115px] mt-3">
                     Upload
                   </label>
-
-                  <Button
-                    className="!bg-green-600 !shadow-custom !border-white"
-                    // onClick={() => setAddDocPopupVisible(true)}
-                    fullWidth={false}
-                    prefix={<UploadOutlined />}
-                    text="Choose Image"
-                  />
+                  <Upload
+                    beforeUpload={(file) => {
+                      setFieldValue("assetImage", file);
+                      return false; // Prevent auto-upload
+                    }}
+                    maxCount={1}
+                  >
+                    <Button
+                      className="!bg-green-600 !shadow-custom !border-white"
+                      // onClick={() => setAddDocPopupVisible(true)}
+                      fullWidth={false}
+                      prefix={<UploadOutlined />}
+                      text="Choose Image"
+                    />
+                  </Upload>
                 </div>
               </div>
               <div className="text-right mt-5 mb-5">
