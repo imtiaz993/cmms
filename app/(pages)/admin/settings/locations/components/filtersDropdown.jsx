@@ -1,10 +1,8 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { message } from "antd";
 import Button from "@/components/common/Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SelectField from "@/components/common/SelectField";
-import { getSites } from "app/services/setUp/sites";
 
 const validationSchema = Yup.object().shape({
   site: Yup.string(),
@@ -12,8 +10,6 @@ const validationSchema = Yup.object().shape({
 
 const FilterDropdown = ({
   closeDropdown,
-  setLoading,
-  setLocations,
   handleFetchFilteredSystems,
   sites,
 }) => {

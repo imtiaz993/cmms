@@ -45,9 +45,7 @@ const CompanyDetails = ({ activeTab }) => {
     const { status, data } = await updateCompany(filteredValues);
     setSubmitting(false);
     if (status === 200) {
-      setCompanyData(values);
       message.success(data.message);
-      resetForm();
     } else {
       message.error(data.error);
     }
