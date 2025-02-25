@@ -4,12 +4,15 @@ import SelectField from "@/components/common/SelectField";
 import { rigs } from "@/constants/rigsAndSystems";
 import { Checkbox, DatePicker, Modal, Radio, message } from "antd";
 import { generateReport } from "app/services/reports";
+import { getCategories } from "app/services/setUp/categories";
 import { Field, Form, Formik } from "formik";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
 // Yup validation schema
 const validationSchema = Yup.object({
-  costCenter: Yup.string().required("Cost Center is required"),
+  // costCenter: Yup.string().required("Cost Center is required"),
   serialNumber: Yup.string().max(
     128,
     "Serial Number can't exceed 128 characters"
@@ -32,7 +35,7 @@ const validationSchema = Yup.object({
 
 // Formik initial values
 const initialValues = {
-  costCenter: "",
+  // costCenter: "",
   serialNumber: "",
   physicalLocation: "",
   year: "",
@@ -48,7 +51,10 @@ const initialValues = {
   tier6: "",
 };
 
-const AssetSummaryPopup = ({ visible, setVisible }) => {
+const AssetSummaryPopup = ({ visible, setVisible , categories }) => {
+  
+  const locations = useSelector((state) => state.location.location);
+  const systems = useSelector((state) => state.system.system);
   // Form submission handler
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
@@ -66,6 +72,8 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
     setSubmitting(false);
     setVisible(false);
   };
+
+ 
 
   return (
     <div>
@@ -104,13 +112,13 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
-                  <div className="w-full">
+                  {/* <div className="w-full">
                     <InputField
                       name="costCenter"
                       placeholder="Cost Center"
                       maxLength={128}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="w-full">
                     <InputField
@@ -124,9 +132,9 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="physicalLocation"
                       placeholder="Physical Location"
-                      options={rigs.map((i) => ({
-                        label: i.name,
-                        value: i.id,
+                      options={locations.map((i) => ({
+                        label: i.site,
+                        value: i._id,
                       }))}
                     />
                   </div>
@@ -165,11 +173,10 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="category"
                       placeholder="Category"
-                      options={[
-                        { value: "category-1", label: "Category 1" },
-                        { value: "category-2", label: "Category 2" },
-                        { value: "category-3", label: "Category 3" },
-                      ]}
+                      options={categories && categories?.map((i) => ({
+                        value: i._id,
+                        label: i.category,
+                      }))}
                     />
                   </div>
 
@@ -177,7 +184,17 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="system"
                       placeholder="System"
-                      options={[{ value: "air-system", label: "Air System" }]}
+                      options={
+                        values.physicalLocation &&
+                        systems
+                          .filter(
+                            (i) => i?.site?._id === values.physicalLocation
+                          )
+                          ?.map((i) => ({
+                            label: i.system,
+                            value: i._id,
+                          }))
+                      }
                     />
                   </div>
 

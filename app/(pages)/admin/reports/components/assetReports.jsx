@@ -62,7 +62,7 @@ const reportsData = [
       "This report displays assets of a particular asset class that have specific custom attribute values.",
   },
 ];
-const AssetReports = () => {
+const AssetReports = ({categories}) => {
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
@@ -164,6 +164,7 @@ const AssetReports = () => {
       <AssetSummaryPopup
         visible={popup === "Asset Summary"}
         setVisible={setPopup}
+        categories={categories}
       />
       <ReportsPopup
         visible={popup === "Total Cost of Ownership"}
