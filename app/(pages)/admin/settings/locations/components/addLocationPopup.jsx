@@ -51,8 +51,10 @@ const AddLocationPopup = ({ visible, setLocations, setVisible }) => {
               }
               open={visible}
               onCancel={() => {
-                setVisible(false);
-                resetForm();
+                if (!isSubmitting) {
+                  setVisible(false);
+                  resetForm();
+                }
               }}
               footer={
                 <div>
@@ -66,7 +68,7 @@ const AddLocationPopup = ({ visible, setLocations, setVisible }) => {
                     size="small"
                     text="Cancel"
                     fullWidth={false}
-                    disabled={false}
+                    disabled={isSubmitting}
                   />
 
                   <Button
@@ -75,7 +77,8 @@ const AddLocationPopup = ({ visible, setLocations, setVisible }) => {
                     size="small"
                     text="Add"
                     fullWidth={false}
-                    disabled={false}
+                    disabled={isSubmitting}
+                    isLoading={isSubmitting}
                   />
                 </div>
               }
