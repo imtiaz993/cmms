@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./components/actionBar";
 import { message, Table } from "antd";
-import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import { deleteSite, filterSites, getSites } from "app/services/setUp/sites";
+import { DeleteOutlined } from "@ant-design/icons";
+import { deleteSite, getSites } from "app/services/setUp/sites";
 import { useSearchParams } from "next/navigation";
 
-const Sites = ({activeTab}) => {
+const Sites = ({ activeTab }) => {
   const columns = [
     {
       title: "Site Name",
@@ -56,7 +56,6 @@ const Sites = ({activeTab}) => {
       key: "actions",
       render: (_, record) => (
         <>
-          <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
           <DeleteOutlined
             style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
             onClick={() => handleDelete(record)}
@@ -75,14 +74,6 @@ const Sites = ({activeTab}) => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [searchText, setSearchText] = useState("");
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys, rows) => {
-      setSelectedRowKeys(keys);
-    },
-  };
 
   useEffect(() => {
     const handleFetchSites = async () => {
@@ -128,8 +119,6 @@ const Sites = ({activeTab}) => {
         checkedList={checkedList}
         setCheckedList={setCheckedList}
         columns={columns}
-        selectedRowKeys={selectedRowKeys}
-        setSelectedRowKeys={setSelectedRowKeys}
         setSearchText={setSearchText}
         setLoading={setLoading}
         setSites={setSites}
@@ -139,7 +128,6 @@ const Sites = ({activeTab}) => {
         size="large"
         scroll={{ x: 1200 }}
         columns={newColumns}
-        rowSelection={rowSelection}
         rowKey="_id"
         dataSource={
           displayedSites &&
