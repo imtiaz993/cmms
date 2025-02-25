@@ -61,7 +61,6 @@ export const exportCategories = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/category/export",
-      method: "POST",
       data: values,
     });
     return { status, data };

@@ -8,7 +8,7 @@ import { deleteEvent, getEvents } from "app/services/setUp/events";
 const Events = () => {
   const columns = [
     {
-      title: "events",
+      title: "Events",
       dataIndex: "event",
       key: "event",
       render: (event) => (
@@ -31,9 +31,6 @@ const Events = () => {
   ];
 
   const defaultCheckedList = columns.map((item) => item.key);
-  const searchParams = useSearchParams();
-  const activeLocation = searchParams.get("location") || "";
-  const activeSystem = searchParams.get("system") || "";
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
@@ -63,35 +60,6 @@ const Events = () => {
       )
     );
   }, [searchText, events, checkedList]);
-  useEffect(() => {
-    if (activeLocation) {
-      const fetchFilteredEvents = async () => {
-        setLoading(true);
-        // try {
-        //   const { status, data } = await filterEvents({
-        //     location: activeLocation,
-        //     system: activeSystem ? activeSystem : "",
-        //   });
-
-        //   if (status === 200) {
-        //     setEvents(data.data);
-        //   } else {
-        //     message.error(
-        //       data?.message || "Failed to fetch filtered sub categories"
-        //     );
-        //   }
-        // } catch (error) {
-        //   message.error("Error fetching filtered sub categories");
-        // } finally {
-        //   setLoading(false);
-        // }
-      };
-
-      fetchFilteredEvents();
-    } else {
-      setEvents(events);
-    }
-  }, []);
 
   const handleDelete = async (event) => {
     setLoading(true);

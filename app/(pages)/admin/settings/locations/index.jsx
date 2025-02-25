@@ -23,7 +23,7 @@ const Locations = ({ activeTab }) => {
       dataIndex: "site",
       key: "site",
       render: (_, record) => (
-        <span className="text-[#017BFE] underline">{record.site?.site}</span>
+        <span>{record.site?.site}</span>
       ),
     },
     {
