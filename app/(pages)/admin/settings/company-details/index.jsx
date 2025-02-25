@@ -61,6 +61,7 @@ const CompanyDetails = ({ activeTab }) => {
       message.error(data.error);
     }
   };
+  
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-60px)] overflow-auto p-[12px_12px_28px_0px]">
@@ -97,6 +98,7 @@ const CompanyDetails = ({ activeTab }) => {
               rigManagerData={rigManagerData}
               setRigManagerData={setRigManagerData}
               outerValues={values}
+              setCompanyData={setCompanyData}
             />
             <div className="grid md:grid-cols-2 gap-4 md:gap-8">
               <div className="grid grid-cols-1 gap-4 md:gap-8">
@@ -227,7 +229,11 @@ const CompanyDetails = ({ activeTab }) => {
                               <strong>Locations:</strong>{" "}
                               {values.rigManagers[i]?.rigs.length > 0 &&
                                 values.rigManagers[i].rigs.map(
-                                  (i) => i?.label + ", "
+                                  (i) => 
+                                    <span className="px-2 py-1 text-center border border-gray-300 rounded-md mx-1">
+
+                                      {i?.site }
+                                    </span>
                                 )}
                             </p>
                           </div>

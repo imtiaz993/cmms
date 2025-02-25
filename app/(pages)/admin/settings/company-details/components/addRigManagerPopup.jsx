@@ -14,15 +14,18 @@ const AddRigManagerPopup = ({
   rigManagerData,
   setRigManagerData,
   outerValues,
+  setCompanyData,
 }) => {
   const locations = useSelector((state) => state.location.location);
-  console.log(locations);
-  
+
   const initialValues = {
     email: rigManagerData?.email || "",
     name: rigManagerData?.name || "",
     phone: rigManagerData?.phone || "",
-    rigs: rigManagerData?.rigs || [],
+    rigs:
+      rigManagerData?.rigs.map((rig) => {
+        return { value: rig._id, label: rig.site };
+      }) || [],
   };
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Required"),
@@ -48,6 +51,12 @@ const AddRigManagerPopup = ({
             rigManager.index === i ? data.data : rigManager
           ),
         }));
+        setCompanyData((prev) => ({
+          ...prev,
+          rigManager: prev.rigManager.map((rigManager, i) =>
+            rigManager.index === i ? data.data : rigManager
+          ),
+        }));
         setRigManagerData(null);
         resetForm();
         setVisible(false);
@@ -67,6 +76,10 @@ const AddRigManagerPopup = ({
     });
     setSubmitting(false);
     if (status === 200) {
+      setCompanyData((prev) => ({
+        ...prev,
+        rigManager: [...prev.rigManager, data.data],
+      }));
       setOuterValues((prev) => ({
         ...prev,
         rigManagers: [...prev.rigManagers, data.data],
