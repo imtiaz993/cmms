@@ -30,6 +30,7 @@ const ActionBar = ({
   checkedList,
   setCheckedList,
   setSearchText,
+  setFilteredAssets,
 }) => {
   const [showHierarchy, setShowHierarchy] = useState(false);
   //Add Field
@@ -107,7 +108,7 @@ const ActionBar = ({
             open={filterDropdown}
             onOpenChange={setFilterDropdown}
             dropdownRender={() => (
-              <AssetFilter closeDropdown={() => setFilterDropdown(false)} />
+              <AssetFilter closeDropdown={() => setFilterDropdown(false)} setFilteredAssets={setFilteredAssets} />
             )}
             trigger={["click"]}
             arrow

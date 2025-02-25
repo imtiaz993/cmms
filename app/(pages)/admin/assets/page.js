@@ -222,7 +222,7 @@ const Assets = () => {
     } else {
       setFilteredAssets(assets); // If no filters, use full assets list
     }
-  }, [activeLocation, activeSystem, assets]);
+  }, [activeLocation, activeSystem]);
 
   return (
     <>
@@ -256,6 +256,7 @@ const Assets = () => {
           setCheckedList={setCheckedList}
           columns={mainColumns}
           setSearchText={setSearchText}
+          setFilteredAssets={setFilteredAssets}
         />
         {/* <div className="flex gap-3 justify-end">
         <p className="text-secondary">
