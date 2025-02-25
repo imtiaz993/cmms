@@ -191,6 +191,9 @@ export default function Layout({ children }) {
         router.replace("/supervisor/dashboard");
       }
     }
+    if ( user && user.role === "rigManager" && currentItem.key === "settings") {
+      router.replace("/admin/dashboard");
+    }
   }, [router]);
 
   return (
