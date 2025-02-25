@@ -59,7 +59,6 @@ const CompanyDetails = ({ activeTab }) => {
       message.error(data.error);
     }
   };
-  
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-60px)] overflow-auto p-[12px_12px_28px_0px]">
@@ -226,13 +225,14 @@ const CompanyDetails = ({ activeTab }) => {
                             <p>
                               <strong>Locations:</strong>{" "}
                               {values.rigManagers[i]?.rigs.length > 0 &&
-                                values.rigManagers[i].rigs.map(
-                                  (i) => 
-                                    <span className="px-2 py-1 text-center border border-gray-300 rounded-md mx-1">
-
-                                      {i?.site }
-                                    </span>
-                                )}
+                                values.rigManagers[i].rigs.map((i, index) => (
+                                  <span
+                                    key={index}
+                                    className="px-2 py-1 text-center border border-gray-300 rounded-md mx-1"
+                                  >
+                                    {i?.site}
+                                  </span>
+                                ))}
                             </p>
                           </div>
                         </Card>

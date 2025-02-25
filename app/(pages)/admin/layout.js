@@ -64,7 +64,7 @@ export default function Layout({ children }) {
   const isNewEditDetails = pathname.split("/")[3];
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
-  const user = localStorage.getItem("user");
+  const user = getUser();
 
   const items = [
     {
