@@ -15,9 +15,9 @@ const FilterDropdown = ({
   setLoading,
   setSubCategories,
   fetchFilteredSubCategories,
+  categories,
 }) => {
   const [isClearing, setIsClearing] = useState(false);
-  const [categories, setCategories] = useState([]);
 
   const submit = async (values, setSubmitting) => {
     console.log(values);
@@ -34,18 +34,6 @@ const FilterDropdown = ({
     // setLoading(false);
   };
 
-  useEffect(() => {
-    const handleFetchCategories = async () => {
-      const { status, data } = await getCategories();
-      if (status === 200) {
-        setCategories(data.data);
-      } else {
-        message.error(data.error);
-      }
-    };
-    handleFetchCategories();
-  }, []);
-
   return (
     <div
       className="p-4 bg-primary rounded-md max-h-[400px] overflow-auto"
@@ -59,6 +47,8 @@ const FilterDropdown = ({
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           fetchFilteredSubCategories(values);
+          setSubmitting(false);
+          closeDropdown();
         }}
       >
         {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (

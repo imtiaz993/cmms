@@ -64,6 +64,8 @@ export default function Layout({ children }) {
   const isNewEditDetails = pathname.split("/")[3];
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
+  const user = localStorage.getItem("user");
+  
 
   const items = [
     {
@@ -128,6 +130,7 @@ export default function Layout({ children }) {
       dispatch(setLocationLoading(true));
       const { status, data } = await getSites();
       if (status === 200) {
+        // if (user?.role === "rigManager") 
         dispatch(setlocation(data?.data));
       } else {
         dispatch(setLocationError(data?.error));

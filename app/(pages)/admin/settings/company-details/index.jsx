@@ -15,7 +15,7 @@ import * as Yup from "yup";
 import AddRigManagerPopup from "./components/addRigManagerPopup";
 import { deleteManager } from "app/services/rigManager";
 
-const CompanyDetails = () => {
+const CompanyDetails = ({ activeTab }) => {
   const [companyData, setCompanyData] = useState();
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -38,7 +38,7 @@ const CompanyDetails = () => {
       }
     };
     handleFetchCategories();
-  }, []);
+  }, [activeTab]);
 
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     const { rigManagers, ...filteredValues } = values; // Exclude rigManagers
@@ -221,6 +221,13 @@ const CompanyDetails = () => {
                             <p>
                               <strong>Phone:</strong>{" "}
                               {values.rigManagers[i].phone}
+                            </p>
+                            <p>
+                              <strong>Locations:</strong>{" "}
+                              {values.rigManagers[i]?.rigs.length > 0 &&
+                                values.rigManagers[i].rigs.map(
+                                  (i) => i?.label + ", "
+                                )}
                             </p>
                           </div>
                         </Card>

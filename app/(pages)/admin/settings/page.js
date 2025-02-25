@@ -6,18 +6,20 @@ import Locations from "./locations";
 import Categories from "./categories";
 import SubCategories from "./sub-categories";
 import Events from "./events";
+import { useState } from "react";
 
 const SetUp = () => {
+  const [activeTab, setActiveTab] = useState("company-details");
   const tabs = [
     {
       key: "company-details",
       label: "Company Details",
-      children: <CompanyDetails />,
+      children: <CompanyDetails activeTab={activeTab} />,
     },
-    { key: "sites", label: "Sites", children: <Sites /> },
-    { key: "locations", label: "Systems", children: <Locations /> },
-    { key: "categories", label: "Categories", children: <Categories /> },
-    { key: "sub-categories", label: "Sub Categories", children: <SubCategories /> },
+    { key: "sites", label: "Sites", children: <Sites activeTab={activeTab} /> },
+    { key: "locations", label: "Systems", children: <Locations activeTab={activeTab} /> },
+    { key: "categories", label: "Categories", children: <Categories activeTab={activeTab} /> },
+    { key: "sub-categories", label: "Sub Categories", children: <SubCategories activeTab={activeTab} /> },
     { key: "events", label: "Events", children: <Events /> },
   ];
   return (
@@ -27,6 +29,7 @@ const SetUp = () => {
         animated
         items={tabs}
         className="select-none asset-tabs"
+        onChange={(key) => setActiveTab(key)}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Checkbox,
   Dropdown,
@@ -19,6 +19,7 @@ import Button from "@/components/common/Button";
 import FilterDropdown from "./filtersDropdown";
 import { exportInventory } from "app/services/inventory";
 import AddLocationPopup from "./addLocationPopup";
+import { getSites } from "app/services/setUp/sites";
 import { SearchIcon } from "@/icons/index";
 
 const ActionBar = ({
@@ -31,15 +32,32 @@ const ActionBar = ({
   setLoading,
   setLocations,
   handleFetchFilteredSystems,
+  activeTab
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const [addLocationPopup, setAddLocationPopup] = useState(false);
+  const [sites, setSites] = useState([]);
 
   const options = columns.map(({ key, title }, index) => ({
     label: title,
     value: key,
     key: index,
   }));
+
+    useEffect(() => {
+      console.log("called");
+      
+      const handleFetchSites = async () => {
+        const { status, data } = await getSites();
+        if (status === 200) {
+          setLoading(false);
+          setSites(data.data);
+        } else {
+          message.error(data.error);
+        }
+      };
+      handleFetchSites();
+    }, [activeTab]);
 
   const handleSearchChange = (e) => {
     setSearchText(e.target.value);
@@ -107,6 +125,8 @@ const ActionBar = ({
                   setLoading={setLoading}
                   setLocations={setLocations}
                   handleFetchFilteredSystems={handleFetchFilteredSystems}
+                 
+                  sites={sites}
                 />
               )}
               trigger={["click"]}

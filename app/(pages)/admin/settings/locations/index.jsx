@@ -11,7 +11,7 @@ import {
   getSystems,
 } from "app/services/setUp/systems";
 
-const Locations = () => {
+const Locations = ({ activeTab }) => {
   const columns = [
     {
       title: "System",
@@ -74,7 +74,7 @@ const Locations = () => {
       }
     };
     handleFetchLocations();
-  }, []);
+  }, [activeTab]);
 
   const displayedLocations = useMemo(() => {
     if (!searchText) return locations; // Return full data if no search
@@ -122,6 +122,7 @@ const Locations = () => {
         setLoading={setLoading}
         setLocations={setLocations}
         handleFetchFilteredSystems={handleFetchFilteredSystems}
+        activeTab={activeTab}
       />
       <Table
         loading={loading}
