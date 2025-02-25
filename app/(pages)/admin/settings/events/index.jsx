@@ -3,10 +3,7 @@ import ActionBar from "./components/actionBar";
 import { message, Table } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useSearchParams } from "next/navigation";
-import {
-  deleteEvent,
-  getEvents,
-} from "app/services/setUp/events";
+import { deleteEvent, getEvents } from "app/services/setUp/events";
 
 const Events = () => {
   const columns = [
@@ -42,7 +39,6 @@ const Events = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [searchText, setSearchText] = useState("");
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-
 
   useEffect(() => {
     const handleFetch = async () => {
