@@ -62,7 +62,7 @@ const Inventory = () => {
         <p className="flex gap-5 text-tertiary">
           <EyeOutlined
             style={{ fontSize: "20px", cursor: "pointer" }}
-            onClick={() => setDetailsPopup(record.partNumber)}
+            onClick={() => setDetailsPopup(record)}
           />
           <span
             className="cursor-pointer"
@@ -91,7 +91,7 @@ const Inventory = () => {
 
   const displayedInventory = useMemo(() => {
     if (!searchText) return filteredInventory;
-    return inventory?.filter((inventoryItem) =>
+    return filteredInventory?.filter((inventoryItem) =>
       checkedList.some((key) =>
         inventoryItem[key]
           ?.toString()
@@ -150,7 +150,7 @@ const Inventory = () => {
         <InventoryDetailsPopup
           visible={detailsPopup}
           setVisible={setDetailsPopup}
-          part={detailsPopup}
+          inventory={detailsPopup}
         />
         <div>
           <ActionBar
