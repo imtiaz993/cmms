@@ -15,10 +15,10 @@ import {
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import FilterDropdown from "./filtersDropdown";
-import { exportInventory } from "app/services/inventory";
 import AddLocationPopup from "./addLocationPopup";
 import { getSites } from "app/services/setUp/sites";
 import { SearchIcon } from "@/icons/index";
+import { exportSystems } from "app/services/setUp/systems";
 
 const ActionBar = ({
   columns,
@@ -68,7 +68,7 @@ const ActionBar = ({
 
   const handleExport = async () => {
     message.success("Export initiated ");
-    const { status, data } = await exportInventory();
+    const { status, data } = await exportSystems();
     if (status === 200) {
       window.open(data.data);
     } else {

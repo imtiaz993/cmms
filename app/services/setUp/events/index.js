@@ -60,7 +60,6 @@ export const exportEvents = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/event/export",
-      method: "POST",
       data: values,
     });
     return { status, data };

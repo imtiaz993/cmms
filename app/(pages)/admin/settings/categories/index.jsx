@@ -31,9 +31,6 @@ const Categories = () => {
   ];
 
   const defaultCheckedList = columns.map((item) => item.key);
-  const searchParams = useSearchParams();
-  const activeLocation = searchParams.get("location") || "";
-  const activeSystem = searchParams.get("system") || "";
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
@@ -63,35 +60,6 @@ const Categories = () => {
       )
     );
   }, [searchText, categories, checkedList]);
-
-  useEffect(() => {
-    if (activeLocation) {
-      const fetchFilteredCategories = async () => {
-        // setLoading(true);
-        // try {
-        //   const { status, data } = await filterCategories({
-        //     location: activeLocation,
-        //     system: activeSystem ? activeSystem : "",
-        //   });
-        //   if (status === 200) {
-        //     setCategories(data.data);
-        //   } else {
-        //     message.error(
-        //       data?.message || "Failed to fetch filtered categories"
-        //     );
-        //   }
-        // } catch (error) {
-        //   message.error("Error fetching filtered categories");
-        // } finally {
-        //   setLoading(false);
-        // }
-      };
-
-      fetchFilteredCategories();
-    } else {
-      setCategories(categories);
-    }
-  }, []);
 
   const handleDelete = async (category) => {
     setLoading(true);

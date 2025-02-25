@@ -61,7 +61,6 @@ export const exportSites = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/site/export",
-      method: "POST",
       data: values,
     });
     return { status, data };

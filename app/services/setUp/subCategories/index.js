@@ -61,7 +61,6 @@ export const exportSubCategories = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/subCategory/export",
-      method: "POST",
       data: values,
     });
     return { status, data };

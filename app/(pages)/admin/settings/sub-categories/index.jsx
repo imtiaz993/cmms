@@ -23,11 +23,7 @@ const SubCategories = ({ activeTab }) => {
       title: "Category",
       dataIndex: "category",
       key: "category",
-      render: (_, record) => (
-        <span className="text-[#017BFE] underline">
-          {record.category?.category}
-        </span>
-      ),
+      render: (_, record) => <span>{record.category?.category}</span>,
     },
     {
       title: "",

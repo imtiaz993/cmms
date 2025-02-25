@@ -17,7 +17,7 @@ export const deleteCompany = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/company/delete",
-      method: "POST",
+      method: "DELETE",
       data: values,
     });
     return { status, data };

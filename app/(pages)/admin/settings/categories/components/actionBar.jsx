@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Input, message } from "antd";
 import { ExportOutlined, PlusOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
-import { exportInventory } from "app/services/inventory";
 import AddCategoryPopup from "./addCategoryPopup";
 import { SearchIcon } from "@/icons/index";
+import { exportCategories } from "app/services/setUp/categories";
 
 const ActionBar = ({ setSearchText, setCategories }) => {
   const [addCategoryPopup, setAddCategoryPopup] = useState(false);
@@ -15,7 +15,7 @@ const ActionBar = ({ setSearchText, setCategories }) => {
 
   const handleExport = async () => {
     message.success("Export initiated ");
-    const { status, data } = await exportInventory();
+    const { status, data } = await exportCategories();
     if (status === 200) {
       window.open(data.data);
     } else {

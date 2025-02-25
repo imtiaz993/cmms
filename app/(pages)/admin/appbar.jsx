@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Dropdown } from "antd";
+import { Avatar, Dropdown } from "antd";
 import {
   UserOutlined,
   DownOutlined,
@@ -83,13 +83,7 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
             trigger={["click"]}
           >
             <div className="cursor-pointer flex gap-1 md:gap-2 items-center select-none">
-              <Image
-                src="/images/profile-image.jpg"
-                alt="avatar"
-                width={40}
-                height={40}
-                className="rounded-full h-6 w-6 object-top"
-              />
+              <Avatar icon={<UserOutlined />} />
               <p className={`dark:text-white text-lg hidden md:block`}>
                 {userName}
               </p>
