@@ -65,11 +65,7 @@ const Sites = ({ activeTab }) => {
     },
   ];
   const defaultCheckedList = columns.map((item) => item.key);
-  const searchParams = useSearchParams();
-  const activeLocation = searchParams.get("location") || "";
-  const activeSystem = searchParams.get("system") || "";
   const [sites, setSites] = useState([]);
-  const [siteData, setSiteData] = useState({});
   const [loading, setLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [searchText, setSearchText] = useState("");
@@ -87,7 +83,7 @@ const Sites = ({ activeTab }) => {
         message.error(data.error);
       }
     };
-    if (!activeLocation) handleFetchSites();
+    handleFetchSites();
   }, [activeTab]);
 
   const displayedSites = useMemo(() => {

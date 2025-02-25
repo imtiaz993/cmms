@@ -15,9 +15,9 @@ import {
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import FilterDropdown from "./filtersDropdown";
-import { exportInventory } from "app/services/inventory";
 import AddSubCategoryPopup from "./addSubCategoryPopup";
 import { SearchIcon } from "@/icons/index";
+import { exportSubCategories } from "app/services/setUp/subCategories";
 
 const ActionBar = ({
   columns,
@@ -51,7 +51,7 @@ const ActionBar = ({
 
   const handleExport = async () => {
     message.success("Export initiated ");
-    const { status, data } = await exportInventory();
+    const { status, data } = await exportSubCategories();
     if (status === 200) {
       window.open(data.data);
     } else {

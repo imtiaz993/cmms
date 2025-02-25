@@ -73,6 +73,7 @@ const CompanyDetails = ({ activeTab }) => {
           country: companyData?.country || "",
           address: companyData?.address || "",
           apartment: companyData?.apartment || "",
+          city: companyData?.city || "",
           state: companyData?.state || "",
           zip: companyData?.zip || "",
           phone: companyData?.phone || "",
@@ -155,7 +156,17 @@ const CompanyDetails = ({ activeTab }) => {
                   placeholder="Email@email.com"
                   label="Email Address"
                 />
-                <p className="font-semibold md:text-lg">Rig Managers</p>
+                <div className="flex items-center justify-between mt-10">
+                  <p className="font-semibold md:text-lg">Rig Managers</p>
+                  <Button
+                    className="!bg-[#4C4C51] !shadow-custom !border-white w-full sm:w-52"
+                    onClick={() => setVisible(true)}
+                    fullWidth={false}
+                    prefix={<PlusOutlined />}
+                    text="Add More Rig Managers"
+                  />
+                </div>
+
                 <FieldArray name="rigManagers">
                   {({ push, remove }) => (
                     <>
@@ -243,34 +254,6 @@ const CompanyDetails = ({ activeTab }) => {
                     </>
                   )}
                 </FieldArray>
-                <div className="sm:ml-32 flex flex-wrap justify-end gap-5">
-                  <Button
-                    className="!bg-[#4C4C51] !shadow-custom !border-white w-full sm:w-52"
-                    onClick={() =>
-                      // setValues({
-                      //   ...values,
-                      //   rigManagers: [
-                      //     ...values.rigManagers,
-                      //     { email: "", name: "", phone: "", password: "" },
-                      //   ],
-                      // })
-                      setVisible(true)
-                    }
-                    fullWidth={false}
-                    prefix={<PlusOutlined />}
-                    text="Add More Rig Managers"
-                  />
-                  {/* {rigManagers > 1 && (
-                    <Button
-                      className="w-full sm:w-52"
-                      outlined
-                      onClick={() => setRigManagers(rigManagers - 1)}
-                      fullWidth={false}
-                      text="Remove Rig Manager"
-                      prefix={<DeleteOutlined />}
-                    />
-                  )} */}
-                </div>
 
                 <p className="font-semibold md:text-lg">
                   Timezone & Currency Information

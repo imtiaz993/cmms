@@ -5,11 +5,12 @@ import SelectField from "@/components/common/SelectField";
 import { Checkbox, InputNumber, message, Modal, Radio } from "antd";
 import { generateReport } from "app/services/reports";
 import { Field, Form, Formik } from "formik";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
 // Initial values for the form
 const initialValues = {
-  costCenter: "",
+  location: "",
   fromDate: null,
   toDate: null,
   criticallyFactor: "",
@@ -29,9 +30,10 @@ const MaintenanceReusedPopup = ({
   craft,
   top,
 }) => {
+  const locations = useSelector((state) => state.location.location);
   // Dynamically create Yup validation schema inside the component
   const validationSchema = Yup.object({
-    costCenter: Yup.string().required("Cost Center is required"),
+    location: Yup.string().required("Location is required"),
     fromDate: Yup.date().required("From Date is required"),
     toDate: Yup.date().required("To Date is required"),
     formType: Yup.string()
@@ -106,11 +108,21 @@ const MaintenanceReusedPopup = ({
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 items-center">
-                  <div className="w-full">
+                  {/* <div className="w-full">
                     <InputField
                       name="costCenter"
                       placeholder="Cost Center"
                       maxLength={128}
+                    />
+                  </div> */}
+                  <div className="w-full">
+                    <SelectField
+                      name="location"
+                      placeholder="Location"
+                      options={locations.map((i) => ({
+                        label: i.site,
+                        value: i._id,
+                      }))}
                     />
                   </div>
 

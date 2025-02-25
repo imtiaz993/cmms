@@ -73,7 +73,6 @@ const ReportsPopup = ({
     setSubmitting(false);
     setVisible(false);
   };
-console.log(locations);
 
   return (
     <div>

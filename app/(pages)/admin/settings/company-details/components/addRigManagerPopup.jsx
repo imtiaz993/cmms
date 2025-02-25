@@ -24,7 +24,7 @@ const AddRigManagerPopup = ({
     phone: rigManagerData?.phone || "",
     rigs:
       rigManagerData?.rigs.map((rig) => {
-        return { value: rig._id, label: rig.site };
+        return rig._id;
       }) || [],
   };
   const validationSchema = Yup.object({
@@ -43,18 +43,19 @@ const AddRigManagerPopup = ({
         _id: rigManagerData._id,
         company: outerValues._id,
       });
+
       setSubmitting(false);
       if (status === 200) {
         setOuterValues((prev) => ({
           ...prev,
           rigManagers: prev.rigManagers.map((rigManager, i) =>
-            rigManager.index === i ? data.data : rigManager
+            rigManager._id == rigManagerData._id ? data.data : rigManager
           ),
         }));
         setCompanyData((prev) => ({
           ...prev,
           rigManager: prev.rigManager.map((rigManager, i) =>
-            rigManager.index === i ? data.data : rigManager
+            rigManager._id === rigManagerData._id ? data.data : rigManager
           ),
         }));
         setRigManagerData(null);

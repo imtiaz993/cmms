@@ -5,12 +5,14 @@ import SelectField from "@/components/common/SelectField";
 import { message, Modal, Radio } from "antd";
 import { generateReport } from "app/services/reports"; // Assuming this is the API for report generation
 import { Field, Form, Formik } from "formik";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
 const UnplannedDetailsPopup = ({ visible, setVisible }) => {
+  const locations = useSelector((state) => state.location.location);
   // Validation schema for the form
   const validationSchema = Yup.object({
-    costCenter: Yup.string().required("Cost Center is required"),
+    location: Yup.string().required("Location is required"),
     assetNumber: Yup.string().required("Asset Number is required"),
     createdFrom: Yup.date().required("Created Between From is required"),
     createdTo: Yup.date().required("Created Between To is required"),
@@ -52,7 +54,7 @@ const UnplannedDetailsPopup = ({ visible, setVisible }) => {
     <div>
       <Formik
         initialValues={{
-          costCenter: "",
+          location: "",
           assetNumber: "",
           createdFrom: null,
           createdTo: null,
@@ -97,11 +99,21 @@ const UnplannedDetailsPopup = ({ visible, setVisible }) => {
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
-                  <div className="w-full">
+                  {/* <div className="w-full">
                     <InputField
                       name="costCenter"
                       placeholder="Cost Center"
                       maxLength={128}
+                    />
+                  </div> */}
+                  <div className="w-full">
+                    <SelectField
+                      name="location"
+                      placeholder="Location"
+                      options={locations.map((i) => ({
+                        label: i.site,
+                        value: i._id,
+                      }))}
                     />
                   </div>
 

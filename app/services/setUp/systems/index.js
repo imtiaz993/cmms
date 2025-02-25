@@ -60,7 +60,6 @@ export const exportSystems = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/system/export",
-      method: "POST",
       data: values,
     });
     return { status, data };
