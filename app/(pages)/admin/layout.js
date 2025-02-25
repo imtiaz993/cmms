@@ -59,8 +59,8 @@ export default function Layout({ children }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const currentPage = pathname.split("/")[2] || "dashboard";
-  const activeLocation = searchParams.get("location") || "";
-  const activeSystem = searchParams.get("system") || "";
+  const activeLocation = searchParams.get("location") || null;
+  const activeSystem = searchParams.get("system") || null;
   const isNewEditDetails = pathname.split("/")[3];
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
@@ -211,7 +211,7 @@ export default function Layout({ children }) {
             setOpenSidebar={setOpenSidebar}
             params={`?location=${activeLocation}&system=${activeSystem}`}
           />
-          <div className="w-full">
+          <div className="w-full lg:w-[calc(100%-251px)]">
             {currentPage !== "new" && !isNewEditDetails && (
               <>
                 <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
@@ -243,7 +243,11 @@ export default function Layout({ children }) {
                         label: i.site,
                         value: i._id,
                       }))}
-                      placeholder="Select Parent Location"
+                      placeholder={
+                        <p>
+                          <EnvironmentOutlined /> Location
+                        </p>
+                      }
                       className="w-full sm:w-44 !h-10 shadow-custom"
                       dropdownRender={(menu) => (
                         <div>
@@ -274,13 +278,17 @@ export default function Layout({ children }) {
                         options={
                           activeLocation &&
                           systems
-                            .filter((i) => i?.rig?.id === activeLocation)
+                            .filter((i) => i?.site?._id === activeLocation)
                             ?.map((i) => ({
-                              label: i.name,
+                              label: i.system,
                               value: i._id,
                             }))
                         }
-                        placeholder="Select System"
+                        placeholder={
+                          <p>
+                            <ShareAltOutlined /> System
+                          </p>
+                        }
                         className="w-full sm:w-44 !h-10 shadow-custom"
                         dropdownRender={(menu) => (
                           <div>
