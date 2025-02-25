@@ -41,7 +41,9 @@ const AddCategoryPopup = ({ visible, setCategories, setVisible }) => {
                 <h1 className="text-lg md:text-2xl mb-5">Add a Category</h1>
               }
               open={visible}
-              onCancel={() => setVisible(false)}
+              onCancel={() => {
+                if (!isSubmitting) setVisible(false);
+              }}
               footer={
                 <div>
                   <Button
@@ -51,7 +53,7 @@ const AddCategoryPopup = ({ visible, setCategories, setVisible }) => {
                     size="small"
                     text="Cancel"
                     fullWidth={false}
-                    disabled={false}
+                    disabled={isSubmitting}
                   />
 
                   <Button
@@ -60,7 +62,8 @@ const AddCategoryPopup = ({ visible, setCategories, setVisible }) => {
                     size="small"
                     text="Add"
                     fullWidth={false}
-                    disabled={false}
+                    disabled={isSubmitting}
+                    isLoading={isSubmitting}
                   />
                 </div>
               }

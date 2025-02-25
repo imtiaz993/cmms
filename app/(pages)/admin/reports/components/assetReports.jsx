@@ -183,8 +183,9 @@ const AssetReports = () => {
         {filteredData.length > 0 &&
           filteredData.map((item, index) => (
             <div
-              className="bg-primary rounded-lg shadow-custom p-5"
+              className="bg-primary rounded-lg shadow-custom p-5 cursor-pointer"
               key={index}
+              onClick={() => setPopup(item.title)}
             >
               <h2 className="text-sm font-semibold">{item.title}</h2>
               <div className="flex justify-between gap-2">
@@ -197,18 +198,6 @@ const AssetReports = () => {
               </div>
             </div>
           ))}
-        {/* <List
-          itemLayout=""
-          dataSource={filteredData.map((i, index) => ({ ...i, key: index }))}
-          renderItem={(item) => (
-            <List.Item actions={[,]}>
-              <List.Item.Meta
-                title={<p>{item.title}</p>}
-                description={item.description}
-              />
-            </List.Item>
-          )}
-        /> */}
       </div>
     </div>
   );

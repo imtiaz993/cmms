@@ -116,9 +116,11 @@ const AddRigManagerPopup = ({
               }
               open={visible}
               onCancel={() => {
-                setVisible(false);
-                resetForm();
-                setRigManagerData(null);
+                if (!isSubmitting) {
+                  setVisible(false);
+                  resetForm();
+                  setRigManagerData(null);
+                }
               }}
               footer={
                 <div>
@@ -133,7 +135,7 @@ const AddRigManagerPopup = ({
                     size="small"
                     text="Cancel"
                     fullWidth={false}
-                    disabled={false}
+                    disabled={isSubmitting}
                   />
 
                   <Button
@@ -142,7 +144,8 @@ const AddRigManagerPopup = ({
                     size="small"
                     text={rigManagerData ? "Update" : "Add"}
                     fullWidth={false}
-                    disabled={false}
+                    disabled={isSubmitting}
+                    isLoading={isSubmitting}
                   />
                 </div>
               }

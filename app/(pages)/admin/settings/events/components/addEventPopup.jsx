@@ -41,8 +41,10 @@ const AddEventPopup = ({ visible, setEvents, setVisible }) => {
               title={<h1 className="text-lg md:text-2xl mb-5">Add a Event</h1>}
               open={visible}
               onCancel={() => {
-                setVisible(false);
-                resetForm();
+                if (!isSubmitting) {
+                  setVisible(false);
+                  resetForm();
+                }
               }}
               footer={
                 <div>
@@ -56,7 +58,7 @@ const AddEventPopup = ({ visible, setEvents, setVisible }) => {
                     size="small"
                     text="Cancel"
                     fullWidth={false}
-                    disabled={false}
+                    disabled={isSubmitting}
                   />
 
                   <Button
@@ -65,7 +67,8 @@ const AddEventPopup = ({ visible, setEvents, setVisible }) => {
                     size="small"
                     text="Add"
                     fullWidth={false}
-                    disabled={false}
+                    disabled={isSubmitting}
+                    isLoading={isSubmitting}
                   />
                 </div>
               }
