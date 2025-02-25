@@ -5,7 +5,6 @@ import {
   Input,
   Button as AntButton,
   message,
-  Select,
   Menu,
 } from "antd";
 import {
@@ -13,7 +12,6 @@ import {
   ExportOutlined,
   PlusOutlined,
   SettingOutlined,
-  SwapOutlined,
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import FilterDropdown from "./filtersDropdown";
@@ -26,38 +24,36 @@ const ActionBar = ({
   columns,
   checkedList,
   setCheckedList,
-  selectedRowKeys,
-  setSelectedRowKeys,
   setSearchText,
   setLoading,
   setLocations,
   handleFetchFilteredSystems,
-  activeTab
+  activeTab,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const [addLocationPopup, setAddLocationPopup] = useState(false);
   const [sites, setSites] = useState([]);
 
-  const options = columns.map(({ key, title }, index) => ({
+  const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
     value: key,
     key: index,
   }));
 
-    useEffect(() => {
-      console.log("called");
-      
-      const handleFetchSites = async () => {
-        const { status, data } = await getSites();
-        if (status === 200) {
-          setLoading(false);
-          setSites(data.data);
-        } else {
-          message.error(data.error);
-        }
-      };
-      handleFetchSites();
-    }, [activeTab]);
+  useEffect(() => {
+    console.log("called");
+
+    const handleFetchSites = async () => {
+      const { status, data } = await getSites();
+      if (status === 200) {
+        setLoading(false);
+        setSites(data.data);
+      } else {
+        message.error(data.error);
+      }
+    };
+    handleFetchSites();
+  }, [activeTab]);
 
   const handleSearchChange = (e) => {
     setSearchText(e.target.value);
@@ -88,34 +84,16 @@ const ActionBar = ({
         setLocations={setLocations}
       />
       <div className="">
-      <Input
-        placeholder="Search"
-        prefix={<SearchIcon />}
-        onChange={handleSearchChange}
-        className="sm:!w-[362px] searchBar"
-        allowClear
-      />
-        <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mt-5">
+        <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3">
           <div className="flex gap-3 w-full md:w-auto">
-            <Checkbox className="!mx-2" />
-            <div className="w-full sm:min-w-56 overflow-hidden">
-              <Select
-                name="actions"
-                placeholder="Actions"
-                style={{ height: "44px", width: "100%" }}
-                // onChange={handleActionsChange}
-                options={[
-                  {
-                    label: (
-                      <>
-                        <SwapOutlined /> Material Transfer
-                      </>
-                    ),
-                    value: "material_transfer",
-                  },
-                ]}
-              />
-            </div>
+            <Input
+              placeholder="Search"
+              prefix={<SearchIcon />}
+              onChange={handleSearchChange}
+              className="sm:!w-[362px] searchBar"
+              allowClear
+            />
+
             <Dropdown
               open={filterDropdown}
               onOpenChange={setFilterDropdown}
@@ -125,7 +103,6 @@ const ActionBar = ({
                   setLoading={setLoading}
                   setLocations={setLocations}
                   handleFetchFilteredSystems={handleFetchFilteredSystems}
-                 
                   sites={sites}
                 />
               )}

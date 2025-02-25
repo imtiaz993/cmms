@@ -64,8 +64,7 @@ export default function Layout({ children }) {
   const isNewEditDetails = pathname.split("/")[3];
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
-  const user = localStorage.getItem("user");
-  
+  const user = getUser();
 
   const items = [
     {
@@ -130,8 +129,16 @@ export default function Layout({ children }) {
       dispatch(setLocationLoading(true));
       const { status, data } = await getSites();
       if (status === 200) {
-        // if (user?.role === "rigManager") 
-        dispatch(setlocation(data?.data));
+        // if (user?.role === "rigManager")
+        dispatch(
+          setlocation(
+            user.role === "rigManager"
+              ? data?.data.filter((rig) =>
+                  user?.rigsArray.some((userRig) => userRig._id === rig._id)
+                )
+              : data?.data
+          )
+        );
       } else {
         dispatch(setLocationError(data?.error));
       }
@@ -170,7 +177,6 @@ export default function Layout({ children }) {
 
     if (typeof window !== "undefined") {
       const userToken = getToken();
-      const userData = getUser();
       const isValid = checkTokenExpiration(userToken);
 
       if (!userToken) {
@@ -180,9 +186,10 @@ export default function Layout({ children }) {
         localStorage.removeItem("user");
         message.error("Token expired! Please login.");
         router.replace("/login");
-      } else if (userData?.role === "supervisor") {
-        router.replace("/supervisor/dashboard");
       }
+    }
+    if (user && user.role === "rigManager" && currentItem.key === "settings") {
+      router.replace("/admin/dashboard");
     }
   }, [router]);
 
@@ -204,7 +211,7 @@ export default function Layout({ children }) {
             setOpenSidebar={setOpenSidebar}
             params={`?location=${activeLocation}&system=${activeSystem}`}
           />
-          <div className="w-full lg:w-[calc(100%-251px)]">
+          <div className="w-full">
             {currentPage !== "new" && !isNewEditDetails && (
               <>
                 <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
@@ -267,9 +274,9 @@ export default function Layout({ children }) {
                         options={
                           activeLocation &&
                           systems
-                            .filter((i) => i?.site?._id === activeLocation)
+                            .filter((i) => i?.rig?.id === activeLocation)
                             ?.map((i) => ({
-                              label: i.system,
+                              label: i.name,
                               value: i._id,
                             }))
                         }

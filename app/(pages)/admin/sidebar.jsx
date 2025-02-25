@@ -11,11 +11,13 @@ import {
   SwapOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import { getUser } from "@/utils/index";
 
 const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
   const router = useRouter();
   const pathname = usePathname();
   const currentPage = pathname.split("/")[2] || "dashboard";
+  const user = getUser();
 
   const items = [
     {
@@ -53,7 +55,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
       icon: <SwapOutlined style={{ fontSize: "18px" }} />,
       label: <span style={{ fontSize: "18px" }}>Material Transfer</span>,
     },
-    {
+    user.role !== "rigManager" && {
       key: "settings",
       icon: <SettingOutlined style={{ fontSize: "18px" }} />,
       label: <span style={{ fontSize: "18px" }}>Settings</span>,

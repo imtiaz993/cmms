@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./components/actionBar";
 import { message, Table } from "antd";
-import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import { useSearchParams } from "next/navigation";
+import { DeleteOutlined } from "@ant-design/icons";
 import {
   deleteSubCategory,
   filterSubCategories,
@@ -10,7 +9,7 @@ import {
 } from "app/services/setUp/subCategories";
 import { getCategories } from "app/services/setUp/categories";
 
-const SubCategories = ({activeTab}) => {
+const SubCategories = ({ activeTab }) => {
   const columns = [
     {
       title: "Sub Category",
@@ -36,7 +35,6 @@ const SubCategories = ({activeTab}) => {
       key: "actions",
       render: (_, record) => (
         <div className="text-right">
-          <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
           <DeleteOutlined
             style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
             onClick={() => handleDelete(record)}
@@ -53,14 +51,6 @@ const SubCategories = ({activeTab}) => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [searchText, setSearchText] = useState("");
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys, rows) => {
-      setSelectedRowKeys(keys);
-    },
-  };
 
   useEffect(() => {
     const handleFetch = async () => {
@@ -127,8 +117,6 @@ const SubCategories = ({activeTab}) => {
         checkedList={checkedList}
         setCheckedList={setCheckedList}
         columns={columns}
-        selectedRowKeys={selectedRowKeys}
-        setSelectedRowKeys={setSelectedRowKeys}
         setSearchText={setSearchText}
         setLoading={setLoading}
         setSubCategories={setSubCategories}
@@ -141,7 +129,6 @@ const SubCategories = ({activeTab}) => {
         size="large"
         // scroll={{ x: 300 }}
         columns={newColumns}
-        rowSelection={rowSelection}
         rowKey="_id"
         dataSource={
           filteredData &&

@@ -1,12 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./components/actionBar";
 import { message, Table } from "antd";
-import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import {
-  deleteCategory,
-  filterCategories,
-  getCategories,
-} from "app/services/setUp/categories";
+import { DeleteOutlined } from "@ant-design/icons";
+import { deleteCategory, getCategories } from "app/services/setUp/categories";
 import { useSearchParams } from "next/navigation";
 
 const Categories = () => {
@@ -25,7 +21,6 @@ const Categories = () => {
       key: "actions",
       render: (_, record) => (
         <div className="text-right">
-          <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
           <DeleteOutlined
             style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
             onClick={() => handleDelete(record)}
@@ -44,14 +39,6 @@ const Categories = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [searchText, setSearchText] = useState("");
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys, rows) => {
-      setSelectedRowKeys(keys);
-    },
-  };
 
   useEffect(() => {
     const handleFetchCategories = async () => {
@@ -126,8 +113,6 @@ const Categories = () => {
         checkedList={checkedList}
         setCheckedList={setCheckedList}
         columns={columns}
-        selectedRowKeys={selectedRowKeys}
-        setSelectedRowKeys={setSelectedRowKeys}
         setSearchText={setSearchText}
         setLoading={setLoading}
         setCategories={setCategories}
@@ -137,7 +122,6 @@ const Categories = () => {
         size="large"
         // scroll={{ x: 300 }}
         columns={newColumns}
-        rowSelection={rowSelection}
         rowKey="_id"
         dataSource={
           displayCategories &&

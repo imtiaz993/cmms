@@ -41,7 +41,7 @@ const DownloadPopup = ({ visible, setVisible, documents }) => {
               maskClosable={false}
               open={visible}
               onCancel={() => setVisible(false)}
-              title="Downloading 40 Documents"
+              title="Download Documents"
               footer={
                 <div>
                   <Button

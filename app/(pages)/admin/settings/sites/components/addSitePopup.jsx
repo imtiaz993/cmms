@@ -1,6 +1,5 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
-import SelectField from "@/components/common/SelectField";
 import { Form, message, Modal } from "antd";
 import { updateLocation } from "app/redux/slices/locationsSlice";
 import { createSite } from "app/services/setUp/sites";

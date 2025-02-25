@@ -25,7 +25,7 @@ const ActionBar = ({
   const [uploadPopup, setUploadPopup] = useState(false);
   const { slug } = useParams();
   const [filterDropdown, setFilterDropdown] = useState(null);
-  const options = columns.map(({ key, title }, index) => ({
+  const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title || key,
     value: key,
     key: index,

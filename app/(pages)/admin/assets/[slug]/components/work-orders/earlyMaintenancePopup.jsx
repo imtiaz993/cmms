@@ -63,7 +63,7 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
   const [createPlannedWOPopup, setCreatePlannedWOPopup] = useState(false);
   const [plannedWOAsset, setPlannedWOAsset] = useState("");
 
-  const options = columns.map(({ key, title }, index) => ({
+  const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
     value: key,
     key: index,
