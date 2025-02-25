@@ -12,9 +12,7 @@ export default function Layout({ children }) {
 
   useEffect(() => {
     const data = getUser();
-    if (data?.role === "supervisor") {
-      router?.replace("/supervisor/dashboard");
-    }
+
     if (data?.role === "admin") {
       router?.replace("/admin/dashboard");
     }

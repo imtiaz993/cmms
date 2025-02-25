@@ -11,12 +11,13 @@ import {
   SwapOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import { getUser } from "@/utils/index";
 
 const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
   const router = useRouter();
   const pathname = usePathname();
   const currentPage = pathname.split("/")[2] || "dashboard";
-  const user = localStorage.getItem("user");
+  const user = getUser();
 
   const items = [
     {

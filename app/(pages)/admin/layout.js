@@ -64,7 +64,7 @@ export default function Layout({ children }) {
   const isNewEditDetails = pathname.split("/")[3];
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
-  const user = localStorage.getItem("user");
+  const user = getUser();
 
   const items = [
     {
@@ -177,7 +177,6 @@ export default function Layout({ children }) {
 
     if (typeof window !== "undefined") {
       const userToken = getToken();
-      const userData = getUser();
       const isValid = checkTokenExpiration(userToken);
 
       if (!userToken) {
@@ -187,11 +186,9 @@ export default function Layout({ children }) {
         localStorage.removeItem("user");
         message.error("Token expired! Please login.");
         router.replace("/login");
-      } else if (userData?.role === "supervisor") {
-        router.replace("/supervisor/dashboard");
       }
     }
-    if ( user && user.role === "rigManager" && currentItem.key === "settings") {
+    if (user && user.role === "rigManager" && currentItem.key === "settings") {
       router.replace("/admin/dashboard");
     }
   }, [router]);

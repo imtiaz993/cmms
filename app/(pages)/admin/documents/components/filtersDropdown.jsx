@@ -48,9 +48,8 @@ const DocumentsFilter = ({ closeDropdown, setDocuments, setIsLoading }) => {
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               <InputField name="documentName" placeholder="Document Name" />
-              <InputField name="asset" placeholder="Asset" />
               <InputField name="type" placeholder="Type" />
-              {/* <InputField name="category" placeholder="Category" /> */}
+              <InputField name="category" placeholder="Category" />
               <InputField name="uploadedBy" placeholder="Uploaded By" />
               <DatePickerField name="createdAt" placeholder="Created At" />
 
