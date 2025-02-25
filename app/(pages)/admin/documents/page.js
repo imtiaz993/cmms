@@ -1,11 +1,11 @@
 "use client";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
-import { DownloadOutlined, EyeOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import { useEffect, useMemo, useState } from "react";
 import { getDocuments, getDocumentsByCategory } from "app/services/document";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const columns = [
   {
@@ -60,11 +60,11 @@ const columns = [
     dataIndex: "createdAt",
     key: "createdAt",
   },
-  // {
-  //   title: "Description",
-  //   dataIndex: "description",
-  //   key: "description",
-  // },
+  {
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+  },
   {
     title: "Preview",
     dataIndex: "link",
@@ -87,14 +87,6 @@ const Documents = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
   const [searchText, setSearchText] = useState("");
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys, rows) => {
-      setSelectedRowKeys(keys);
-    },
-  };
 
   useEffect(() => {
     const handleFetchDocuments = async () => {
@@ -160,24 +152,16 @@ const Documents = () => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
-          selectedRowKeys={selectedRowKeys}
-          setSelectedRowKeys={setSelectedRowKeys}
           setDocuments={setDocuments}
           documents={documents}
           setIsLoading={setFetchingDocuments}
         />
-        {/* <div className="flex justify-end">
-          <p className="text-secondary">
-            Total Documents: <span>({filteredDocuments.length})</span>
-          </p>
-        </div> */}
         <Table
           loading={fetchingDocuments}
           size="large"
           scroll={{ x: 1100 }}
           columns={newColumns}
           rowKey="_id"
-          rowSelection={rowSelection}
           dataSource={displayedDocuments}
           pagination={{
             total: displayedDocuments.length,
