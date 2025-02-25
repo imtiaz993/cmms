@@ -177,7 +177,6 @@ export default function Layout({ children }) {
 
     if (typeof window !== "undefined") {
       const userToken = getToken();
-      const userData = getUser();
       const isValid = checkTokenExpiration(userToken);
 
       if (!userToken) {
@@ -187,11 +186,9 @@ export default function Layout({ children }) {
         localStorage.removeItem("user");
         message.error("Token expired! Please login.");
         router.replace("/login");
-      } else if (userData?.role === "supervisor") {
-        router.replace("/supervisor/dashboard");
       }
     }
-    if ( user && user.role === "rigManager" && currentItem.key === "settings") {
+    if (user && user.role === "rigManager" && currentItem.key === "settings") {
       router.replace("/admin/dashboard");
     }
   }, [router]);
