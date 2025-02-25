@@ -75,7 +75,6 @@ const AssetForm = () => {
     };
 
     slug && getAsset();
-    slug && handleFetchFields();
   }, [slug]);
 
   useEffect(() => {

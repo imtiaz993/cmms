@@ -60,7 +60,7 @@ const InventoryForm = () => {
   const { slug } = useParams();
   const router = useRouter();
   const dispatch = useDispatch();
-  const [details, setDetails] = useState({});
+  const [details, setDetails] = useState();
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -178,10 +178,10 @@ const InventoryForm = () => {
       // Append custom fields in the correct format
       formData.append("customFields", JSON.stringify(customFields));
 
-      // Append the image if it exists and is a File object
-      if (values.image instanceof File) {
-        formData.append("image", values.image);
-      }
+      // // Append the image if it exists and is a File object
+      // if (values.image instanceof File) {
+      //   formData.append("image", values.image);
+      // }
 
       // formData.append("childInventory", selectedRowKeys);
 
@@ -224,6 +224,9 @@ const InventoryForm = () => {
     setSubmitting(false);
   };
 
+  if ((slug && loading) || (slug && !details))
+    return <div className="ml-10 mt-20 text-center">Loading...</div>;
+
   return (
     <div className="mx-5 md:mx-10">
       <AddFieldPopup
@@ -249,262 +252,250 @@ const InventoryForm = () => {
           fullWidth={false}
           prefix={<LeftOutlined />}
         />
-        {/* <Button
-          onClick={() => setAddFieldPopupVisible(true)}
-          text="Manage Fields"
-          outlined
-          htmlType="button"
-          fullWidth={false}
-        /> */}
       </div>
       <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto mt-5 bg-primary shadow-custom rounded-lg p-4">
         <p className="text-2xl font-semibold mb-5">
           {slug ? "Edit Inventory" : "New Inventory Form"}
         </p>
-        {!loading && (
-          <Formik
-            initialValues={{
-              site: details?.site?._id || "",
-              system: details?.system?._id || "",
-              invoiceNumber: details.invoiceNumber || "",
-              receivedDate: details.receivedDate || null,
-              partNumber: details.partNumber || "",
-              tagId: details.tagId || "",
-              description: details.description || "",
-              quantity: details.quantity || "",
-              notes: details.notes || "",
-              image: details.image || null,
-              ...customFieldInitialValues,
-            }}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ values, isSubmitting, setFieldValue }) => (
-              <Form>
-                <div className="grid md:grid-cols-2 gap-4 md:gap-8">
-                  <p className="md:col-span-2 font-semibold md:text-lg">
-                    Inventory Information
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <SelectField
-                      name="site"
-                      placeholder="Site"
-                      className="!w-full"
-                      label="Site"
-                      options={locations.map((i) => ({
-                        label: i.site,
-                        value: i._id,
-                      }))}
-                    />
-                    <Button
-                      text="New"
-                      className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
-                      onClick={() => setAddSitePopup(true)}
-                      fullWidth={false}
-                      prefix={<PlusOutlined />}
-                    />
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <SelectField
-                      name="system"
-                      placeholder="System"
-                      label="System"
-                      options={
-                        values.site &&
-                        systems
-                          .filter((i) => i?.site?._id === values.site)
-                          ?.map((i) => ({
-                            label: i.system,
-                            value: i._id,
-                          }))
-                      }
-                    />
-                    <Button
-                      text="New"
-                      className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
-                      onClick={() => setAddSystemPopup(true)}
-                      fullWidth={false}
-                      prefix={<PlusOutlined />}
-                    />
-                  </div>
+        {console.log("details", details)}
 
-                  <InputField
-                    name="invoiceNumber"
-                    placeholder="Invoice/PO #"
-                    label="Invoice/PO #"
+        <Formik
+          initialValues={{
+            site: details?.site?._id || "",
+            system: details?.system?._id || "",
+            invoiceNumber: details.invoiceNumber || "",
+            receivedDate: details.receivedDate || null,
+            partNumber: details.partNumber || "",
+            tagId: details.tagId || "",
+            description: details.description || "",
+            quantity: details.quantity || "",
+            notes: details.notes || "",
+            image: details.image || null,
+            ...customFieldInitialValues,
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ values, isSubmitting, setFieldValue }) => (
+            <Form>
+              {console.log("values", values)}
+              <div className="grid md:grid-cols-2 gap-4 md:gap-8">
+                <p className="md:col-span-2 font-semibold md:text-lg">
+                  Inventory Information
+                </p>
+                <div className="flex items-center gap-3">
+                  <SelectField
+                    name="site"
+                    placeholder="Site"
+                    className="!w-full"
+                    label="Site"
+                    options={locations.map((i) => ({
+                      label: i.site,
+                      value: i._id,
+                    }))}
                   />
-                  <DatePickerField name="receivedDate" label="Date Received" />
-
-                  <p className="md:col-span-2 font-semibold md:text-lg">
-                    Inventory Added
-                  </p>
-
-                  <Table
-                    loading={isLoading}
-                    size={"large"}
-                    scroll={{ x: 1000 }}
-                    columns={columns}
-                    rowSelection={rowSelection}
-                    rowKey="_id"
-                    dataSource={
-                      inventory &&
-                      inventory.length > 0 &&
-                      inventory.map((i, index) => ({
-                        ...i,
-                        key: index,
-                      }))
+                  <Button
+                    text="New"
+                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                    onClick={() => setAddSitePopup(true)}
+                    fullWidth={false}
+                    prefix={<PlusOutlined />}
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <SelectField
+                    name="system"
+                    placeholder="System"
+                    label="System"
+                    options={
+                      values.site &&
+                      systems
+                        .filter((i) => i?.site?._id === values.site)
+                        ?.map((i) => ({
+                          label: i.system,
+                          value: i._id,
+                        }))
                     }
-                    style={{
-                      marginTop: 16,
-                      overflow: "auto",
-                    }}
-                    className="md:col-span-2"
                   />
+                  <Button
+                    text="New"
+                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                    onClick={() => setAddSystemPopup(true)}
+                    fullWidth={false}
+                    prefix={<PlusOutlined />}
+                  />
+                </div>
 
-                  <p className="md:col-span-2 font-semibold md:text-lg">
-                    Inventory Information
-                  </p>
-                  <InputField
-                    name="partNumber"
-                    placeholder="Part #"
-                    label="Part #"
-                  />
-                  <InputField
-                    name="tagId"
-                    placeholder="Tag ID"
-                    label="Tag ID"
-                  />
-                  <div className="md:col-span-2">
-                    <TextAreaField
-                      name="description"
-                      placeholder="Description"
-                      label="Description"
-                      className="!h-12"
-                    />
-                  </div>
-                  <InputField
-                    name="quantity"
-                    placeholder="00"
-                    label="Quantity"
-                    type="number"
-                  />
-                  <InputField name="notes" placeholder="Model" label="Notes" />
+                <InputField
+                  name="invoiceNumber"
+                  placeholder="Invoice/PO #"
+                  label="Invoice/PO #"
+                />
+                <DatePickerField name="receivedDate" label="Date Received" />
 
-                  <div className={`w-full flex items-center gap-3`}>
-                    <label className="text-sm text-right min-w-[115px] mt-3">
-                      Upload Image
-                    </label>
-                    <div>
-                      <Upload
-                        beforeUpload={(file) => {
-                          setFieldValue("image", file);
-                          return false; // Prevent auto-upload
-                        }}
-                        onRemove={() => setFieldValue("image", null)}
-                        maxCount={1}
-                      >
-                        <Button
-                          className="!bg-green-600 !shadow-custom !border-white"
-                          fullWidth={false}
-                          prefix={<UploadOutlined />}
-                          text="Choose Image"
-                        />
-                      </Upload>
+                <p className="md:col-span-2 font-semibold md:text-lg">
+                  Inventory Added
+                </p>
 
-                      {values.image && typeof values.image === "string" && (
-                        <span className="">
-                          {values.image.split("/").pop()}
-                        </span>
-                      )}
-                      <ErrorMessage
-                        name="image"
-                        component="div"
-                        className="text-red-500 text-sm mt-1"
+                <Table
+                  loading={isLoading}
+                  size={"large"}
+                  scroll={{ x: 1000 }}
+                  columns={columns}
+                  rowSelection={rowSelection}
+                  rowKey="_id"
+                  dataSource={
+                    inventory &&
+                    inventory.length > 0 &&
+                    inventory.map((i, index) => ({
+                      ...i,
+                      key: index,
+                    }))
+                  }
+                  style={{
+                    marginTop: 16,
+                    overflow: "auto",
+                  }}
+                  className="md:col-span-2"
+                />
+
+                <p className="md:col-span-2 font-semibold md:text-lg">
+                  Inventory Information
+                </p>
+                <InputField
+                  name="partNumber"
+                  placeholder="Part #"
+                  label="Part #"
+                />
+                <InputField name="tagId" placeholder="Tag ID" label="Tag ID" />
+                <div className="md:col-span-2">
+                  <TextAreaField
+                    name="description"
+                    placeholder="Description"
+                    label="Description"
+                    className="!h-12"
+                  />
+                </div>
+                <InputField
+                  name="quantity"
+                  placeholder="00"
+                  label="Quantity"
+                  type="number"
+                />
+                <InputField name="notes" placeholder="Model" label="Notes" />
+
+                <div className={`w-full flex items-center gap-3`}>
+                  <label className="text-sm text-right min-w-[115px] mt-3">
+                    Upload Image
+                  </label>
+                  <div>
+                    <Upload
+                      beforeUpload={(file) => {
+                        setFieldValue("image", file);
+                        return false; // Prevent auto-upload
+                      }}
+                      onRemove={() => setFieldValue("image", null)}
+                      maxCount={1}
+                    >
+                      <Button
+                        className="!bg-green-600 !shadow-custom !border-white"
+                        fullWidth={false}
+                        prefix={<UploadOutlined />}
+                        text="Choose Image"
                       />
-                    </div>
-                  </div>
-                  <p className="md:col-span-2 font-semibold md:text-lg">
-                    Custom Fields:
-                  </p>
-                  {fields.map((field) => {
-                    switch (field.type) {
-                      case "text":
-                        return (
-                          <InputField
-                            key={field.uniqueKey}
-                            name={field.uniqueKey}
-                            placeholder={field.name}
-                            label={field.name}
-                          />
-                        );
-                      case "number":
-                        return (
-                          <InputField
-                            key={field.uniqueKey}
-                            name={field.uniqueKey}
-                            placeholder={field.name}
-                            label={field.name}
-                            type="number"
-                          />
-                        );
-                      case "dropdown":
-                        return (
-                          <SelectField
-                            key={field.uniqueKey}
-                            name={field.uniqueKey}
-                            placeholder={"Select " + field.name}
-                            label={field.name}
-                            options={field.preFilValue.map((value) => ({
-                              label: value,
-                              value: value,
-                            }))}
-                          />
-                        );
-                      case "date":
-                        return (
-                          <DatePickerField
-                            key={field.uniqueKey}
-                            name={field.uniqueKey}
-                            label={field.name}
-                          />
-                        );
-                      default:
-                        return null;
-                    }
-                  })}
-                  <div className="md:col-span-2 sm:ml-32">
-                    <Button
-                      className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-2"
-                      onClick={() => setAddFieldPopupVisible(true)}
-                      fullWidth={false}
-                      prefix={<PlusOutlined />}
-                      text="Add More"
+                    </Upload>
+
+                    {values.image && typeof values.image === "string" && (
+                      <span className="">{values.image.split("/").pop()}</span>
+                    )}
+                    <ErrorMessage
+                      name="image"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
                     />
                   </div>
                 </div>
-                <div className="flex justify-end mt-5">
+                <p className="md:col-span-2 font-semibold md:text-lg">
+                  Custom Fields:
+                </p>
+                {fields.map((field) => {
+                  switch (field.type) {
+                    case "text":
+                      return (
+                        <InputField
+                          key={field.uniqueKey}
+                          name={field.uniqueKey}
+                          placeholder={field.name}
+                          label={field.name}
+                        />
+                      );
+                    case "number":
+                      return (
+                        <InputField
+                          key={field.uniqueKey}
+                          name={field.uniqueKey}
+                          placeholder={field.name}
+                          label={field.name}
+                          type="number"
+                        />
+                      );
+                    case "dropdown":
+                      return (
+                        <SelectField
+                          key={field.uniqueKey}
+                          name={field.uniqueKey}
+                          placeholder={"Select " + field.name}
+                          label={field.name}
+                          options={field.preFilValue.map((value) => ({
+                            label: value,
+                            value: value,
+                          }))}
+                        />
+                      );
+                    case "date":
+                      return (
+                        <DatePickerField
+                          key={field.uniqueKey}
+                          name={field.uniqueKey}
+                          label={field.name}
+                        />
+                      );
+                    default:
+                      return null;
+                  }
+                })}
+                <div className="md:col-span-2 sm:ml-32">
                   <Button
-                    className="mr-2"
-                    outlined
-                    size="small"
-                    text="Cancel"
+                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-2"
+                    onClick={() => setAddFieldPopupVisible(true)}
                     fullWidth={false}
-                    onClick={() => router.push("/admin/inventory")}
-                  />
-                  <Button
-                    className="mr-2 !min-w-[125px] !text-base"
-                    htmlType="submit"
-                    isLoading={isSubmitting}
-                    disabled={isSubmitting}
-                    size="small"
-                    text="Add Inventory"
-                    fullWidth={false}
+                    prefix={<PlusOutlined />}
+                    text="Add More"
                   />
                 </div>
-              </Form>
-            )}
-          </Formik>
-        )}
+              </div>
+              <div className="flex justify-end mt-5">
+                <Button
+                  className="mr-2"
+                  outlined
+                  size="small"
+                  text="Cancel"
+                  fullWidth={false}
+                  onClick={() => router.push("/admin/inventory")}
+                />
+                <Button
+                  className="mr-2 !min-w-[125px] !text-base"
+                  htmlType="submit"
+                  isLoading={isSubmitting}
+                  disabled={isSubmitting}
+                  size="small"
+                  text="Add Inventory"
+                  fullWidth={false}
+                />
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     </div>
   );

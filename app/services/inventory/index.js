@@ -61,7 +61,7 @@ export const updateInventoryApi = async (values) => {
 export const getInventoryDetails = async (id) => {
   try {
     const { status, data } = await authRequest({
-      url: `/inventory/get/${id}`,
+      url: `/inventory/view/?inventory=${id}`,
     });
     return { status, data };
   } catch (e) {

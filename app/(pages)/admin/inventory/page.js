@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { Table } from "antd";
+import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateInventoryPopup from "./components/createInventoryPopup";
 import { useSelector } from "react-redux";
@@ -62,7 +62,7 @@ const Inventory = () => {
         <p className="flex gap-5 text-tertiary">
           <EyeOutlined
             style={{ fontSize: "20px", cursor: "pointer" }}
-            onClick={() => setDetailsPopup(record.partNumber)}
+            onClick={() => setDetailsPopup(record)}
           />
           <span
             className="cursor-pointer"
@@ -91,7 +91,7 @@ const Inventory = () => {
 
   const displayedInventory = useMemo(() => {
     if (!searchText) return filteredInventory;
-    return inventory?.filter((inventoryItem) =>
+    return filteredInventory?.filter((inventoryItem) =>
       checkedList.some((key) =>
         inventoryItem[key]
           ?.toString()
@@ -129,7 +129,7 @@ const Inventory = () => {
     } else {
       setFilteredInventory(inventory); // If no filters, use full assets list
     }
-  }, [activeLocation, activeSystem, inventory]);
+  }, [activeLocation, activeSystem]);
 
   return (
     <>
@@ -150,7 +150,7 @@ const Inventory = () => {
         <InventoryDetailsPopup
           visible={detailsPopup}
           setVisible={setDetailsPopup}
-          part={detailsPopup}
+          inventory={detailsPopup}
         />
         <div>
           <ActionBar
@@ -160,6 +160,7 @@ const Inventory = () => {
             selectedRowKeys={selectedRowKeys}
             setSelectedRowKeys={setSelectedRowKeys}
             setSearchText={setSearchText}
+            setFilteredInventory={setFilteredInventory}
             // setInventory={setInventory}
           />
           {/* <div className="flex gap-3 justify-end">

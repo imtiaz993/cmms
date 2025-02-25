@@ -19,7 +19,7 @@ const ActionBar = ({
   columns,
   selectedRowKeys,
   setSelectedRowKeys,
-  setDetails,
+  setData,
 }) => {
   const [downloadPopup, setDownloadPopup] = useState(false);
   const [uploadPopup, setUploadPopup] = useState(false);
@@ -55,13 +55,13 @@ const ActionBar = ({
         visible={uploadPopup === "uploadDocument"}
         setVisible={setUploadPopup}
         assetSlug={slug}
-        setDetails={setDetails}
+        setDetails={setData}
       />
       <UploadLinkDocPopup
         visible={uploadPopup === "uploadLinkDocument"}
         setVisible={setUploadPopup}
         assetSlug={slug}
-        setDetails={setDetails}
+        setDetails={setData}
       />
       <div className="">
         <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3">

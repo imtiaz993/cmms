@@ -40,6 +40,7 @@ const ActionBar = ({
   selectedRowKeys,
   setSelectedRowKeys,
   setSearchText,
+  setFilteredInventory,
 }) => {
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
@@ -189,6 +190,7 @@ const ActionBar = ({
               dropdownRender={() => (
                 <InventoryFilter
                   closeDropdown={() => setFilterDropdown(false)}
+                  setFilteredInventory={setFilteredInventory}
                 />
               )}
               trigger={["click"]}
