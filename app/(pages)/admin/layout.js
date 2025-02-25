@@ -64,7 +64,6 @@ export default function Layout({ children }) {
   const isNewEditDetails = pathname.split("/")[3];
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
-  const user = getUser();
 
   const items = [
     {
@@ -126,6 +125,7 @@ export default function Layout({ children }) {
       dispatch(setAssetsLoading(false));
     };
     const handleFetchLocations = async () => {
+      const user = getUser();
       dispatch(setLocationLoading(true));
       const { status, data } = await getSites();
       if (status === 200) {
@@ -188,6 +188,8 @@ export default function Layout({ children }) {
         router.replace("/login");
       }
     }
+    const user = getUser();
+
     if (user && user.role === "rigManager" && currentItem.key === "settings") {
       router.replace("/admin/dashboard");
     }
@@ -226,10 +228,9 @@ export default function Layout({ children }) {
                           router.push(
                             `/admin/${currentPage}${
                               value || activeSystem
-                                ? `?${value ? `location=${value}` : ""}${
-                                    value && activeSystem ? "&" : ""
-                                  }${
-                                    activeSystem ? `system=${activeSystem}` : ""
+                                ? `?${value ? `location=${value}` : ""}
+                                ${value && activeSystem ? "&" : ""}${
+                                    activeSystem ? `system=` : ""
                                   }`
                                 : ""
                             }`
