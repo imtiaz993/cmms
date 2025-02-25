@@ -31,6 +31,7 @@ import { rigs } from "@/constants/rigsAndSystems";
 import { LinkBroken } from "@/icons/index";
 
 const AssetDetail = () => {
+  const [data, setData] = useState();
   const [details, setDetails] = useState();
   const [editAssetPopup, setEditAssetPopup] = useState(false);
   const [deleteAssetPopup, setDeleteAssetPopup] = useState(false);
@@ -42,7 +43,8 @@ const AssetDetail = () => {
       const { status, data } = await getAssetDetails(slug);
       if (status === 200) {
         console.log(data);
-        setDetails(data?.data);
+        setData(data?.data);
+        setDetails(data?.data.dashboard);
       } else {
         message.error(data?.message || "Failed to fetch data");
       }
@@ -62,13 +64,13 @@ const AssetDetail = () => {
 
   return (
     <div className="overflow-auto h-[calc(100dvh-130px)]">
-      {details && (
+      {data && (
         <CreateAssetPopup
           visible={editAssetPopup}
           setVisible={setEditAssetPopup}
           assetId={slug}
-          details={details}
-          setDetails={setDetails}
+          details={data}
+          setDetails={setData}
         />
       )}
       <ConfirmationPopup
@@ -80,7 +82,7 @@ const AssetDetail = () => {
       />
       <div className="mx-5 lg:mx-10">
         <p className="text-sm text-[#828282]">
-          Assets {" > " + details?.dashboard?.assetNumber}
+          Assets {" > " + details?.assetNumber}
         </p>
         <Button
           text="Back to Assets"
@@ -92,12 +94,12 @@ const AssetDetail = () => {
         <div className="bg-primary rounded-lg p-3 md:p-5 mt-5 shadow-custom">
           <div className="md:flex justify-between gap-5 mb-5">
             <p className="hidden md:block text-left text-lg md:text-2xl font-semibold">
-              {details?.dashboard?.assetNumber}{" "}
+              {details?.assetNumber}{" "}
               <WarningOutlined className="!text-secondary" />{" "}
             </p>
             <div className="grid md:flex grid-cols-2 gap-3 md:gap-5">
               <p className="md:hidden text-left text-lg md:text-2xl font-semibold">
-                {details?.dashboard?.assetNumber}{" "}
+                {details?.assetNumber}{" "}
                 <WarningOutlined className="!text-secondary" />{" "}
               </p>
               {/* <Button
@@ -205,34 +207,36 @@ const AssetDetail = () => {
                 Asset ID
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                {details?.dashboard?.assetNumber || "-"}
+                {details?.assetID || "-"}
               </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Purchase Date
               </p>
-              <p className="p-2 md:px-3 md:py-2 border border-b-0">-</p>
+              <p className="p-2 md:px-3 md:py-2 border border-b-0">
+                {details?.purchaseDate || "-"}
+              </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Cost
               </p>
-              <p className="p-2 md:px-3 md:py-2 border border-b-0">-</p>
+              <p className="p-2 md:px-3 md:py-2 border border-b-0">---</p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Brand
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                {details?.dashboard.make || "-"}
+                {details?.brand || "-"}
               </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Model
               </p>
 
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                {details?.dashboard.model || "-"}
+                {details?.model || "-"}
               </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border">
                 Description
               </p>
               <p className="p-2 md:px-3 md:py-2 border truncate">
-                {details?.dashboard.description || "-"}
+                {details?.description || "-"}
               </p>
             </div>
             <div className="md:w-5/12 grid grid-cols-2">
@@ -240,40 +244,42 @@ const AssetDetail = () => {
                 Site
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                {rigs?.find(
-                  (rig) => rig.id === details?.dashboard?.physicalLocation
-                )?.name || "-"}
+                {details?.site.site || "-"}
               </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
-                Location
+                System
               </p>
-              <p className="p-2 md:px-3 md:py-2 border border-b-0">-</p>
+              <p className="p-2 md:px-3 md:py-2 border border-b-0">
+                {details?.system.system || "-"}
+              </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Category
               </p>
-              <p className="p-2 md:px-3 md:py-2 border border-b-0">-</p>
+              <p className="p-2 md:px-3 md:py-2 border border-b-0">
+                {details?.category.category || "-"}
+              </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Sub-Category
               </p>
-              <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>
+              <p className="p-2 md:px-3 md:py-2 border border-b-0">
+                {details?.subCategory.subCategory || "-"}
+              </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Assigned to
               </p>
 
-              <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>
+              <p className="p-2 md:px-3 md:py-2 border border-b-0">{"---"}</p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border">
                 Status
               </p>
               <p className="p-2 md:px-3 md:py-2 border truncate">
-                {details?.dashboard.maintStatus || "-"}
+                {details?.maintStatus || "-"}
               </p>
             </div>
           </div>
         </div>
       </div>
-      {details && (
-        <Tabs details={details} setDetails={setDetails} slug={slug} />
-      )}
+      {data && <Tabs data={data} setData={setData} slug={slug} />}
     </div>
   );
 };

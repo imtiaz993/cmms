@@ -12,7 +12,7 @@ import History from "./history";
 import ManHours from "./man-hours";
 import Photos from "./photos";
 
-const Tabs = ({ details, setDetails, slug }) => {
+const Tabs = ({ data, setData, slug }) => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -23,7 +23,11 @@ const Tabs = ({ details, setDetails, slug }) => {
   };
 
   const tabs = [
-    { key: "details", label: "Details", children: <Details /> },
+    {
+      key: "details",
+      label: "Details",
+      children: <Details details={data?.dashboard} />,
+    },
     { key: "events", label: "Events", children: <Events></Events> },
     { key: "photos", label: "Photos", children: <Photos /> },
     // {
@@ -50,7 +54,7 @@ const Tabs = ({ details, setDetails, slug }) => {
       key: "documents",
       label: "Documents",
       children: (
-        <Documents documentsData={details?.documents} setDetails={setDetails} />
+        <Documents documentsData={data?.documents} setData={setData} />
       ),
     },
     { key: "manHours", label: "Man Hours", children: <ManHours /> },
@@ -70,8 +74,8 @@ const Tabs = ({ details, setDetails, slug }) => {
       label: "Material Transfer",
       children: (
         <MaterialTransfer
-          materialTransferData={details?.materialTransfers}
-          setDetails={setDetails}
+          materialTransferData={data?.materialTransfers}
+          setDetails={setData}
         />
       ),
     },

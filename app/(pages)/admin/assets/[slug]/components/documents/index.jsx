@@ -30,7 +30,7 @@ const columns = [
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const Documents = ({ documentsData, setDetails }) => {
+const Documents = ({ documentsData, setData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
@@ -52,7 +52,7 @@ const Documents = ({ documentsData, setDetails }) => {
           columns={columns}
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
-          setDetails={setDetails}
+          setData={setData}
         />
 
         <Table
