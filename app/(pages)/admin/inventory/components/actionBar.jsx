@@ -272,7 +272,7 @@ const ActionBar = ({
               style={{ padding: "4px 0px" }}
               prefix={<ExportOutlined />}
             />
-            <Link href="/admin/inventory/new">
+            <Link href="/admin/new/inventory">
               <Button
                 text="Add New Inventory"
                 style={{ padding: "4px 30px" }}

@@ -1,10 +1,14 @@
 "use client";
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Input, message, Table } from "antd";
+import { message, Table, Upload } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-import { addInventory } from "app/services/inventory";
+import {
+  addInventory,
+  getInventoryDetails,
+  updateInventoryApi,
+} from "app/services/inventory";
 import DatePickerField from "@/components/common/DatePickerField";
 import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
@@ -13,7 +17,7 @@ import { getFields } from "app/services/customFields";
 import AddFieldPopup from "@/components/addFieldPopup";
 import { useDispatch, useSelector } from "react-redux";
 import { updateInventory } from "app/redux/slices/inventoriesSlice";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
 import AddLocationPopup from "../../settings/locations/components/addLocationPopup";
@@ -52,9 +56,11 @@ const columns = [
 ];
 const defaultCheckedList = columns.map((item) => item.key);
 
-const CreateInventory = () => {
+const InventoryForm = () => {
+  const { slug } = useParams();
   const router = useRouter();
   const dispatch = useDispatch();
+  const [details, setDetails] = useState({});
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -76,6 +82,19 @@ const CreateInventory = () => {
       setSelectedRowKeys(keys);
     },
   };
+
+  useEffect(() => {
+    const getInventory = async () => {
+      const { status, data } = await getInventoryDetails(slug);
+      if (status === 200) {
+        console.log(data);
+        setDetails(data?.data);
+      } else {
+        message.error(data?.message || "Failed to fetch data");
+      }
+    };
+    slug && getInventory();
+  }, [slug]);
 
   useEffect(() => {
     const handleFetchFields = async () => {
@@ -122,50 +141,87 @@ const CreateInventory = () => {
   }, {});
 
   const validationSchema = Yup.object().shape({
-    details: Yup.string().required("Description is required"),
-    partItem: Yup.string().required("Part number is required"),
-    // category: Yup.string().required("Category is required"),
-    // details: Yup.string().required("Details is required"),
-    quantity: Yup.string().required("Quantity is required"),
-    // price: Yup.string().required("Price is required"),
-    location: Yup.string().required("Location is required"),
-    // PO: Yup.string().required("PO is required"),
-    // SO: Yup.string().required("SO is required"),
-    invoiceNumber: Yup.string().required("Invoice number is required"),
-    // supplier: Yup.string().required("Supplier is required"),
-    receivedDate: Yup.date().required("Received Date is required"),
     site: Yup.string().required("Site is required"),
+    system: Yup.string().required("System is required"),
+    invoiceNumber: Yup.string().required("Invoice Number is required"),
+    receivedDate: Yup.date().required("Received Date is required"),
+    partNumber: Yup.string().required("Part Number is required"),
     tagId: Yup.string().required("Tag ID is required"),
+    description: Yup.string().required("Description is required"),
+    quantity: Yup.number().required("Quantity is required"),
     notes: Yup.string().required("Notes is required"),
+    image: Yup.mixed().required("Image is required"),
     ...customFieldValidations,
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    const customFields = fields.map((field) => ({
-      uniqueKey: field.uniqueKey,
-      value: values[field.uniqueKey],
-    }));
+    try {
+      const formData = new FormData();
 
-    const standardValues = { ...values };
-    fields.forEach((field) => {
-      delete standardValues[field.uniqueKey];
-    });
+      // Extract custom field values
+      const customFields = fields.map((field) => ({
+        uniqueKey: field.uniqueKey,
+        value: values[field.uniqueKey],
+      }));
 
-    const payload = {
-      ...standardValues,
-      customFields,
-    };
+      // Remove custom fields from values to get standard fields
+      const standardValues = { ...values };
+      fields.forEach((field) => delete standardValues[field.uniqueKey]);
 
-    const { status, data } = await addInventory(payload);
-    setSubmitting(false);
-    if (status === 200) {
-      message.success(data?.message);
-      resetForm();
-      dispatch(updateInventory(data.data));
-      router.push("/admin/inventory");
-    } else {
-      message.error(data.error);
+      // Append standard form values
+      Object.entries(standardValues).forEach(([key, value]) => {
+        if (value) {
+          formData.append(key, value);
+        }
+      });
+
+      // Append custom fields in the correct format
+      formData.append("customFields", JSON.stringify(customFields));
+
+      // Append the image if it exists and is a File object
+      if (values.image instanceof File) {
+        formData.append("image", values.image);
+      }
+
+      // formData.append("childInventory", selectedRowKeys);
+
+      let response;
+      if (slug) {
+        // Update inventory
+        formData.append("inventory", slug);
+        response = await updateInventoryApi(formData);
+      } else {
+        // Add new inventory
+        response = await addInventory(formData);
+      }
+
+      const { status, data } = response;
+
+      if (status === 200) {
+        message.success(
+          data?.message ||
+            (slug
+              ? "Inventory Updated successfully"
+              : "Inventory Added successfully")
+        );
+
+        // Update Redux store accordingly
+        if (slug) {
+          // dispatch(editAsset(data.data));
+          // setDetails((prev) => ({ ...prev, dashboard: data.data }));
+        } else {
+          dispatch(updateInventory(data.data));
+        }
+        resetForm();
+      } else {
+        message.error(data.error || "Failed to process request");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      message.error("Something went wrong!");
     }
+
+    setSubmitting(false);
   };
 
   return (
@@ -183,7 +239,7 @@ const CreateInventory = () => {
         setVisible={setAddSystemPopup}
       />
       <p className="text-sm text-[#828282]">
-        Inventory {" > "} Add New Inventory
+        Inventory {" > "} {slug ? slug + " > Edit" : "Add New Inventory"}
       </p>
       <div className="flex justify-between mt-4">
         <Button
@@ -202,25 +258,28 @@ const CreateInventory = () => {
         /> */}
       </div>
       <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto mt-5 bg-primary shadow-custom rounded-lg p-4">
-        <p className="text-2xl font-semibold mb-5">New Inventory Form</p>
+        <p className="text-2xl font-semibold mb-5">
+          {slug ? "Edit Inventory" : "New Inventory Form"}
+        </p>
         {!loading && (
           <Formik
             initialValues={{
-              site: "",
-              system: "",
-              invoiceNumber: "",
-              receivedDate: null,
-              partNumber: "",
-              tagId: "",
-              description: "",
-              quantity: "",
-              notes: "",
+              site: details?.site?._id || "",
+              system: details?.system?._id || "",
+              invoiceNumber: details.invoiceNumber || "",
+              receivedDate: details.receivedDate || null,
+              partNumber: details.partNumber || "",
+              tagId: details.tagId || "",
+              description: details.description || "",
+              quantity: details.quantity || "",
+              notes: details.notes || "",
+              image: details.image || null,
               ...customFieldInitialValues,
             }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
-            {({ values, isSubmitting }) => (
+            {({ values, isSubmitting, setFieldValue }) => (
               <Form>
                 <div className="grid md:grid-cols-2 gap-4 md:gap-8">
                   <p className="md:col-span-2 font-semibold md:text-lg">
@@ -283,7 +342,7 @@ const CreateInventory = () => {
                   <Table
                     loading={isLoading}
                     size={"large"}
-                    scroll={{ x: 1400 }}
+                    scroll={{ x: 1000 }}
                     columns={columns}
                     rowSelection={rowSelection}
                     rowKey="_id"
@@ -332,19 +391,38 @@ const CreateInventory = () => {
                   <InputField name="notes" placeholder="Model" label="Notes" />
 
                   <div className={`w-full flex items-center gap-3`}>
-                    <label className="text-right min-w-[115px]">
+                    <label className="text-sm text-right min-w-[115px] mt-3">
                       Upload Image
                     </label>
+                    <div>
+                      <Upload
+                        beforeUpload={(file) => {
+                          setFieldValue("image", file);
+                          return false; // Prevent auto-upload
+                        }}
+                        onRemove={() => setFieldValue("image", null)}
+                        maxCount={1}
+                      >
+                        <Button
+                          className="!bg-green-600 !shadow-custom !border-white"
+                          fullWidth={false}
+                          prefix={<UploadOutlined />}
+                          text="Choose Image"
+                        />
+                      </Upload>
 
-                    <Button
-                      className="!bg-green-600 !shadow-custom !border-white !h-11 mt-2"
-                      // onClick={() => setAddDocPopupVisible(true)}
-                      fullWidth={false}
-                      prefix={<UploadOutlined />}
-                      text="Choose Image"
-                    />
+                      {values.image && typeof values.image === "string" && (
+                        <span className="">
+                          {values.image.split("/").pop()}
+                        </span>
+                      )}
+                      <ErrorMessage
+                        name="image"
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
+                      />
+                    </div>
                   </div>
-
                   <p className="md:col-span-2 font-semibold md:text-lg">
                     Custom Fields:
                   </p>
@@ -432,4 +510,4 @@ const CreateInventory = () => {
   );
 };
 
-export default CreateInventory;
+export default InventoryForm;

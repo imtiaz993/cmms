@@ -1,4 +1,4 @@
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { message, Radio, Table, Upload } from "antd";
 import InputField from "@/components/common/InputField";
@@ -74,6 +74,11 @@ const AssetForm = () => {
       }
     };
 
+    slug && getAsset();
+    slug && handleFetchFields();
+  }, [slug]);
+
+  useEffect(() => {
     const handleFetchFields = async () => {
       const { status, data } = await getFields("assets");
       if (status === 200) {
@@ -84,9 +89,8 @@ const AssetForm = () => {
       setLoading(false);
     };
 
-    slug && getAsset();
-    slug && handleFetchFields();
-  }, [slug]);
+    handleFetchFields();
+  }, []);
 
   useEffect(() => {
     const handleFetchSubCategories = async () => {
@@ -159,6 +163,7 @@ const AssetForm = () => {
     startDate: Yup.date().required("Start date is required"),
     criticality: Yup.string().required("Criticality is required"),
     maintStatus: Yup.string().required("Maintenance status is required"),
+    assetImage: Yup.mixed().required("Asset image is required"),
     ...customFieldValidations,
   });
 
@@ -166,30 +171,38 @@ const AssetForm = () => {
     try {
       const formData = new FormData();
 
-      // Append all standard form values except the file
-      Object.entries(values).forEach(([key, value]) => {
-        if (key !== "assetImage" && value) {
+      // Extract custom field values
+      const customFields = fields.map((field) => ({
+        uniqueKey: field.uniqueKey,
+        value: values[field.uniqueKey],
+      }));
+
+      // Remove custom fields from values to get standard fields
+      const standardValues = { ...values };
+      fields.forEach((field) => delete standardValues[field.uniqueKey]);
+
+      // Append standard form values
+      Object.entries(standardValues).forEach(([key, value]) => {
+        if (value) {
           formData.append(key, value);
         }
       });
 
-      // Append custom fields
-      fields.forEach((field) => {
-        const fieldValue = values[field.uniqueKey];
-        if (fieldValue) {
-          formData.append(`customFields[${field.uniqueKey}]`, fieldValue);
-        }
-      });
+      // Append custom fields in the correct format
+      formData.append("customFields", JSON.stringify(customFields));
 
-      // Append the image separately if it exists
+      // Append the image if it exists and is a File object
       if (values.assetImage instanceof File) {
-        formData.append("assetImage", values.assetImage); // Ensure it's a File object
+        formData.append("assetImage", values.assetImage);
       }
+
+      // formData.append("childAssets", selectedRowKeys);
 
       let response;
       if (slug) {
         // Update asset
-        response = await updateAsset(formData, slug);
+        formData.append("asset", slug);
+        response = await updateAsset(formData);
       } else {
         // Add new asset
         response = await addAsset(formData);
@@ -280,6 +293,8 @@ const AssetForm = () => {
             startDate: details?.dashboard?.startDate || "",
             criticality: details?.dashboard?.criticality || "",
             maintStatus: details?.dashboard?.maintStatus || "",
+            assetImage: details?.dashboard?.image || "",
+            // childAssets: details?.dashboard?.childAssets || [],
             ...customFieldInitialValues,
           }}
           validationSchema={validationSchema}
@@ -405,7 +420,7 @@ const AssetForm = () => {
                 <Table
                   loading={isLoading}
                   size={"large"}
-                  scroll={{ x: 1400 }}
+                  scroll={{ x: 700 }}
                   columns={columns}
                   rowSelection={rowSelection}
                   rowKey="_id"
@@ -557,6 +572,7 @@ const AssetForm = () => {
                       setFieldValue("assetImage", file);
                       return false; // Prevent auto-upload
                     }}
+                    onRemove={() => setFieldValue("assetImage", null)}
                     maxCount={1}
                   >
                     <Button
@@ -569,6 +585,14 @@ const AssetForm = () => {
                   </Upload>
                 </div>
               </div>
+              {values.assetImage && typeof values.assetImage === "string" && (
+                <span className="">{values.assetImage.split("/").pop()}</span>
+              )}
+              <ErrorMessage
+                name="assetImage"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
               <div className="text-right mt-5 mb-5">
                 <Button
                   className="mr-2"
