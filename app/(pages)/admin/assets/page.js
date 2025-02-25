@@ -65,9 +65,9 @@ const Assets = () => {
     },
     {
       title: "Main System",
-      dataIndex: "mainSystem",
+      dataIndex: "system",
       key: "mainSystem",
-      render: (mainSystem) => systems.find((i) => i.id === mainSystem).name,
+      render: (system) => system.system,
     },
     { title: "Serial #", dataIndex: "serialNumber", key: "serialNumber" },
     { title: "Model", dataIndex: "model", key: "model" },
@@ -88,7 +88,12 @@ const Assets = () => {
             style={{ fontSize: "20px", cursor: "pointer" }}
             onClick={() => setAssetDetailsPopup(record)}
           />
-          <EditPagePencil />
+          <span
+            className="cursor-pointer"
+            onClick={() => router.push("/admin/assets/" + id + "/edit")}
+          >
+            <EditPagePencil />
+          </span>
         </p>
       ),
     },
@@ -197,7 +202,7 @@ const Assets = () => {
         setIsFiltering(true);
         try {
           const { status, data } = await getFilteredAssets({
-            location: activeLocation ? activeLocation : null,
+            site: activeLocation ? activeLocation : null,
             system: activeSystem ? activeSystem : null,
           });
 

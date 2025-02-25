@@ -169,7 +169,7 @@ const CreateInventory = () => {
   };
 
   return (
-    <div className="ml-5 md:ml-10">
+    <div className="mx-5 md:mx-10">
       <AddFieldPopup
         visible={addFieldPopupVisible}
         setVisible={setAddFieldPopupVisible}
@@ -207,14 +207,14 @@ const CreateInventory = () => {
           <Formik
             initialValues={{
               site: "",
-              location: "",
-              partItem: "",
-              tagId: "",
-              notes: "",
+              system: "",
               invoiceNumber: "",
-              details: "",
-              quantity: "",
               receivedDate: null,
+              partNumber: "",
+              tagId: "",
+              description: "",
+              quantity: "",
+              notes: "",
               ...customFieldInitialValues,
             }}
             validationSchema={validationSchema}
@@ -306,7 +306,7 @@ const CreateInventory = () => {
                     Inventory Information
                   </p>
                   <InputField
-                    name="partItem"
+                    name="partNumber"
                     placeholder="Part #"
                     label="Part #"
                   />
@@ -317,7 +317,7 @@ const CreateInventory = () => {
                   />
                   <div className="md:col-span-2">
                     <TextAreaField
-                      name="details"
+                      name="description"
                       placeholder="Description"
                       label="Description"
                       className="!h-12"
