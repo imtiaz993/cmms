@@ -17,6 +17,7 @@ import UploadDocPopup from "../../../../../components/uploadDocPopup";
 import { usePathname, useRouter } from "next/navigation";
 import AddAssetPopupMT from "@/components/addAssetPopupInMT";
 import {
+  completeMaterialTransfer,
   emailMaterialTransferDetails,
   getMaterialTransferDetails,
   printMaterialTransferDetails,
@@ -127,7 +128,7 @@ const MaterialTransferDetail = () => {
               text="View Details"
             /> */}
 
-            <Button
+            {/* <Button
               type="primary"
               className="!h-7 md:!h-9"
               fullWidth={false}
@@ -141,7 +142,7 @@ const MaterialTransferDetail = () => {
               text="Export"
               onClick={() => message.info("Export will be available soon.")}
               prefix={<ExportOutlined />}
-            />
+            /> */}
           </div>
           <Table
             loading={false}
@@ -196,18 +197,18 @@ const MaterialTransferDetail = () => {
                 materialTransferId={slug}
               />
             )}
-            {console.log("selected: ", selectedRowKeys)}
+
             <div className="text-end mt-3 xl:mt-0">
-              <Button
+              {/* <Button
                 type="primary"
                 className="!h-7 md:!h-9"
                 fullWidth={false}
                 text="Add Inventory"
                 onClick={() => setAddInventoryPopup(true)}
-              />
+              /> */}
             </div>
           </div>
-          {details?.materialTransfer.inventory.length > 0 ? (
+          {details?.materialTransfer?.inventory?.length > 0 ? (
             <Table
               loading={false}
               size={"small"}
@@ -251,18 +252,18 @@ const MaterialTransferDetail = () => {
         </>
       ),
     },
-    {
-      label: "Misc",
-      children: (
-        <div className="text-ellipsisxt-center my-7">
-          <TextArea
-            value={details?.materialTransfer.misc}
-            className={` !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F] resize-none`}
-            style={{ width: "100%" }}
-          />
-        </div>
-      ),
-    },
+    // {
+    //   label: "Misc",
+    //   children: (
+    //     <div className="text-ellipsisxt-center my-7">
+    //       <TextArea
+    //         value={details?.materialTransfer.misc}
+    //         className={` !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F] resize-none`}
+    //         style={{ width: "100%" }}
+    //       />
+    //     </div>
+    //   ),
+    // },
   ];
 
   useEffect(() => {
@@ -278,6 +279,7 @@ const MaterialTransferDetail = () => {
     };
     fetchData();
   }, []);
+  console.log(details);
 
   const handleEmail = async () => {
     const { status, data } = await emailMaterialTransferDetails(slug);
@@ -295,6 +297,20 @@ const MaterialTransferDetail = () => {
       message.success(data.message || "Printed successfully");
     } else {
       message.error(data.message || "Failed to print");
+    }
+  };
+
+  const handleComplete = async () => {
+    const { status, data } = await completeMaterialTransfer(
+      details?.materialTransfer._id
+    );
+    if (status === 200) {
+      window.open(data.data);
+      message.success(
+        data.message || "Material Transfer Completed Successfully"
+      );
+    } else {
+      message.error(data.message || "Failed to complete");
     }
   };
 
@@ -334,6 +350,13 @@ const MaterialTransferDetail = () => {
             className="ml-3"
             onClick={() => handlePrint()}
           />
+          <Button
+            text="Complete"
+            // prefix={<PrinterFilled />}
+            fullWidth={false}
+            className="ml-3"
+            onClick={() => handleComplete()}
+          />
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-5">
@@ -346,7 +369,8 @@ const MaterialTransferDetail = () => {
                 <span className="px-2 py-1 bg-secondary rounded-full">
                   <FolderFilled />
                 </span>
-                TRF14687000001 <p className="text-xs font-normal">(Approved)</p>
+                {details?.materialTransfer?._id}{" "}
+                <p className="text-xs font-normal">(Approved)</p>
               </div>
             }
           >
@@ -361,12 +385,12 @@ const MaterialTransferDetail = () => {
                   }
                 </span>
               </div>
-              <div>
+              {/* <div>
                 <span className="opacity-70 mr-3">Transporter</span>
                 <span className="">
                   {details?.materialTransfer.transporter}
                 </span>
-              </div>
+              </div> */}
               <div>
                 <span className="opacity-70 mr-3">Destination</span>
                 <span className="">
@@ -377,12 +401,12 @@ const MaterialTransferDetail = () => {
                   }
                 </span>
               </div>
-              <div>
+              {/* <div>
                 <span className="opacity-70 mr-3">Attention To</span>
                 <span className="">
                   {details?.materialTransfer.attentionTo}
                 </span>
-              </div>
+              </div> */}
             </div>
           </Card>
           <Card
@@ -404,14 +428,14 @@ const MaterialTransferDetail = () => {
                   )}
                 </span>
               </div>
-              <div className="flex">
+              {/* <div className="flex">
                 <span className="opacity-70 mr-3 block">
                   Material Transfer Type
                 </span>
                 <span className="">
                   {details?.materialTransfer.materialTransferType}
                 </span>
-              </div>
+              </div> */}
               <div className="md:col-span-2">
                 <span className="opacity-70 mr-3">Comments</span>
                 <span className="">{details?.materialTransfer.comments}</span>
@@ -439,17 +463,17 @@ const MaterialTransferDetail = () => {
           <Card
             loading={false}
             title={<p>Workflow Status</p>}
-            extra={
-              <Button
-                outlined
-                size="small"
-                fullWidth={false}
-                className="!text-xs !h-7 mr-3"
-                text="Export"
-                prefix={<ExportOutlined />}
-                onClick={() => message.info("Export will be available soon.")}
-              />
-            }
+            // extra={
+            //   <Button
+            //     outlined
+            //     size="small"
+            //     fullWidth={false}
+            //     className="!text-xs !h-7 mr-3"
+            //     text="Export"
+            //     prefix={<ExportOutlined />}
+            //     onClick={() => message.info("Export will be available soon.")}
+            //   />
+            // }
           >
             <Steps
               direction="vertical"
@@ -477,8 +501,8 @@ const MaterialTransferDetail = () => {
                 description={
                   <div>
                     <p>
-                      <span className="text-[#52c41a]">Approved</span> by Rig 23
-                      Manager
+                      <span className="text-[#52c41a]">Approved</span> by{" "}
+                      {details?.materialTransfer.createdBy}
                     </p>
                   </div>
                 }
@@ -504,8 +528,9 @@ const MaterialTransferDetail = () => {
                 description={
                   <div>
                     <p>
-                      <span className="text-[#52c41a]">Approved</span> by
-                      Midland Yard
+                      In Progress
+                      {/* <span className="text-[#52c41a]">Approved</span> by
+                      Midland Yard */}
                     </p>
                   </div>
                 }
@@ -521,14 +546,14 @@ const MaterialTransferDetail = () => {
                   <h1 className="text-base">Material Transfer Documents</h1>
                 </Badge>
                 <div>
-                  <Button
+                  {/* <Button
                     outlined
                     size="small"
                     text="View Details"
                     fullWidth={false}
                     className="!text-xs !h-7 mr-3"
                     disabled
-                  />
+                  /> */}
                   <Dropdown
                     dropdownRender={() => (
                       <Menu>

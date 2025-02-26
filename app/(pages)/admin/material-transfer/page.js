@@ -13,9 +13,11 @@ import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 import { rigs } from "@/constants/rigsAndSystems";
 import Link from "next/link";
 import { EditPagePencil } from "@/icons/index";
+import { getAdminsManagers } from "app/services/common";
 
 const MaterialTransfer = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
   const [materialTransferData, setMaterialTransferData] = useState();
@@ -25,23 +27,14 @@ const MaterialTransfer = () => {
 
   const columns = [
     {
-      title: "Asset #",
-      dataIndex: "assets",
-      key: "assetNumber",
-      render: (assets) => (
-        <Link
-          className="text-[#017BFE] underline"
-          href={`/admin/assets/${assets[0]._id}`}
-        >
-          {assets
-            ?.map((asset, index) =>
-              index === 0 ? asset._id : ", " + asset._id
-            )
-            .join("")}
-
-          {/*Assets has multiple assets but we are showing only one*/}
-        </Link>
-      ),
+      title: "Material Transfer #",
+      dataIndex: "_id",
+      key: "_id",
+      // render: (_id) => (
+      //   <span>
+      //     {_id}
+      //   </span>
+      // ),
     },
     {
       title: "Description",
@@ -58,24 +51,25 @@ const MaterialTransfer = () => {
       title: "Origin",
       dataIndex: "origination",
       key: "origination",
-      render: (origination) => rigs.find((i) => i.id === origination).name,
+      render: (origination) => rigs.find((i) => i.id === origination)?.name,
     },
     {
       title: "Destination",
       dataIndex: "destination",
       key: "destination",
-      render: (destination) => rigs.find((i) => i.id === destination).name,
+      render: (destination) => rigs.find((i) => i.id === destination)?.name,
     },
     {
       title: "",
       dataIndex: "actions",
       key: "actions",
-      render: () => (
+      render: (_ , record) => (
         <div className="flex gap-3">
           <EyeOutlined
             onClick={(e) => {
-              e.stopPropagation();
-              setPreviewPopupVisible(true);
+              // e.stopPropagation();
+              // setPreviewPopupVisible(true);
+              router.push(`/admin/material-transfer/${record._id}`);
             }}
             style={{ fontSize: "20px", cursor: "pointer" }}
           />
@@ -91,6 +85,7 @@ const MaterialTransfer = () => {
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
   // const [selectedInventory, setSelectedInventory] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [superUsers, setSuperUsers] = useState([]);
 
   const rowSelection = {
     selectedRowKeys,
@@ -109,7 +104,19 @@ const MaterialTransfer = () => {
       message.error(data.error || "Failed to fetch data");
     }
   };
+  const handleFetchSuperUsers = async () => {
+    setFetchingData(true);
+    const { status, data } = await getAdminsManagers();
+    if (status === 200) {
+      setSuperUsers(data.data);
+      setFetchingData(false);
+    } else {
+      message.error(data.error);
+      setFetchingData(false);
+    }
+  };
   useEffect(() => {
+    handleFetchSuperUsers();
     if (!activeLocation) handleFetchData();
   }, []);
 
@@ -151,6 +158,7 @@ const MaterialTransfer = () => {
       setMaterialTransferData(materialTransferData); // If no filters, use full assets list
     }
   }, [activeLocation, activeSystem]);
+  console.log(materialTransferData);
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
@@ -180,6 +188,7 @@ const MaterialTransfer = () => {
           setSearchText={setSearchText}
           setMaterialTransferData={setMaterialTransferData}
           setFetchingData={setFetchingData}
+          superUsers={superUsers}
         />
         <Table
           // onRow={(record, rowIndex) => {

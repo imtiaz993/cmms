@@ -83,7 +83,10 @@ const DocumentsFilter = ({
               <SelectField
                 name="uploadedBy"
                 placeholder="Uploaded By"
-                options={[]}
+                options={superUsers.map((user) => ({
+                  label: user?.name,
+                  value: user?._id,
+                }))}
                 required
                 // label="Type"
               />

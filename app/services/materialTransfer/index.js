@@ -87,6 +87,20 @@ export const printMaterialTransfer = async (values) => {
   }
 };
 
+export const completeMaterialTransfer = async (values) => {
+  //value could be status (List of MTs based on status)
+  try {
+    const { status, data } = await authRequest({
+      url: `/material-transfer/confirmMaterialTransfer?id=${values}`,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const exportMaterialTransfer = async (values) => {
   //value could be status (List of MTs based on status)
   try {

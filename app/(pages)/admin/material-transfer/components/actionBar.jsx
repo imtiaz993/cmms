@@ -33,6 +33,7 @@ const ActionBar = ({
   setSearchText,
   setMaterialTransferData,
   setFetchingData,
+  superUsers
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
@@ -98,6 +99,7 @@ const ActionBar = ({
               <MaterialTransferFilter
                 setMaterialTransferData={setMaterialTransferData}
                 closeDropdown={() => setFilterDropdown(false)}
+                superUsers={superUsers}
               />
             )}
             trigger={["click"]}
