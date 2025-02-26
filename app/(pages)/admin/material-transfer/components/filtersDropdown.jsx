@@ -1,13 +1,21 @@
 import { useState } from "react";
-import {  Form, Formik } from "formik";
-import {message } from "antd";
+import { Form, Formik } from "formik";
+import { message } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import { getFilteredMT } from "app/services/materialTransfer";
+import { useSelector } from "react-redux";
+import SelectField from "@/components/common/SelectField";
 
-const MaterialTransferFilter = ({ setMaterialTransferData, closeDropdown }) => {0
+const MaterialTransferFilter = ({
+  setMaterialTransferData,
+  closeDropdown,
+  superUsers,
+}) => {
+  0;
   const [isClearing, setIsClearing] = useState(false);
+  const locations = useSelector((state) => state.location.location);
   const submit = async (values, setSubmitting) => {
     console.log(values);
     !setSubmitting && setIsClearing(true);
@@ -33,10 +41,11 @@ const MaterialTransferFilter = ({ setMaterialTransferData, closeDropdown }) => {
       <Formik
         initialValues={{
           createdDateRange: "",
-          materialTransferType: "",
+          // materialTransferType: "",
           origination: "",
           destination: "",
-          Transporter: "",
+          createdBy: "",
+          // Transporter: "",
         }}
         onSubmit={(values, { setSubmitting }) => {
           submit(values, setSubmitting);
@@ -50,17 +59,53 @@ const MaterialTransferFilter = ({ setMaterialTransferData, closeDropdown }) => {
                 placeholder="Created Date Range"
               />
 
-              <InputField
+              {/* <InputField
                 name="origination"
                 placeholder="Origin"
                 maxLength={128}
+              /> */}
+              <SelectField
+                name="origination"
+                placeholder="Select Origination"
+                options={
+                  locations &&
+                  locations.map((i) => ({
+                    label: i.site,
+                    value: i._id,
+                  }))
+                }
+                // required
+                // label="Type"
               />
-              <InputField
+              {/* <InputField
                 name="destination"
                 placeholder="Destination"
                 maxLength={128}
+              /> */}
+              <SelectField
+                name="destination"
+                placeholder="Select Destination"
+                options={
+                  locations &&
+                  locations.map((i) => ({
+                    label: i.site,
+                    value: i._id,
+                  }))
+                }
+                // required
+                // label="Type"
               />
-              <InputField
+              <SelectField
+                name="createdBy"
+                placeholder="Created By"
+                options={superUsers.map((user) => ({
+                  label: user?.name,
+                  value: user?._id,
+                }))}
+                // required
+                // label="Type"
+              />
+              {/* <InputField
                 name="materialTransferType"
                 placeholder="Transfer Type"
                 maxLength={128}
@@ -69,7 +114,7 @@ const MaterialTransferFilter = ({ setMaterialTransferData, closeDropdown }) => {
                 name="transporter"
                 placeholder="Transporter"
                 maxLength={128}
-              />
+              /> */}
 
               <div className="sm:col-span-2 flex justify-end gap-4">
                 <div>
