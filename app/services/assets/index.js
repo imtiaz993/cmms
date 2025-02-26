@@ -99,6 +99,21 @@ export const getAssetDetails = async (id) => {
   }
 };
 
+export const updateStatus = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/asset/updateStatus",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const addCost = async (values) => {
   try {
     const { status, data } = await authRequest({

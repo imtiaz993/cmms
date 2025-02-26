@@ -52,14 +52,14 @@ const Assets = () => {
   const mainColumns = [
     {
       title: "Asset #",
-      dataIndex: "assetNumber",
-      key: "assetNumber",
+      dataIndex: "assetID",
+      key: "assetID",
       render: (_, record) => (
         <Link
           href={"/admin/assets/" + record._id}
           className="text-[#017BFE] underline"
         >
-          {record.assetNumber}
+          {record.assetID}
         </Link>
       ),
     },
@@ -253,8 +253,9 @@ const Assets = () => {
           columns={mainColumns}
           setSearchText={setSearchText}
           setFilteredAssets={setFilteredAssets}
+          selectedRowKeys={selectedRowKeys}
         />
-
+        {console.log("displayedAssets", filteredAssets)}
         <Table
           loading={isFiltering || isLoading}
           size="large"

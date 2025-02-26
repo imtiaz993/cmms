@@ -25,9 +25,10 @@ import {
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import AssetFilter from "./filtersDropdown";
-import { exportAssets } from "app/services/assets";
+import { exportAssets, updateStatus } from "app/services/assets";
 import Link from "next/link";
 import { LinkBroken, SearchIcon } from "@/icons/index";
+import ConfirmationPopup from "@/components/confirmationPopup";
 
 const ActionBar = ({
   showAddAssetModal,
@@ -36,11 +37,13 @@ const ActionBar = ({
   setCheckedList,
   setSearchText,
   setFilteredAssets,
+  selectedRowKeys,
 }) => {
   const [showHierarchy, setShowHierarchy] = useState(false);
   //Add Field
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
   const [filterDropdown, setFilterDropdown] = useState(null);
+  const [actionPopup, setActionPopup] = useState(false);
 
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
@@ -70,8 +73,106 @@ const ActionBar = ({
     }
   };
 
+  const actionOptions = [
+    {
+      label: (
+        <p>
+          <ToolOutlined /> New Work Order
+        </p>
+      ),
+      value: "workorder",
+    },
+    {
+      label: (
+        <p>
+          <ExclamationCircleFilled /> Damaged beyond repair
+        </p>
+      ),
+      value: "damaged",
+    },
+    {
+      label: (
+        <p className="flex items-center gap-1">
+          <LinkBroken /> Broken
+        </p>
+      ),
+      value: "repair",
+    },
+    {
+      label: (
+        <p>
+          <DeleteOutlined /> Dispose
+        </p>
+      ),
+      value: "dispose",
+    },
+    {
+      label: (
+        <p>
+          <TruckOutlined /> Out for Repair
+        </p>
+      ),
+      value: "outForRepair",
+    },
+    {
+      label: (
+        <p>
+          <DollarOutlined /> Sell
+        </p>
+      ),
+      value: "sell",
+    },
+    {
+      label: (
+        <p>
+          <CheckCircleOutlined /> Active
+        </p>
+      ),
+      value: "active",
+    },
+    {
+      label: (
+        <p>
+          <SwapOutlined /> Material Transfer
+        </p>
+      ),
+      value: "materialTransfer",
+    },
+  ];
+
+  const handleAction = (value) => {
+    if (value !== "materialTransfer") setActionPopup(value);
+  };
+
+  const handleActionConfirm = async () => {
+    const { status, data } = await updateStatus({
+      assets: [...selectedRowKeys],
+      status: actionPopup,
+    });
+    if (status === 200) {
+      message.success(data?.message || "Asset updated successfully");
+      setFilteredAssets((prev) =>
+        prev.map((asset) =>
+          selectedRowKeys.includes(asset._id)
+            ? { ...asset, maintStatus: actionPopup }
+            : asset
+        )
+      );
+    } else {
+      console.log("err",data.error);
+    }
+  };
+
   return (
     <>
+      <ConfirmationPopup
+        visible={actionPopup}
+        setVisible={setActionPopup}
+        title={actionOptions.find((o) => o.value === actionPopup)?.label}
+        message="Are you sure you want to perform this action on selected Assets?"
+        onConfirm={handleActionConfirm}
+        onCancel={() => message.info("Action cancelled")}
+      />
       {/* <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3"> */}
       <Input
         placeholder="Search"
@@ -85,76 +186,13 @@ const ActionBar = ({
           <Checkbox className="!mx-2" />
           <div className="w-full sm:min-w-40 overflow-hidden">
             <Select
+              value={null}
               name="actions"
+              onChange={handleAction}
               placeholder="Actions"
               style={{ height: "44px", width: "100%" }}
               // onChange={handleActionsChange}
-              options={[
-                {
-                  label: (
-                    <p>
-                      <ToolOutlined /> New Work Order
-                    </p>
-                  ),
-                  value: "workorder",
-                },
-                {
-                  label: (
-                    <p>
-                      <ExclamationCircleFilled /> Damaged beyond repair
-                    </p>
-                  ),
-                  value: "damaged",
-                },
-                {
-                  label: (
-                    <p className="flex items-center gap-1">
-                      <LinkBroken /> Broken
-                    </p>
-                  ),
-                  value: "repair",
-                },
-                {
-                  label: (
-                    <p>
-                      <DeleteOutlined /> Dispose
-                    </p>
-                  ),
-                  value: "dispose",
-                },
-                {
-                  label: (
-                    <p>
-                      <TruckOutlined /> Out for Repair
-                    </p>
-                  ),
-                  value: "outForRepair",
-                },
-                {
-                  label: (
-                    <p>
-                      <DollarOutlined /> Sell
-                    </p>
-                  ),
-                  value: "sell",
-                },
-                {
-                  label: (
-                    <p>
-                      <CheckCircleOutlined /> Active
-                    </p>
-                  ),
-                  value: "active",
-                },
-                {
-                  label: (
-                    <p>
-                      <SwapOutlined /> Material Transfer
-                    </p>
-                  ),
-                  value: "materialTransfer",
-                },
-              ]}
+              options={actionOptions}
             />
           </div>
           <Dropdown

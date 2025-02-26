@@ -114,9 +114,9 @@ const AssetForm = () => {
 
   const customFieldInitialValues = useMemo(() => {
     // Parse the customFields from the details object
-    const parsedCustomFields = details?.dashboard?.customFields
-      ? JSON.parse(details.dashboard.customFields)
-      : [];
+    const parsedCustomFields = details?.dashboard?.customFields || [];
+    // ? JSON.parse(details.dashboard.customFields)
+    // : [];
 
     return fields.reduce((acc, field) => {
       // Find the custom field value for this field from the parsed customFields
