@@ -172,7 +172,7 @@ const Assets = () => {
       dataSource={[record]} // Single parent data for nested table
       pagination={false}
       size="small"
-      rowKey="key"
+      rowKey="_id"
       rowSelection={rowSelection}
       // expandable={{
       //   expandedRowRender: (parentRecord) => (
@@ -191,8 +191,8 @@ const Assets = () => {
   // Handle row expand/collapse
   const handleRowExpand = (expanded, record) => {
     const newExpandedRowKeys = expanded
-      ? [...expandedRowKeys, record.key]
-      : expandedRowKeys.filter((key) => key !== record.key);
+      ? [...expandedRowKeys, record._id]
+      : expandedRowKeys.filter((key) => key !== record._id);
     setExpandedRowKeys(newExpandedRowKeys);
   };
 
@@ -224,6 +224,8 @@ const Assets = () => {
     }
   }, [activeLocation, activeSystem]);
 
+  console.log("row Keys ", selectedRowKeys);
+
   return (
     <>
       <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
@@ -239,12 +241,6 @@ const Assets = () => {
         />
       </div>
       <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
-        {/* {addAssetVisible && (
-        <CreateAssetPopup
-          visible={addAssetVisible}
-          setVisible={setAddAssetVisible}
-        />
-      )} */}
         <AssetDetailsPopup
           visible={assetDetailsPopup}
           setVisible={setAssetDetailsPopup}
@@ -258,21 +254,14 @@ const Assets = () => {
           setSearchText={setSearchText}
           setFilteredAssets={setFilteredAssets}
         />
-        {/* <div className="flex gap-3 justify-end">
-        <p className="text-secondary">
-          Total Assets: <span>{`(${assets?.length})`}</span>
-        </p>
-        <p className="text-secondary">
-          Parent Assets: <span>{`(${assets?.length})`}</span>
-        </p>
-      </div> */}
+
         <Table
           loading={isFiltering || isLoading}
           size="large"
           scroll={{ x: 1100 }}
           columns={newMainColumns}
           rowSelection={rowSelection}
-          // rowKey="_id"
+          rowKey="_id"
           dataSource={displayedAssets}
           pagination={{
             total: displayedAssets?.length,
@@ -283,12 +272,12 @@ const Assets = () => {
             className: "custom-pagination",
           }}
           style={{ marginTop: 16 }}
-          rowKey="key"
-          expandable={{
-            expandedRowRender,
-            expandedRowKeys,
-            onExpand: handleRowExpand,
-          }}
+          // rowKey="key"
+          // expandable={{
+          //   expandedRowRender,
+          //   expandedRowKeys,
+          //   onExpand: handleRowExpand,
+          // }}
         />
       </div>
     </>

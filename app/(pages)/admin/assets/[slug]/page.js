@@ -134,23 +134,23 @@ const AssetDetail = () => {
                 options={[
                   {
                     label: (
-                      <>
+                      <p>
                         <ToolOutlined /> New Work Order
-                      </>
+                      </p>
                     ),
                     value: "workorder",
                   },
                   {
                     label: (
-                      <>
+                      <p>
                         <ExclamationCircleFilled /> Damaged beyond repair
-                      </>
+                      </p>
                     ),
                     value: "damaged",
                   },
                   {
                     label: (
-                      <p className="flex items-center gap-2">
+                      <p className="flex items-center gap-1">
                         <LinkBroken /> Broken
                       </p>
                     ),
@@ -158,41 +158,41 @@ const AssetDetail = () => {
                   },
                   {
                     label: (
-                      <>
+                      <p>
                         <DeleteOutlined /> Dispose
-                      </>
+                      </p>
                     ),
                     value: "dispose",
                   },
                   {
                     label: (
-                      <>
-                        <TruckOutlined /> Dispose
-                      </>
+                      <p>
+                        <TruckOutlined /> Out for Repair
+                      </p>
                     ),
-                    value: "dispose",
+                    value: "outForRepair",
                   },
                   {
                     label: (
-                      <>
+                      <p>
                         <DollarOutlined /> Sell
-                      </>
+                      </p>
                     ),
                     value: "sell",
                   },
                   {
                     label: (
-                      <>
+                      <p>
                         <CheckCircleOutlined /> Active
-                      </>
+                      </p>
                     ),
                     value: "active",
                   },
                   {
                     label: (
-                      <>
+                      <p>
                         <SwapOutlined /> Material Transfer
-                      </>
+                      </p>
                     ),
                     value: "materialTransfer",
                   },

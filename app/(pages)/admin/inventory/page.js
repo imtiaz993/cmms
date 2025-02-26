@@ -50,9 +50,16 @@ const Inventory = () => {
       key: "tagId",
     },
     {
-      title: "Location",
+      title: "Site",
+      dataIndex: "site",
+      key: "site",
+      render: (site) => site?.site,
+    },
+    {
+      title: "System",
       dataIndex: "system",
       key: "system",
+      render: (system) => system?.system,
     },
     {
       title: "",
@@ -107,7 +114,7 @@ const Inventory = () => {
         setIsFiltering(true);
         try {
           const { status, data } = await getFilteredInventory({
-            location: activeLocation ? activeLocation : null,
+            site: activeLocation ? activeLocation : null,
             system: activeSystem ? activeSystem : null,
           });
 

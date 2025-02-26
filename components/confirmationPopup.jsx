@@ -12,7 +12,7 @@ const ConfirmationPopup = ({
   return (
     <Modal
       title={title || "Confirmation"}
-      visible={visible}
+      open={visible}
       onCancel={() => setVisible(false)}
       footer={[
         <Button

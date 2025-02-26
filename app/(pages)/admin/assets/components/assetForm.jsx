@@ -113,11 +113,22 @@ const AssetForm = () => {
   }, []);
 
   const customFieldInitialValues = useMemo(() => {
+    // Parse the customFields from the details object
+    const parsedCustomFields = details?.dashboard?.customFields
+      ? JSON.parse(details.dashboard.customFields)
+      : [];
+
     return fields.reduce((acc, field) => {
-      acc[field.uniqueKey] = "";
+      // Find the custom field value for this field from the parsed customFields
+      const customField = parsedCustomFields.find(
+        (customField) => customField.uniqueKey === field.uniqueKey
+      );
+
+      // Set the value if found, otherwise default to an empty string
+      acc[field.uniqueKey] = customField ? customField.value : "";
       return acc;
     }, {});
-  }, [fields]);
+  }, [fields, details]);
 
   const customFieldValidations = useMemo(() => {
     return fields.reduce((acc, field) => {
@@ -182,18 +193,20 @@ const AssetForm = () => {
 
       // Append standard form values
       Object.entries(standardValues).forEach(([key, value]) => {
-        if (value) {
+        if (value && key !== "customFields") {
           formData.append(key, value);
         }
       });
 
       // Append custom fields in the correct format
-      formData.append("customFields", JSON.stringify(customFields));
+      if (customFields.length > 0) {
+        formData.append("customFields", JSON.stringify(customFields));
+      }
 
       // Append the image if it exists and is a File object
-      if (values.assetImage instanceof File) {
-        formData.append("assetImage", values.assetImage);
-      }
+      // if (values.assetImage instanceof File) {
+      //   formData.append("assetImage", values.assetImage);
+      // }
 
       // formData.append("childAssets", selectedRowKeys);
 
@@ -292,7 +305,7 @@ const AssetForm = () => {
             startDate: details?.dashboard?.startDate || "",
             criticality: details?.dashboard?.criticality || "",
             maintStatus: details?.dashboard?.maintStatus || "",
-            assetImage: details?.dashboard?.image || "",
+            assetImage: details?.dashboard?.assetImage || "",
             // childAssets: details?.dashboard?.childAssets || [],
             ...customFieldInitialValues,
           }}
@@ -609,7 +622,7 @@ const AssetForm = () => {
                   onClick={handleSubmit}
                   disabled={isSubmitting}
                   size="small"
-                  text={slug ? "Update" : "Add New Asset"}
+                  text={slug ? "Update Asset" : "Add New Asset"}
                   fullWidth={false}
                 />
               </div>

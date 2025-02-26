@@ -12,7 +12,7 @@ import {
 import DatePickerField from "@/components/common/DatePickerField";
 import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getFields } from "app/services/customFields";
 import AddFieldPopup from "@/components/addFieldPopup";
 import { useDispatch, useSelector } from "react-redux";
@@ -109,10 +109,23 @@ const InventoryForm = () => {
     handleFetchFields();
   }, []);
 
-  const customFieldInitialValues = fields.reduce((acc, field) => {
-    acc[field.uniqueKey] = "";
-    return acc;
-  }, {});
+  const customFieldInitialValues = useMemo(() => {
+    // Parse the customFields from the details object
+    const parsedCustomFields = details?.customFields || [];
+    // ? JSON.parse(details.customFields)
+    // : [];
+
+    return fields.reduce((acc, field) => {
+      // Find the custom field value for this field from the parsed customFields
+      const customField = parsedCustomFields.find(
+        (customField) => customField.uniqueKey === field.uniqueKey
+      );
+
+      // Set the value if found, otherwise default to an empty string
+      acc[field.uniqueKey] = customField ? customField.value : "";
+      return acc;
+    }, {});
+  }, [fields, details]);
 
   const customFieldValidations = fields.reduce((acc, field) => {
     switch (field.type) {
@@ -263,14 +276,14 @@ const InventoryForm = () => {
           initialValues={{
             site: details?.site?._id || "",
             system: details?.system?._id || "",
-            invoiceNumber: details.invoiceNumber || "",
-            receivedDate: details.receivedDate || null,
-            partNumber: details.partNumber || "",
-            tagId: details.tagId || "",
-            description: details.description || "",
-            quantity: details.quantity || "",
-            notes: details.notes || "",
-            image: details.image || null,
+            invoiceNumber: details?.invoiceNumber || "",
+            receivedDate: details?.receivedDate || null,
+            partNumber: details?.partNumber || "",
+            tagId: details?.tagId || "",
+            description: details?.description || "",
+            quantity: details?.quantity || "",
+            notes: details?.notes || "",
+            image: details?.image || null,
             ...customFieldInitialValues,
           }}
           validationSchema={validationSchema}
@@ -489,7 +502,7 @@ const InventoryForm = () => {
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                   size="small"
-                  text="Add Inventory"
+                  text={slug ? "Update Inventory" : "Add Inventory"}
                   fullWidth={false}
                 />
               </div>

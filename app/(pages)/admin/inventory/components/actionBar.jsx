@@ -118,66 +118,66 @@ const ActionBar = ({
                 options={[
                   {
                     label: (
-                      <>
+                      <p>
                         <AppstoreOutlined /> Assign to Asset
-                      </>
+                      </p>
                     ),
                     value: "assign_to_asset",
                   },
                   {
                     label: (
-                      <>
+                      <p>
                         <ExclamationCircleFilled /> Damaged beyond Repair
-                      </>
+                      </p>
                     ),
                     value: "damaged",
                   },
                   {
                     label: (
-                      <>
+                      <p className="flex items-center gap-1">
                         <LinkBroken /> Broken
-                      </>
+                      </p>
                     ),
                     value: "broken",
                   },
                   {
                     label: (
-                      <>
+                      <p>
                         <DeleteOutlined /> Dispose
-                      </>
+                      </p>
                     ),
                     value: "dispose",
                   },
                   {
                     label: (
-                      <>
+                      <p>
                         <LogoutOutlined /> Out for Repair
-                      </>
+                      </p>
                     ),
                     value: "out_for_repair",
                   },
                   {
                     label: (
-                      <>
+                      <p>
                         <DollarCircleOutlined /> Sell
-                      </>
+                      </p>
                     ),
                     value: "sell",
                   },
                   {
                     label: (
-                      <>
+                      <p>
                         <ShoppingCartOutlined />
                         Add to Shipping Cart
-                      </>
+                      </p>
                     ),
                     value: "shipping_cart",
                   },
                   {
                     label: (
-                      <>
+                      <p>
                         <SwapOutlined /> Material Transfer
-                      </>
+                      </p>
                     ),
                     value: "material_transfer",
                   },
