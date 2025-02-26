@@ -21,7 +21,6 @@ const DocumentsFilter = ({
   const [isClearing, setIsClearing] = useState(false);
 
   const submit = async (values, setSubmitting) => {
-    console.log(values);
     !setSubmitting && setIsClearing(true);
     const { status, data } = await getDocumentsByCategory(values);
     // const status = null,
@@ -29,10 +28,10 @@ const DocumentsFilter = ({
     setSubmitting ? setSubmitting(false) : setIsClearing(false);
     if (status === 200) {
       setDocuments(data?.data);
-      message.success(data?.message || "Inventory fetched successfully");
+      message.success(data?.message || "Documents fetched successfully");
       closeDropdown();
     } else {
-      message.error(data?.message || "Failed to fetch inventory");
+      message.error(data?.message || "Failed to fetch documents");
     }
   };
 

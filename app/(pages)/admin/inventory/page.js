@@ -3,13 +3,14 @@ import { useEffect, useMemo, useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateInventoryPopup from "./components/createInventoryPopup";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { EyeOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import InventoryDetailsPopup from "./components/inventoryDetailsPopup";
 import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getFilteredInventory } from "app/services/inventory";
 import { EditPagePencil } from "@/icons/index";
+import { setMaterialTransfer } from "app/redux/slices/saveMaterialTransferData";
 
 const Inventory = () => {
   const searchParams = useSearchParams();
@@ -81,6 +82,7 @@ const Inventory = () => {
   const [filteredInventory, setFilteredInventory] = useState([]);
   const [isFiltering, setIsFiltering] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const rowSelection = {
     selectedRowKeys,
@@ -131,6 +133,15 @@ const Inventory = () => {
     }
   }, [activeLocation, activeSystem]);
 
+  const saveMaterialTransfer = async (assetsData) => {
+    const matchedInventory = filteredInventory.filter((inventory) =>
+      assetsData.includes(inventory._id)
+    );
+
+    dispatch(setMaterialTransfer(matchedInventory));
+    router.push("/admin/new/material-transfer?materialType=inventory");
+  };
+
   return (
     <>
       <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
@@ -142,7 +153,7 @@ const Inventory = () => {
           }
           fullWidth={false}
           prefix={<ShoppingCartOutlined />}
-          onClick={() => router.push("/admin/new/material-transfer")}
+          onClick={() => saveMaterialTransfer(selectedRowKeys)}
         />
       </div>
       <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
