@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getDocuments, getDocumentsByCategory } from "app/services/document";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { getAdminsManagers } from "../../../services/common";
 
 const columns = [
   {
@@ -87,6 +88,7 @@ const Documents = () => {
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
   const [searchText, setSearchText] = useState("");
+  const [superUsers, setSuperUsers] = useState([]);
 
   useEffect(() => {
     const handleFetchDocuments = async () => {
@@ -100,7 +102,19 @@ const Documents = () => {
         message.error(data.error);
       }
     };
+    const handleFetchSuperUsers = async () => {
+      setFetchingDocuments(true);
+      const { status, data } = await getAdminsManagers();
+      if (status === 200) {
+        setFetchingDocuments(false);
+        setSuperUsers(data.data);
+      } else {
+        setFetchingDocuments(false);
+        message.error(data.error);
+      }
+    };
     handleFetchDocuments();
+    handleFetchSuperUsers();
   }, []);
 
   const displayedDocuments = useMemo(() => {
@@ -155,6 +169,7 @@ const Documents = () => {
           setDocuments={setDocuments}
           documents={documents}
           setIsLoading={setFetchingDocuments}
+          superUsers={superUsers}
         />
         <Table
           loading={fetchingDocuments}

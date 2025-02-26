@@ -25,6 +25,7 @@ const ActionBar = ({
   documents,
   setDocuments,
   isLoading,
+  superUsers
 }) => {
   const [popup, setPopup] = useState();
   const [filterDropdown, setFilterDropdown] = useState(null);
@@ -67,6 +68,7 @@ const ActionBar = ({
                 closeDropdown={() => setFilterDropdown(false)}
                 setDocuments={setDocuments}
                 isLoading={isLoading}
+                superUsers={superUsers}
               />
             )}
             trigger={["click"]}
