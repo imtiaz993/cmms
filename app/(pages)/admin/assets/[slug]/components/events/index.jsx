@@ -34,8 +34,7 @@ const columns = [
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const Events = () => {
-  const [events, setEvents] = useState([]);
+const Events = ({ events, setData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
@@ -48,22 +47,22 @@ const Events = () => {
     },
   };
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      setIsLoading(true);
-      // const { status, data } = null;
-      const status = null,
-        data = null;
-      if (status === 200) {
-        setEvents(data?.data);
-        message.success(data?.message || "Events fetched successfully");
-      } else {
-        message.error(data?.message || "Failed to fetch events");
-      }
-      setIsLoading(false);
-    };
-    fetchEvents();
-  }, []);
+  // useEffect(() => {
+  //   const fetchEvents = async () => {
+  //     setIsLoading(true);
+  //     // const { status, data } = null;
+  //     const status = null,
+  //       data = null;
+  //     if (status === 200) {
+  //       setEvents(data?.data);
+  //       message.success(data?.message || "Events fetched successfully");
+  //     } else {
+  //       message.error(data?.message || "Failed to fetch events");
+  //     }
+  //     setIsLoading(false);
+  //   };
+  //   fetchEvents();
+  // }, []);
 
   return (
     <div className="px-3 lg:px-5 pb-4 mt-1">
@@ -74,6 +73,7 @@ const Events = () => {
           columns={columns}
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
+          setDetails={setData}
         />
 
         <Table
@@ -84,12 +84,12 @@ const Events = () => {
           rowSelection={rowSelection}
           rowKey="_id"
           dataSource={
-            events &&
-            events.length > 0 &&
-            events.map((i, index) => ({ ...i, key: index }))
+            events?.events &&
+            events?.events.length > 0 &&
+            events?.events.map((i, index) => ({ ...i, key: index }))
           }
           pagination={{
-            total: events?.length,
+            total: events?.events?.length,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,

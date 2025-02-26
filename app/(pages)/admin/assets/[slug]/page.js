@@ -23,11 +23,13 @@ import {
 import { message, Select } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { deleteAsset, getAssetDetails } from "app/services/assets";
+import {
+  deleteAsset,
+  getAssetDetails,
+  updateStatus,
+} from "app/services/assets";
 import CreateAssetPopup from "../components/createAssetPopup";
 import ConfirmationPopup from "@/components/confirmationPopup";
-import Link from "next/link";
-import { rigs } from "@/constants/rigsAndSystems";
 import { LinkBroken } from "@/icons/index";
 
 const AssetDetail = () => {
@@ -35,6 +37,7 @@ const AssetDetail = () => {
   const [details, setDetails] = useState();
   const [editAssetPopup, setEditAssetPopup] = useState(false);
   const [deleteAssetPopup, setDeleteAssetPopup] = useState(false);
+  const [actionPopup, setActionPopup] = useState(false);
   const router = useRouter();
   const { slug } = useParams();
 
@@ -52,13 +55,98 @@ const AssetDetail = () => {
     getAsset();
   }, [slug]);
 
-  const handleDelete = async () => {
-    const { status, data } = await deleteAsset(slug);
+  // const handleDelete = async () => {
+  //   const { status, data } = await deleteAsset(slug);
+  //   if (status === 200) {
+  //     message.success(data?.message || "Asset deleted successfully");
+  //     router.push("/admin/assets");
+  //   } else {
+  //     message.error(data?.message || "Failed to delete asset");
+  //   }
+  // };
+
+  const options = [
+    {
+      label: (
+        <p>
+          <ToolOutlined /> New Work Order
+        </p>
+      ),
+      value: "workorder",
+    },
+    {
+      label: (
+        <p>
+          <ExclamationCircleFilled /> Damaged beyond repair
+        </p>
+      ),
+      value: "damaged",
+    },
+    {
+      label: (
+        <p className="flex items-center gap-1">
+          <LinkBroken /> Broken
+        </p>
+      ),
+      value: "repair",
+    },
+    {
+      label: (
+        <p>
+          <DeleteOutlined /> Dispose
+        </p>
+      ),
+      value: "dispose",
+    },
+    {
+      label: (
+        <p>
+          <TruckOutlined /> Out for Repair
+        </p>
+      ),
+      value: "outForRepair",
+    },
+    {
+      label: (
+        <p>
+          <DollarOutlined /> Sell
+        </p>
+      ),
+      value: "sell",
+    },
+    {
+      label: (
+        <p>
+          <CheckCircleOutlined /> Active
+        </p>
+      ),
+      value: "active",
+    },
+    {
+      label: (
+        <p>
+          <SwapOutlined /> Material Transfer
+        </p>
+      ),
+      value: "materialTransfer",
+    },
+  ];
+
+  const handleAction = (value) => {
+    if (value !== "materialTransfer") setActionPopup(value);
+  };
+
+  const handleActionConfirm = async () => {
+    const { status, data } = await updateStatus({
+      assets: [slug],
+      status: actionPopup,
+    });
     if (status === 200) {
-      message.success(data?.message || "Asset deleted successfully");
-      router.push("/admin/assets");
-    } else {
-      message.error(data?.message || "Failed to delete asset");
+      message.success(data?.message || "Asset updated successfully");
+      setData((prev) => ({
+        ...prev,
+        dashboard: { ...prev.dashboard, maintStatus: actionPopup },
+      }));
     }
   };
 
@@ -73,12 +161,20 @@ const AssetDetail = () => {
           setDetails={setData}
         />
       )}
-      <ConfirmationPopup
+      {/* <ConfirmationPopup
         visible={deleteAssetPopup}
         setVisible={setDeleteAssetPopup}
         message="Are you sure you want to delete this asset?"
         onConfirm={handleDelete}
         onCancel={() => message.info("Delete action cancelled")}
+      /> */}
+      <ConfirmationPopup
+        visible={actionPopup}
+        setVisible={setActionPopup}
+        title={options.find((o) => o.value === actionPopup)?.label}
+        message="Are you sure you want to perform this action?"
+        onConfirm={handleActionConfirm}
+        onCancel={() => message.info("Action cancelled")}
       />
       <div className="mx-5 lg:mx-10">
         <p className="text-sm text-[#828282]">
@@ -126,77 +222,14 @@ const AssetDetail = () => {
                 outlined
               />
               <Select
+                value={null}
                 name="actions"
                 placeholder="More Actions"
+                onChange={handleAction}
                 className="!h-11 md:!min-w-52 secondary-select !text-white"
                 suffixIcon={<DownOutlined style={{ color: "white" }} />}
                 // onChange={handleActionsChange}
-                options={[
-                  {
-                    label: (
-                      <>
-                        <ToolOutlined /> New Work Order
-                      </>
-                    ),
-                    value: "workorder",
-                  },
-                  {
-                    label: (
-                      <>
-                        <ExclamationCircleFilled /> Damaged beyond repair
-                      </>
-                    ),
-                    value: "damaged",
-                  },
-                  {
-                    label: (
-                      <p className="flex items-center gap-2">
-                        <LinkBroken /> Broken
-                      </p>
-                    ),
-                    value: "repair",
-                  },
-                  {
-                    label: (
-                      <>
-                        <DeleteOutlined /> Dispose
-                      </>
-                    ),
-                    value: "dispose",
-                  },
-                  {
-                    label: (
-                      <>
-                        <TruckOutlined /> Dispose
-                      </>
-                    ),
-                    value: "dispose",
-                  },
-                  {
-                    label: (
-                      <>
-                        <DollarOutlined /> Sell
-                      </>
-                    ),
-                    value: "sell",
-                  },
-                  {
-                    label: (
-                      <>
-                        <CheckCircleOutlined /> Active
-                      </>
-                    ),
-                    value: "active",
-                  },
-                  {
-                    label: (
-                      <>
-                        <SwapOutlined /> Material Transfer
-                      </>
-                    ),
-                    value: "materialTransfer",
-                  },
-                ]}
+                options={options}
               />
             </div>
           </div>

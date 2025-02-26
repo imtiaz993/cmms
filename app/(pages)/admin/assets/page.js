@@ -54,8 +54,8 @@ const Assets = () => {
   const mainColumns = [
     {
       title: "Asset #",
-      dataIndex: "assetNumber",
-      key: "assetNumber",
+      dataIndex: "assetID",
+      key: "assetID",
       render: (_, record) => (
         <Link
           href={"/admin/assets/" + record._id}
@@ -174,7 +174,7 @@ const Assets = () => {
       dataSource={[record]} // Single parent data for nested table
       pagination={false}
       size="small"
-      rowKey="key"
+      rowKey="_id"
       rowSelection={rowSelection}
       // expandable={{
       //   expandedRowRender: (parentRecord) => (
@@ -193,8 +193,8 @@ const Assets = () => {
   // Handle row expand/collapse
   const handleRowExpand = (expanded, record) => {
     const newExpandedRowKeys = expanded
-      ? [...expandedRowKeys, record.key]
-      : expandedRowKeys.filter((key) => key !== record.key);
+      ? [...expandedRowKeys, record._id]
+      : expandedRowKeys.filter((key) => key !== record._id);
     setExpandedRowKeys(newExpandedRowKeys);
   };
 
@@ -252,12 +252,6 @@ const Assets = () => {
         />
       </div>
       <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
-        {/* {addAssetVisible && (
-        <CreateAssetPopup
-          visible={addAssetVisible}
-          setVisible={setAddAssetVisible}
-        />
-      )} */}
         <AssetDetailsPopup
           visible={assetDetailsPopup}
           setVisible={setAssetDetailsPopup}
@@ -270,15 +264,9 @@ const Assets = () => {
           columns={mainColumns}
           setSearchText={setSearchText}
           setFilteredAssets={setFilteredAssets}
+          selectedRowKeys={selectedRowKeys}
         />
-        {/* <div className="flex gap-3 justify-end">
-        <p className="text-secondary">
-          Total Assets: <span>{`(${assets?.length})`}</span>
-        </p>
-        <p className="text-secondary">
-          Parent Assets: <span>{`(${assets?.length})`}</span>
-        </p>
-      </div> */}
+        {console.log("displayedAssets", filteredAssets)}
         <Table
           loading={isFiltering || isLoading}
           size="large"
@@ -297,11 +285,11 @@ const Assets = () => {
           }}
           style={{ marginTop: 16 }}
           // rowKey="key"
-          expandable={{
-            expandedRowRender,
-            expandedRowKeys,
-            onExpand: handleRowExpand,
-          }}
+          // expandable={{
+          //   expandedRowRender,
+          //   expandedRowKeys,
+          //   onExpand: handleRowExpand,
+          // }}
         />
       </div>
     </>

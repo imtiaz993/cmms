@@ -46,7 +46,7 @@ const AssetDetailsPopup = ({ visible, setVisible, asset }) => {
               Category
             </p>
             <p className="p-2 md:px-3 md:py-2 border border-b-0">
-              {asset?.subCategory.category}
+              {asset?.category.category}
             </p>
             <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
               Sub-Category

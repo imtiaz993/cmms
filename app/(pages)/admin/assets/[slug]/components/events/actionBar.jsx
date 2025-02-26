@@ -9,6 +9,7 @@ import {
 import Button from "@/components/common/Button";
 import EventsFilter from "./filtersDropdown";
 import { useRouter } from "next/navigation";
+import AddEventPopup from "app/(pages)/admin/settings/events/components/addEventPopup";
 
 const ActionBar = ({
   checkedList,
@@ -16,9 +17,11 @@ const ActionBar = ({
   columns,
   selectedRowKeys,
   setSelectedRowKeys,
+  setData,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const router = useRouter();
+  const [newEventPopup, setNewEventPopup] = useState(false);
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title || key,
     value: key,
@@ -44,6 +47,11 @@ const ActionBar = ({
 
   return (
     <>
+      {/* <AddEventPopup
+        visible={newEventPopup}
+        setEvents={setData}
+        setVisible={setNewEventPopup}
+      /> */}
       <div className="">
         <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3">
           <div className="flex gap-3">
@@ -119,7 +127,7 @@ const ActionBar = ({
               text="New Event"
               style={{ padding: "0px 20px", height: "44px" }}
               prefix={<PlusOutlined />}
-              // onClick={() => router.push("/admin/events/new")}
+              onClick={() => setNewEventPopup(true)}
             />
           </div>
         </div>

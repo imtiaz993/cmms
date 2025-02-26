@@ -14,8 +14,8 @@ const columns = [
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const History = () => {
-  const [history, setHistory] = useState([]);
+const History = ({ historyData }) => {
+  // const [historyData, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
@@ -28,22 +28,22 @@ const History = () => {
     },
   };
 
-  useEffect(() => {
-    const fetchHistory = async () => {
-      setIsLoading(true);
-      // const { status, data } = null;
-      const status = null,
-        data = null;
-      if (status === 200) {
-        setHistory(data?.data);
-        message.success(data?.message || "History fetched successfully");
-      } else {
-        message.error(data?.message || "Failed to fetch History");
-      }
-      setIsLoading(false);
-    };
-    fetchHistory();
-  }, []);
+  // useEffect(() => {
+  //   const fetchHistory = async () => {
+  //     setIsLoading(true);
+  //     // const { status, data } = null;
+  //     const status = null,
+  //       data = null;
+  //     if (status === 200) {
+  //       setHistory(data?.data);
+  //       message.success(data?.message || "History fetched successfully");
+  //     } else {
+  //       message.error(data?.message || "Failed to fetch History");
+  //     }
+  //     setIsLoading(false);
+  //   };
+  //   fetchHistory();
+  // }, []);
 
   return (
     <div className="px-3 lg:px-5 pb-4 mt-1">
@@ -64,12 +64,12 @@ const History = () => {
           rowSelection={rowSelection}
           rowKey="_id"
           dataSource={
-            history &&
-            history.length > 0 &&
-            history.map((i, index) => ({ ...i, key: index }))
+            historyData &&
+            historyData.length > 0 &&
+            historyData.map((i, index) => ({ ...i, key: index }))
           }
           pagination={{
-            total: history?.length,
+            total: historyData?.length,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,

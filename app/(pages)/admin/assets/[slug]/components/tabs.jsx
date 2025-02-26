@@ -28,7 +28,11 @@ const Tabs = ({ data, setData, slug }) => {
       label: "Details",
       children: <Details details={data?.dashboard} />,
     },
-    { key: "events", label: "Events", children: <Events></Events> },
+    {
+      key: "events",
+      label: "Events",
+      children: <Events data={data?.events} setData={setData} />,
+    },
     { key: "photos", label: "Photos", children: <Photos /> },
     // {
     //   key: "dashboard",
@@ -53,21 +57,19 @@ const Tabs = ({ data, setData, slug }) => {
     {
       key: "documents",
       label: "Documents",
-      children: (
-        <Documents documentsData={data?.documents} setData={setData} />
-      ),
+      children: <Documents documentsData={data?.documents} setData={setData} />,
     },
     { key: "manHours", label: "Man Hours", children: <ManHours /> },
 
     {
       key: "maintenance",
       label: "Maintenance",
-      children: <Maintainance />,
+      children: <Maintainance maintenanceData={data?.maintenanceSchedules} />,
     },
     {
       key: "history",
       label: "History",
-      children: <History />,
+      children: <History historyData={data?.history} />,
     },
     {
       key: "material-transfer",

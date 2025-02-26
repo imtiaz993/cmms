@@ -29,8 +29,8 @@ const columns = [
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const Maintenance = () => {
-  const [maintenanceData, setMaintenanceData] = useState([]);
+const Maintenance = ({ maintenanceData }) => {
+  // const [maintenanceData, setMaintenanceData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
@@ -43,24 +43,24 @@ const Maintenance = () => {
     },
   };
 
-  useEffect(() => {
-    const fetchHistory = async () => {
-      setIsLoading(true);
-      // const { status, data } = null;
-      const status = null,
-        data = null;
-      if (status === 200) {
-        setMaintenanceData(data?.data);
-        message.success(
-          data?.message || "Maintenance Data fetched successfully"
-        );
-      } else {
-        message.error(data?.message || "Failed to fetch maintenance data");
-      }
-      setIsLoading(false);
-    };
-    fetchHistory();
-  }, []);
+  // useEffect(() => {
+  //   const fetchHistory = async () => {
+  //     setIsLoading(true);
+  //     // const { status, data } = null;
+  //     const status = null,
+  //       data = null;
+  //     if (status === 200) {
+  //       setMaintenanceData(data?.data);
+  //       message.success(
+  //         data?.message || "Maintenance Data fetched successfully"
+  //       );
+  //     } else {
+  //       message.error(data?.message || "Failed to fetch maintenance data");
+  //     }
+  //     setIsLoading(false);
+  //   };
+  //   fetchHistory();
+  // }, []);
 
   return (
     <div className="px-3 lg:px-5 pb-4 mt-1">

@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
+import Button from "./common/Button";
 
 const ConfirmationPopup = ({
   visible,
@@ -12,28 +13,28 @@ const ConfirmationPopup = ({
   return (
     <Modal
       title={title || "Confirmation"}
-      visible={visible}
+      open={visible}
       onCancel={() => setVisible(false)}
       footer={[
         <Button
-          key="cancel"
+          key={"cancel"}
           onClick={() => {
             setVisible(false);
             if (onCancel) onCancel();
           }}
-        >
-          No
-        </Button>,
+          text="No"
+          fullWidth={false}
+          outlined
+        />,
         <Button
-          key="confirm"
-          type="primary"
+          key={"confirm"}
           onClick={() => {
             setVisible(false);
             if (onConfirm) onConfirm();
           }}
-        >
-          Yes
-        </Button>,
+          fullWidth={false}
+          text="Yes"
+        />,
       ]}
       maskClosable={false}
       centered
