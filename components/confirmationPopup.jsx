@@ -17,6 +17,7 @@ const ConfirmationPopup = ({
       onCancel={() => setVisible(false)}
       footer={[
         <Button
+          key={"cancel"}
           onClick={() => {
             setVisible(false);
             if (onCancel) onCancel();
@@ -26,6 +27,7 @@ const ConfirmationPopup = ({
           outlined
         />,
         <Button
+          key={"confirm"}
           onClick={() => {
             setVisible(false);
             if (onConfirm) onConfirm();
