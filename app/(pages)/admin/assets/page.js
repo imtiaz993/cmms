@@ -5,13 +5,14 @@ import ActionBar from "./components/actionBar";
 import CreateAssetPopup from "./components/createAssetPopup";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getAssets, getFilteredAssets } from "app/services/assets";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { rigs, systems } from "@/constants/rigsAndSystems";
 import { EditPagePencil } from "@/icons/index";
 import { EyeOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import AssetDetailsPopup from "./components/assetDetailsPoup";
 import Button from "@/components/common/Button";
+import { setMaterialTransfer } from "app/redux/slices/saveMaterialTransferData";
 
 // Common column structure
 // const baseColumns = [
@@ -47,6 +48,7 @@ const Assets = () => {
   const [filteredAssets, setFilteredAssets] = useState([]);
   const [isFiltering, setIsFiltering] = useState(false);
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
+  const dispatch = useDispatch();
 
   // Filter columns dynamically based on checkedList
   const mainColumns = [
@@ -59,7 +61,7 @@ const Assets = () => {
           href={"/admin/assets/" + record._id}
           className="text-[#017BFE] underline"
         >
-          {record.assetNumber}
+          {record.assetID}
         </Link>
       ),
     },
@@ -224,6 +226,15 @@ const Assets = () => {
     }
   }, [activeLocation, activeSystem]);
 
+  const saveMaterialTransfer = async (assetsData) => {
+    const matchedAssets = filteredAssets.filter((asset) =>
+      assetsData.includes(asset._id)
+    );
+
+    dispatch(setMaterialTransfer(matchedAssets));
+    router.push("/admin/new/material-transfer?materialType=asset");
+  };
+
   return (
     <>
       <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
@@ -235,7 +246,9 @@ const Assets = () => {
           }
           fullWidth={false}
           prefix={<ShoppingCartOutlined />}
-          onClick={() => router.push("/admin/new/material-transfer")}
+          onClick={() => {
+            saveMaterialTransfer(selectedRowKeys);
+          }}
         />
       </div>
       <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
@@ -272,7 +285,7 @@ const Assets = () => {
           scroll={{ x: 1100 }}
           columns={newMainColumns}
           rowSelection={rowSelection}
-          // rowKey="_id"
+          rowKey="_id"
           dataSource={displayedAssets}
           pagination={{
             total: displayedAssets?.length,
@@ -283,7 +296,7 @@ const Assets = () => {
             className: "custom-pagination",
           }}
           style={{ marginTop: 16 }}
-          rowKey="key"
+          // rowKey="key"
           expandable={{
             expandedRowRender,
             expandedRowKeys,
