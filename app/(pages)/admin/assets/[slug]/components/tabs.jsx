@@ -33,7 +33,11 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
       label: "Events",
       children: <Events data={data?.events} setData={setData} />,
     },
-    { key: "photos", label: "Photos", children: <Photos /> },
+    {
+      key: "photos",
+      label: "Photos",
+      children: <Photos photos={data?.dashboard.assetImages} setData={setData} />,
+    },
     // {
     //   key: "dashboard",
     //   label: "Dashboard",
