@@ -153,29 +153,8 @@ const UnplannedDetailsPopup = ({ visible, setVisible }) => {
                     />
                   </div>
 
-                  <div className="w-full">
-                    <SelectField
-                      name="assignedTo"
-                      placeholder="Person Doing Work"
-                      options={[{ label: "John", value: "john" }]}
-                    />
-                  </div>
 
-                  <div className="w-full">
-                    <SelectField
-                      name="status"
-                      placeholder="Status"
-                      options={[{ label: "Open", value: "open" }]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="priority"
-                      placeholder="Priority"
-                      options={[{ label: "High", value: "high" }]}
-                    />
-                  </div>
+                 
 
                   <div className="w-full">
                     <SelectField

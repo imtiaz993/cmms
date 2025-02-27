@@ -113,7 +113,7 @@ const reportsData = [
       "Display the pie charts of planned vs unplanned WOs in a time range.",
   },
 ];
-const MaintenanceReports = ({categories}) => {
+const MaintenanceReports = ({ categories }) => {
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
@@ -159,7 +159,6 @@ const MaintenanceReports = ({categories}) => {
           type="maintenance"
           physicalLocation
           fromToDate
-          criticallyFactor
           includeChildAssets
         />
 
@@ -272,16 +271,6 @@ const MaintenanceReports = ({categories}) => {
           title="MTBF MTTR Report"
           type="maintenance"
           date
-          criticallyFactor
-        />
-
-        <MaintenanceReusedPopup
-          visible={popup === "Top Offenders"}
-          setVisible={setPopup}
-          title="Top Offenders Report"
-          type="maintenance"
-          criticallyFactor
-          top
         />
 
         <ReportsPopup
@@ -289,7 +278,6 @@ const MaintenanceReports = ({categories}) => {
           setVisible={setPopup}
           title="Planned WOs vs Unplanned WOs Report"
           type="maintenance"
-          criticallyFactor
           fromToDate
         />
       </>

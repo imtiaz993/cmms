@@ -150,40 +150,6 @@ const PlannedSummaryPopup = ({ visible, setVisible }) => {
                       placeholder="Closed Between To"
                     />
                   </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="assignedTo"
-                      placeholder="Assigned To"
-                      options={[{ value: "manager", label: "Manager" }]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="priority"
-                      placeholder="Priority"
-                      options={[
-                        {
-                          value: "High",
-                          label: "High",
-                        },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="companyDoingWork"
-                      placeholder="Company Doing Work"
-                      options={[
-                        {
-                          value: "Company 1",
-                          label: "Company 1",
-                        },
-                      ]}
-                    />
-                  </div>
                 </div>
 
                 <div className="mt-4">

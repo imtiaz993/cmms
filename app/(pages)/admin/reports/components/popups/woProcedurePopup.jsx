@@ -10,7 +10,7 @@ import * as Yup from "yup";
 import { generateReport } from "app/services/reports";
 import { useSelector } from "react-redux";
 
-const WOProcedurePopup = ({ visible, setVisible , categories }) => {
+const WOProcedurePopup = ({ visible, setVisible, categories }) => {
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
   // Validation schema using Yup
@@ -166,20 +166,15 @@ const WOProcedurePopup = ({ visible, setVisible , categories }) => {
 
                   <div className="w-full">
                     <SelectField
-                      name="assignedTo"
-                      placeholder="Person Doing Work"
-                      options={[{ value: "John Doe", label: "John Doe" }]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
                       name="category"
                       placeholder="Category"
-                      options={categories && categories?.map((i) => ({
-                        value: i._id,
-                        label: i.category,
-                      }))}
+                      options={
+                        categories &&
+                        categories?.map((i) => ({
+                          value: i._id,
+                          label: i.category,
+                        }))
+                      }
                     />
                   </div>
 
@@ -190,48 +185,12 @@ const WOProcedurePopup = ({ visible, setVisible , categories }) => {
                       options={
                         values.location &&
                         systems
-                          .filter(
-                            (i) => i?.site?._id === values.location
-                          )
+                          .filter((i) => i?.site?._id === values.location)
                           ?.map((i) => ({
                             label: i.system,
                             value: i._id,
                           }))
                       }
-                    />
-                  </div>
-
-                  {Array.from({ length: 4 }).map((_, index) => (
-                    <div key={index} className="w-full">
-                      <SelectField
-                        name={`tier${index + 3}`}
-                        placeholder={`Tier ${index + 3}`}
-                        options={[]}
-                      />
-                    </div>
-                  ))}
-
-                  <div className="w-full">
-                    <SelectField
-                      name="status"
-                      placeholder="Status"
-                      options={[{ value: "Open", label: "Open" }]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="craft"
-                      placeholder="Craft"
-                      options={[]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="priority"
-                      placeholder="Priority"
-                      options={[{ value: "High", label: "High" }]}
                     />
                   </div>
                 </div>

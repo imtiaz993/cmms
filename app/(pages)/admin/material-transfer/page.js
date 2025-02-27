@@ -63,7 +63,7 @@ const MaterialTransfer = () => {
       title: "",
       dataIndex: "actions",
       key: "actions",
-      render: (_ , record) => (
+      render: (_, record) => (
         <div className="flex gap-3">
           <EyeOutlined
             onClick={(e) => {
@@ -73,7 +73,6 @@ const MaterialTransfer = () => {
             }}
             style={{ fontSize: "20px", cursor: "pointer" }}
           />
-          <EditPagePencil />
         </div>
       ),
     },
@@ -84,15 +83,7 @@ const MaterialTransfer = () => {
     useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
   // const [selectedInventory, setSelectedInventory] = useState([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [superUsers, setSuperUsers] = useState([]);
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys, rows) => {
-      setSelectedRowKeys(keys);
-    },
-  };
 
   const handleFetchData = async () => {
     const { status, data } = await getMaterialTransferData();
@@ -203,7 +194,6 @@ const MaterialTransfer = () => {
           size={"large"}
           scroll={{ x: 1100 }}
           columns={newColumns}
-          rowSelection={rowSelection}
           dataSource={
             filteredData &&
             filteredData.length > 0 &&

@@ -5,6 +5,7 @@ import MaintenanceReports from "./components/maintenanceReports";
 import AnalyticsReports from "./components/analyticsReports";
 import Readings from "./components/reading";
 import { useEffect, useState } from "react";
+import { getCategories } from "app/services/setUp/categories";
 
 const Reports = () => {
   const [categories, setCategories] = useState([]);
