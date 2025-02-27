@@ -42,22 +42,20 @@ const MaterialTransfer = () => {
       key: "description",
     },
     {
-      title: "Created Date",
-      dataIndex: "createdAt",
-      key: "createdAt",
+      title: "Created By",
+      dataIndex: "createdBy",
+      key: "createdBy",
     },
 
     {
       title: "Origin",
       dataIndex: "origination",
       key: "origination",
-      render: (origination) => rigs.find((i) => i.id === origination)?.name,
     },
     {
       title: "Destination",
       dataIndex: "destination",
       key: "destination",
-      render: (destination) => rigs.find((i) => i.id === destination)?.name,
     },
     {
       title: "",

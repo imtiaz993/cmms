@@ -7,7 +7,6 @@ import {
   Button as AntButton,
   Select,
 } from "antd";
-import DownloadPopup from "./downloadPopup";
 import Button from "@/components/common/Button";
 import {
   DownOutlined,

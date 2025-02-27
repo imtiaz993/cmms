@@ -6,7 +6,6 @@ import { EyeFilled, EyeOutlined } from "@ant-design/icons";
 import { useParams, useRouter } from "next/navigation";
 import PreviewPopup from "@/components/previewPopup";
 import AddMaterialTransferPopup from "app/(pages)/admin/material-transfer/components/addMaterialTransferPopup";
-import { rigs } from "@/constants/rigsAndSystems";
 
 const MaterialTransfer = ({ materialTransferData, setDetails }) => {
   console.log("materialTransferData", materialTransferData);

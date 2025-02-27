@@ -31,6 +31,7 @@ import {
 import CreateAssetPopup from "../components/createAssetPopup";
 import ConfirmationPopup from "@/components/confirmationPopup";
 import { LinkBroken } from "@/icons/index";
+import { getAdminsManagers } from "app/services/common";
 
 const AssetDetail = () => {
   const [data, setData] = useState();
@@ -40,6 +41,7 @@ const AssetDetail = () => {
   const [actionPopup, setActionPopup] = useState(false);
   const router = useRouter();
   const { slug } = useParams();
+  const [superUsers, setSuperUsers] = useState([]);
 
   useEffect(() => {
     const getAsset = async () => {
@@ -52,6 +54,15 @@ const AssetDetail = () => {
         message.error(data?.message || "Failed to fetch data");
       }
     };
+    const handleFetchSuperUsers = async () => {
+      const { status, data } = await getAdminsManagers();
+      if (status === 200) {
+        setSuperUsers(data.data);
+      } else {
+        message.error(data.error);
+      }
+    };
+    handleFetchSuperUsers();
     getAsset();
   }, [slug]);
 
@@ -312,7 +323,14 @@ const AssetDetail = () => {
           </div>
         </div>
       </div>
-      {data && <Tabs data={data} setData={setData} slug={slug} />}
+      {data && (
+        <Tabs
+          data={data}
+          superUsers={superUsers}
+          setData={setData}
+          slug={slug}
+        />
+      )}
     </div>
   );
 };

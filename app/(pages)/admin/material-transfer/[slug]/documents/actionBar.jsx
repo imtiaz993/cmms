@@ -18,7 +18,6 @@ const ActionBar = ({
   columns,
   setData,
   superUsers,
-  setDocuments,
   isLoading,
 }) => {
   const [uploadPopup, setUploadPopup] = useState(false);
@@ -52,13 +51,13 @@ const ActionBar = ({
       <UploadDocPopup
         visible={uploadPopup === "uploadDocument"}
         setVisible={setUploadPopup}
-        assetSlug={slug}
+        materialTransferSlug={slug}
         setDetails={setData}
       />
       <UploadLinkDocPopup
         visible={uploadPopup === "uploadLinkDocument"}
         setVisible={setUploadPopup}
-        assetSlug={slug}
+        materialTransferSlug={slug}
         setDetails={setData}
       />
       <div className="">

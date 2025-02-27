@@ -4,9 +4,9 @@ import ActionBar from "./components/actionBar";
 import { EyeOutlined } from "@ant-design/icons";
 import { useEffect, useMemo, useState } from "react";
 import { getDocuments, getDocumentsByCategory } from "app/services/document";
+import { getAdminsManagers } from "app/services/common";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { getAdminsManagers } from "../../../services/common";
 
 const columns = [
   {
@@ -84,10 +84,10 @@ const Documents = () => {
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
   const [documents, setDocuments] = useState([]);
-  const [fetchingDocuments, setFetchingDocuments] = useState(true);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
   const [searchText, setSearchText] = useState("");
+  const [fetchingDocuments, setFetchingDocuments] = useState(true);
   const [superUsers, setSuperUsers] = useState([]);
 
   useEffect(() => {
@@ -113,8 +113,8 @@ const Documents = () => {
         message.error(data.error);
       }
     };
-    handleFetchDocuments();
     handleFetchSuperUsers();
+    handleFetchDocuments();
   }, []);
 
   const displayedDocuments = useMemo(() => {
