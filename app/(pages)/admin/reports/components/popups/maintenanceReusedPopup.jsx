@@ -13,7 +13,6 @@ const initialValues = {
   location: "",
   fromDate: null,
   toDate: null,
-  criticallyFactor: "",
   craft: "",
   top: null,
   includeWO: false,
@@ -25,7 +24,6 @@ const MaintenanceReusedPopup = ({
   setVisible,
   title,
   type,
-  criticallyFactor,
   includeWO,
   craft,
   top,
@@ -39,11 +37,6 @@ const MaintenanceReusedPopup = ({
     formType: Yup.string()
       .oneOf(["pdf", "csv"], "Select a valid export format")
       .required("Export format is required"),
-
-    // Conditionally validate based on props
-    ...(criticallyFactor && {
-      criticallyFactor: Yup.string().required("Critically Factor is required"),
-    }),
 
     ...(craft && {
       craft: Yup.string().required("Craft is required"),
@@ -133,27 +126,6 @@ const MaintenanceReusedPopup = ({
                   <div className="w-full">
                     <DatePickerField name="toDate" placeholder="To Date" />
                   </div>
-
-                  {/* Conditionally render fields based on props */}
-                  {criticallyFactor && (
-                    <div className="w-full">
-                      <SelectField
-                        name="criticallyFactor"
-                        placeholder="Critically Factor"
-                        options={[{ value: "factor-1", label: "Factor 1" }]}
-                      />
-                    </div>
-                  )}
-
-                  {craft && (
-                    <div className="w-full">
-                      <SelectField
-                        name="craft"
-                        placeholder="Craft"
-                        options={[{ value: "craft-1", label: "Craft 1" }]}
-                      />
-                    </div>
-                  )}
 
                   {top && (
                     <div className="w-full">

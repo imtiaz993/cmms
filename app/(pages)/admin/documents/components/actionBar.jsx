@@ -25,9 +25,8 @@ const ActionBar = ({
   documents,
   setDocuments,
   isLoading,
-  superUsers
+  superUsers,
 }) => {
-  const [popup, setPopup] = useState();
   const [filterDropdown, setFilterDropdown] = useState(null);
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title || key,
@@ -44,11 +43,6 @@ const ActionBar = ({
 
   return (
     <>
-      <DownloadPopup
-        visible={popup === "downloadDocument"}
-        setVisible={setPopup}
-        documents={documents}
-      />
       {/* Search Bar */}
 
       <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mt-5">
@@ -138,13 +132,6 @@ const ActionBar = ({
               prefix={<SettingOutlined />}
             />
           </Dropdown>
-          <Button
-            text="Export"
-            outlined
-            onClick={() => setPopup("downloadDocument")}
-            style={{ padding: "0px 15px", height: "44px" }}
-            prefix={<ExportOutlined />}
-          />
         </div>
       </div>
     </>

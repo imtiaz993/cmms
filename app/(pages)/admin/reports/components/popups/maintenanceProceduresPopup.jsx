@@ -92,27 +92,13 @@ const MaintenanceProceduresPopup = ({ visible, setVisible, categories }) => {
                   <div className="w-full">
                     <SelectField
                       name="location"
-                      placeholder="Physical Location"
+                      placeholder="Location"
                       options={locations.map((i) => ({
                         label: i.site,
                         value: i._id,
                       }))}
                     />
                   </div>
-                  <div className="w-full">
-                    <SelectField
-                      name="category"
-                      placeholder="Category"
-                      options={
-                        categories &&
-                        categories?.map((i) => ({
-                          value: i._id,
-                          label: i.category,
-                        }))
-                      }
-                    />
-                  </div>
-
                   <div className="w-full">
                     <SelectField
                       name="system"
@@ -128,25 +114,19 @@ const MaintenanceProceduresPopup = ({ visible, setVisible, categories }) => {
                       }
                     />
                   </div>
-
-                  {Array.from({ length: 2 }).map((_, index) => (
-                    <div key={index} className="w-full">
-                      <SelectField
-                        name={`tier${index + 3}`}
-                        placeholder={`Tier ${index + 3}`}
-                        options={[
-                          {
-                            value: `tier-${index + 3}-1`,
-                            label: `Tier ${index + 3} Option 1`,
-                          },
-                          {
-                            value: `tier-${index + 3}-2`,
-                            label: `Tier ${index + 3} Option 2`,
-                          },
-                        ]}
-                      />
-                    </div>
-                  ))}
+                  <div className="w-full">
+                    <SelectField
+                      name="category"
+                      placeholder="Category"
+                      options={
+                        categories &&
+                        categories?.map((i) => ({
+                          value: i._id,
+                          label: i.category,
+                        }))
+                      }
+                    />
+                  </div>
                 </div>
                 <div className="mt-4">
                   <p className="text-secondary mb-1">Export As</p>

@@ -20,7 +20,6 @@ const ReportsPopup = ({
   fromToDate,
   includeChildAssets,
   physicalLocation,
-  criticallyFactor,
   date,
   year,
 }) => {
@@ -50,9 +49,6 @@ const ReportsPopup = ({
       ? Yup.date().required("To Date is required")
       : Yup.date().notRequired(),
 
-    criticallyFactor: criticallyFactor
-      ? Yup.string().required("Critically Factor is required")
-      : Yup.string(),
     childAssets: includeChildAssets ? Yup.boolean() : Yup.boolean(),
     formType: Yup.string()
       .oneOf(["pdf", "csv"], "Select a valid export format")
@@ -86,7 +82,6 @@ const ReportsPopup = ({
           dataOnly: false,
           fromDate: null,
           toDate: null,
-          criticallyFactor: "",
           childAssets: false,
           formType: "pdf", // Default value for form type
         }}
@@ -145,9 +140,9 @@ const ReportsPopup = ({
 
                     {assetNumber && (
                       <div className="w-full">
-                        <SelectField
+                        <InputField
                           name="assetNumber"
-                          placeholder="Select Asset Number"
+                          placeholder="Asset Number"
                           label="Asset Number"
                           labelOnTop
                           options={[]}
@@ -169,6 +164,7 @@ const ReportsPopup = ({
                           label="Year"
                           labelOnTop
                           options={[
+                            { value: "2025", label: "2025" },
                             { value: "2024", label: "2024" },
                             { value: "2023", label: "2023" },
                             { value: "2022", label: "2022" },
@@ -216,17 +212,6 @@ const ReportsPopup = ({
                 )}
 
                 <div className="mt-4 flex flex-col md:flex-row gap-4 w-full md:items-center">
-                  {criticallyFactor && (
-                    <div className="w-full">
-                      <SelectField
-                        name="criticallyFactor"
-                        label="Critically Factor"
-                        labelOnTop
-                        placeholder="Select Critically Factor"
-                        options={[]}
-                      />
-                    </div>
-                  )}
                   {includeChildAssets && (
                     <div className="w-full">
                       <Field as={Checkbox} name="childAssets">

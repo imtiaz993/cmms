@@ -167,18 +167,6 @@ const WOSummaryPopup = ({ visible, setVisible, categories }) => {
                     />
                   </div>
 
-                  {/* Select Fields */}
-                  <div className="w-full">
-                    <SelectField
-                      name="assignedTo"
-                      placeholder="Person Doing Work"
-                      options={[
-                        { value: "user1", label: "User 1" },
-                        { value: "user2", label: "User 2" },
-                      ]}
-                    />
-                  </div>
-
                   <div className="w-full">
                     <SelectField
                       name="category"
@@ -200,86 +188,12 @@ const WOSummaryPopup = ({ visible, setVisible, categories }) => {
                       options={
                         values.location &&
                         systems
-                          .filter(
-                            (i) => i?.site?._id === values.location
-                          )
+                          .filter((i) => i?.site?._id === values.location)
                           ?.map((i) => ({
                             label: i.system,
                             value: i._id,
                           }))
                       }
-                    />
-                  </div>
-
-                  {/* Dynamic Select Fields for Tiers */}
-                  {Array.from({ length: 4 }).map((_, index) => (
-                    <div key={index} className="w-full">
-                      <SelectField
-                        name={`tier${index + 3}`}
-                        placeholder={`Tier ${index + 3}`}
-                        options={[
-                          {
-                            value: `tier${index + 3}`,
-                            label: `Tier ${index + 3}`,
-                          },
-                        ]}
-                      />
-                    </div>
-                  ))}
-
-                  {/* Other Select Fields */}
-                  <div className="w-full">
-                    <SelectField
-                      name="type"
-                      placeholder="Type"
-                      options={[
-                        { value: "type1", label: "Type 1" },
-                        { value: "type2", label: "Type 2" },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="status"
-                      placeholder="Status"
-                      options={[
-                        { value: "open", label: "Open" },
-                        { value: "closed", label: "Closed" },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="craft"
-                      placeholder="Craft"
-                      options={[
-                        { value: "craft1", label: "Craft 1" },
-                        { value: "craft2", label: "Craft 2" },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="priority"
-                      placeholder="Priority"
-                      options={[
-                        { value: "high", label: "High" },
-                        { value: "low", label: "Low" },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="cause"
-                      placeholder="Cause"
-                      options={[
-                        { value: "cause1", label: "Cause 1" },
-                        { value: "cause2", label: "Cause 2" },
-                      ]}
                     />
                   </div>
                 </div>

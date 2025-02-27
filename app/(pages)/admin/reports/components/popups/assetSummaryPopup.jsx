@@ -51,8 +51,7 @@ const initialValues = {
   tier6: "",
 };
 
-const AssetSummaryPopup = ({ visible, setVisible , categories }) => {
-  
+const AssetSummaryPopup = ({ visible, setVisible, categories }) => {
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
   // Form submission handler
@@ -72,8 +71,6 @@ const AssetSummaryPopup = ({ visible, setVisible , categories }) => {
     setSubmitting(false);
     setVisible(false);
   };
-
- 
 
   return (
     <div>
@@ -123,7 +120,7 @@ const AssetSummaryPopup = ({ visible, setVisible , categories }) => {
                   <div className="w-full">
                     <InputField
                       name="serialNumber"
-                      placeholder="Serial Number"
+                      placeholder="Asset Number"
                       maxLength={128}
                     />
                   </div>
@@ -131,55 +128,13 @@ const AssetSummaryPopup = ({ visible, setVisible , categories }) => {
                   <div className="w-full">
                     <SelectField
                       name="physicalLocation"
-                      placeholder="Physical Location"
+                      placeholder="Location"
                       options={locations.map((i) => ({
                         label: i.site,
                         value: i._id,
                       }))}
                     />
                   </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="year"
-                      placeholder="Year"
-                      options={[
-                        { value: "2021", label: "2021" },
-                        { value: "2022", label: "2022" },
-                        { value: "2023", label: "2023" },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="accountingDept"
-                      placeholder="Accounting Dept"
-                      options={[
-                        { value: "accounting-1", label: "Accounting 1" },
-                        { value: "accounting-2", label: "Accounting 2" },
-                        { value: "accounting-3", label: "Accounting 3" },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Field as={Checkbox} name="expandAssetClass">
-                      Expand Asset Class
-                    </Field>
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="category"
-                      placeholder="Category"
-                      options={categories && categories?.map((i) => ({
-                        value: i._id,
-                        label: i.category,
-                      }))}
-                    />
-                  </div>
-
                   <div className="w-full">
                     <SelectField
                       name="system"
@@ -198,14 +153,33 @@ const AssetSummaryPopup = ({ visible, setVisible , categories }) => {
                     />
                   </div>
 
-                  {Array.from({ length: 4 }).map((_, index) => (
-                    <div key={index} className="w-full">
-                      <SelectField
-                        name={`tier${index + 3}`}
-                        placeholder={`Tier ${index + 3}`}
-                      />
-                    </div>
-                  ))}
+                  <div className="w-full">
+                    <SelectField
+                      name="year"
+                      placeholder="Year"
+                      options={[
+                        { value: "2021", label: "2021" },
+                        { value: "2022", label: "2022" },
+                        { value: "2023", label: "2023" },
+                        { value: "2024", label: "2024" },
+                        { value: "2025", label: "2025" },
+                      ]}
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <SelectField
+                      name="category"
+                      placeholder="Category"
+                      options={
+                        categories &&
+                        categories?.map((i) => ({
+                          value: i._id,
+                          label: i.category,
+                        }))
+                      }
+                    />
+                  </div>
 
                   <div className="w-full">
                     <Field as={Checkbox} name="childAssets">
