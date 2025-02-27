@@ -201,9 +201,10 @@ const AssetForm = () => {
       // Append the image if it exists and is a File object
       values.assetImage.length > 0 &&
         values.assetImage.forEach((image) => {
+          console.log("instanceof File", image.originFileObj instanceof File);
           formData.append(
             "assetImage",
-            image instanceof File ? image.originFileObj : image
+            image.originFileObj instanceof File ? image.originFileObj : image.name
           );
         });
 
