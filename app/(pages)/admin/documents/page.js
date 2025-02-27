@@ -24,14 +24,17 @@ const columns = [
 
       // Check for asset, materialTransfer, and workOrder properties
       if (record.asset) {
-        content = "Asset (" + record.asset.id + ")";
-        url = "/admin/assets/" + record.asset.id; // Update URL for asset
+        content = "Asset (" + record.asset + ")";
+        url = "/admin/assets/" + record.asset; // Update URL for asset
       } else if (record.materialTransfer) {
-        content = "Material Transfer (" + record.materialTransfer.id + ")";
-        url = "/admin/material-transfer/" + record.materialTransfer.id; // URL for material transfer
+        content = "Material Transfer (" + record.materialTransfer + ")";
+        url = "/admin/material-transfer/" + record.materialTransfer; // URL for material transfer
       } else if (record.workOrder) {
-        content = "Work Order (" + record.workOrder.id + ")";
-        url = "/admin/work-orders/" + record.workOrder.id; // URL for work order
+        content = "Work Order (" + record.workOrder + ")";
+        url = "/admin/work-orders/" + record.workOrder; // URL for work order
+      } else if (record.company) {
+        content = "Company (" + record.company + ")";
+        url = "#";
       }
 
       return (

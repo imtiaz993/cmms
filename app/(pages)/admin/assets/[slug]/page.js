@@ -178,7 +178,7 @@ const AssetDetail = () => {
       />
       <div className="mx-5 lg:mx-10">
         <p className="text-sm text-[#828282]">
-          Assets {" > " + details?.assetNumber}
+          Assets {" > " + details?.assetID}
         </p>
         <Button
           text="Back to Assets"
@@ -190,12 +190,12 @@ const AssetDetail = () => {
         <div className="bg-primary rounded-lg p-3 md:p-5 mt-5 shadow-custom">
           <div className="md:flex justify-between gap-5 mb-5">
             <p className="hidden md:block text-left text-lg md:text-2xl font-semibold">
-              {details?.assetNumber}{" "}
+              {details?.assetID}{" "}
               <WarningOutlined className="!text-secondary" />{" "}
             </p>
             <div className="grid md:flex grid-cols-2 gap-3 md:gap-5">
               <p className="md:hidden text-left text-lg md:text-2xl font-semibold">
-                {details?.assetNumber}{" "}
+                {details?.assetID}{" "}
                 <WarningOutlined className="!text-secondary" />{" "}
               </p>
               {/* <Button
