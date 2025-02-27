@@ -3,7 +3,7 @@ import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
 import { rigs } from "@/constants/rigsAndSystems";
 import { DeleteOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
-import { message, Table } from "antd";
+import { Input, message, Table } from "antd";
 import { Form, Formik } from "formik";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -37,27 +37,81 @@ const NewMaterialTransfer = () => {
     },
     {
       title: "Location",
-      dataIndex: "location",
-      key: "location",
-      render: (_, record) => <span>{record?.site.address}</span>,
+      dataIndex: "site",
+      key: "site",
+      render: (_, record) => <span>{record?.site.site}</span>,
     },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
     },
-    {
-      title: "Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
-      render: (_, record) => <span>{"10"}</span>,
-    },
-    {
-      title: "Selected Quantity",
-      dataIndex: "selectedQuantity",
-      key: "selectedQuantity",
-      render: (_, record) => <span>{"1"}</span>,
-    },
+    ...(materialType === "inventory"
+      ? [
+          {
+            title: "Quantity",
+            dataIndex: "quantity",
+            key: "quantity",
+          },
+          {
+            title: "Selected Quantity",
+            dataIndex: "selectedQuantity",
+            key: "selectedQuantity",
+            render: (_, record) => (
+              <span className="flex items-center">
+                <Button
+                  text="-"
+                  onClick={() => {
+                    if (record.selectedQuantity > 1) {
+                      const updatedData = assetsMaterialTransfer.map((item) =>
+                        item._id == record._id
+                          ? {
+                              ...item,
+                              selectedQuantity: item.selectedQuantity - 1,
+                            }
+                          : item
+                      );
+                      dispatch(setMaterialTransfer(updatedData));
+                    }
+                  }}
+                  className="!text-black"
+                  style={{
+                    height: "26px",
+                    fontSize: "18px",
+                    minWidth: "10px",
+                    width: "10px",
+                  }}
+                />
+                <p className="font-bold mx-3">{record.selectedQuantity}</p>
+
+                <Button
+                  text="+"
+                  onClick={() => {
+                    if (record.quantity > record.selectedQuantity) {
+                      const updatedData = assetsMaterialTransfer.map((item) =>
+                        item._id == record._id
+                          ? {
+                              ...item,
+                              selectedQuantity: item.selectedQuantity + 1,
+                            }
+                          : item
+                      );
+                      dispatch(setMaterialTransfer(updatedData));
+                    }
+                  }}
+                  className="!text-black"
+                  style={{
+                    height: "26px",
+                    fontSize: "18px",
+                    minWidth: "10px",
+                    width: "10px",
+                  }}
+                />
+              </span>
+            ),
+          },
+        ]
+      : []),
     {
       title: "Remove",
       dataIndex: "_id",
@@ -98,12 +152,28 @@ const NewMaterialTransfer = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     setSubmitting(true);
-    const { status, data } = await addMaterialTransfer(values);
+    const { status, data } = await addMaterialTransfer({
+      ...values,
+      inventories:
+        materialType === "inventory"
+          ? assetsMaterialTransfer.map((i) => ({
+              id: i._id,
+              quantity: i.selectedQuantity,
+            }))
+          : [],
+      assets:
+        materialType === "asset"
+          ? assetsMaterialTransfer.map((i) => ({
+              id: i._id,
+              quantity: i.selectedQuantity,
+            }))
+          : [],
+    });
     if (status === 200) {
       message.success(data?.message || "Material Trasnfer Added Successfully");
       setSubmitting(false);
     } else {
-      message.error(data?.message || "Failed to save material transfer");
+      message.error(data?.error || "Failed to save material transfer");
       setSubmitting(false);
     }
   };
@@ -127,8 +197,6 @@ const NewMaterialTransfer = () => {
       />
       <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto mt-5 bg-primary shadow-custom rounded-lg p-4">
         <p className="text-2xl font-semibold mb-5">New Material Transfer</p>
-        <p className="mt-5 text-lg font-semibold">Asset Selection</p>
-        <Button text="Asset Seacrh" fullWidth={false} className="mt-8" />
         <Table
           loading={false}
           scroll={{ x: 700 }}
@@ -146,14 +214,6 @@ const NewMaterialTransfer = () => {
             destinationSite: "",
             destinationSystem: "",
             comments: "",
-            inventories:
-              materialType === "inventory"
-                ? assetsMaterialTransfer.map((i) => i._id)
-                : [],
-            assets:
-              materialType === "asset"
-                ? assetsMaterialTransfer.map((i) => i._id)
-                : [],
           }}
           validationSchema={Yup.object().shape({
             destinationSite: Yup.string().required(
@@ -162,9 +222,7 @@ const NewMaterialTransfer = () => {
             destinationSystem: Yup.string().required(
               "Destination System is required"
             ),
-            comments: Yup.string()
-              .max(150, "Notes can't exceed 150 characters")
-              .required("Notes is required"),
+            comments: Yup.string(),
           })}
           onSubmit={handleSubmit}
         >

@@ -12,7 +12,7 @@ import History from "./history";
 import ManHours from "./man-hours";
 import Photos from "./photos";
 
-const Tabs = ({ data, setData, slug }) => {
+const Tabs = ({ data, setData, slug, superUsers }) => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -57,7 +57,13 @@ const Tabs = ({ data, setData, slug }) => {
     {
       key: "documents",
       label: "Documents",
-      children: <Documents documentsData={data?.documents} setData={setData} />,
+      children: (
+        <Documents
+          documentsData={data?.documents}
+          setData={setData}
+          superUsers={superUsers}
+        />
+      ),
     },
     { key: "manHours", label: "Man Hours", children: <ManHours /> },
 
