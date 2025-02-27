@@ -145,7 +145,11 @@ const Inventory = () => {
       assetsData.includes(inventory._id)
     );
 
-    dispatch(setMaterialTransfer(matchedInventory));
+    dispatch(
+      setMaterialTransfer(
+        matchedInventory.map((i) => ({ ...i, selectedQuantity: 1 }))
+      )
+    );
     router.push("/admin/new/material-transfer?materialType=inventory");
   };
 

@@ -13,7 +13,12 @@ const columns = [
     render: (asset) => asset.id,
   },
   { title: "Document Type", dataIndex: "type", key: "type" },
-  { title: "Category", dataIndex: "type", key: "type" },
+  {
+    title: "Category",
+    dataIndex: "type",
+    key: "type",
+    render: () => "Material Transfer",
+  },
   { title: "Uploaded By", dataIndex: "uploadedBy", key: "uploadedBy" },
   { title: "Uploaded Date", dataIndex: "createdAt", key: "createdAt" },
   {
@@ -42,8 +47,9 @@ const Documents = ({ documentsData, setData, superUsers }) => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
-          superUsers={superUsers}
           setData={setData}
+          setIsLoading={setIsLoading}
+          superUsers={superUsers}
         />
 
         <Table

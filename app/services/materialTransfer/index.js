@@ -101,6 +101,20 @@ export const completeMaterialTransfer = async (values) => {
   }
 };
 
+export const cancelMaterialTransfer = async (values) => {
+  //value could be status (List of MTs based on status)
+  try {
+    const { status, data } = await authRequest({
+      url: `/material-transfer/cancelmMaterialTransfer?id=${values}`,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const exportMaterialTransfer = async (values) => {
   //value could be status (List of MTs based on status)
   try {
