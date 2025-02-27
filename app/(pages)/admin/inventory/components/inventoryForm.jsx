@@ -183,14 +183,24 @@ const InventoryForm = () => {
 
       // Append standard form values
       Object.entries(standardValues).forEach(([key, value]) => {
-        if (value) {
+        if (value && key !== "customFields" && key !== "image") {
           formData.append(key, value);
         }
       });
 
-      // Append custom fields in the correct format
-      formData.append("customFields", JSON.stringify(customFields));
+      // Append the image if it exists and is a File object
+      values.image.length > 0 &&
+        values.image.forEach((image) => {
+          formData.append(
+            "image",
+            image.originFileObj instanceof File ? image.originFileObj : image.name
+          );
+        });
 
+      // Append custom fields in the correct format
+      if (customFields.length > 0) {
+        formData.append("customFields", JSON.stringify(customFields));
+      }
       // // Append the image if it exists and is a File object
       // if (values.image instanceof File) {
       //   formData.append("image", values.image);
@@ -283,7 +293,12 @@ const InventoryForm = () => {
             description: details?.description || "",
             quantity: details?.quantity || "",
             notes: details?.notes || "",
-            image: details?.image || null,
+            image:
+              details?.image.length > 0
+                ? details?.image.map((i) => {
+                    return { name: i };
+                  })
+                : null,
             ...customFieldInitialValues,
           }}
           validationSchema={validationSchema}
@@ -403,12 +418,29 @@ const InventoryForm = () => {
                   </label>
                   <div>
                     <Upload
-                      beforeUpload={(file) => {
-                        setFieldValue("image", file);
-                        return false; // Prevent auto-upload
+                      beforeUpload={() => {
+                        // Prevent auto-upload, just return false
+                        return false;
                       }}
-                      onRemove={() => setFieldValue("image", null)}
-                      maxCount={1}
+                      onChange={(info) => {
+                        const updatedFileList = info.fileList;
+
+                        // When file is removed, update Formik field value by filtering out the removed file
+                        if (info.file.status === "removed") {
+                          setFieldValue(
+                            "image",
+                            values.image.filter(
+                              (f) => f.uid !== info.file.uid
+                            )
+                          );
+                        } else {
+                          // Update Formik's field with the updated file list
+                          setFieldValue("image", updatedFileList);
+                        }
+                      }}
+                      fileList={values.image || []} // Default to empty array if assetImage is not yet set
+                      accept="image/*"
+                      multiple
                     >
                       <Button
                         className="!bg-green-600 !shadow-custom !border-white"
