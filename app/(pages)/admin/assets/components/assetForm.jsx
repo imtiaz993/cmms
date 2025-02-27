@@ -173,7 +173,7 @@ const AssetForm = () => {
     startDate: Yup.date().required("Start date is required"),
     criticality: Yup.string().required("Criticality is required"),
     maintStatus: Yup.string().required("Maintenance status is required"),
-    assetImage: Yup.mixed().required("Asset image is required"),
+    assetImage: Yup.array().required("Asset Image is required"),
     ...customFieldValidations,
   });
 
@@ -193,10 +193,19 @@ const AssetForm = () => {
 
       // Append standard form values
       Object.entries(standardValues).forEach(([key, value]) => {
-        if (value && key !== "customFields") {
+        if (value && key !== "customFields" && key !== "assetImage") {
           formData.append(key, value);
         }
       });
+
+      // Append the image if it exists and is a File object
+      values.assetImage.length > 0 &&
+        values.assetImage.forEach((image) => {
+          formData.append(
+            "assetImage",
+            image instanceof File ? image.originFileObj : image
+          );
+        });
 
       // Append custom fields in the correct format
       if (customFields.length > 0) {
@@ -305,7 +314,13 @@ const AssetForm = () => {
             startDate: details?.dashboard?.startDate || "",
             criticality: details?.dashboard?.criticality || "",
             maintStatus: details?.dashboard?.maintStatus || "",
-            assetImage: details?.dashboard?.assetImage || "",
+            assetImage: [{ name: details?.dashboard?.assetImage }] || [],
+            // ? [
+            //     {
+            //       name: details?.dashboard?.assetImage,
+            //     },
+            //   ]
+            // : [],
             // childAssets: details?.dashboard?.childAssets || [],
             ...customFieldInitialValues,
           }}
@@ -314,7 +329,7 @@ const AssetForm = () => {
         >
           {({ values, isSubmitting, handleSubmit, setFieldValue, errors }) => (
             <Form onSubmit={handleSubmit}>
-              {console.log("errors", errors)}
+              {console.log("values", values)}
               <div className="grid md:grid-cols-2 gap-4 md:gap-8">
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Asset Location
@@ -580,16 +595,32 @@ const AssetForm = () => {
                     Upload
                   </label>
                   <Upload
-                    beforeUpload={(file) => {
-                      setFieldValue("assetImage", file);
-                      return false; // Prevent auto-upload
+                    beforeUpload={() => {
+                      // Prevent auto-upload, just return false
+                      return false;
                     }}
-                    onRemove={() => setFieldValue("assetImage", null)}
-                    maxCount={1}
+                    onChange={(info) => {
+                      const updatedFileList = info.fileList;
+
+                      // When file is removed, update Formik field value by filtering out the removed file
+                      if (info.file.status === "removed") {
+                        setFieldValue(
+                          "assetImage",
+                          values.assetImage.filter(
+                            (f) => f.uid !== info.file.uid
+                          )
+                        );
+                      } else {
+                        // Update Formik's field with the updated file list
+                        setFieldValue("assetImage", updatedFileList);
+                      }
+                    }}
+                    fileList={values.assetImage || []} // Default to empty array if assetImage is not yet set
+                    accept="image/*"
+                    multiple
                   >
                     <Button
                       className="!bg-green-600 !shadow-custom !border-white"
-                      // onClick={() => setAddDocPopupVisible(true)}
                       fullWidth={false}
                       prefix={<UploadOutlined />}
                       text="Choose Image"

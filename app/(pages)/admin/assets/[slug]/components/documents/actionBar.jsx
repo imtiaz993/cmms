@@ -77,6 +77,7 @@ const ActionBar = ({
                         documents: data,
                       }));
                     }}
+                    asset={slug}
                     isLoading={isLoading}
                     superUsers={superUsers}
                   />

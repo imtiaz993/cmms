@@ -17,6 +17,7 @@ const DocumentsFilter = ({
   setDocuments,
   setIsLoading,
   superUsers,
+  asset,
 }) => {
   const [isClearing, setIsClearing] = useState(false);
 
@@ -39,8 +40,8 @@ const DocumentsFilter = ({
     <div className="p-4 bg-primary rounded-md max-h-[400px] overflow-auto shadow-custom">
       <Formik
         initialValues={{
-          documentName: "",
-          asset: "",
+          title: "",
+          asset: asset || "",
           type: "",
           // category: "",
           uploadedBy: "",
@@ -54,7 +55,7 @@ const DocumentsFilter = ({
         {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <InputField name="documentName" placeholder="Document Name" />
+              <InputField name="title" placeholder="Document Name" />
               <SelectField
                 name="type"
                 placeholder="Select Type"
