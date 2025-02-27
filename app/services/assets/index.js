@@ -128,3 +128,18 @@ export const addCost = async (values) => {
     }
   }
 };
+
+export const addImage = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/asset/addImage",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
