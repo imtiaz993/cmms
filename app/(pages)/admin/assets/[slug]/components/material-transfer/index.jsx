@@ -7,7 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import PreviewPopup from "@/components/previewPopup";
 import AddMaterialTransferPopup from "app/(pages)/admin/material-transfer/components/addMaterialTransferPopup";
 
-const MaterialTransfer = ({ materialTransferData, setDetails }) => {
+const MaterialTransfer = ({ materialTransferData, setData, superUsers }) => {
   console.log("materialTransferData", materialTransferData);
   const [fetchingData, setFetchingData] = useState(false);
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
@@ -17,39 +17,51 @@ const MaterialTransfer = ({ materialTransferData, setDetails }) => {
 
   const columns = [
     {
-      title: "Date",
-      dataIndex: "createdAt",
-      key: "createdAt",
+      title: "Material Transfer #",
+      dataIndex: "_id",
+      key: "_id",
+      // render: (_id) => (
+      //   <span>
+      //     {_id}
+      //   </span>
+      // ),
     },
+    {
+      title: "Description",
+      dataIndex: "comments",
+      key: "description",
+    },
+    {
+      title: "Created By",
+      dataIndex: "createdBy",
+      key: "createdBy",
+    },
+
     {
       title: "Origin",
       dataIndex: "origination",
       key: "origination",
-      render: (origination) => rigs.find((i) => i.id === origination).name,
     },
     {
       title: "Destination",
       dataIndex: "destination",
       key: "destination",
-      render: (destination) => rigs.find((i) => i.id === destination).name,
-    },
-    {
-      title: "Comments",
-      dataIndex: "comments",
-      key: "comments",
     },
     {
       title: "",
-      dataIndex: "",
+      dataIndex: "actions",
       key: "actions",
-      render: () => (
-        <EyeOutlined
-          onClick={(e) => {
-            e.stopPropagation();
-            setPreviewPopupVisible(true);
-          }}
-          style={{ fontSize: "20px", cursor: "pointer" }}
-        />
+      render: (_, record) => (
+        <div className="flex gap-3">
+          <EyeOutlined
+            onClick={(e) => {
+              // e.stopPropagation();
+              // setPreviewPopupVisible(true);
+              router.push(`/admin/material-transfer/${record._id}`);
+            }}
+            style={{ fontSize: "20px", cursor: "pointer" }}
+          />
+        </div>
       ),
     },
   ];
@@ -88,9 +100,9 @@ const MaterialTransfer = ({ materialTransferData, setDetails }) => {
           setAddMaterialTransferVisible={setAddMaterialTransferVisible}
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
-          setMaterialTransferData={setDetails}
+          setMaterialTransferData={setData}
           assetDetailsSlug={slug}
-          setAssetDetails={setDetails}
+          setAssetDetails={setData}
         />
       )}
       <div>
@@ -102,8 +114,10 @@ const MaterialTransfer = ({ materialTransferData, setDetails }) => {
           setCheckedList={setCheckedList}
           columns={columns}
           setSearchText={setSearchText}
-          setDetails={setDetails}
+          setData={setData}
           setFetchingData={setFetchingData}
+          superUsers={superUsers}
+          slug={slug}
         />
         <Table
           // onRow={(record, rowIndex) => {

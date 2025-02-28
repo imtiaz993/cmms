@@ -157,6 +157,8 @@ const ActionBar = ({
             : asset
         )
       );
+    } else {
+      message.error(data.error);
     }
     //  else if (data.error === "Asset is not available") {
     //   selectedRowKeys.length > 1 && selectedRowKeys.map((id) => {

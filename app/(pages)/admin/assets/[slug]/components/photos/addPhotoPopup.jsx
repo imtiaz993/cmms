@@ -18,7 +18,7 @@ const AddPhotoPopup = ({ visible, setVisible, setData }) => {
     // formData.append("assetImages", files[0]);
 
     for (let i = 0; i < files.length; i++) {
-      formData.append("assetImage", files[i]);
+      formData.append("assetImage", files[i].originFileObj);
     }
 
     const { status, data } = await addImage(formData);

@@ -38,7 +38,16 @@ const Details = ({ details }) => {
             <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
               Maintenance Status
             </p>
-            <p className="p-2 md:px-3 md:py-2">{details.maintStatus || "-"}</p>
+            <p className="p-2 md:px-3 md:py-2">
+              {details?.maintStatus
+                ? details.maintStatus === "damagedBeyondRepair"
+                  ? "Damaged Beyond Repair"
+                  : details.maintStatus === "outForRepair"
+                  ? "Out for repair"
+                  : details.maintStatus.charAt(0).toUpperCase() +
+                    details.maintStatus.slice(1)
+                : "-"}
+            </p>
           </div>
         </div>
       </div>
@@ -50,7 +59,17 @@ const Details = ({ details }) => {
             <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
               Status
             </p>
-            <p className="p-2 md:px-3 md:py-2">{details.maintStatus || "-"}</p>
+            <p className="p-2 md:px-3 md:py-2">
+              {" "}
+              {details?.maintStatus
+                ? details.maintStatus === "damagedBeyondRepair"
+                  ? "Damaged Beyond Repair"
+                  : details.maintStatus === "outForRepair"
+                  ? "Out for repair"
+                  : details.maintStatus.charAt(0).toUpperCase() +
+                    details.maintStatus.slice(1)
+                : "-"}
+            </p>
           </div>
           <div className="grid grid-cols-2 border">
             <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">

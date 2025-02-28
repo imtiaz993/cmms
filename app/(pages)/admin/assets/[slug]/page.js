@@ -158,6 +158,9 @@ const AssetDetail = () => {
         ...prev,
         dashboard: { ...prev.dashboard, maintStatus: actionPopup },
       }));
+      setDetails((prev) => ({ ...prev, maintStatus: actionPopup }));
+    } else {
+      message.error(data.error);
     }
   };
 
@@ -316,7 +319,14 @@ const AssetDetail = () => {
                 Status
               </p>
               <p className="p-2 md:px-3 md:py-2 border truncate">
-                {details?.maintStatus || "-"}
+                {details?.maintStatus
+                  ? details.maintStatus === "damagedBeyondRepair"
+                    ? "Damaged Beyond Repair"
+                    : details.maintStatus === "outForRepair"
+                    ? "Out for repair"
+                    : details.maintStatus.charAt(0).toUpperCase() +
+                      details.maintStatus.slice(1)
+                  : "-"}
               </p>
             </div>
           </div>

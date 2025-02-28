@@ -12,6 +12,7 @@ const MaterialTransferFilter = ({
   setMaterialTransferData,
   closeDropdown,
   superUsers,
+  assetId,
 }) => {
   0;
   const [isClearing, setIsClearing] = useState(false);
@@ -42,6 +43,7 @@ const MaterialTransferFilter = ({
         initialValues={{
           createdDateRange: "",
           // materialTransferType: "",
+          asset: assetId ? assetId : "",
           origination: "",
           destination: "",
           createdBy: "",

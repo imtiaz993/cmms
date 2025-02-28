@@ -87,7 +87,8 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
       children: (
         <MaterialTransfer
           materialTransferData={data?.materialTransfers}
-          setDetails={setData}
+          setData={setData}
+          superUsers={superUsers}
         />
       ),
     },
