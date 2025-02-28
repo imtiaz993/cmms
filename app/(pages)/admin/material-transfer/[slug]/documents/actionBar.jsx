@@ -78,6 +78,7 @@ const ActionBar = ({
                     }}
                     isLoading={isLoading}
                     superUsers={superUsers}
+                    materialTransfer={slug}
                   />
                 )}
                 trigger={["click"]}

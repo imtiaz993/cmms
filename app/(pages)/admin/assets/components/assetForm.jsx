@@ -26,11 +26,9 @@ import dayjs from "dayjs";
 const columns = [
   {
     title: "Asset #",
-    dataIndex: "assetNumber",
+    dataIndex: "assetID",
     key: "assetNumber",
-    render: (assetNumber) => (
-      <a className="text-[#017BFE] underline">{assetNumber}</a>
-    ),
+    render: (assetID) => <a className="text-[#017BFE] underline">{assetID}</a>,
   },
   { title: "Category", dataIndex: "category", key: "category" },
   { title: "Start Date", dataIndex: "startDate", key: "startDate" },
@@ -173,7 +171,7 @@ const AssetForm = () => {
     startDate: Yup.date().required("Start date is required"),
     criticality: Yup.string().required("Criticality is required"),
     maintStatus: Yup.string().required("Maintenance status is required"),
-    assetImage: Yup.array().required("Asset Image is required"),
+    assetImages: Yup.array().required("Asset Image is required"),
     ...customFieldValidations,
   });
 
@@ -193,19 +191,31 @@ const AssetForm = () => {
 
       // Append standard form values
       Object.entries(standardValues).forEach(([key, value]) => {
-        if (value && key !== "customFields" && key !== "assetImage") {
+        if (value && key !== "customFields" && key !== "assetImages") {
           formData.append(key, value);
         }
       });
 
       // Append the image if it exists and is a File object
-      values.assetImage.length > 0 &&
-        values.assetImage.forEach((image) => {
-          console.log("instanceof File", image.originFileObj instanceof File);
-          formData.append(
-            "assetImage",
-            image.originFileObj instanceof File ? image.originFileObj : image.name
-          );
+      values.assetImages.length > 0 &&
+        values.assetImages.forEach((image) => {
+          if (image.originFileObj instanceof File)
+            formData.append("assetImages", image.originFileObj);
+          else {
+            formData.append(
+              "prevImage",
+              JSON.stringify({
+                url: image.uniqueName,
+                name: image.name,
+                _id: image._id,
+              })
+            );
+            console.log("prevImage", {
+              url: image.uniqueName,
+              name: image.name,
+              _id: image._id,
+            });
+          }
         });
 
       // Append custom fields in the correct format
@@ -315,7 +325,16 @@ const AssetForm = () => {
             startDate: details?.dashboard?.startDate || "",
             criticality: details?.dashboard?.criticality || "",
             maintStatus: details?.dashboard?.maintStatus || "",
-            assetImage: [{ name: details?.dashboard?.assetImage }] || [],
+            assetImages: details?.dashboard?.assetImages
+              ? details.dashboard.assetImages.map((i) => {
+                  return {
+                    name: i.name,
+                    uniqueName: i.url,
+                    url: process.env.NEXT_PUBLIC_S3_BASE_URL + i.url,
+                    _id: i._id,
+                  };
+                })
+              : [],
             // ? [
             //     {
             //       name: details?.dashboard?.assetImage,
@@ -508,7 +527,7 @@ const AssetForm = () => {
                   <Field name="maintStatus">
                     {({ field, form }) => (
                       <Radio.Group {...field} className="">
-                        <Radio value="Active" className="!ml-3">
+                        <Radio value="active" className="!ml-3">
                           Active
                         </Radio>
                         <Radio value="damagedBeyondRepair" className="sm:!ml-7">
@@ -606,17 +625,15 @@ const AssetForm = () => {
                       // When file is removed, update Formik field value by filtering out the removed file
                       if (info.file.status === "removed") {
                         setFieldValue(
-                          "assetImage",
-                          values.assetImage.filter(
-                            (f) => f.uid !== info.file.uid
-                          )
+                          "assetImages",
+                          values.assetImages.filter((f) => f.uid !== info.file.uid)
                         );
                       } else {
                         // Update Formik's field with the updated file list
-                        setFieldValue("assetImage", updatedFileList);
+                        setFieldValue("assetImages", updatedFileList);
                       }
                     }}
-                    fileList={values.assetImage || []} // Default to empty array if assetImage is not yet set
+                    fileList={values.assetImages || []} // Default to empty array if assetImage is not yet set
                     accept="image/*"
                     multiple
                   >

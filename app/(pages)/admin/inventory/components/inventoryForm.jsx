@@ -88,7 +88,7 @@ const InventoryForm = () => {
       const { status, data } = await getInventoryDetails(slug);
       if (status === 200) {
         console.log(data);
-        setDetails(data?.data);
+        setDetails(data?.data?.dashboard);
       } else {
         message.error(data?.message || "Failed to fetch data");
       }
@@ -191,10 +191,23 @@ const InventoryForm = () => {
       // Append the image if it exists and is a File object
       values.image.length > 0 &&
         values.image.forEach((image) => {
-          formData.append(
-            "image",
-            image.originFileObj instanceof File ? image.originFileObj : image.name
-          );
+          if (image.originFileObj instanceof File)
+            formData.append("image", image.originFileObj);
+          else {
+            formData.append(
+              "prevImage",
+              JSON.stringify({
+                url: image.uniqueName,
+                name: image.name,
+                _id: image._id,
+              })
+            );
+            console.log("prevImage", {
+              url: image.uniqueName,
+              name: image.name,
+              _id: image._id,
+            });
+          }
         });
 
       // Append custom fields in the correct format
@@ -293,12 +306,16 @@ const InventoryForm = () => {
             description: details?.description || "",
             quantity: details?.quantity || "",
             notes: details?.notes || "",
-            image:
-              details?.image.length > 0
-                ? details?.image.map((i) => {
-                    return { name: i };
-                  })
-                : null,
+            image: details?.image
+              ? details.image.map((i) => {
+                  return {
+                    name: i.name,
+                    uniqueName: i.url,
+                    url: process.env.NEXT_PUBLIC_S3_BASE_URL + i.url,
+                    _id: i._id,
+                  };
+                })
+              : [],
             ...customFieldInitialValues,
           }}
           validationSchema={validationSchema}
@@ -429,9 +446,7 @@ const InventoryForm = () => {
                         if (info.file.status === "removed") {
                           setFieldValue(
                             "image",
-                            values.image.filter(
-                              (f) => f.uid !== info.file.uid
-                            )
+                            values.image.filter((f) => f.uid !== info.file.uid)
                           );
                         } else {
                           // Update Formik's field with the updated file list

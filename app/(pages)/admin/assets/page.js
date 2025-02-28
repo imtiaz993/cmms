@@ -74,7 +74,20 @@ const Assets = () => {
     { title: "Serial #", dataIndex: "serialNumber", key: "serialNumber" },
     { title: "Model", dataIndex: "model", key: "model" },
     { title: "Priority", dataIndex: "criticality", key: "criticality" },
-    { title: "Status", dataIndex: "maintStatus", key: "maintStatus" },
+    {
+      title: "Status",
+      dataIndex: "maintStatus",
+      key: "maintStatus",
+      render: (status) => {
+        if (status === "damagedBeyondRepair") {
+          return "Damaged Beyond Repair";
+        } else if (status === "outForRepair") {
+          return "Out for repair";
+        } else {
+          return status.charAt(0).toUpperCase() + status.slice(1);
+        }
+      },
+    },
     {
       title: "Purchase Date",
       dataIndex: "purchaseDate",

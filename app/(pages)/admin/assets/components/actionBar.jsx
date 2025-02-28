@@ -88,7 +88,7 @@ const ActionBar = ({
           <ExclamationCircleFilled /> Damaged beyond repair
         </p>
       ),
-      value: "damaged",
+      value: "damagedBeyondRepair",
     },
     {
       label: (
@@ -96,7 +96,7 @@ const ActionBar = ({
           <LinkBroken /> Broken
         </p>
       ),
-      value: "repair",
+      value: "broken",
     },
     {
       label: (
@@ -139,7 +139,6 @@ const ActionBar = ({
       value: "materialTransfer",
     },
   ];
-
   const handleAction = (value) => {
     if (value !== "materialTransfer") setActionPopup(value);
   };
@@ -207,6 +206,10 @@ const ActionBar = ({
               <AssetFilter
                 closeDropdown={() => setFilterDropdown(false)}
                 setFilteredAssets={setFilteredAssets}
+                options={actionOptions.filter(
+                  (o) =>
+                    o.value !== "materialTransfer" && o.value !== "workorder"
+                )}
               />
             )}
             trigger={["click"]}
