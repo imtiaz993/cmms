@@ -52,7 +52,7 @@ const Photos = ({ photos, setData }) => {
             <div className="" key={index}>
               <Image
                 src={
-                  env.NEXT_PUBLIC_APP_URL + "/" + photo ||
+                  process.env.NEXT_PUBLIC_S3_BASE_URL + photo.url ||
                   "/images/profile-image.jpg"
                 }
                 alt="placeholder"
@@ -61,7 +61,7 @@ const Photos = ({ photos, setData }) => {
                 className="h-36 w-full object-cover bg-gray-700 rounded-lg shadow-custom"
               />
               <p className="mt-5 text-sm font-medium">
-                {photos?.name || "IMG #1.JPG"}
+                {photo?.name || "IMG #1.JPG"}
               </p>
             </div>
           ))}

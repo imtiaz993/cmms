@@ -12,6 +12,7 @@ import {
   AppstoreOutlined,
   DeleteOutlined,
   DollarCircleOutlined,
+  DollarOutlined,
   DownOutlined,
   ExclamationCircleFilled,
   ExportOutlined,
@@ -21,17 +22,19 @@ import {
   SettingOutlined,
   ShoppingCartOutlined,
   SwapOutlined,
+  TruckOutlined,
   WarningFilled,
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import InventoryFilter from "./filtersDropdown";
 import AddMaterialTransferPopup from "../../material-transfer/components/addMaterialTransferPopup";
 import AddFieldPopup from "../../../../../components/addFieldPopup";
-import { exportInventory } from "app/services/inventory";
+import { exportInventory, updateStatus } from "app/services/inventory";
 import CreatePurchaseOrderPopup from "../purchase-order/createPurchaseOrderPopup";
 import ChangeToAssetPopup from "./changeToAssetPopup";
 import Link from "next/link";
 import { LinkBroken, SearchIcon } from "@/icons/index";
+import ConfirmationPopup from "@/components/confirmationPopup";
 
 const ActionBar = ({
   columns,
@@ -46,6 +49,7 @@ const ActionBar = ({
     useState(false);
   const [changeToAssetVisible, setChangeToAssetVisible] = useState(false);
   const [filterDropdown, setFilterDropdown] = useState(null);
+  const [actionPopup, setActionPopup] = useState(false);
 
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
@@ -76,8 +80,121 @@ const ActionBar = ({
     }
   };
 
+  const actionOptions = [
+    {
+      label: (
+        <p>
+          <AppstoreOutlined /> Assign to Asset
+        </p>
+      ),
+      value: "assignToAsset",
+    },
+    {
+      label: (
+        <p>
+          <ExclamationCircleFilled /> Damaged beyond repair
+        </p>
+      ),
+      value: "damagedBeyondRepair",
+    },
+    {
+      label: (
+        <p className="flex items-center gap-1">
+          <LinkBroken /> Broken
+        </p>
+      ),
+      value: "broken",
+    },
+    {
+      label: (
+        <p>
+          <DeleteOutlined /> Dispose
+        </p>
+      ),
+      value: "dispose",
+    },
+    {
+      label: (
+        <p>
+          <TruckOutlined /> Out for Repair
+        </p>
+      ),
+      value: "outForRepair",
+    },
+    {
+      label: (
+        <p>
+          <DollarOutlined /> Sell
+        </p>
+      ),
+      value: "sell",
+    },
+    // {
+    //   label: (
+    //     <p>
+    //       <CheckCircleOutlined /> Active
+    //     </p>
+    //   ),
+    //   value: "active",
+    // },
+    {
+      label: (
+        <p>
+          <ShoppingCartOutlined />
+          Add to Shipping Cart
+        </p>
+      ),
+      value: "shipping_cart",
+    },
+    {
+      label: (
+        <p>
+          <SwapOutlined /> Material Transfer
+        </p>
+      ),
+      value: "materialTransfer",
+    },
+  ];
+  const handleAction = (value) => {
+    if (value !== "materialTransfer") setActionPopup(value);
+  };
+
+  const handleActionConfirm = async () => {
+    const { status, data } = await updateStatus({
+      inventory: [...selectedRowKeys],
+      status: actionPopup,
+    });
+    if (status === 200) {
+      message.success(data?.message || "Inventory updated successfully");
+      setFilteredInventory((prev) =>
+        prev.map((i) =>
+          selectedRowKeys.includes(i._id)
+            ? { ...i, maintStatus: actionPopup }
+            : i
+        )
+      );
+    } else {
+      message.error(data.error);
+    }
+    //  else if (data.error === "Asset is not available") {
+    //   selectedRowKeys.length > 1 && selectedRowKeys.map((id) => {
+    //     data.
+    //   })
+
+    //   )
+    // }
+  };
+
   return (
     <>
+      <ConfirmationPopup
+        visible={actionPopup}
+        setVisible={setActionPopup}
+        title={actionOptions.find((o) => o.value === actionPopup)?.label}
+        message="Are you sure you want to perform this action on selected Inventory?"
+        onConfirm={handleActionConfirm}
+        onCancel={() => message.info("Action cancelled")}
+      />
       {addMaterialTransferVisible && (
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
@@ -111,77 +228,13 @@ const ActionBar = ({
             <Checkbox className="!mx-2" />
             <div className="w-full sm:min-w-56 overflow-hidden">
               <Select
+                value={null}
                 name="actions"
+                onChange={handleAction}
                 placeholder="Actions"
                 style={{ height: "44px", width: "100%" }}
                 // onChange={handleActionsChange}
-                options={[
-                  {
-                    label: (
-                      <p>
-                        <AppstoreOutlined /> Assign to Asset
-                      </p>
-                    ),
-                    value: "assign_to_asset",
-                  },
-                  {
-                    label: (
-                      <p>
-                        <ExclamationCircleFilled /> Damaged beyond Repair
-                      </p>
-                    ),
-                    value: "damaged",
-                  },
-                  {
-                    label: (
-                      <p className="flex items-center gap-1">
-                        <LinkBroken /> Broken
-                      </p>
-                    ),
-                    value: "broken",
-                  },
-                  {
-                    label: (
-                      <p>
-                        <DeleteOutlined /> Dispose
-                      </p>
-                    ),
-                    value: "dispose",
-                  },
-                  {
-                    label: (
-                      <p>
-                        <LogoutOutlined /> Out for Repair
-                      </p>
-                    ),
-                    value: "out_for_repair",
-                  },
-                  {
-                    label: (
-                      <p>
-                        <DollarCircleOutlined /> Sell
-                      </p>
-                    ),
-                    value: "sell",
-                  },
-                  {
-                    label: (
-                      <p>
-                        <ShoppingCartOutlined />
-                        Add to Shipping Cart
-                      </p>
-                    ),
-                    value: "shipping_cart",
-                  },
-                  {
-                    label: (
-                      <p>
-                        <SwapOutlined /> Material Transfer
-                      </p>
-                    ),
-                    value: "material_transfer",
-                  },
-                ]}
+                options={actionOptions}
               />
             </div>
             <Dropdown

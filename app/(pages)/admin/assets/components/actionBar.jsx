@@ -88,7 +88,7 @@ const ActionBar = ({
           <ExclamationCircleFilled /> Damaged beyond repair
         </p>
       ),
-      value: "damaged",
+      value: "damagedBeyondRepair",
     },
     {
       label: (
@@ -96,7 +96,7 @@ const ActionBar = ({
           <LinkBroken /> Broken
         </p>
       ),
-      value: "repair",
+      value: "broken",
     },
     {
       label: (
@@ -139,7 +139,6 @@ const ActionBar = ({
       value: "materialTransfer",
     },
   ];
-
   const handleAction = (value) => {
     if (value !== "materialTransfer") setActionPopup(value);
   };
@@ -158,6 +157,8 @@ const ActionBar = ({
             : asset
         )
       );
+    } else {
+      message.error(data.error);
     }
     //  else if (data.error === "Asset is not available") {
     //   selectedRowKeys.length > 1 && selectedRowKeys.map((id) => {
@@ -207,6 +208,10 @@ const ActionBar = ({
               <AssetFilter
                 closeDropdown={() => setFilterDropdown(false)}
                 setFilteredAssets={setFilteredAssets}
+                options={actionOptions.filter(
+                  (o) =>
+                    o.value !== "materialTransfer" && o.value !== "workorder"
+                )}
               />
             )}
             trigger={["click"]}

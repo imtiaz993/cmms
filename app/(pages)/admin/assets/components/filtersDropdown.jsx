@@ -15,7 +15,7 @@ const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
 });
 
-const AssetFilter = ({ closeDropdown, setFilteredAssets }) => {
+const AssetFilter = ({ closeDropdown, setFilteredAssets, options }) => {
   const [isClearing, setIsClearing] = useState(false);
   const dispatch = useDispatch();
   const locations = useSelector((state) => state.location.location);
@@ -103,16 +103,7 @@ const AssetFilter = ({ closeDropdown, setFilteredAssets }) => {
               <SelectField
                 name="maintStatus"
                 placeholder="Status"
-                options={[
-                  { value: "active", label: "Active" },
-                  {
-                    value: "damagedBeyondRepair",
-                    label: "Damaged Beyond Repair",
-                  },
-                  { value: "outForRepair", label: "Out For Repair" },
-                  { value: "damaged", label: "Damaged" },
-                  { value: "disposed", label: "Disposed" },
-                ]}
+                options={options}
               />
               <DatePickerField
                 name="purchaseDate"

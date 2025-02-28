@@ -18,6 +18,7 @@ const DocumentsFilter = ({
   setIsLoading,
   superUsers,
   asset,
+  materialTransfer,
 }) => {
   const [isClearing, setIsClearing] = useState(false);
 
@@ -46,6 +47,7 @@ const DocumentsFilter = ({
           // category: "",
           uploadedBy: "",
           createdAt: "",
+          materialTransfer: materialTransfer || "",
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {

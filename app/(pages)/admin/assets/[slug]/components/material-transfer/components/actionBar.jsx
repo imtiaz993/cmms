@@ -16,12 +16,12 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
-import MaterialTransferFilter from "./filtersDropdown";
 import {
   exportMaterialTransfer,
   getMaterialTransferByStatus,
   printMaterialTransfer,
 } from "app/services/materialTransfer";
+import MaterialTransferFilter from "app/(pages)/admin/material-transfer/components/filtersDropdown";
 
 const ActionBar = ({
   showAddMaterialTransferModal,
@@ -29,8 +29,10 @@ const ActionBar = ({
   checkedList,
   setCheckedList,
   setSearchText,
-  setDetails,
+  setData,
   setFetchingData,
+  superUsers,
+  slug,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
@@ -79,8 +81,12 @@ const ActionBar = ({
             onOpenChange={setFilterDropdown}
             dropdownRender={() => (
               <MaterialTransferFilter
-                setDetails={setDetails}
+                setMaterialTransferData={(data) =>
+                  setData((prev) => ({ ...prev, materialTransfers: data }))
+                }
                 closeDropdown={() => setFilterDropdown(false)}
+                superUsers={superUsers}
+                assetId={slug}
               />
             )}
             trigger={["click"]}

@@ -417,7 +417,7 @@ const MaterialTransferDetail = () => {
           style={{ marginTop: "20px" }}
         >
           <Documents
-            documentsData={details?.materialTransfer?.documents}
+            documentsData={details?.documents}
             setData={setDetails}
             superUsers={superUsers}
           />
