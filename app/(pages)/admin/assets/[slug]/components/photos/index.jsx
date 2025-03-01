@@ -1,6 +1,5 @@
 import Button from "@/components/common/Button";
-import { ExportOutlined, PlusOutlined } from "@ant-design/icons";
-import { message } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { useState } from "react";
 import AddPhotoPopup from "./addPhotoPopup";
@@ -8,15 +7,6 @@ import AddPhotoPopup from "./addPhotoPopup";
 const Photos = ({ photos, setData }) => {
   const [addPhotoPopup, setAddPhotoPopup] = useState(false);
 
-  const handleExport = async () => {
-    message.success("Export Failed ");
-    // const { status, data } = await exportEvents();
-    // if (status === 200) {
-    //   window.open(data.data);
-    // } else {
-    //   message.error(data.error);
-    // }
-  };
   return (
     <div>
       <AddPhotoPopup
@@ -27,14 +17,6 @@ const Photos = ({ photos, setData }) => {
       {/* actionBar */}
       <div className="px-3 lg:px-5 pb-4 mt-1">
         <div className="grid grid-cols-2 md:flex justify-end gap-3 items-center text-right">
-          <Button
-            text="Export"
-            outlined
-            fullWidth={false}
-            onClick={handleExport}
-            style={{ padding: "0px 15px", height: "44px" }}
-            prefix={<ExportOutlined />}
-          />
           <Button
             text="Add Photo"
             fullWidth={false}

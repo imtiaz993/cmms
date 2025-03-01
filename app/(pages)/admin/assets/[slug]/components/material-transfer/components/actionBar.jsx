@@ -1,26 +1,8 @@
 import { useState } from "react";
-import {
-  Checkbox,
-  Dropdown,
-  Input,
-  Menu,
-  message,
-  Button as AntButton,
-} from "antd";
-import {
-  DownOutlined,
-  ExportOutlined,
-  FilterOutlined,
-  PlusOutlined,
-  PrinterOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+import { Checkbox, Dropdown, Menu, message, Button as AntButton } from "antd";
+import { DownOutlined, SettingOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
-import {
-  exportMaterialTransfer,
-  getMaterialTransferByStatus,
-  printMaterialTransfer,
-} from "app/services/materialTransfer";
+import { printMaterialTransfer } from "app/services/materialTransfer";
 import MaterialTransferFilter from "app/(pages)/admin/material-transfer/components/filtersDropdown";
 
 const ActionBar = ({
@@ -40,10 +22,6 @@ const ActionBar = ({
     key: index,
   }));
 
-  const handleSearchChange = (e) => {
-    setSearchText(e.target.value);
-  };
-
   const handleCheckboxChange = (value) => {
     const newCheckedList = checkedList.includes(value)
       ? checkedList.filter((key) => key !== value)
@@ -61,15 +39,6 @@ const ActionBar = ({
     }
   };
 
-  const handleExport = async () => {
-    const { status, data } = await exportMaterialTransfer();
-    if (status === 200) {
-      window.open(data.data);
-      message.success(data.message || "Exported successfully");
-    } else {
-      message.error(data.message || "Failed to export");
-    }
-  };
   return (
     <>
       <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3">
@@ -138,29 +107,6 @@ const ActionBar = ({
               prefix={<SettingOutlined />}
             />
           </Dropdown>
-
-          {/* <Button
-            text="Print"
-            outlined
-            style={{ padding: "4px 0px" }}
-            fullWidth={false}
-            prefix={<PrinterOutlined />}
-            onClick={handlePrint}
-          /> */}
-
-          <Button
-            text="Export"
-            outlined
-            style={{ padding: "4px 0px" }}
-            prefix={<ExportOutlined />}
-            onClick={handleExport}
-          />
-          {/* <Button
-            text="New Material Transfer"
-            onClick={showAddMaterialTransferModal}
-            style={{ padding: "4px 35px" }}
-            prefix={<PlusOutlined />}
-          /> */}
         </div>
       </div>
     </>
