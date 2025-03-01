@@ -19,6 +19,7 @@ const DocumentsFilter = ({
   superUsers,
   asset,
   materialTransfer,
+  inventory,
 }) => {
   const [isClearing, setIsClearing] = useState(false);
 
@@ -43,6 +44,7 @@ const DocumentsFilter = ({
         initialValues={{
           title: "",
           asset: asset || "",
+          inventoryNumber: inventory || "",
           type: "",
           // category: "",
           uploadedBy: "",
@@ -75,6 +77,7 @@ const DocumentsFilter = ({
                 placeholder="Category"
                 options={[
                   { label: "Asset", value: "asset" },
+                  { label: "Inventory", value: "inventory" },
                   { label: "Work Order", value: "workOrder" },
                   { label: "Material Transfer", value: "materialTransfer" },
                 ]}

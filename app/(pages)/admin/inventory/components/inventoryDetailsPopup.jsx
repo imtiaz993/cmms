@@ -1,6 +1,7 @@
 import Button from "@/components/common/Button";
 import { EyeOutlined } from "@ant-design/icons";
 import { Modal } from "antd";
+import Link from "next/link";
 
 const InventoryDetailsPopup = ({ visible, setVisible, inventory }) => {
   return (
@@ -24,8 +25,9 @@ const InventoryDetailsPopup = ({ visible, setVisible, inventory }) => {
                 text="Close"
                 fullWidth={false}
               />
-
-              <Button className="" text="More Details" fullWidth={false} />
+              <Link href={"/admin/inventory/" + inventory?._id}>
+                <Button className="" text="More Details" fullWidth={false} />
+              </Link>
             </div>
           }
         >
