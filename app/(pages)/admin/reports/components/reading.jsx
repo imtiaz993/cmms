@@ -6,9 +6,9 @@ import { SearchIcon } from "@/icons/index";
 
 const columns = [
   {
-    title: "Sub-Category",
-    dataIndex: "subCategory",
-    key: "subCategory",
+    title: "Location",
+    dataIndex: "location",
+    key: "location",
   },
   {
     title: "Asset #",
@@ -79,7 +79,6 @@ const Readings = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState("");
   const filteredData = useMemo(() => {
     if (!searchText) return readings;
@@ -96,13 +95,6 @@ const Readings = () => {
       })
     );
   }, [searchText, readings]);
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys, rows) => {
-      setSelectedRowKeys(keys);
-    },
-  };
 
   useEffect(() => {
     const handleFetchReadings = async () => {
@@ -134,8 +126,6 @@ const Readings = () => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
-          selectedRowKeys={selectedRowKeys}
-          setSelectedRowKeys={setSelectedRowKeys}
         />
 
         <Table
@@ -143,7 +133,6 @@ const Readings = () => {
           size={"large"}
           scroll={{ x: 1400 }}
           columns={newColumns}
-          rowSelection={rowSelection}
           rowKey="_id"
           dataSource={
             filteredData &&
