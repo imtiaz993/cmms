@@ -153,7 +153,6 @@ const MaterialTransferDetail = () => {
   };
 
   const columns = [
-    { title: "Id", dataIndex: "_id", key: "_id" },
     {
       title:
         details?.materialTransfer?.inventories?.length > 0 === "inventory"
@@ -161,23 +160,31 @@ const MaterialTransferDetail = () => {
           : "Asset #",
       dataIndex:
         details?.materialTransfer?.inventories?.length > 0 === "inventory"
-          ? "partNumber"
-          : "assetID",
+          ? "inventory"
+          : "asset",
       key:
         details?.materialTransfer?.inventories?.length > 0 === "inventory"
           ? "partNumber"
           : "assetID",
+      render: (data) => data?.partNumber || data?.assetID,
     },
     {
       title: "Location",
-      dataIndex: "site",
+      dataIndex:
+        details?.materialTransfer?.inventories?.length > 0 === "inventory"
+          ? "inventory"
+          : "asset",
       key: "site",
-      render: (_, record) => <span>{record?.site?.site}</span>,
+      render: (data, record) => <span>{data?.site}</span>,
     },
     {
       title: "Description",
-      dataIndex: "description",
+      dataIndex:
+        details?.materialTransfer?.inventories?.length > 0 === "inventory"
+          ? "inventory"
+          : "asset",
       key: "description",
+      render: (data, record) => <span>{data?.description}</span>,
     },
     ...(details?.materialTransfer?.inventories?.length > 0 === "inventory"
       ? [

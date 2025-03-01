@@ -46,16 +46,23 @@ const MaterialTransfer = () => {
       dataIndex: "createdBy",
       key: "createdBy",
     },
-
+    {
+      title: "Created At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+    },
     {
       title: "Origin",
-      dataIndex: "origination",
+      dataIndex: "origiationSites",
       key: "origination",
+      render: (origiationSites) =>
+        origiationSites?.map((i) => i.site).join(","),
     },
     {
       title: "Destination",
-      dataIndex: "destination",
+      dataIndex: "destinationSite",
       key: "destination",
+      render: (destinationSite) => destinationSite?.site,
     },
     {
       title: "",
