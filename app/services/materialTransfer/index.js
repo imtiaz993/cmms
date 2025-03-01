@@ -105,7 +105,7 @@ export const cancelMaterialTransfer = async (values) => {
   //value could be status (List of MTs based on status)
   try {
     const { status, data } = await authRequest({
-      url: `/material-transfer/cancelmMaterialTransfer?id=${values}`,
+      url: `/material-transfer/cancelMaterialTransfer?id=${values}`,
     });
     return { status, data };
   } catch (e) {

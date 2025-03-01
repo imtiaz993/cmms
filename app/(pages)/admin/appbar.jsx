@@ -92,7 +92,7 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
               </span>
             </div>
           </Dropdown>
-          <div className="ml-3 lg:hidden">
+          <div className="ml-3 lg:hidden text-[--primary-text]">
             <MenuOutlined
               style={{ fontSize: "20px" }}
               onClick={() => {
