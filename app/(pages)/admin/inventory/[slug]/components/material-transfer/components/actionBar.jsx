@@ -85,7 +85,7 @@ const ActionBar = ({
                 }
                 closeDropdown={() => setFilterDropdown(false)}
                 superUsers={superUsers}
-                assetId={slug}
+                inventoryId={slug}
               />
             )}
             trigger={["click"]}
