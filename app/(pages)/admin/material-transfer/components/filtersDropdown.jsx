@@ -55,7 +55,7 @@ const MaterialTransferFilter = ({
           submit(values, setSubmitting);
         }}
       >
-        {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
+        {({ initialValues, isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 gap-4">
               <DatePickerField
@@ -130,7 +130,7 @@ const MaterialTransferFilter = ({
                     isLoading={isClearing}
                     onClick={() => {
                       resetForm();
-                      submit({});
+                      submit(initialValues);
                     }}
                     style={{ width: "fit-content" }}
                     className="mr-2"
