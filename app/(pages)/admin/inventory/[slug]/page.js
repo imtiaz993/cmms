@@ -153,11 +153,11 @@ const InventoryDetails = () => {
       />
       <div className="mx-5 lg:mx-10">
         <p className="text-sm text-[#828282]">
-          Assets {" > " + details?.assetID}
+          Inventory {" > " + details?.partNumber}
         </p>
         <Button
-          text="Back to Assets"
-          onClick={() => router.push("/admin/assets")}
+          text="Back to Inventory"
+          onClick={() => router.push("/admin/inventory")}
           className="mt-4 !bg-[#3F3F3F] !border-none"
           fullWidth={false}
           prefix={<LeftOutlined />}

@@ -9,6 +9,7 @@ const ConfirmationPopup = ({
   message,
   onConfirm,
   onCancel,
+  cancelText,
 }) => {
   return (
     <Modal
@@ -22,19 +23,21 @@ const ConfirmationPopup = ({
             setVisible(false);
             if (onCancel) onCancel();
           }}
-          text="No"
+          text={cancelText || "No"}
           fullWidth={false}
           outlined
         />,
-        <Button
-          key={"confirm"}
-          onClick={() => {
-            setVisible(false);
-            if (onConfirm) onConfirm();
-          }}
-          fullWidth={false}
-          text="Yes"
-        />,
+        onConfirm && (
+          <Button
+            key={"confirm"}
+            onClick={() => {
+              setVisible(false);
+              if (onConfirm) onConfirm();
+            }}
+            fullWidth={false}
+            text="Yes"
+          />
+        ),
       ]}
       maskClosable={false}
       centered

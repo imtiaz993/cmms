@@ -38,14 +38,6 @@ const Events = ({ events, setData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys, rows) => {
-      setSelectedRowKeys(keys);
-    },
-  };
 
   // useEffect(() => {
   //   const fetchEvents = async () => {
@@ -71,8 +63,6 @@ const Events = ({ events, setData }) => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
-          selectedRowKeys={selectedRowKeys}
-          setSelectedRowKeys={setSelectedRowKeys}
           setDetails={setData}
         />
 
@@ -81,8 +71,6 @@ const Events = ({ events, setData }) => {
           size={"large"}
           scroll={{ x: 1400 }}
           columns={newColumns}
-          rowSelection={rowSelection}
-          rowKey="_id"
           dataSource={
             events?.events &&
             events?.events.length > 0 &&
