@@ -14,26 +14,61 @@ const columns = [
     dataIndex: "title",
     key: "title",
   },
+  // {
+  //   title: "Asset / MT / workOrders",
+  //   dataIndex: "asset",
+  //   key: "asset",
+  //   render: (text, record) => {
+  //     let content = "unknown"; // Default content
+  //     let url = "#"; // Default URL
+
+  //     // Check for asset, materialTransfer, and workOrder properties
+  //     if (record.asset) {
+  //       content = "Asset (" + record.asset + ")";
+  //       url = "/admin/assets/" + record.asset; // Update URL for asset
+  //     } else if (record.materialTransfer) {
+  //       content = "Material Transfer (" + record.materialTransfer + ")";
+  //       url = "/admin/material-transfer/" + record.materialTransfer; // URL for material transfer
+  //     } else if (record.workOrder) {
+  //       content = "Work Order (" + record.workOrder + ")";
+  //       url = "/admin/work-orders/" + record.workOrder; // URL for work order
+  //     } else if (record.company) {
+  //       content = "Company (" + record.company + ")";
+  //       url = "#";
+  //     }
+
+  //     return (
+  //       <Link href={url} target="_blank">
+  //         {content}
+  //       </Link>
+  //     );
+  //   },
+  // },
   {
-    title: "Asset / MT / workOrders",
-    dataIndex: "asset",
-    key: "asset",
+    title: "Document Type",
+    dataIndex: "type",
+    key: "type",
+  },
+  {
+    title: "Category",
+    dataIndex: "_",
+    key: "category",
     render: (text, record) => {
       let content = "unknown"; // Default content
       let url = "#"; // Default URL
 
       // Check for asset, materialTransfer, and workOrder properties
       if (record.asset) {
-        content = "Asset (" + record.asset + ")";
-        url = "/admin/assets/" + record.asset; // Update URL for asset
+        content = "Asset";
+        url = "/admin/assets/" + record.asset;
       } else if (record.materialTransfer) {
-        content = "Material Transfer (" + record.materialTransfer + ")";
-        url = "/admin/material-transfer/" + record.materialTransfer; // URL for material transfer
+        content = "Material Transfer";
+        url = "/admin/material-transfer/" + record.materialTransfer;
       } else if (record.workOrder) {
-        content = "Work Order (" + record.workOrder + ")";
-        url = "/admin/work-orders/" + record.workOrder; // URL for work order
+        content = "Work Order";
+        url = "/admin/work-orders/" + record.workOrder;
       } else if (record.company) {
-        content = "Company (" + record.company + ")";
+        content = "Company";
         url = "#";
       }
 
@@ -43,16 +78,6 @@ const columns = [
         </Link>
       );
     },
-  },
-  {
-    title: "Document Type",
-    dataIndex: "type",
-    key: "type",
-  },
-  {
-    title: "Category",
-    dataIndex: "type",
-    key: "type",
   },
   {
     title: "Uploaded By",
