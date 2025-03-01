@@ -6,6 +6,7 @@ import Button from "@/components/common/Button";
 import { useState } from "react";
 import SelectField from "@/components/common/SelectField";
 import { filterSites } from "app/services/setUp/sites";
+import { countries } from "@/constants/countries";
 
 const validationSchema = Yup.object().shape({
   siteName: Yup.string(),
@@ -59,9 +60,15 @@ const FilterDropdown = ({ closeDropdown, setLoading, setSites }) => {
               <InputField name="address" placeholder="Address" />
               <InputField name="apartment" placeholder="Apt./Suite #" />
               <InputField name="city" placeholder="City" />
-              <SelectField name="state" placeholder="State" />
+              <InputField name="state" placeholder="State" />
               <InputField name="zip" placeholder="Zip Code" />
-              <InputField name="country" placeholder="Country" />
+              <SelectField
+                name="country"
+                placeholder="Select Country"
+                options={countries.map((country) => {
+                  return { value: country.label, label: country.label };
+                })}
+              />
 
               <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
                 <div>

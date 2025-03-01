@@ -67,14 +67,6 @@ const MaterialTransfer = ({ materialTransferData, setData, superUsers }) => {
   const defaultCheckedList = columns.map((item) => item.key);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys, rows) => {
-      setSelectedRowKeys(keys);
-    },
-  };
 
   const filteredData = useMemo(() => {
     if (!searchText) return materialTransferData; // Return full data if no search
@@ -115,7 +107,6 @@ const MaterialTransfer = ({ materialTransferData, setData, superUsers }) => {
           size={"large"}
           scroll={{ x: 1100 }}
           columns={newColumns}
-          rowSelection={rowSelection}
           dataSource={
             filteredData &&
             filteredData.length > 0 &&

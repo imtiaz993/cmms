@@ -3,19 +3,9 @@ import { Checkbox, Dropdown, Button as AntButton, message, Menu } from "antd";
 import { DownOutlined, PlusOutlined, SettingOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import EventsFilter from "./filtersDropdown";
-import { useRouter } from "next/navigation";
 
-const ActionBar = ({
-  checkedList,
-  setCheckedList,
-  columns,
-  selectedRowKeys,
-  setSelectedRowKeys,
-  setData,
-}) => {
+const ActionBar = ({ checkedList, setCheckedList, columns, setData }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
-  const router = useRouter();
-  const [newEventPopup, setNewEventPopup] = useState(false);
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title || key,
     value: key,
@@ -31,15 +21,9 @@ const ActionBar = ({
 
   return (
     <>
-      {/* <AddEventPopup
-        visible={newEventPopup}
-        setEvents={setData}
-        setVisible={setNewEventPopup}
-      /> */}
       <div className="">
         <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3">
-          <div className="flex gap-3">
-            <Checkbox className="!mx-2" />
+          <div>
             <div className="sm:min-w-36 overflow-hidden">
               <Dropdown
                 open={filterDropdown}
@@ -100,12 +84,6 @@ const ActionBar = ({
                 prefix={<SettingOutlined />}
               />
             </Dropdown>
-            <Button
-              text="New Event"
-              style={{ padding: "0px 20px", height: "44px" }}
-              prefix={<PlusOutlined />}
-              onClick={() => setNewEventPopup(true)}
-            />
           </div>
         </div>
       </div>

@@ -53,8 +53,7 @@ const ActionBar = ({
   return (
     <>
       <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3">
-        <div className="flex gap-3">
-          <Checkbox className="!mx-2" />
+        <div>
           <Dropdown
             open={filterDropdown}
             onOpenChange={setFilterDropdown}

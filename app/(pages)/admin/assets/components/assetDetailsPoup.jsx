@@ -9,7 +9,7 @@ const AssetDetailsPopup = ({ visible, setVisible, asset }) => {
     <div>
       <Modal
         maskClosable={false}
-        title={<h1 className="text-lg md:text-2xl">{asset.assetNumber}</h1>}
+        title={<h1 className="text-lg md:text-2xl">Asset # {asset.assetID}</h1>}
         open={visible}
         onCancel={() => setVisible(false)}
         footer={

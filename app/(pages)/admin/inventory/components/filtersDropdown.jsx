@@ -60,7 +60,6 @@ const InventoryFilter = ({ closeDropdown, setFilteredInventory }) => {
           receivedDate: null,
           quantity: "",
           tagId: "",
-          location: "",
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
@@ -101,7 +100,6 @@ const InventoryFilter = ({ closeDropdown, setFilteredInventory }) => {
 
               <InputField name="quantity" placeholder="Quantity" />
               <InputField name="tagId" placeholder="Tag ID" />
-              <InputField name="location" placeholder="Location" />
 
               <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
                 <div>

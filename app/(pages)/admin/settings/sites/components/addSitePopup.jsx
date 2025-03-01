@@ -1,5 +1,7 @@
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
+import SelectField from "@/components/common/SelectField";
+import { countries } from "@/constants/countries";
 import { Form, message, Modal } from "antd";
 import { updateLocation } from "app/redux/slices/locationsSlice";
 import { createSite } from "app/services/setUp/sites";
@@ -9,6 +11,7 @@ import * as Yup from "yup";
 
 const AddSitePopup = ({ visible, setSites, setVisible }) => {
   const dispatch = useDispatch();
+
   const initialValues = {
     site: "",
     description: "",
@@ -117,10 +120,13 @@ const AddSitePopup = ({ visible, setSites, setVisible }) => {
                   placeholder="Enter zip"
                   label="Zip Code"
                 />
-                <InputField
+                <SelectField
                   name="country"
-                  placeholder="Enter country"
+                  placeholder="Select Country"
                   label="Country"
+                  options={countries.map((country) => {
+                    return { value: country.label, label: country.label };
+                  })}
                 />
               </div>
             </Modal>
