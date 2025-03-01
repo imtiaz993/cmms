@@ -4,12 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs as AntTabs } from "antd";
 import Documents from "./documents";
 import MaterialTransfer from "./material-transfer";
-import Dashboard from "./dashboard";
-import Maintainance from "./maintenance";
 import Details from "./details";
 import Events from "./events";
-import History from "./history";
-import ManHours from "./man-hours";
 import Photos from "./photos";
 
 const Tabs = ({ data, setData, slug, superUsers }) => {
