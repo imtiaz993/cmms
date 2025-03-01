@@ -378,7 +378,7 @@ const InventoryForm = () => {
                 />
                 <DatePickerField name="receivedDate" label="Date Received" />
 
-                <p className="md:col-span-2 font-semibold md:text-lg">
+                {/* <p className="md:col-span-2 font-semibold md:text-lg">
                   Inventory Added
                 </p>
 
@@ -402,7 +402,7 @@ const InventoryForm = () => {
                     overflow: "auto",
                   }}
                   className="md:col-span-2"
-                />
+                /> */}
 
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Inventory Information

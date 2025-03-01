@@ -464,7 +464,7 @@ const AssetForm = () => {
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Asset Maintenance
                 </p>
-                <Table
+                {/* <Table
                   loading={isLoading}
                   size={"large"}
                   scroll={{ x: 700 }}
@@ -485,7 +485,7 @@ const AssetForm = () => {
                   }}
                   className="md:col-span-2"
                   pagination={false}
-                />
+                /> */}
                 <SelectField
                   name="maintCategory"
                   placeholder="Category"
@@ -626,7 +626,9 @@ const AssetForm = () => {
                       if (info.file.status === "removed") {
                         setFieldValue(
                           "assetImages",
-                          values.assetImages.filter((f) => f.uid !== info.file.uid)
+                          values.assetImages.filter(
+                            (f) => f.uid !== info.file.uid
+                          )
                         );
                       } else {
                         // Update Formik's field with the updated file list
