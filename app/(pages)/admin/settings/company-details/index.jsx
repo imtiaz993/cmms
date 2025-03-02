@@ -18,11 +18,13 @@ import { countries } from "@/constants/countries";
 import { currencies } from "@/constants/currencies";
 import { months } from "@/constants/monthsAndYears";
 import { timeZones } from "@/constants/timezones";
+import ConfirmationPopup from "@/components/confirmationPopup";
 
 const CompanyDetails = ({ activeTab }) => {
   const [companyData, setCompanyData] = useState();
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   // const initialValues = ;
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Email is required"),
@@ -59,6 +61,12 @@ const CompanyDetails = ({ activeTab }) => {
     const { status, data } = await deleteManager(managerId);
     if (status === 200) {
       message.success("Rig Manager Deleted Successfully");
+      setCompanyData((prev) => ({
+        ...prev,
+        rigManager: prev.rigManager.filter(
+          (manager) => manager._id !== managerId
+        ),
+      }));
     } else {
       message.error(data.error);
     }
@@ -66,6 +74,13 @@ const CompanyDetails = ({ activeTab }) => {
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-70px)] overflow-auto p-[12px_12px_28px_0px]">
+      <ConfirmationPopup
+        visible={deleteConfirmation}
+        setVisible={setDeleteConfirmation}
+        title={"Delete Rig Manager"}
+        message="Are you sure you want to perform this action?"
+        onConfirm={() => handleDeleteManager(deleteConfirmation)}
+      />
       <Formik
         initialValues={{
           _id: companyData?._id || "",
@@ -102,6 +117,7 @@ const CompanyDetails = ({ activeTab }) => {
               outerValues={values}
               setCompanyData={setCompanyData}
             />
+            {console.log("values rig managers", values.rigManagers)}
             <div className="grid md:grid-cols-2 gap-4 md:gap-8">
               <div className="grid grid-cols-1 gap-4 md:gap-8">
                 <div className="flex justify-between items-center">
@@ -209,12 +225,10 @@ const CompanyDetails = ({ activeTab }) => {
                               /> */}
                               {values.rigManagers.length > 1 && (
                                 <Button
-                                  className="!bg-yellow-500"
-                                  outlined
-                                  onClick={() => {
-                                    handleDeleteManager(manager?._id);
-                                    remove(i);
-                                  }}
+                                  onClick={
+                                    () => setDeleteConfirmation(manager?._id)
+                                    // remove(i);
+                                  }
                                   fullWidth={false}
                                   text="Remove"
                                   prefix={<DeleteOutlined />}
