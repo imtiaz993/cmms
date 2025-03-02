@@ -206,12 +206,10 @@ const MaterialTransfer = () => {
           }
           pagination={{
             total: filteredData?.length,
-            current: 1,
-            pageSize: 10,
+            // pageSize: 10,
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
-            onChange: () => {},
             className: "custom-pagination",
           }}
           style={{

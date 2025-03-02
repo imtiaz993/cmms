@@ -22,9 +22,7 @@ const Locations = ({ activeTab }) => {
       title: "Site",
       dataIndex: "site",
       key: "site",
-      render: (_, record) => (
-        <span>{record.site?.site}</span>
-      ),
+      render: (_, record) => <span>{record.site?.site}</span>,
     },
     {
       title: "",
@@ -123,12 +121,10 @@ const Locations = ({ activeTab }) => {
         }
         pagination={{
           total: displayedLocations?.length,
-          current: 1,
-          pageSize: 10,
+          // pageSize: 10,
           showSizeChanger: true,
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} of ${total} items`,
-          onChange: () => {},
           className: "custom-pagination",
         }}
         style={{

@@ -1,6 +1,11 @@
 import { Table } from "antd";
 
-const WOtable = ({ filteredColumns, filteredData, fetchingWorkOrders, rowSelection }) => {
+const WOtable = ({
+  filteredColumns,
+  filteredData,
+  fetchingWorkOrders,
+  rowSelection,
+}) => {
   return (
     <Table
       // rowClassName="cursor-pointer"
@@ -15,8 +20,7 @@ const WOtable = ({ filteredColumns, filteredData, fetchingWorkOrders, rowSelecti
       dataSource={filteredData}
       pagination={{
         total: filteredData.length,
-        current: 1,
-        pageSize: 10,
+        // pageSize: 10,
         showSizeChanger: true,
         showTotal: (total, range) =>
           `${range[0]}-${range[1]} of ${total} items`,
