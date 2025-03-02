@@ -24,8 +24,8 @@ const Details = ({ details }) => {
       <div className="flex gap-5 mt-5">
         <p className="min-w-32 mt-2">Custom Fields</p>
         <div className="grid md:grid-cols-2 gap-y-2 gap-x-5 w-full">
-          {details?.customFields?.map((field) => (
-            <div className="grid grid-cols-2 border">
+          {details?.customFields?.map((field, i) => (
+            <div className="grid grid-cols-2 border" key={i}>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
                 {field?.name}
               </p>
