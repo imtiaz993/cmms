@@ -261,7 +261,7 @@ const InventoryForm = () => {
   };
 
   if ((slug && loading) || (slug && !details))
-    return <div className="ml-10 mt-20 text-center">Loading...</div>;
+    return <p className="ml-10 mt-20 text-center">Loading...</p>;
 
   return (
     <div className="mx-5 md:mx-10">

@@ -8,7 +8,7 @@ import {
   getDashboardStats,
 } from "app/services/dashboard";
 import { Octagon } from "@/icons/index";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const ColumnChart = dynamic(() => import("./components/columnChart"), {
   ssr: false,

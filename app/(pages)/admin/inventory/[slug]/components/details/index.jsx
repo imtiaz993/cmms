@@ -6,9 +6,11 @@ const Details = ({ details }) => {
         <div className="grid md:grid-cols-2 gap-y-2 gap-x-5 w-full">
           <div className="grid grid-cols-2 border">
             <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
-              Serial #
+              Invoice #
             </p>
-            <p className="p-2 md:px-3 md:py-2">{details?.serialNumber || "-"}</p>
+            <p className="p-2 md:px-3 md:py-2">
+              {details?.invoiceNumber || "-"}
+            </p>
           </div>
           <div className="grid grid-cols-2 border">
             <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
@@ -22,24 +24,14 @@ const Details = ({ details }) => {
       <div className="flex gap-5 mt-5">
         <p className="min-w-32 mt-2">Custom Fields</p>
         <div className="grid md:grid-cols-2 gap-y-2 gap-x-5 w-full">
-          <div className="grid grid-cols-2 border">
-            <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
-              Criticality
-            </p>
-            <p className="p-2 md:px-3 md:py-2">{details?.criticality || "-"}</p>
-          </div>
-          <div className="grid grid-cols-2 border">
-            <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
-              Criticality
-            </p>
-            <p className="p-2 md:px-3 md:py-2">{details?.criticality || "-"}</p>
-          </div>
-          <div className="grid grid-cols-2 border">
-            <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
-              Maintenance Status
-            </p>
-            <p className="p-2 md:px-3 md:py-2">{details?.maintStatus || "-"}</p>
-          </div>
+          {details?.customFields?.map((field) => (
+            <div className="grid grid-cols-2 border">
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
+                {field?.name}
+              </p>
+              <p className="p-2 md:px-3 md:py-2">{field?.value || "-"}</p>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -50,7 +42,16 @@ const Details = ({ details }) => {
             <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
               Status
             </p>
-            <p className="p-2 md:px-3 md:py-2">{details?.maintStatus || "-"}</p>
+            <p className="p-2 md:px-3 md:py-2">
+              {details?.status
+                ? details.status === "damagedBeyondRepair"
+                  ? "Damaged Beyond Repair"
+                  : details.status === "outForRepair"
+                  ? "Out for repair"
+                  : details.status.charAt(0).toUpperCase() +
+                    details.status.slice(1)
+                : "-"}
+            </p>
           </div>
           <div className="grid grid-cols-2 border">
             <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
@@ -66,9 +67,9 @@ const Details = ({ details }) => {
         <div className="grid md:grid-cols-2 gap-y-2 gap-x-5 w-full">
           <div className="grid grid-cols-2 border">
             <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
-              Date Installed
+             Updated at
             </p>
-            <p className="p-2 md:px-3 md:py-2">{"-"}</p>
+            <p className="p-2 md:px-3 md:py-2">{details?.updatedAt || "-"}</p>
           </div>
           <div className="grid grid-cols-2 border">
             <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
