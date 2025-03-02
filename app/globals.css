@@ -103,7 +103,7 @@ h6 {
 .searchBar input {
   padding-left: 8px !important;
 }
-.searchBar ::placeholder{
+.searchBar ::placeholder {
   color: var(--tertiary-text) !important;
 }
 
@@ -287,4 +287,9 @@ h6 {
   width: 6px; /* Adjust size of the tick */
   height: 12px; /* Adjust size of the tick */
   transform: translate(-50%, -50%) rotate(45deg);
+}
+/* Override Ant Design Message Styles */
+.ant-message-notice-content {
+  background: var(--background-secondary-color) !important;
+  color: var(--primary-text) !important;
 }

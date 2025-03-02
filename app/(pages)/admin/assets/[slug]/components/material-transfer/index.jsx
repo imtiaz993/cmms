@@ -37,16 +37,13 @@ const MaterialTransfer = ({ materialTransferData, setData, superUsers }) => {
     },
     {
       title: "Origin",
-      dataIndex: "origiationSites",
+      dataIndex: "origination",
       key: "origination",
-      render: (origiationSites) =>
-        origiationSites?.map((i) => i.site).join(","),
     },
     {
       title: "Destination",
-      dataIndex: "destinationSite",
+      dataIndex: "destination",
       key: "destination",
-      render: (destinationSite) => destinationSite?.site,
     },
     {
       title: "",
