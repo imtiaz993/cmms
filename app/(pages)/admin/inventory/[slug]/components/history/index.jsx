@@ -2,59 +2,22 @@
 import { useState } from "react";
 import { Table } from "antd";
 import ActionBar from "./actionBar";
-import { EditPagePencil } from "@/icons/index";
 
 const columns = [
-  {
-    title: "Date",
-    dataIndex: "date",
-    key: "date",
-  },
-  {
-    title: "Event",
-    dataIndex: "event",
-    key: "event",
-  },
-  {
-    title: "Notes",
-    dataIndex: "notes",
-    key: "notes",
-  },
-  {
-    title: "",
-    dataIndex: "action",
-    key: "action",
-    render: (text, record) => (
-      <div>
-        <EditPagePencil />
-      </div>
-    ),
-  },
+  { title: "Date", dataIndex: "date", key: "date" },
+  { title: "Event", dataIndex: "event", key: "event" },
+  { title: "Field", dataIndex: "field", key: "field" },
+  { title: "Changed From", dataIndex: "changedFrom", key: "changedFrom" },
+  { title: "Changed To", dataIndex: "changedTo", key: "changedTo" },
+  { title: "Action By", dataIndex: "actionBy", key: "actionBy" },
 ];
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const Events = ({ events, setData }) => {
+const History = ({ historyData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-
-  // useEffect(() => {
-  //   const fetchEvents = async () => {
-  //     setIsLoading(true);
-  //     // const { status, data } = null;
-  //     const status = null,
-  //       data = null;
-  //     if (status === 200) {
-  //       setEvents(data?.data);
-  //       message.success(data?.message || "Events fetched successfully");
-  //     } else {
-  //       message.error(data?.message || "Failed to fetch events");
-  //     }
-  //     setIsLoading(false);
-  //   };
-  //   fetchEvents();
-  // }, []);
 
   return (
     <div className="px-3 lg:px-5 pb-4 mt-1">
@@ -63,7 +26,6 @@ const Events = ({ events, setData }) => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
-          setDetails={setData}
         />
 
         <Table
@@ -72,12 +34,12 @@ const Events = ({ events, setData }) => {
           scroll={{ x: 1400 }}
           columns={newColumns}
           dataSource={
-            events?.events &&
-            events?.events.length > 0 &&
-            events?.events.map((i, index) => ({ ...i, key: index }))
+            historyData &&
+            historyData.length > 0 &&
+            historyData.map((i, index) => ({ ...i, key: index }))
           }
           pagination={{
-            total: events?.events?.length,
+            total: historyData?.length,
             current: 1,
             pageSize: 10,
             showSizeChanger: true,
@@ -96,4 +58,4 @@ const Events = ({ events, setData }) => {
   );
 };
 
-export default Events;
+export default History;

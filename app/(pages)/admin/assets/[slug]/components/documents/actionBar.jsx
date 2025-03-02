@@ -156,12 +156,6 @@ const ActionBar = ({
                 prefix={<PlusOutlined />}
               />
             </Dropdown>
-            {/* <Button
-              text="New Event"
-              style={{ padding: "0px 20px", height: "44px" }}
-              prefix={<PlusOutlined />}
-              onClick={() => router.push("/admin/events/new")}
-            /> */}
           </div>
         </div>
       </div>

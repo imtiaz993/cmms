@@ -5,7 +5,7 @@ import { Tabs as AntTabs } from "antd";
 import Documents from "./documents";
 import MaterialTransfer from "./material-transfer";
 import Details from "./details";
-import Events from "./events";
+import History from "./history";
 import Photos from "./photos";
 
 const Tabs = ({ data, setData, slug, superUsers }) => {
@@ -23,11 +23,6 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
       key: "details",
       label: "Details",
       children: <Details details={data?.dashboard} />,
-    },
-    {
-      key: "events",
-      label: "Events",
-      children: <Events data={data?.events} setData={setData} />,
     },
     {
       key: "photos",
@@ -55,6 +50,11 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
           superUsers={superUsers}
         />
       ),
+    },
+    {
+      key: "history",
+      label: "History",
+      children: <History data={data?.events} />,
     },
   ];
   return (

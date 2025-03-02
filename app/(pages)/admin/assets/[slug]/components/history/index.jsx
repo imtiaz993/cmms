@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { message, Table } from "antd";
+import { useState } from "react";
+import { Table } from "antd";
 import ActionBar from "./actionBar";
 
 const columns = [
@@ -15,35 +15,9 @@ const columns = [
 const defaultCheckedList = columns.map((item) => item.key);
 
 const History = ({ historyData }) => {
-  // const [historyData, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys, rows) => {
-      setSelectedRowKeys(keys);
-    },
-  };
-
-  // useEffect(() => {
-  //   const fetchHistory = async () => {
-  //     setIsLoading(true);
-  //     // const { status, data } = null;
-  //     const status = null,
-  //       data = null;
-  //     if (status === 200) {
-  //       setHistory(data?.data);
-  //       message.success(data?.message || "History fetched successfully");
-  //     } else {
-  //       message.error(data?.message || "Failed to fetch History");
-  //     }
-  //     setIsLoading(false);
-  //   };
-  //   fetchHistory();
-  // }, []);
 
   return (
     <div className="px-3 lg:px-5 pb-4 mt-1">
@@ -52,8 +26,6 @@ const History = ({ historyData }) => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
-          selectedRowKeys={selectedRowKeys}
-          setSelectedRowKeys={setSelectedRowKeys}
         />
 
         <Table
@@ -61,8 +33,6 @@ const History = ({ historyData }) => {
           size={"large"}
           scroll={{ x: 1400 }}
           columns={newColumns}
-          rowSelection={rowSelection}
-          rowKey="_id"
           dataSource={
             historyData &&
             historyData.length > 0 &&
