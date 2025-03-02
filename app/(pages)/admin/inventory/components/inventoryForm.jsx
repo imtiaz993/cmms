@@ -20,7 +20,7 @@ import { updateInventory } from "app/redux/slices/inventoriesSlice";
 import { useParams, useRouter } from "next/navigation";
 import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
-import AddLocationPopup from "../../settings/locations/components/addLocationPopup";
+import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
 
 const columns = [
   {
@@ -273,7 +273,7 @@ const InventoryForm = () => {
         setFields={setFields}
       />
       <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
-      <AddLocationPopup
+      <AddSystemPopup
         visible={addSystemPopup}
         setVisible={setAddSystemPopup}
       />

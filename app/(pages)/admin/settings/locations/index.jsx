@@ -7,8 +7,10 @@ import {
   filterSystems,
   getSystems,
 } from "app/services/setUp/systems";
+import ConfirmationPopup from "@/components/confirmationPopup";
 
 const Locations = ({ activeTab }) => {
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const columns = [
     {
       title: "System",
@@ -32,7 +34,7 @@ const Locations = ({ activeTab }) => {
         <div className="text-right">
           <DeleteOutlined
             style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
-            onClick={() => handleDelete(record)}
+            onClick={() => setDeleteConfirmation(record)}
           />
         </div>
       ),
@@ -41,42 +43,42 @@ const Locations = ({ activeTab }) => {
 
   const defaultCheckedList = columns.map((item) => item.key);
 
-  const [locations, setLocations] = useState([]);
+  const [systems, setSystems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [searchText, setSearchText] = useState("");
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
 
   useEffect(() => {
-    const handleFetchLocations = async () => {
+    const handleFetchSystems = async () => {
       setLoading(true);
       const { status, data } = await getSystems();
       if (status === 200) {
         setLoading(false);
-        setLocations(data.data);
+        setSystems(data.data);
       } else {
         setLoading(false);
         message.error(data.error);
       }
     };
-    handleFetchLocations();
+    handleFetchSystems();
   }, [activeTab]);
 
-  const displayedLocations = useMemo(() => {
-    if (!searchText) return locations; // Return full data if no search
-    return locations?.filter((site) =>
+  const displayedSystems = useMemo(() => {
+    if (!searchText) return systems; // Return full data if no search
+    return systems?.filter((site) =>
       checkedList.some((key) =>
         site[key]?.toString()?.toLowerCase()?.includes(searchText.toLowerCase())
       )
     );
-  }, [searchText, locations, checkedList]);
+  }, [searchText, systems, checkedList]);
 
   const handleDelete = async (system) => {
     setLoading(true);
     const { status, data } = await deleteSystem(system._id);
     if (status === 200) {
       setLoading(false);
-      setLocations((prev) => prev.filter((i) => i._id !== system._id));
+      setSystems((prev) => prev.filter((i) => i._id !== system._id));
       message.success(data.message);
     } else {
       setLoading(false);
@@ -88,7 +90,7 @@ const Locations = ({ activeTab }) => {
     const { status, data } = await filterSystems(values);
     if (status === 200) {
       setLoading(false);
-      setLocations(data.data);
+      setSystems(data.data);
     } else {
       setLoading(false);
       message.error(data.error);
@@ -97,6 +99,13 @@ const Locations = ({ activeTab }) => {
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
+      <ConfirmationPopup
+        visible={deleteConfirmation}
+        setVisible={setDeleteConfirmation}
+        title={"Delete System"}
+        message="Are you sure you want to delete this system?"
+        onConfirm={() => handleDelete(deleteConfirmation)}
+      />
       <h3 className="font-semibold text-lg pb-8">List of Systems</h3>
       <ActionBar
         checkedList={checkedList}
@@ -104,7 +113,7 @@ const Locations = ({ activeTab }) => {
         columns={columns}
         setSearchText={setSearchText}
         setLoading={setLoading}
-        setLocations={setLocations}
+        setSystems={setSystems}
         handleFetchFilteredSystems={handleFetchFilteredSystems}
         activeTab={activeTab}
       />
@@ -115,12 +124,12 @@ const Locations = ({ activeTab }) => {
         columns={newColumns}
         rowKey="_id"
         dataSource={
-          displayedLocations &&
-          displayedLocations.length > 0 &&
-          displayedLocations.map((i, index) => ({ ...i, key: index }))
+          displayedSystems &&
+          displayedSystems.length > 0 &&
+          displayedSystems.map((i, index) => ({ ...i, key: index }))
         }
         pagination={{
-          total: displayedLocations?.length,
+          total: displayedSystems?.length,
           // pageSize: 10,
           showSizeChanger: true,
           showTotal: (total, range) =>

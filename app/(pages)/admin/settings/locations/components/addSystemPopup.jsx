@@ -9,7 +9,7 @@ import { use } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-const AddLocationPopup = ({ visible, setLocations, setVisible }) => {
+const AddSystemPopup = ({ visible, setSystems, setVisible }) => {
   const dispatch = useDispatch();
   const locations = useSelector((state) => state.location.location);
   const initialValues = {
@@ -24,7 +24,7 @@ const AddLocationPopup = ({ visible, setLocations, setVisible }) => {
     const { status, data } = await createSystem(values);
     setSubmitting(false);
     if (status === 200) {
-      setLocations && setLocations((prev) => [...prev, data.data]);
+      setSystems && setSystems((prev) => [...prev, data.data]);
       dispatch(updateSystem(data?.data));
       message.success(data.message);
       resetForm();
@@ -47,7 +47,7 @@ const AddLocationPopup = ({ visible, setLocations, setVisible }) => {
             <Modal
               maskClosable={false}
               title={
-                <h1 className="text-lg md:text-2xl mb-5">Add a Location</h1>
+                <h1 className="text-lg md:text-2xl mb-5">Add a System</h1>
               }
               open={visible}
               onCancel={() => {
@@ -110,4 +110,4 @@ const AddLocationPopup = ({ visible, setLocations, setVisible }) => {
   );
 };
 
-export default AddLocationPopup;
+export default AddSystemPopup;

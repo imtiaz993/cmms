@@ -4,8 +4,10 @@ import { message, Table } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { deleteCategory, getCategories } from "app/services/setUp/categories";
 import { useSearchParams } from "next/navigation";
+import ConfirmationPopup from "@/components/confirmationPopup";
 
 const Categories = () => {
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const columns = [
     {
       title: "Category",
@@ -23,7 +25,7 @@ const Categories = () => {
         <div className="text-right">
           <DeleteOutlined
             style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
-            onClick={() => handleDelete(record)}
+            onClick={() => setDeleteConfirmation(record)}
           />
         </div>
       ),
@@ -76,6 +78,13 @@ const Categories = () => {
 
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
+      <ConfirmationPopup
+        visible={deleteConfirmation}
+        setVisible={setDeleteConfirmation}
+        title={"Delete Category"}
+        message="Are you sure you want to delete this category?"
+        onConfirm={() => handleDelete(deleteConfirmation)}
+      />
       <h3 className="font-semibold text-lg pb-8">List of Categories</h3>
       <ActionBar
         checkedList={checkedList}
@@ -98,7 +107,6 @@ const Categories = () => {
         }
         pagination={{
           total: displayCategories?.length,
-
           // pageSize: 10,
           showSizeChanger: true,
           showTotal: (total, range) =>
