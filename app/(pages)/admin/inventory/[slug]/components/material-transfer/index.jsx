@@ -35,7 +35,6 @@ const MaterialTransfer = ({ materialTransferData, setData, superUsers }) => {
       dataIndex: "createdBy",
       key: "createdBy",
     },
-
     {
       title: "Origin",
       dataIndex: "origination",

@@ -43,12 +43,11 @@ export const updateAsset = async (values) => {
   }
 };
 
-export const deleteAsset = async (values) => {
+export const deleteAsset = async (id) => {
   try {
     const { status, data } = await authRequest({
-      url: "/asset/delete",
-      method: "POST",
-      data: values,
+      url: "/asset/delete?slug=" + id,
+      method: "Delete",
     });
     return { status, data };
   } catch (e) {

@@ -17,6 +17,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
   const router = useRouter();
   const pathname = usePathname();
   const currentPage = pathname.split("/")[2] || "dashboard";
+  const slashNewPages = pathname.split("/")[3];
 
   const items = [
     {
@@ -71,8 +72,18 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
       <div className=" max-h-[calc(100dvh-16px-60px-16px)] min-h-[calc(100dvh-16px-60px-16px)] overflow-auto hidden lg:block lg:w-[250px] p-5 pt-7 select-none">
         <Menu
           mode="inline"
-          defaultSelectedKeys={[currentPage || "dashboard"]}
-          selectedKeys={[currentPage || "dashboard"]}
+          defaultSelectedKeys={[currentPage]}
+          selectedKeys={
+            currentPage !== "new"
+              ? [currentPage || "dashboard"]
+              : [
+                  slashNewPages === "asset"
+                    ? "assets"
+                    : slashNewPages === "work-order"
+                    ? "work-orders"
+                    : "",
+                ]
+          }
           onClick={onClick}
           items={items}
           className="[&_.ant-menu-item]:!pl-3 !border-none"

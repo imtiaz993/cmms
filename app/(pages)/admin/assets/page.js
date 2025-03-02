@@ -4,15 +4,26 @@ import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateAssetPopup from "./components/createAssetPopup";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getAssets, getFilteredAssets } from "app/services/assets";
+import {
+  deleteAsset,
+  getAssets,
+  getFilteredAssets,
+  updateAsset,
+} from "app/services/assets";
 import { useDispatch, useSelector } from "react-redux";
 import { rigs, systems } from "@/constants/rigsAndSystems";
 import { EditPagePencil } from "@/icons/index";
-import { EyeOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EyeOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
 import Link from "next/link";
 import AssetDetailsPopup from "./components/assetDetailsPoup";
 import Button from "@/components/common/Button";
 import { setMaterialTransfer } from "app/redux/slices/saveMaterialTransferData";
+import { setAssets } from "app/redux/slices/assetsSlice";
+import ConfirmationPopup from "@/components/confirmationPopup";
 
 // Common column structure
 // const baseColumns = [
@@ -48,6 +59,7 @@ const Assets = () => {
   const [filteredAssets, setFilteredAssets] = useState([]);
   const [isFiltering, setIsFiltering] = useState(false);
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const dispatch = useDispatch();
 
   // Filter columns dynamically based on checkedList
@@ -103,18 +115,21 @@ const Assets = () => {
             style={{ fontSize: "20px", cursor: "pointer" }}
             onClick={() => setAssetDetailsPopup(record)}
           />
-          <span
-            className="cursor-pointer"
-            onClick={() => router.push("/admin/assets/" + id + "/edit")}
-          >
+          <Link href={"/admin/assets/" + id + "/edit"}>
             <EditPagePencil />
-          </span>
+          </Link>
+          <DeleteOutlined
+            style={{ fontSize: "20px", cursor: "pointer" }}
+            onClick={() => {
+              setDeleteConfirmation(id);
+            }}
+          />
         </p>
       ),
     },
     // ...baseColumns.filter((col) => checkedList.includes(col.key)),
   ];
-
+  console.log("assets", assets);
   const parentColumns = [
     // { title: "Parent Asset", dataIndex: "parentAsset", key: "parentAsset" },
     // ...baseColumns.filter((col) => checkedList.includes(col.key)),
@@ -248,8 +263,27 @@ const Assets = () => {
     router.push("/admin/new/material-transfer?materialType=asset");
   };
 
+  const handleDelete = async (id) => {
+    const { status, data } = await deleteAsset(id);
+    if (status === 200) {
+      dispatch(setAssets(assets.filter((asset) => asset._id !== id)));
+      setFilteredAssets((prev) => prev.filter((asset) => asset._id !== id));
+      message.success(data?.message || "Asset deleted successfully");
+    } else {
+      message.error(data?.message || "Failed to delete asset");
+    }
+    setDeleteConfirmation(false);
+  };
+
   return (
     <>
+      <ConfirmationPopup
+        visible={deleteConfirmation}
+        setVisible={setDeleteConfirmation}
+        title={"Delete Asset"}
+        message="Are you sure you want to delete this asset?"
+        onConfirm={() => handleDelete(deleteConfirmation)}
+      />
       <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
         <Button
           text={

@@ -128,3 +128,17 @@ export const addImage = async (values) => {
     }
   }
 };
+
+export const deleteInventory = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/inventory/delete?slug=" + id,
+      method: "Delete",
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
