@@ -4,8 +4,10 @@ import { message, Table } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useSearchParams } from "next/navigation";
 import { deleteEvent, getEvents } from "app/services/setUp/events";
+import ConfirmationPopup from "@/components/confirmationPopup";
 
 const Events = () => {
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const columns = [
     {
       title: "Events",
@@ -23,7 +25,7 @@ const Events = () => {
         <div className="text-right">
           <DeleteOutlined
             style={{ fontSize: "20px", cursor: "pointer", marginLeft: "13px" }}
-            onClick={() => handleDelete(record)}
+            onClick={() => setDeleteConfirmation(record)}
           />
         </div>
       ),
@@ -75,6 +77,13 @@ const Events = () => {
   };
   return (
     <div className="max-h-[calc(100dvh-140px-16px-60px-10px)] overflow-auto p-[12px_12px_28px_0px]">
+      <ConfirmationPopup
+        visible={deleteConfirmation}
+        setVisible={setDeleteConfirmation}
+        title={"Delete Event"}
+        message="Are you sure you want to delete this event?"
+        onConfirm={() => handleDelete(deleteConfirmation)}
+      />
       <h3 className="font-semibold text-lg pb-8">List of Events</h3>
       <ActionBar
         checkedList={checkedList}
@@ -97,12 +106,10 @@ const Events = () => {
         }
         pagination={{
           total: filteredData?.length,
-          current: 1,
-          pageSize: 10,
+          // pageSize: 10,
           showSizeChanger: true,
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} of ${total} items`,
-          onChange: () => {},
           className: "custom-pagination",
         }}
         style={{

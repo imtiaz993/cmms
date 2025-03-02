@@ -185,7 +185,7 @@ const ActionBar = ({
         visible={actionError}
         setVisible={setActionError}
         title="Action Cannot Be Performed"
-        message="Please select at least one Inventory to perform this action."
+        message="Please select at least one Asset to perform this action."
         onCancel={() => message.info("Action cancelled")}
         cancelText={"Cancel"}
       />

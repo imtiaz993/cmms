@@ -4,10 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs as AntTabs } from "antd";
 import Documents from "./documents";
 import MaterialTransfer from "./material-transfer";
-import Dashboard from "./dashboard";
 import Maintainance from "./maintenance";
 import Details from "./details";
-import Events from "./events";
 import History from "./history";
 import ManHours from "./man-hours";
 import Photos from "./photos";
@@ -29,35 +27,12 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
       children: <Details details={data?.dashboard} />,
     },
     {
-      key: "events",
-      label: "Events",
-      children: <Events data={data?.events} setData={setData} />,
-    },
-    {
       key: "photos",
       label: "Photos",
-      children: <Photos photos={data?.dashboard.assetImages} setData={setData} />,
+      children: (
+        <Photos photos={data?.dashboard.assetImages} setData={setData} />
+      ),
     },
-    // {
-    //   key: "dashboard",
-    //   label: "Dashboard",
-    //   children: <Dashboard dashboardDetails={details?.dashboard} />,
-    // },
-    // {
-    //   key: "work-orders",
-    //   label: "Work Orders",
-    //   children: <WorkOrders />,
-    // },
-    // {
-    //   key: "history",
-    //   label: "History",
-    //   children: <HistoryAssetDetail />,
-    // },
-    // {
-    //   key: "cost",
-    //   label: "Cost",
-    //   children: <Cost setDetails={setDetails} />,
-    // },
     {
       key: "documents",
       label: "Documents",
@@ -77,11 +52,6 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
       children: <Maintainance maintenanceData={data?.maintenanceSchedules} />,
     },
     {
-      key: "history",
-      label: "History",
-      children: <History historyData={data?.history} />,
-    },
-    {
       key: "material-transfer",
       label: "Material Transfer",
       children: (
@@ -91,6 +61,11 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
           superUsers={superUsers}
         />
       ),
+    },
+    {
+      key: "history",
+      label: "History",
+      children: <History historyData={data?.history} />,
     },
   ];
   return (

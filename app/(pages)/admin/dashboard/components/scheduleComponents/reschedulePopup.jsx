@@ -145,12 +145,10 @@ const ReschedulePopup = ({
                   }))}
                   pagination={{
                     total: selectedItems.total,
-                    current: 1,
-                    pageSize: 5,
+                    defaultPageSize: 5,
                     showSizeChanger: true,
                     showTotal: (total, range) =>
                       `${range[0]}-${range[1]} of ${total} items`,
-                    onChange: () => {},
                   }}
                   style={{
                     marginTop: 16,

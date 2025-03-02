@@ -72,6 +72,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
         <Menu
           mode="inline"
           defaultSelectedKeys={[currentPage || "dashboard"]}
+          selectedKeys={[currentPage || "dashboard"]}
           onClick={onClick}
           items={items}
           className="[&_.ant-menu-item]:!pl-3 !border-none"

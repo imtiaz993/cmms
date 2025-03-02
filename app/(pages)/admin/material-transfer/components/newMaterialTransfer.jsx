@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
-import AddLocationPopup from "../../settings/locations/components/addLocationPopup";
+import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
 import * as Yup from "yup";
 import {
   setMaterialTransfer,
@@ -181,7 +181,7 @@ const NewMaterialTransfer = () => {
   return (
     <div className="ml-5 md:ml-10">
       <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
-      <AddLocationPopup
+      <AddSystemPopup
         visible={addSystemPopup}
         setVisible={setAddSystemPopup}
       />
