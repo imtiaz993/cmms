@@ -1,7 +1,7 @@
 import React from "react";
 import Chart from "react-apexcharts";
 
-const LineChart = () => {
+const LineChart = ({ data, months }) => {
   const options = {
     chart: {
       type: "line",
@@ -11,7 +11,7 @@ const LineChart = () => {
       },
     },
     xaxis: {
-      categories: ["Jan", "Feb", "Mar", "Apr", "May"],
+      categories: months,
     },
     stroke: {
       width: 2,
@@ -31,7 +31,7 @@ const LineChart = () => {
       enabled: false,
     },
     tooltip: {
-      theme: "dark",
+      theme: document.body.classList.contains("dark-mode") ? "dark" : "light",
     },
     grid: {
       show: true, // Show grid
@@ -52,12 +52,12 @@ const LineChart = () => {
 
   const series = [
     {
-      name: "Planned",
-      data: [12, 10, 16, 9, 10], // Sample Data
+      name: data[0].name,
+      data: data[0].data,
     },
     {
-      name: "Unplanned",
-      data: [10, 12, 9, 11, 8], // Sample Data
+      name: data[1].name,
+      data: data[1].data,
     },
   ];
 
