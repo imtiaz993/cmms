@@ -29,6 +29,7 @@ import { exportAssets, updateStatus } from "app/services/assets";
 import Link from "next/link";
 import { LinkBroken, SearchIcon } from "@/icons/index";
 import ConfirmationPopup from "@/components/confirmationPopup";
+import { useRouter } from "next/navigation";
 
 const ActionBar = ({
   showAddAssetModal,
@@ -38,7 +39,9 @@ const ActionBar = ({
   setSearchText,
   setFilteredAssets,
   selectedRowKeys,
+  selectedRowsData,
 }) => {
+  const router = useRouter();
   const [showHierarchy, setShowHierarchy] = useState(false);
   //Add Field
   const [addFieldPopupVisible, setAddFieldPopupVisible] = useState(false);
@@ -142,23 +145,28 @@ const ActionBar = ({
   const handleAction = (value) => {
     if (value !== "materialTransfer") setActionPopup(value);
   };
-
   const handleActionConfirm = async () => {
-    const { status, data } = await updateStatus({
-      assets: [...selectedRowKeys],
-      status: actionPopup,
-    });
-    if (status === 200) {
-      message.success(data?.message || "Asset updated successfully");
-      setFilteredAssets((prev) =>
-        prev.map((asset) =>
-          selectedRowKeys.includes(asset._id)
-            ? { ...asset, maintStatus: actionPopup }
-            : asset
-        )
-      );
+    if (actionPopup === "workorder") {
+      let Id = selectedRowsData[0]._id;
+
+      router.push(`/admin/new/work-order?Id=${Id}`);
     } else {
-      message.error(data.error);
+      const { status, data } = await updateStatus({
+        assets: [...selectedRowKeys],
+        status: actionPopup,
+      });
+      if (status === 200) {
+        message.success(data?.message || "Asset updated successfully");
+        setFilteredAssets((prev) =>
+          prev.map((asset) =>
+            selectedRowKeys.includes(asset._id)
+              ? { ...asset, maintStatus: actionPopup }
+              : asset
+          )
+        );
+      } else {
+        message.error(data.error);
+      }
     }
     //  else if (data.error === "Asset is not available") {
     //   selectedRowKeys.length > 1 && selectedRowKeys.map((id) => {
@@ -169,14 +177,26 @@ const ActionBar = ({
     // }
   };
 
+  const navigateToWorkOrder = () => {
+    router.push(`/admin/${key}${params}`);
+  };
+
+  const modalMessage = () => {
+    let isMultipleRows =
+      selectedRowKeys.length > 1 && actionPopup === "workorder";
+    let message = isMultipleRows
+      ? "Please select only one asset"
+      : "Are you sure you want to perform this action on selected Assets?";
+    return { message, onConfirm: isMultipleRows ? false : handleActionConfirm };
+  };
   return (
     <>
       <ConfirmationPopup
         visible={actionPopup}
         setVisible={setActionPopup}
         title={actionOptions.find((o) => o.value === actionPopup)?.label}
-        message="Are you sure you want to perform this action on selected Assets?"
-        onConfirm={handleActionConfirm}
+        message={modalMessage().message}
+        onConfirm={modalMessage().onConfirm}
         onCancel={() => message.info("Action cancelled")}
       />
       {/* <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-3"> */}

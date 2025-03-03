@@ -2,7 +2,7 @@ import ReactApexChart from "react-apexcharts";
 
 const ColumnChart = ({ data }) => {
   // Extracting data from the provided object
-  const { months, created, completed } = data;
+  // const { months, created, completed } = data;
 
   return (
     <ReactApexChart
