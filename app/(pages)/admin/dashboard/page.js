@@ -8,7 +8,7 @@ import {
   getDashboardStats,
 } from "app/services/dashboard";
 import { Octagon } from "@/icons/index";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const ColumnChart = dynamic(() => import("./components/columnChart"), {
   ssr: false,
@@ -70,7 +70,7 @@ const Dashboard = () => {
           <div className="flex justify-center w-full">
             {stats ? (
               <div>
-                <ColumnChart data={stats?.unPlanned} />
+                <ColumnChart data={stats?.assets} months={stats?.months} />
                 <p className="mt-2 text-center">
                   Lorem ipsum dolor sit amet consectetur. Mauris nisl amet est
                   elit eu amet cursus.
@@ -91,7 +91,7 @@ const Dashboard = () => {
           >
             {stats ? (
               <div>
-                <LineChart />
+                <LineChart data={stats?.workOrder} months={stats?.months} />
                 <p className="mt-2 text-center">
                   Lorem ipsum dolor sit amet consectetur. Mauris nisl amet est
                   elit eu amet cursus.
@@ -204,7 +204,7 @@ const Dashboard = () => {
             <div className="flex justify-center">
               {stats ? (
                 <div>
-                  <ColumnChart data={stats?.unPlanned} />
+                  <ColumnChart data={stats?.inventory} months={stats?.months} />
                   <p className="mt-2">
                     Lorem ipsum dolor sit amet consectetur. Mauris nisl amet est
                     elit eu amet cursus.

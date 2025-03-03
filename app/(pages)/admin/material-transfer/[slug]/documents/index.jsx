@@ -6,12 +6,6 @@ import { EyeOutlined } from "@ant-design/icons";
 
 const columns = [
   { title: "Document Name", dataIndex: "title", key: "title" },
-  {
-    title: "Asset #",
-    dataIndex: "asset",
-    key: "asset",
-    render: (asset) => asset.id,
-  },
   { title: "Document Type", dataIndex: "type", key: "type" },
   {
     title: "Category",
@@ -65,12 +59,9 @@ const Documents = ({ documentsData, setData, superUsers }) => {
           }
           pagination={{
             total: documentsData?.length,
-            current: 1,
-            pageSize: 10,
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
-            onChange: () => {},
             className: "custom-pagination",
           }}
           style={{

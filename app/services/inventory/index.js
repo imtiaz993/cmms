@@ -113,3 +113,32 @@ export const updateStatus = async (values) => {
     }
   }
 };
+
+export const addImage = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/inventory/addImage",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const deleteInventory = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/inventory/delete?slug=" + id,
+      method: "Delete",
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};

@@ -13,12 +13,11 @@ export const getCompany = async () => {
   }
 };
 
-export const deleteCompany = async (values) => {
+export const deleteCompany = async (id) => {
   try {
     const { status, data } = await authRequest({
-      url: "/company/delete",
+      url: "/company/delete?id=" + id,
       method: "DELETE",
-      data: values,
     });
     return { status, data };
   } catch (e) {

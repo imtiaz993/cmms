@@ -1,6 +1,7 @@
 import Button from "@/components/common/Button";
 import { EyeOutlined } from "@ant-design/icons";
 import { Modal } from "antd";
+import Link from "next/link";
 
 const InventoryDetailsPopup = ({ visible, setVisible, inventory }) => {
   return (
@@ -10,7 +11,7 @@ const InventoryDetailsPopup = ({ visible, setVisible, inventory }) => {
           maskClosable={false}
           title={
             <h1 className="text-lg md:text-2xl">
-              {inventory && inventory?.partNumber}
+             Part # {inventory && inventory?.partNumber}
             </h1>
           }
           open={visible}
@@ -24,8 +25,9 @@ const InventoryDetailsPopup = ({ visible, setVisible, inventory }) => {
                 text="Close"
                 fullWidth={false}
               />
-
-              <Button className="" text="More Details" fullWidth={false} />
+              <Link href={"/admin/inventory/" + inventory?._id}>
+                <Button className="" text="More Details" fullWidth={false} />
+              </Link>
             </div>
           }
         >
@@ -73,17 +75,11 @@ const InventoryDetailsPopup = ({ visible, setVisible, inventory }) => {
               <p className="p-2 md:px-3 md:py-2 border border-b-0 truncate">
                 {inventory?.description}
               </p>
-              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0">
                 Notes
               </p>
-              <p className="p-2 md:px-3 md:py-2 border border-b-0">
+              <p className="p-2 md:px-3 md:py-2 border">
                 {inventory?.notes}
-              </p>
-              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0">
-                Image
-              </p>
-              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border">
-                <a className="underline"> View Image </a> <EyeOutlined />
               </p>
             </div>
           )}

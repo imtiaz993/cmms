@@ -5,30 +5,24 @@ import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import { getFilteredMT } from "app/services/materialTransfer";
-import { useSelector } from "react-redux";
-import SelectField from "@/components/common/SelectField";
+import { useParams } from "next/navigation";
 
-const MaterialTransferFilter = ({
-  setMaterialTransferData,
-  closeDropdown,
-  superUsers,
-  assetId,
-  inventoryId,
-}) => {
-  0;
+const MaterialTransferFilter = ({ setDetails, closeDropdown }) => {
+  const { slug } = useParams();
   const [isClearing, setIsClearing] = useState(false);
-  const locations = useSelector((state) => state.location.location);
   const submit = async (values, setSubmitting) => {
     console.log(values);
     !setSubmitting && setIsClearing(true);
-    const { status, data } = await getFilteredMT(values);
+    const { status, data } = await getFilteredMTinAssets(values, slug);
     setSubmitting ? setSubmitting(false) : setIsClearing(false);
     if (status === 200) {
-      message.success(data?.message || "Assets fetched successfully");
-      setMaterialTransferData(data?.data);
+      message.success(
+        data?.message || "Material Transfers fetched successfully"
+      );
+      setDetails((prev) => ({ ...prev, materialTransfers: data?.data }));
       closeDropdown();
     } else {
-      message.error(data?.message || "Failed to fetch assets");
+      message.error(data?.message || "Failed to fetch material transfers");
     }
   };
 
@@ -43,19 +37,16 @@ const MaterialTransferFilter = ({
       <Formik
         initialValues={{
           createdDateRange: "",
-          // materialTransferType: "",
-          asset: assetId ? assetId : "",
-          inventory: inventoryId ? inventoryId : "",
+          materialTransferType: "",
           origination: "",
           destination: "",
-          createdBy: "",
-          // Transporter: "",
+          Transporter: "",
         }}
         onSubmit={(values, { setSubmitting }) => {
           submit(values, setSubmitting);
         }}
       >
-        {({ initialValues, isSubmitting, handleSubmit, resetForm }) => (
+        {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 gap-4">
               <DatePickerField
@@ -63,53 +54,17 @@ const MaterialTransferFilter = ({
                 placeholder="Created Date Range"
               />
 
-              {/* <InputField
+              <InputField
                 name="origination"
                 placeholder="Origin"
                 maxLength={128}
-              /> */}
-              <SelectField
-                name="origination"
-                placeholder="Select Origination"
-                options={
-                  locations &&
-                  locations.map((i) => ({
-                    label: i.site,
-                    value: i._id,
-                  }))
-                }
-                // required
-                // label="Type"
               />
-              {/* <InputField
+              <InputField
                 name="destination"
                 placeholder="Destination"
                 maxLength={128}
-              /> */}
-              <SelectField
-                name="destination"
-                placeholder="Select Destination"
-                options={
-                  locations &&
-                  locations.map((i) => ({
-                    label: i.site,
-                    value: i._id,
-                  }))
-                }
-                // required
-                // label="Type"
               />
-              <SelectField
-                name="createdBy"
-                placeholder="Created By"
-                options={superUsers.map((user) => ({
-                  label: user?.name,
-                  value: user?._id,
-                }))}
-                // required
-                // label="Type"
-              />
-              {/* <InputField
+              <InputField
                 name="materialTransferType"
                 placeholder="Transfer Type"
                 maxLength={128}
@@ -118,7 +73,7 @@ const MaterialTransferFilter = ({
                 name="transporter"
                 placeholder="Transporter"
                 maxLength={128}
-              /> */}
+              />
 
               <div className="sm:col-span-2 flex justify-end gap-4">
                 <div>
@@ -130,7 +85,7 @@ const MaterialTransferFilter = ({
                     isLoading={isClearing}
                     onClick={() => {
                       resetForm();
-                      submit(initialValues);
+                      submit({});
                     }}
                     style={{ width: "fit-content" }}
                     className="mr-2"

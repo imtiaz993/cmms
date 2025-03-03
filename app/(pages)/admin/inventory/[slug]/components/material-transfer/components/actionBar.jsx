@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Checkbox, Dropdown, Menu, message, Button as AntButton } from "antd";
+import {
+  Checkbox,
+  Dropdown,
+  Input,
+  Menu,
+  message,
+  Button as AntButton,
+} from "antd";
 import { DownOutlined, SettingOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import { printMaterialTransfer } from "app/services/materialTransfer";
@@ -21,6 +28,10 @@ const ActionBar = ({
     value: key,
     key: index,
   }));
+
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+  };
 
   const handleCheckboxChange = (value) => {
     const newCheckedList = checkedList.includes(value)
@@ -53,7 +64,7 @@ const ActionBar = ({
                 }
                 closeDropdown={() => setFilterDropdown(false)}
                 superUsers={superUsers}
-                assetId={slug}
+                inventoryId={slug}
               />
             )}
             trigger={["click"]}

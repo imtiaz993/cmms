@@ -20,7 +20,7 @@ import { updateInventory } from "app/redux/slices/inventoriesSlice";
 import { useParams, useRouter } from "next/navigation";
 import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
-import AddLocationPopup from "../../settings/locations/components/addLocationPopup";
+import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
 
 const columns = [
   {
@@ -261,7 +261,7 @@ const InventoryForm = () => {
   };
 
   if ((slug && loading) || (slug && !details))
-    return <div className="ml-10 mt-20 text-center">Loading...</div>;
+    return <p className="ml-10 mt-20 text-center">Loading...</p>;
 
   return (
     <div className="mx-5 md:mx-10">
@@ -273,7 +273,7 @@ const InventoryForm = () => {
         setFields={setFields}
       />
       <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
-      <AddLocationPopup
+      <AddSystemPopup
         visible={addSystemPopup}
         setVisible={setAddSystemPopup}
       />
@@ -378,7 +378,7 @@ const InventoryForm = () => {
                 />
                 <DatePickerField name="receivedDate" label="Date Received" />
 
-                <p className="md:col-span-2 font-semibold md:text-lg">
+                {/* <p className="md:col-span-2 font-semibold md:text-lg">
                   Inventory Added
                 </p>
 
@@ -402,7 +402,7 @@ const InventoryForm = () => {
                     overflow: "auto",
                   }}
                   className="md:col-span-2"
-                />
+                /> */}
 
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Inventory Information

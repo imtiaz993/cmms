@@ -9,6 +9,7 @@ const ConfirmationPopup = ({
   message,
   onConfirm,
   onCancel,
+  cancelText,
 }) => {
   return (
     <Modal
@@ -22,7 +23,7 @@ const ConfirmationPopup = ({
             setVisible(false);
             if (onCancel) onCancel();
           }}
-          text="No"
+          text={cancelText || "No"}
           fullWidth={false}
           outlined
         />,

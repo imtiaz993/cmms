@@ -198,12 +198,10 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
                 dataSource={data}
                 pagination={{
                   total: data?.total,
-                  current: 1,
-                  pageSize: 10,
+                  // pageSize: 10,
                   showSizeChanger: true,
                   showTotal: (total, range) =>
                     `${range[0]}-${range[1]} of ${total} items`,
-                  onChange: () => {},
                 }}
                 style={{
                   marginTop: 16,

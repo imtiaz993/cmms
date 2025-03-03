@@ -152,12 +152,10 @@ const AddInventoryPopupMT = ({
           scroll={{ x: 1200 }}
           pagination={{
             total: inventory?.length,
-            current: 1,
-            pageSize: 10,
+            // pageSize: 10,
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
-            onChange: () => {},
           }}
         />
       </div>

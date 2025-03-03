@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { Checkbox, Dropdown, Button as AntButton, message, Menu } from "antd";
-import {
-  DownOutlined,
-  ExportOutlined,
-  PlusOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+import { DownOutlined, PlusOutlined, SettingOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import { useParams } from "next/navigation";
 import UploadDocPopup from "@/components/uploadDocPopup";
@@ -35,16 +30,6 @@ const ActionBar = ({
       ? checkedList.filter((key) => key !== value)
       : [...checkedList, value];
     setCheckedList(newCheckedList);
-  };
-
-  const handleExport = async () => {
-    message.success("Export Failed ");
-    // const { status, data } = await exportEvents();
-    // if (status === 200) {
-    //   window.open(data.data);
-    // } else {
-    //   message.error(data.error);
-    // }
   };
 
   return (
@@ -133,13 +118,6 @@ const ActionBar = ({
                 prefix={<SettingOutlined />}
               />
             </Dropdown>
-            <Button
-              text="Export"
-              outlined
-              onClick={handleExport}
-              style={{ padding: "0px 15px", height: "44px" }}
-              prefix={<ExportOutlined />}
-            />
             <Dropdown
               dropdownRender={() => (
                 <Menu>
@@ -178,12 +156,6 @@ const ActionBar = ({
                 prefix={<PlusOutlined />}
               />
             </Dropdown>
-            {/* <Button
-              text="New Event"
-              style={{ padding: "0px 20px", height: "44px" }}
-              prefix={<PlusOutlined />}
-              onClick={() => router.push("/admin/events/new")}
-            /> */}
           </div>
         </div>
       </div>

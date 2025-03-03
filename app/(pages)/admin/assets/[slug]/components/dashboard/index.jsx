@@ -429,15 +429,7 @@ const MaintenanceCard = ({ dashboardDetails }) => {
         scroll={{ x: 700 }}
         columns={columns}
         dataSource={data}
-        pagination={{
-          total: data.total,
-          current: 1,
-          pageSize: 10,
-          showSizeChanger: true,
-          showTotal: (total, range) =>
-            `${range[0]}-${range[1]} of ${total} items`,
-          onChange: () => {},
-        }}
+        pagination={false}
         style={{
           marginTop: 16,
           overflow: "auto",

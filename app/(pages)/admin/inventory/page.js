@@ -4,13 +4,20 @@ import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
 import CreateInventoryPopup from "./components/createInventoryPopup";
 import { useDispatch, useSelector } from "react-redux";
-import { EyeOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EyeOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
 import InventoryDetailsPopup from "./components/inventoryDetailsPopup";
 import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getFilteredInventory } from "app/services/inventory";
+import { deleteInventory, getFilteredInventory } from "app/services/inventory";
 import { EditPagePencil } from "@/icons/index";
 import { setMaterialTransfer } from "app/redux/slices/saveMaterialTransferData";
+import ConfirmationPopup from "@/components/confirmationPopup";
+import Link from "next/link";
+import { setInventory } from "app/redux/slices/inventoriesSlice";
 
 const Inventory = () => {
   const searchParams = useSearchParams();
@@ -24,6 +31,7 @@ const Inventory = () => {
   const [detailsPopup, setDetailsPopup] = useState();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState(""); // State for search text
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const columns = [
     {
       title: "Part #",
@@ -72,12 +80,15 @@ const Inventory = () => {
             style={{ fontSize: "20px", cursor: "pointer" }}
             onClick={() => setDetailsPopup(record)}
           />
-          <span
-            className="cursor-pointer"
-            onClick={() => router.push("/admin/inventory/" + id + "/edit")}
-          >
+          <Link href={`/admin/inventory/${id}/edit`}>
             <EditPagePencil />
-          </span>
+          </Link>
+          <DeleteOutlined
+            style={{ fontSize: "20px", cursor: "pointer" }}
+            onClick={() => {
+              setDeleteConfirmation(id);
+            }}
+          />
         </p>
       ),
     },
@@ -136,7 +147,7 @@ const Inventory = () => {
 
       fetchFilteredInventory();
     } else {
-      setFilteredInventory(inventory); // If no filters, use full assets list
+      setFilteredInventory(inventory); // If no filters, use full inventory list
     }
   }, [activeLocation, activeSystem]);
 
@@ -153,8 +164,27 @@ const Inventory = () => {
     router.push("/admin/new/material-transfer?materialType=inventory");
   };
 
+  const handleDelete = async (id) => {
+    const { status, data } = await deleteInventory(id);
+    if (status === 200) {
+      dispatch(setInventory(inventory.filter((i) => i._id !== id)));
+      setFilteredInventory((prev) => prev.filter((i) => i._id !== id));
+      message.success(data?.message || "Inventory deleted successfully");
+    } else {
+      message.error(data?.message || "Failed to delete inventory");
+    }
+    setDeleteConfirmation(false);
+  };
+
   return (
     <>
+      <ConfirmationPopup
+        visible={deleteConfirmation}
+        setVisible={setDeleteConfirmation}
+        title={"Delete Inventory"}
+        message="Are you sure you want to delete this inventory?"
+        onConfirm={() => handleDelete(deleteConfirmation)}
+      />
       <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
         <Button
           text={
@@ -207,12 +237,10 @@ const Inventory = () => {
             }
             pagination={{
               total: displayedInventory?.length,
-              current: 1,
-              pageSize: 10,
+              // pageSize: 10,
               showSizeChanger: true,
               showTotal: (total, range) =>
                 `${range[0]}-${range[1]} of ${total} items`,
-              onChange: () => {},
               className: "custom-pagination",
             }}
             style={{

@@ -15,7 +15,7 @@ import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import AddFieldPopup from "@/components/addFieldPopup";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
-import AddLocationPopup from "../../settings/locations/components/addLocationPopup";
+import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
 import AddCategoryPopup from "../../settings/categories/components/addCategoryPopup";
 import AddSubCategoryPopup from "../../settings/sub-categories/components/addSubCategoryPopup";
 import { getCategories } from "app/services/setUp/categories";
@@ -268,7 +268,7 @@ const AssetForm = () => {
   };
 
   if ((slug && loading) || (slug && !details))
-    return <div className="ml-10 mt-20 text-center">Loading...</div>;
+    return <p className="ml-10 mt-20 text-center">Loading...</p>;
 
   return (
     <div className="mx-5 md:mx-10">
@@ -280,7 +280,7 @@ const AssetForm = () => {
         setFields={setFields}
       />
       <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
-      <AddLocationPopup
+      <AddSystemPopup
         visible={addSystemPopup}
         setVisible={setAddSystemPopup}
       />
@@ -464,7 +464,7 @@ const AssetForm = () => {
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Asset Maintenance
                 </p>
-                <Table
+                {/* <Table
                   loading={isLoading}
                   size={"large"}
                   scroll={{ x: 700 }}
@@ -485,7 +485,7 @@ const AssetForm = () => {
                   }}
                   className="md:col-span-2"
                   pagination={false}
-                />
+                /> */}
                 <SelectField
                   name="maintCategory"
                   placeholder="Category"
@@ -626,7 +626,9 @@ const AssetForm = () => {
                       if (info.file.status === "removed") {
                         setFieldValue(
                           "assetImages",
-                          values.assetImages.filter((f) => f.uid !== info.file.uid)
+                          values.assetImages.filter(
+                            (f) => f.uid !== info.file.uid
+                          )
                         );
                       } else {
                         // Update Formik's field with the updated file list

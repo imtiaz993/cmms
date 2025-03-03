@@ -4,10 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs as AntTabs } from "antd";
 import Documents from "./documents";
 import MaterialTransfer from "./material-transfer";
-import Maintainance from "./maintenance";
 import Details from "./details";
 import History from "./history";
-import ManHours from "./man-hours";
 import Photos from "./photos";
 
 const Tabs = ({ data, setData, slug, superUsers }) => {
@@ -17,7 +15,7 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
   const activeTab = searchParams.get("tab");
 
   const onChange = (key) => {
-    router.push(`/admin/assets/${slug}?tab=${key}`);
+    router.push(`/admin/inventory/${slug}?tab=${key}`);
   };
 
   const tabs = [
@@ -29,9 +27,7 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
     {
       key: "photos",
       label: "Photos",
-      children: (
-        <Photos photos={data?.dashboard.assetImages} setData={setData} />
-      ),
+      children: <Photos photos={data?.dashboard?.image} setData={setData} />,
     },
     {
       key: "documents",
@@ -43,13 +39,6 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
           superUsers={superUsers}
         />
       ),
-    },
-    { key: "manHours", label: "Man Hours", children: <ManHours /> },
-
-    {
-      key: "maintenance",
-      label: "Maintenance",
-      children: <Maintainance maintenanceData={data?.maintenanceSchedules} />,
     },
     {
       key: "material-transfer",
@@ -65,7 +54,7 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
     {
       key: "history",
       label: "History",
-      children: <History historyData={data?.history} />,
+      children: <History data={data?.events} />,
     },
   ];
   return (

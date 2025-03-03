@@ -46,16 +46,23 @@ const MaterialTransfer = () => {
       dataIndex: "createdBy",
       key: "createdBy",
     },
-
+    {
+      title: "Created At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+    },
     {
       title: "Origin",
-      dataIndex: "origination",
+      dataIndex: "origiationSites",
       key: "origination",
+      render: (origiationSites) =>
+        origiationSites?.map((i) => i.site).join(","),
     },
     {
       title: "Destination",
-      dataIndex: "destination",
+      dataIndex: "destinationSite",
       key: "destination",
+      render: (destinationSite) => destinationSite?.site,
     },
     {
       title: "",
@@ -199,12 +206,10 @@ const MaterialTransfer = () => {
           }
           pagination={{
             total: filteredData?.length,
-            current: 1,
-            pageSize: 10,
+            // pageSize: 10,
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
-            onChange: () => {},
             className: "custom-pagination",
           }}
           style={{

@@ -1,69 +1,57 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { message } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-import { getFilteredInventory } from "app/services/inventory";
+import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
-import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { message } from "antd";
 
 const validationSchema = Yup.object().shape({
-  date: Yup.date().nullable(),
   event: Yup.string(),
-  notes: Yup.string(),
 });
 
-const EventsFilter = ({ closeDropdown }) => {
-  const dispatch = useDispatch();
+const HistoryFilter = ({ closeDropdown }) => {
   const [isClearing, setIsClearing] = useState(false);
-
-  const submit = async (values, setSubmitting) => {
-    console.log(values);
-    // dispatch(setInventoryLoading(true));
+  const handleSubmit = async (values, setSubmitting) => {
     !setSubmitting && setIsClearing(true);
-    // const { status, data } = await getFilteredInventory(values);
-    const status = null,
-      data = null;
+    const status = 404;
+    const data = null;
     setSubmitting ? setSubmitting(false) : setIsClearing(false);
     if (status === 200) {
-      message.success(data?.message || "Events fetched successfully");
-      // dispatch(setInventory(data?.data));
+      message.success(data?.message || "History fetched successfully");
       closeDropdown();
     } else {
-      // dispatch(setInventoryError(data?.error));
-      message.error(data?.message || "Failed to fetch events");
+      message.error(data?.message || "Failed to fetch History");
     }
-    // dispatch(setInventoryLoading(false));
   };
 
   return (
-    <div
-      className="p-4 bg-primary rounded-md max-h-[400px] overflow-auto"
-      style={{
-        boxShadow:
-          "0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)",
-      }}
-    >
+    <div className="p-4 bg-primary rounded-md max-h-[400px] overflow-auto shadow-custom">
       <Formik
         initialValues={{
-          date: null,
+          date: "",
           event: "",
-          notes: "",
+          field: "",
+          changedFrom: "",
+          changedTo: "",
+          actionBy: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          submit(values, setSubmitting);
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          handleSubmit(values, setSubmitting);
         }}
       >
-        {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
+        {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 gap-4">
               <DatePickerField name="date" placeholder="Date" />
-              <InputField name="event" placeholder="Event" maxLength={128} />
-              <InputField name="notes" placeholder="Notes" maxLength={128} />
-
-              <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
+              <InputField name="event" placeholder="Event" />
+              <InputField name="field" placeholder="Field" />
+              <InputField name="changedFrom" placeholder="Changed From" />
+              <InputField name="changedTo" placeholder="Changed To" />
+              <InputField name="actionBy" placeholder="Action By" />
+              <div className="sm:col-span-2 flex justify-end gap-4">
                 <div>
                   <Button
                     outlined
@@ -73,7 +61,7 @@ const EventsFilter = ({ closeDropdown }) => {
                     isLoading={isClearing}
                     onClick={() => {
                       resetForm();
-                      submit({});
+                      handleSubmit({});
                     }}
                     style={{ width: "fit-content" }}
                     className="mr-2"
@@ -96,4 +84,4 @@ const EventsFilter = ({ closeDropdown }) => {
   );
 };
 
-export default EventsFilter;
+export default HistoryFilter;

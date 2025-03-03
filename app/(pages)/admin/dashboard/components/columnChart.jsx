@@ -1,15 +1,12 @@
 import ReactApexChart from "react-apexcharts";
 
-const ColumnChart = ({ data }) => {
-  // Extracting data from the provided object
-  // const { months, created, completed } = data;
-
+const ColumnChart = ({ data, months }) => {
   return (
     <ReactApexChart
       series={[
         {
-          name: "Created",
-          data: [3500, 2500, 2000, 3000, 3200, 3900],
+          name: "Cost",
+          data: data.data,
         },
       ]}
       options={{
@@ -55,20 +52,7 @@ const ColumnChart = ({ data }) => {
               colors: "var(--primary-text)",
             },
           },
-          categories: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            // "July",
-            // "Aug",
-            // "Sep",
-            // "Oct",
-            // "Nov",
-            // "Dec",
-          ], // Dynamically set categories
+          categories: months,
           crosshairs: {
             show: false,
           },
@@ -81,7 +65,9 @@ const ColumnChart = ({ data }) => {
           },
         },
         tooltip: {
-          theme: "dark",
+          theme: document.body.classList.contains("dark-mode")
+            ? "dark"
+            : "light",
         },
         // responsive: [
         //   {

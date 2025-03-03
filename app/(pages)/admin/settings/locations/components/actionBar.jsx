@@ -15,7 +15,7 @@ import {
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import FilterDropdown from "./filtersDropdown";
-import AddLocationPopup from "./addLocationPopup";
+import AddSystemPopup from "./addSystemPopup";
 import { getSites } from "app/services/setUp/sites";
 import { SearchIcon } from "@/icons/index";
 import { exportSystems } from "app/services/setUp/systems";
@@ -26,12 +26,12 @@ const ActionBar = ({
   setCheckedList,
   setSearchText,
   setLoading,
-  setLocations,
+  setSystems,
   handleFetchFilteredSystems,
   activeTab,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
-  const [addLocationPopup, setAddLocationPopup] = useState(false);
+  const [addSystemPopup, setAddSystemPopup] = useState(false);
   const [sites, setSites] = useState([]);
 
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
@@ -78,10 +78,10 @@ const ActionBar = ({
 
   return (
     <>
-      <AddLocationPopup
-        visible={addLocationPopup}
-        setVisible={setAddLocationPopup}
-        setLocations={setLocations}
+      <AddSystemPopup
+        visible={addSystemPopup}
+        setVisible={setAddSystemPopup}
+        setSystems={setSystems}
       />
       <div className="">
         <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3">
@@ -100,8 +100,8 @@ const ActionBar = ({
               dropdownRender={() => (
                 <FilterDropdown
                   closeDropdown={() => setFilterDropdown(false)}
-                  setLoading={setLoading}
-                  setLocations={setLocations}
+                  // setLoading={setLoading}
+                  // setLocations={setSystems}
                   handleFetchFilteredSystems={handleFetchFilteredSystems}
                   sites={sites}
                 />
@@ -164,10 +164,10 @@ const ActionBar = ({
               prefix={<ExportOutlined />}
             />
             <Button
-              text="New Location"
+              text="New System"
               style={{ padding: "4px 30px" }}
               prefix={<PlusOutlined />}
-              onClick={() => setAddLocationPopup(true)}
+              onClick={() => setAddSystemPopup(true)}
             />
           </div>
         </div>

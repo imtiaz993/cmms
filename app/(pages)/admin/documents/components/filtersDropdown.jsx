@@ -19,6 +19,7 @@ const DocumentsFilter = ({
   superUsers,
   asset,
   materialTransfer,
+  inventory,
 }) => {
   const [isClearing, setIsClearing] = useState(false);
 
@@ -43,6 +44,7 @@ const DocumentsFilter = ({
         initialValues={{
           title: "",
           asset: asset || "",
+          inventory: inventory || "",
           type: "",
           // category: "",
           uploadedBy: "",
@@ -54,7 +56,7 @@ const DocumentsFilter = ({
           submit(values, setSubmitting);
         }}
       >
-        {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
+        {({ initialValues, isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               <InputField name="title" placeholder="Document Name" />
@@ -75,6 +77,7 @@ const DocumentsFilter = ({
                 placeholder="Category"
                 options={[
                   { label: "Asset", value: "asset" },
+                  { label: "Inventory", value: "inventory" },
                   { label: "Work Order", value: "workOrder" },
                   { label: "Material Transfer", value: "materialTransfer" },
                 ]}
@@ -105,7 +108,7 @@ const DocumentsFilter = ({
                     isLoading={isClearing}
                     onClick={() => {
                       resetForm();
-                      submit({});
+                      submit(initialValues);
                     }}
                     style={{ width: "fit-content" }}
                     className="mr-2"

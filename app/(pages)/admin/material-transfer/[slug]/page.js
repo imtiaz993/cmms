@@ -83,17 +83,17 @@ const MaterialTransferDetail = () => {
 
   const { Step } = Steps;
 
+  const fetchData = async () => {
+    const { status, data } = await getMaterialTransferDetails(slug);
+    if (status === 200) {
+      console.log(data);
+      setDetails(data?.data);
+      setSelectedRowKeys(data?.data?.materialTransfer.inventory);
+    } else {
+      message.error(data?.message || "Failed to fetch data");
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const { status, data } = await getMaterialTransferDetails(slug);
-      if (status === 200) {
-        console.log(data);
-        setDetails(data?.data);
-        setSelectedRowKeys(data?.data?.materialTransfer.inventory);
-      } else {
-        message.error(data?.message || "Failed to fetch data");
-      }
-    };
     const handleFetchSuperUsers = async () => {
       const { status, data } = await getAdminsManagers();
       if (status === 200) {
@@ -131,6 +131,7 @@ const MaterialTransferDetail = () => {
       details?.materialTransfer._id
     );
     if (status === 200) {
+      fetchData();
       message.success(
         data.message || "Material Transfer Completed Successfully"
       );
@@ -144,8 +145,9 @@ const MaterialTransferDetail = () => {
       details?.materialTransfer._id
     );
     if (status === 200) {
+      fetchData();
       message.success(
-        data.message || "Material Transfer Canceled Successfully"
+        data.message || "Material Transfer Cancelled Successfully"
       );
     } else {
       message.error(data.message || "Failed to cancel");
@@ -153,33 +155,40 @@ const MaterialTransferDetail = () => {
   };
 
   const columns = [
-    { title: "Id", dataIndex: "_id", key: "_id" },
     {
       title:
-        details?.materialTransfer?.inventories?.length > 0 === "inventory"
+        details?.materialTransfer?.inventories?.length > 0
           ? "Part #"
           : "Asset #",
       dataIndex:
-        details?.materialTransfer?.inventories?.length > 0 === "inventory"
-          ? "partNumber"
-          : "assetID",
+        details?.materialTransfer?.inventories?.length > 0
+          ? "inventory"
+          : "asset",
       key:
-        details?.materialTransfer?.inventories?.length > 0 === "inventory"
+        details?.materialTransfer?.inventories?.length > 0
           ? "partNumber"
           : "assetID",
+      render: (data) => data?.partNumber || data?.assetID,
     },
     {
       title: "Location",
-      dataIndex: "site",
+      dataIndex:
+        details?.materialTransfer?.inventories?.length > 0
+          ? "inventory"
+          : "asset",
       key: "site",
-      render: (_, record) => <span>{record?.site?.site}</span>,
+      render: (data, record) => <span>{data?.site}</span>,
     },
     {
       title: "Description",
-      dataIndex: "description",
+      dataIndex:
+        details?.materialTransfer?.inventories?.length > 0
+          ? "inventory"
+          : "asset",
       key: "description",
+      render: (data, record) => <span>{data?.description}</span>,
     },
-    ...(details?.materialTransfer?.inventories?.length > 0 === "inventory"
+    ...(details?.materialTransfer?.inventories?.length > 0
       ? [
           {
             title: "Quantity",
@@ -189,6 +198,8 @@ const MaterialTransferDetail = () => {
         ]
       : []),
   ];
+
+  console.log("columsn", details?.materialTransfer?.inventories?.length);
 
   return (
     <div className="p-7 overflow-auto h-[calc(100dvh-130px)]">
@@ -226,24 +237,24 @@ const MaterialTransferDetail = () => {
             className="ml-3"
             onClick={() => handlePrint()}
           />
-          {(details?.materialTransfer?.status !== "canceled" ||
-            details?.materialTransfer?.status !== "completed") && (
-            <Button
-              text="Cancel"
-              fullWidth={false}
-              className="ml-3"
-              onClick={() => handleCancel()}
-            />
-          )}
-          {(details?.materialTransfer?.status !== "canceled" ||
-            details?.materialTransfer?.status !== "completed") && (
-            <Button
-              text="Complete"
-              fullWidth={false}
-              className="ml-3"
-              onClick={() => handleComplete()}
-            />
-          )}
+          {details?.materialTransfer?.status !== "cancelled" &&
+            details?.materialTransfer?.status !== "confirmed" && (
+              <Button
+                text="Cancel"
+                fullWidth={false}
+                className="ml-3"
+                onClick={() => handleCancel()}
+              />
+            )}
+          {details?.materialTransfer?.status !== "cancelled" &&
+            details?.materialTransfer?.status !== "confirmed" && (
+              <Button
+                text="Complete"
+                fullWidth={false}
+                className="ml-3"
+                onClick={() => handleComplete()}
+              />
+            )}
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-5">
@@ -363,9 +374,11 @@ const MaterialTransferDetail = () => {
                 description={
                   <div>
                     <p>
-                      {details?.materialTransfer?.status}
-                      {/* <span className="text-[#52c41a]">Approved</span> by
-                      Midland Yard */}
+                      <span className="text-[#52c41a] capitalize">
+                        {details?.materialTransfer.status}
+                      </span>
+                      {details?.materialTransfer.receivedBy ? "by " : ""}
+                      {details?.materialTransfer?.receivedBy}
                     </p>
                   </div>
                 }
@@ -388,6 +401,12 @@ const MaterialTransferDetail = () => {
           }
         >
           <div className="">
+            {details?.materialTransfer?.assets?.length > 0
+              ? console.log("assets", details?.materialTransfer?.assets)
+              : console.log(
+                  "inventories",
+                  details?.materialTransfer?.inventories
+                )}
             <Table
               loading={false}
               scroll={{ x: 700 }}

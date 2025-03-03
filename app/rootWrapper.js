@@ -56,6 +56,10 @@ export default function RootWrapper({ children }) {
               },
               Menu: {
                 itemSelectedBg: "#efbf60",
+                itemSelectedColor: "#000000 !important",
+              },
+              Drawer: {
+                colorBgElevated: "var(--background-color)",
               },
               Dropdown: {
                 colorBgElevated: "var(--background-secondary-color)",

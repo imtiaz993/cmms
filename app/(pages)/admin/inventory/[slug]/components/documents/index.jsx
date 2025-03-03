@@ -2,19 +2,35 @@
 import { useState } from "react";
 import { Table } from "antd";
 import ActionBar from "./actionBar";
+import { EyeOutlined } from "@ant-design/icons";
 
 const columns = [
-  { title: "Date", dataIndex: "date", key: "date" },
-  { title: "Event", dataIndex: "event", key: "event" },
-  { title: "Field", dataIndex: "field", key: "field" },
-  { title: "Changed From", dataIndex: "changedFrom", key: "changedFrom" },
-  { title: "Changed To", dataIndex: "changedTo", key: "changedTo" },
-  { title: "Action By", dataIndex: "actionBy", key: "actionBy" },
+  { title: "Document Name", dataIndex: "title", key: "title" },
+  // {
+  //   title: "Asset #",
+  //   dataIndex: "asset",
+  //   key: "asset",
+  //   render: (asset) => asset.id,
+  // },
+  { title: "Document Type", dataIndex: "type", key: "type" },
+  { title: "Category", dataIndex: "type", key: "type" },
+  { title: "Uploaded By", dataIndex: "uploadedBy", key: "uploadedBy" },
+  { title: "Uploaded Date", dataIndex: "createdAt", key: "createdAt" },
+  {
+    title: "",
+    dataIndex: "link",
+    key: "link",
+    render: (link) => (
+      <a href={link} target="_blank" className="text-tertiary">
+        <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+      </a>
+    ),
+  },
 ];
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const History = ({ historyData }) => {
+const Documents = ({ documentsData, setData, superUsers }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
@@ -26,6 +42,8 @@ const History = ({ historyData }) => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
+          superUsers={superUsers}
+          setData={setData}
         />
 
         <Table
@@ -33,13 +51,14 @@ const History = ({ historyData }) => {
           size={"large"}
           scroll={{ x: 1400 }}
           columns={newColumns}
+          rowKey="_id"
           dataSource={
-            historyData &&
-            historyData.length > 0 &&
-            historyData.map((i, index) => ({ ...i, key: index }))
+            documentsData &&
+            documentsData.length > 0 &&
+            documentsData.map((i, index) => ({ ...i, key: index }))
           }
           pagination={{
-            total: historyData?.length,
+            total: documentsData?.length,
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
@@ -55,4 +74,4 @@ const History = ({ historyData }) => {
   );
 };
 
-export default History;
+export default Documents;

@@ -2,7 +2,7 @@ import "./globals.css";
 import RootWrapper from "./rootWrapper";
 
 export const metadata = {
-  title: "CMMS",
+  title: "Hive Solutions",
   description: "",
 };
 
