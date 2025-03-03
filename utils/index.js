@@ -11,9 +11,13 @@ export const getUser = () => {
 };
 export const getDarkMode = () => {
   if (typeof window !== "undefined") {
-    // Check if it's running in the browser
-    const darkMode = localStorage.getItem("darkMode");
-    return darkMode ? JSON.parse(darkMode) : false;
+    const storedMode = localStorage.getItem("darkMode");
+    const isDark = storedMode === "true";
+    if (isDark) {
+      document.body.classList.add("dark-mode");
+      document.documentElement.classList.add("dark");
+    }
+    return isDark;
   }
-  return false; // Return null if it's running server-side
+  return null; // Default to light mode if window is undefined
 };

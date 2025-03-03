@@ -95,13 +95,12 @@ export default function Layout({ children }) {
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add("dark-mode");
-      document.documentElement.classList.toggle("dark");
-      localStorage.setItem("darkMode", "true");
+      document.documentElement.classList.add("dark");
     } else {
       document.body.classList.remove("dark-mode");
       document.documentElement.classList.remove("dark");
-      localStorage.setItem("darkMode", "false");
     }
+    localStorage.setItem("darkMode", isDarkMode.toString());
   }, [isDarkMode]);
 
   useEffect(() => {
@@ -251,7 +250,7 @@ export default function Layout({ children }) {
                         }))}
                         placeholder={
                           <p>
-                            <EnvironmentOutlined /> Location
+                            <EnvironmentOutlined /> Site
                           </p>
                         }
                         className="w-full sm:w-44 !h-10 shadow-custom"
@@ -267,7 +266,7 @@ export default function Layout({ children }) {
                               <EnvironmentOutlined
                                 style={{ marginRight: "8px", fontSize: "16px" }}
                               />
-                              <span>Locations</span>
+                              <span>Sites</span>
                             </div>
                             {menu}
                           </div>

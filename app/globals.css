@@ -151,7 +151,7 @@ h6 {
   padding-left: 10px !important;
   padding-right: 10px !important;
   background-color: var(--background-color) !important;
-  border-color: var(--primary-text) !important;
+  border-color: var(--border-color) !important;
 }
 
 .ant-drawer-content-wrapper {
