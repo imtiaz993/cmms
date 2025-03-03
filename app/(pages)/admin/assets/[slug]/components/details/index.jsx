@@ -65,6 +65,15 @@ const Details = ({ details }) => {
             </p>
             <p className="p-2 md:px-3 md:py-2">{details.criticality || "-"}</p>
           </div>
+
+          <div className="grid grid-cols-2 border">
+            <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r">
+              Completion Date
+            </p>
+            <p className="p-2 md:px-3 md:py-2">
+              {details.completionDate || "-"}
+            </p>
+          </div>
         </div>
       </div>
 

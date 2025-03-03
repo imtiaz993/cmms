@@ -169,6 +169,7 @@ const AssetForm = () => {
     serialNumber: Yup.string().required("Serial number is required"),
     maintCategory: Yup.string().required("Maintenance category is required"),
     startDate: Yup.date().required("Start date is required"),
+    completionDate: Yup.date().required("Completion date is required"),
     criticality: Yup.string().required("Criticality is required"),
     maintStatus: Yup.string().required("Maintenance status is required"),
     assetImages: Yup.array().required("Asset Image is required"),
@@ -280,10 +281,7 @@ const AssetForm = () => {
         setFields={setFields}
       />
       <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
-      <AddSystemPopup
-        visible={addSystemPopup}
-        setVisible={setAddSystemPopup}
-      />
+      <AddSystemPopup visible={addSystemPopup} setVisible={setAddSystemPopup} />
       <AddCategoryPopup
         visible={addCategoryPopup}
         setVisible={setAddCategoryPopup}
@@ -323,6 +321,7 @@ const AssetForm = () => {
             serialNumber: details?.dashboard?.serialNumber || "",
             maintCategory: details?.dashboard?.maintCategory?._id || "",
             startDate: details?.dashboard?.startDate || "",
+            completionDate: details?.dashboard?.completionDate || "",
             criticality: details?.dashboard?.criticality || "",
             maintStatus: details?.dashboard?.maintStatus || "",
             assetImages: details?.dashboard?.assetImages
@@ -496,6 +495,10 @@ const AssetForm = () => {
                   }))}
                 />
                 <DatePickerField name="startDate" label="Start Date" />
+                <DatePickerField
+                  name="completionDate"
+                  label="Completion Date"
+                />
                 {console.log("values:", values)}
                 <div className="md:col-span-2 sm:flex items-center">
                   <label className="text-sm sm:text-right sm:min-w-[115px]">

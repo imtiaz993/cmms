@@ -156,7 +156,6 @@ const CompanyDetails = ({ activeTab }) => {
                   </p>
                   <Button
                     text="Save Changes"
-                    className="!bg-yellow-500 !shadow-custom !border-white w-full sm:w-32"
                     fullWidth={false}
                     onClick={handleSubmit}
                     disabled={isSubmitting}
