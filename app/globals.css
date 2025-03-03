@@ -293,3 +293,7 @@ h6 {
   background: var(--background-secondary-color) !important;
   color: var(--primary-text) !important;
 }
+
+.ant-menu-item-selected span {
+  color: black !important;
+}
