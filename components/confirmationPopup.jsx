@@ -16,7 +16,7 @@ const ConfirmationPopup = ({
       title={title || "Confirmation"}
       open={visible}
       onCancel={() => setVisible(false)}
-      footer={[
+      footer={onConfirm ? [
         <Button
           key={"cancel"}
           onClick={() => {
@@ -27,18 +27,25 @@ const ConfirmationPopup = ({
           fullWidth={false}
           outlined
         />,
-        onConfirm && (
-          <Button
-            key={"confirm"}
-            onClick={() => {
-              setVisible(false);
-              if (onConfirm) onConfirm();
-            }}
-            fullWidth={false}
-            text="Yes"
-          />
-        ),
-      ]}
+        <Button
+          key={"confirm"}
+          onClick={() => {
+            setVisible(false);
+            if (onConfirm) onConfirm();
+          }}
+          fullWidth={false}
+          text="Yes"
+        />,
+      ] :[ <Button
+        key={"cancel"}
+        onClick={() => {
+          setVisible(false);
+          if (onCancel) onCancel();
+        }}
+        text="Cancel"
+        fullWidth={false}
+        outlined
+      />]}
       maskClosable={false}
       centered
     >

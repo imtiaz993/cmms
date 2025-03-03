@@ -56,6 +56,7 @@ const Assets = () => {
   const [searchText, setSearchText] = useState(""); // State for search text
   const router = useRouter();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRowsData, setselectedRowsData] = useState([])
   const [filteredAssets, setFilteredAssets] = useState([]);
   const [isFiltering, setIsFiltering] = useState(false);
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
@@ -174,6 +175,7 @@ const Assets = () => {
   const rowSelection = {
     selectedRowKeys,
     onChange: (keys, rows) => {
+      setselectedRowsData(rows)
       setSelectedRowKeys(keys);
     },
   };
@@ -204,17 +206,17 @@ const Assets = () => {
       size="small"
       rowKey="_id"
       rowSelection={rowSelection}
-      // expandable={{
-      //   expandedRowRender: (parentRecord) => (
-      //     <Table
-      //       columns={childColumns}
-      //       dataSource={[parentRecord]} // Single child data for further nesting
-      //       pagination={false}
-      //       size="small"
-      //       rowKey="key"
-      //     />
-      //   ),
-      // }}
+    // expandable={{
+    //   expandedRowRender: (parentRecord) => (
+    //     <Table
+    //       columns={childColumns}
+    //       dataSource={[parentRecord]} // Single child data for further nesting
+    //       pagination={false}
+    //       size="small"
+    //       rowKey="key"
+    //     />
+    //   ),
+    // }}
     />
   );
 
@@ -312,8 +314,10 @@ const Assets = () => {
           setSearchText={setSearchText}
           setFilteredAssets={setFilteredAssets}
           selectedRowKeys={selectedRowKeys}
+          selectedRowsData={selectedRowsData}
+
         />
-        {console.log("displayedAssets", filteredAssets)}
+        {console.log("displayedAssets", filteredAssets, displayedAssets)}
         <Table
           loading={isFiltering || isLoading}
           size="large"
@@ -331,12 +335,12 @@ const Assets = () => {
             className: "custom-pagination",
           }}
           style={{ marginTop: 16 }}
-          // rowKey="key"
-          // expandable={{
-          //   expandedRowRender,
-          //   expandedRowKeys,
-          //   onExpand: handleRowExpand,
-          // }}
+        // rowKey="key"
+        // expandable={{
+        //   expandedRowRender,
+        //   expandedRowKeys,
+        //   onExpand: handleRowExpand,
+        // }}
         />
       </div>
     </>
