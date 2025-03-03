@@ -447,13 +447,11 @@ const InventoryForm = () => {
                       listType="picture"
                       beforeUpload={(file) => {
                         file.preview = URL.createObjectURL(file);
+                        file.url = URL.createObjectURL(file);
                         return false;
                       }}
                       onChange={(info) => {
-                        const updatedFileList = info.fileList.map((file) => ({
-                          ...file,
-                          preview: file.preview || file,
-                        }));
+                        const updatedFileList = info.fileList;
                         setFieldValue("image", updatedFileList);
                       }}
                       onRemove={(file) => {
