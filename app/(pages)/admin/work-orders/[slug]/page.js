@@ -166,7 +166,7 @@ const WorkOrdersDetail = () => {
 
   return (
     <>
-      {workOrder && (
+      {
         <div className="ml-5 md:ml-10">
           <p className="text-sm text-[#828282]">
             Work Order {" > "} Planned Work Order
@@ -345,7 +345,7 @@ const WorkOrdersDetail = () => {
             </Formik>
           </div>
         </div>
-      )}
+      }
     </>
   );
 };

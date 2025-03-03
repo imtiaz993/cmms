@@ -8,7 +8,7 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { getToken, getUser } from "@/utils/index";
+import { getDarkMode, getToken, getUser } from "@/utils/index";
 import { useDispatch, useSelector } from "react-redux";
 import Appbar from "./appbar";
 import Sidebar from "./sidebar";
@@ -90,15 +90,17 @@ export default function Layout({ children }) {
 
   // Dark mode
   const { defaultAlgorithm, darkAlgorithm } = theme;
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(getDarkMode());
 
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add("dark-mode");
       document.documentElement.classList.toggle("dark");
+      localStorage.setItem("darkMode", "true");
     } else {
       document.body.classList.remove("dark-mode");
       document.documentElement.classList.remove("dark");
+      localStorage.setItem("darkMode", "false");
     }
   }, [isDarkMode]);
 

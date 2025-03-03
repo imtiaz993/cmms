@@ -9,3 +9,11 @@ export const getUser = () => {
   }
   return null; // Return null if it's running server-side
 };
+export const getDarkMode = () => {
+  if (typeof window !== "undefined") {
+    // Check if it's running in the browser
+    const darkMode = localStorage.getItem("darkMode");
+    return darkMode ? JSON.parse(darkMode) : false;
+  }
+  return false; // Return null if it's running server-side
+};
