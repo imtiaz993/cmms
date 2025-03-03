@@ -1,6 +1,7 @@
 import { Modal } from "antd";
 import Button from "./common/Button";
 import Image from "next/image";
+import Link from "next/link";
 
 const ImagePreview = ({ previewImage, setPreviewImage }) => {
   return (
@@ -18,13 +19,15 @@ const ImagePreview = ({ previewImage, setPreviewImage }) => {
       }
       onCancel={() => setPreviewImage(false)}
     >
-      <Image
-        width={100}
-        height={100}
-        alt="Preview"
-        style={{ width: "100%" }}
-        src={previewImage}
-      />
+      <Link href={previewImage} target="_blank">
+        <Image
+          width={100}
+          height={100}
+          alt="Preview"
+          style={{ width: "100%" }}
+          src={previewImage}
+        />
+      </Link>
     </Modal>
   );
 };
