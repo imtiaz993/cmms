@@ -21,6 +21,7 @@ import { useParams, useRouter } from "next/navigation";
 import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
 import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
+import ImagePreview from "@/components/imagePreviewPopup";
 
 const columns = [
   {
@@ -75,6 +76,7 @@ const InventoryForm = () => {
   const systems = useSelector((state) => state.system.system);
   const [addSitePopup, setAddSitePopup] = useState(false);
   const [addSystemPopup, setAddSystemPopup] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const rowSelection = {
     selectedRowKeys,
@@ -271,6 +273,10 @@ const InventoryForm = () => {
 
   return (
     <div className="mx-5 md:mx-10">
+      <ImagePreview
+        previewImage={previewImage}
+        setPreviewImage={setPreviewImage}
+      />
       <AddFieldPopup
         visible={addFieldPopupVisible}
         setVisible={setAddFieldPopupVisible}
@@ -438,25 +444,28 @@ const InventoryForm = () => {
                   </label>
                   <div>
                     <Upload
-                      beforeUpload={() => {
-                        // Prevent auto-upload, just return false
+                      listType="picture"
+                      beforeUpload={(file) => {
+                        file.preview = URL.createObjectURL(file);
                         return false;
                       }}
                       onChange={(info) => {
-                        const updatedFileList = info.fileList;
-
-                        // When file is removed, update Formik field value by filtering out the removed file
-                        if (info.file.status === "removed") {
-                          setFieldValue(
-                            "image",
-                            values.image.filter((f) => f.uid !== info.file.uid)
-                          );
-                        } else {
-                          // Update Formik's field with the updated file list
-                          setFieldValue("image", updatedFileList);
-                        }
+                        const updatedFileList = info.fileList.map((file) => ({
+                          ...file,
+                          preview: file.preview || file,
+                        }));
+                        setFieldValue("image", updatedFileList);
                       }}
-                      fileList={values.image || []} // Default to empty array if assetImage is not yet set
+                      onRemove={(file) => {
+                        setFieldValue(
+                          "image",
+                          values.image.filter((f) => f.uid !== file.uid)
+                        );
+                      }}
+                      onPreview={(file) => {
+                        setPreviewImage(file.preview || file.url);
+                      }}
+                      fileList={values.image || []}
                       accept="image/*"
                       multiple
                     >
