@@ -107,7 +107,6 @@ const WorkOrderForm = () => {
       dataIndex: "purchaseDate",
       key: "purchaseDate",
     },
-
   ];
   const columns = [
     {
@@ -167,7 +166,6 @@ const WorkOrderForm = () => {
         </span>
       ),
     },
-   
   ];
 
   const parts = [
@@ -194,36 +192,30 @@ const WorkOrderForm = () => {
     },
   ];
 
- 
-
   useEffect(() => {
     let specificAsset = assets?.filter((item) => item._id == assetId);
     setAssetDetails(specificAsset);
   }, [assets, assetId]);
 
   useEffect(() => {
- 
-      const fetchFilteredInventory = async () => {
-        try {
-          const { status, data } = await getFilteredInventory({
-            site: assetDetails[0].site._id,
-          });
+    const fetchFilteredInventory = async () => {
+      try {
+        const { status, data } = await getFilteredInventory({
+          site: assetDetails[0].site._id,
+        });
 
-          if (status === 200) {
-            setFilteredInventory(data.data);
-          } else {
-            message.error(
-              data?.message || "Failed to fetch filtered inventory"
-            );
-          }
-        } catch (error) {
-          message.error("Error fetching filtered inventory");
-        } finally {
+        if (status === 200) {
+          setFilteredInventory(data.data);
+        } else {
+          message.error(data?.message || "Failed to fetch filtered inventory");
         }
-      };
+      } catch (error) {
+        message.error("Error fetching filtered inventory");
+      } finally {
+      }
+    };
 
-      fetchFilteredInventory();
-   
+    fetchFilteredInventory();
   }, [assetDetails]);
 
   return (
@@ -271,20 +263,17 @@ const WorkOrderForm = () => {
               );
             });
 
-          
-    values.workOrderDocuments.forEach((file) => {
-      formData.append(`workOrderDocuments`, file);
-    });
+            values.workOrderDocuments.forEach((file) => {
+              formData.append(`workOrderDocuments`, file);
+            });
 
-    values.workOrderImages.forEach((file) => {
-      formData.append(`workOrderImages`, file);
-    });
-            console.log("FormData Entries:")
+            values.workOrderImages.forEach((file) => {
+              formData.append(`workOrderImages`, file);
+            });
+            console.log("FormData Entries:");
             for (let pair of formData.entries()) {
               console.log(pair[0], pair[1]);
             }
-      
-         
           }}
         >
           {({ values, isSubmitting, handleSubmit, setFieldValue }) => {
@@ -293,7 +282,7 @@ const WorkOrderForm = () => {
                 .filter((item) => values?.parts?.includes(item.partNumber))
                 .map((item) => ({
                   ...item,
-                  selectedQuantity: item.selectedQuantity ?? 1, 
+                  selectedQuantity: item.selectedQuantity ?? 1,
                 }));
 
               setSelectedParts(filtered);
@@ -322,7 +311,6 @@ const WorkOrderForm = () => {
                     rowKey="_id"
                     dataSource={assetDetails}
                     style={{ marginTop: 5 }}
-                   
                   />
                 </div>
                 <div className="grid md:grid-cols-2 gap-4 md:gap-8">
@@ -361,7 +349,7 @@ const WorkOrderForm = () => {
                       </Radio>
                     </Radio.Group>
                   </div>
-                  
+
                   <InputField
                     name="technician"
                     label="Technician"
@@ -379,7 +367,7 @@ const WorkOrderForm = () => {
                     }))}
                   />
                   <></>
-                  
+
                   <Table
                     loading={partsLoading}
                     size={"large"}
@@ -482,7 +470,7 @@ const WorkOrderForm = () => {
                           setFieldValue("workOrderImages", updatedFileList);
                         }
                       }}
-                      fileList={values.workOrderImages || []} 
+                      fileList={values.workOrderImages || []}
                       accept="image/*"
                       multiple
                     >
@@ -519,7 +507,7 @@ const WorkOrderForm = () => {
                           setFieldValue("workOrderDocuments", updatedFileList);
                         }
                       }}
-                      fileList={values.workOrderDocuments || []} 
+                      fileList={values.workOrderDocuments || []}
                       accept="file/*"
                       multiple
                     >

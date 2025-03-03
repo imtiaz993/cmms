@@ -6,10 +6,21 @@ import {
   ExclamationCircleOutlined,
   ExportOutlined,
   FolderFilled,
+  LeftOutlined,
   MailOutlined,
   PrinterFilled,
 } from "@ant-design/icons";
-import { Badge, Card, Dropdown, Menu, message, Steps, Table, Tabs } from "antd";
+import {
+  Badge,
+  Card,
+  Dropdown,
+  Menu,
+  message,
+  Spin,
+  Steps,
+  Table,
+  Tabs,
+} from "antd";
 import ViewAssetsDetailsPopup from "./viewAssetsDetailsPopup";
 import { useEffect, useState } from "react";
 import UploadLinkDocPopup from "../../../../../components/uploadLinkDocPopup";
@@ -201,8 +212,8 @@ const MaterialTransferDetail = () => {
 
   console.log("columsn", details?.materialTransfer?.inventories?.length);
 
-  return (
-    <div className="p-7 overflow-auto h-[calc(100dvh-130px)]">
+  return details ? (
+    <div className="pt-0 p-7 overflow-auto h-[calc(100dvh-130px)]">
       <UploadLinkDocPopup
         visible={uploadLinkDocVisible}
         setVisible={setUploadLinkDocVisible}
@@ -215,13 +226,19 @@ const MaterialTransferDetail = () => {
         materialTransferSlug={slug}
         setDetails={setDetails}
       />
-      <div className="flex justify-between gap-3 mb-5">
-        <Button
-          prefix={<ArrowLeftOutlined />}
-          onClick={() => router.back()}
-          fullWidth={false}
-          outlined
-        />
+      <p className="text-sm text-[#828282]">
+        Material Transfer {" > "} {details?.materialTransfer?._id}
+      </p>
+      <div className="flex justify-between gap-3 my-5">
+        <div>
+          <Button
+            text="Back to Material Transfer"
+            onClick={() => router.push("/admin/material-transfer")}
+            className="!bg-[#3F3F3F] !border-none"
+            fullWidth={false}
+            prefix={<LeftOutlined />}
+          />
+        </div>
         <div className="">
           <Button
             text="Email"
@@ -443,6 +460,8 @@ const MaterialTransferDetail = () => {
         </Card>
       </div>
     </div>
+  ) : (
+    <Spin size="large" spinning={true} className="text-center w-full !mt-80" />
   );
 };
 

@@ -16,7 +16,7 @@ import {
   TruckOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
-import { message, Select } from "antd";
+import { message, Select, Spin } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { updateStatus } from "app/services/assets";
@@ -141,7 +141,7 @@ const InventoryDetails = () => {
     }
   };
 
-  return (
+  return data ? (
     <div className="overflow-auto h-[calc(100dvh-130px)]">
       <ConfirmationPopup
         visible={actionPopup}
@@ -286,15 +286,10 @@ const InventoryDetails = () => {
           </div>
         </div>
       </div>
-      {data && (
-        <Tabs
-          data={data}
-          superUsers={superUsers}
-          setData={setData}
-          slug={slug}
-        />
-      )}
+      <Tabs data={data} superUsers={superUsers} setData={setData} slug={slug} />
     </div>
+  ) : (
+    <Spin size="large" spinning={true} className="text-center w-full !mt-80" />
   );
 };
 

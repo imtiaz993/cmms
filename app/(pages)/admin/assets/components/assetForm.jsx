@@ -1,6 +1,6 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { message, Radio, Table, Upload } from "antd";
+import { message, Radio, Spin, Table, Upload } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import { addAsset, getAssetDetails, updateAsset } from "app/services/assets";
@@ -11,7 +11,12 @@ import { rigs } from "@/constants/rigsAndSystems";
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getFields } from "app/services/customFields";
-import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  LoadingOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import AddFieldPopup from "@/components/addFieldPopup";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
@@ -269,7 +274,13 @@ const AssetForm = () => {
   };
 
   if ((slug && loading) || (slug && !details))
-    return <p className="ml-10 mt-20 text-center">Loading...</p>;
+    return (
+      <Spin
+        size="large"
+        spinning={true}
+        className="text-center w-full !mt-80"
+      />
+    );
 
   return (
     <div className="mx-5 md:mx-10">

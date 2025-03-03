@@ -1,7 +1,7 @@
 "use client";
 import { ErrorMessage, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { message, Table, Upload } from "antd";
+import { message, Spin, Table, Upload } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import {
@@ -261,7 +261,13 @@ const InventoryForm = () => {
   };
 
   if ((slug && loading) || (slug && !details))
-    return <p className="ml-10 mt-20 text-center">Loading...</p>;
+    return (
+      <Spin
+        size="large"
+        spinning={true}
+        className="text-center w-full !mt-80"
+      />
+    );
 
   return (
     <div className="mx-5 md:mx-10">
@@ -273,10 +279,7 @@ const InventoryForm = () => {
         setFields={setFields}
       />
       <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
-      <AddSystemPopup
-        visible={addSystemPopup}
-        setVisible={setAddSystemPopup}
-      />
+      <AddSystemPopup visible={addSystemPopup} setVisible={setAddSystemPopup} />
       <p className="text-sm text-[#828282]">
         Inventory {" > "} {slug ? slug + " > Edit" : "Add New Inventory"}
       </p>

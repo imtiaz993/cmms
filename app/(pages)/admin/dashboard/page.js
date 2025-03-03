@@ -1,5 +1,5 @@
 "use client";
-import { Card, message } from "antd";
+import { Card, message, Spin } from "antd";
 import Schedule from "./components/schedule";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
@@ -77,14 +77,16 @@ const Dashboard = () => {
                 </p>
               </div>
             ) : (
-              <p className="text-center my-5"> Loading... </p>
+              <p className="text-center my-20">
+                <Spin spinning={true} />
+              </p>
             )}
           </div>
         </Card>
         <div className="xl:w-7/12 flex flex-col xl:flex-row gap-6">
           <Card
             loading={false}
-            className="!bg-primary xl:w-3/5 shacus"
+            className="!bg-primary xl:w-3/5 shadow-custom"
             title={
               <h2 className="text-center">Planned & Unplanned Work Orders</h2>
             }
@@ -98,7 +100,9 @@ const Dashboard = () => {
                 </p>
               </div>
             ) : (
-              <p className="text-center my-5"> Loading... </p>
+              <p className="text-center my-20">
+                <Spin spinning={true} />
+              </p>
             )}
           </Card>
           <Card
@@ -211,7 +215,9 @@ const Dashboard = () => {
                   </p>
                 </div>
               ) : (
-                <p className="text-center my-5"> Loading... </p>
+                <p className="text-center my-20">
+                  <Spin spinning={true} />
+                </p>
               )}
             </div>
           </Card>
@@ -229,7 +235,9 @@ const Dashboard = () => {
                   loadingSchedule={loadingSchedule}
                 />
               ) : (
-                <p className="text-center my-5"> Loading... </p>
+                <p className="text-center my-20">
+                  <Spin spinning={true} />
+                </p>
               )}
             </div>
           </Card>
