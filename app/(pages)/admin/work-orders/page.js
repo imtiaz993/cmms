@@ -146,7 +146,7 @@ const WorkOrders = () => {
     setSelectedRowKeys([]);
     const fetchWorkOrders = async () => {
       setFetchingWorkOrders(true);
-      const { status, data } = await getWorkOrders(currentTab);
+      const { status, data } = await getWorkOrders(currentTab.toLowerCase());
       if (status === 200) {
         setWorkOrders(data?.data);
       } else {
@@ -180,7 +180,7 @@ const WorkOrders = () => {
           const { status, data } = await getFilteredWorkOrders({
             site: activeLocation ? activeLocation : "",
             system: activeSystem ? activeSystem : "",
-          }, currentTab);
+          }, currentTab.toLowerCase());
 
           if (status === 200) {
             setWorkOrders(data.data);

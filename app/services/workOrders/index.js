@@ -28,15 +28,15 @@ export const exportWorkOrders = async (query) => {
 
 export const getWorkOrdersByStatus = async (status, query) => {
   // Convert query object into query parameters
-  const queryString = new URLSearchParams(
-    Object.entries(query).filter(([_, value]) => value) // Remove empty values
-  ).toString();
+  // const queryString = new URLSearchParams(
+  //   Object.entries(query).filter(([_, value]) => value) // Remove empty values
+  // ).toString();
   try {
-    const url = `/work-orders/getByStatus?status=${status}${
-      queryString ? `&${queryString}` : ""
+    const url = `/work-orders/getByStatus?query=${query}${
+      status !== "all" && `&status=${status}`
     }`;
     const { status: s, data } = await authRequest({
-      url,
+      url: url,
     });
     return { status: s, data };
   } catch (e) {
