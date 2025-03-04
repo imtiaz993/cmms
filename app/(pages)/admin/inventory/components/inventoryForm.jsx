@@ -165,7 +165,7 @@ const InventoryForm = () => {
     description: Yup.string().required("Description is required"),
     quantity: Yup.number().required("Quantity is required"),
     notes: Yup.string().required("Notes is required"),
-    image: Yup.mixed().required("Image is required"),
+    image: Yup.array().min(1, "At least one image is required"),
     ...customFieldValidations,
   });
 
