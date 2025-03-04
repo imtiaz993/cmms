@@ -63,10 +63,12 @@ export const getWorkOrdersByTimeRange = async (timeRange, query) => {
   }
 };
 
-export const getFilteredWorkOrders = async (values, query) => {
+export const getFilteredWorkOrders = async (values, query, WOStatus) => {
   try {
     const { status, data } = await authRequest({
-      url: "/work-orders/getFilteredWorkOrders?query=" + query,
+      url: `/work-orders/getFilteredWorkOrders?query=${query}${
+        WOStatus ? (WOStatus !== "all" ? `&status=${WOStatus}` : "") : ""
+      }`,
       method: "POST",
       data: values,
     });

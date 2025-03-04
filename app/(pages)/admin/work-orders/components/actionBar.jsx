@@ -32,6 +32,8 @@ const ActionBar = ({
   setWorkOrders,
   unplanned,
   setFetchingWorkOrders,
+  WOStatus,
+  setWOStatus,
 }) => {
   const router = useRouter();
   const [filterDropdown, setFilterDropdown] = useState(null);
@@ -62,6 +64,7 @@ const ActionBar = ({
 
     if (status === 200) {
       setWorkOrders(data?.data);
+      setWOStatus(value);
     } else {
       message.error(data.error || "Failed to fetch data");
     }
@@ -113,6 +116,7 @@ const ActionBar = ({
                 setWorkOrders={setWorkOrders}
                 closeDropdown={() => setFilterDropdown(false)}
                 WOType={unplanned ? "unplanned" : "planned"}
+                WOStatus={WOStatus}
               />
             )}
             trigger={["click"]}
