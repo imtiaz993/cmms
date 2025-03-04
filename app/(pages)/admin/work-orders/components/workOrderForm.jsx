@@ -277,16 +277,16 @@ const WorkOrderForm = () => {
           }}
         >
           {({ values, isSubmitting, handleSubmit, setFieldValue }) => {
-            useEffect(() => {
-              const filtered = filteredInventory
-                .filter((item) => values?.parts?.includes(item.partNumber))
-                .map((item) => ({
-                  ...item,
-                  selectedQuantity: item.selectedQuantity ?? 1,
-                }));
+            // useEffect(() => {
+            //   const filtered = filteredInventory
+            //     .filter((item) => values?.parts?.includes(item.partNumber))
+            //     .map((item) => ({
+            //       ...item,
+            //       selectedQuantity: item.selectedQuantity ?? 1,
+            //     }));
 
-              setSelectedParts(filtered);
-            }, [values.parts, filteredInventory]);
+            //   setSelectedParts(filtered);
+            // }, [values.parts, filteredInventory]);
 
             return (
               <Form onSubmit={handleSubmit}>
