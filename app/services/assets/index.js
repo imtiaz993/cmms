@@ -142,3 +142,17 @@ export const addImage = async (values) => {
     }
   }
 };
+export const getFilteredHistory = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/asset/getFilteredHistory",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};

@@ -1,7 +1,7 @@
 "use client";
 import { ErrorMessage, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { message, Table, Upload } from "antd";
+import { message, Spin, Table, Upload } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import {
@@ -21,6 +21,7 @@ import { useParams, useRouter } from "next/navigation";
 import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
 import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
+import ImagePreview from "@/components/imagePreviewPopup";
 
 const columns = [
   {
@@ -75,6 +76,7 @@ const InventoryForm = () => {
   const systems = useSelector((state) => state.system.system);
   const [addSitePopup, setAddSitePopup] = useState(false);
   const [addSystemPopup, setAddSystemPopup] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const rowSelection = {
     selectedRowKeys,
@@ -261,10 +263,20 @@ const InventoryForm = () => {
   };
 
   if ((slug && loading) || (slug && !details))
-    return <p className="ml-10 mt-20 text-center">Loading...</p>;
+    return (
+      <Spin
+        size="large"
+        spinning={true}
+        className="text-center w-full !mt-80"
+      />
+    );
 
   return (
     <div className="mx-5 md:mx-10">
+      <ImagePreview
+        previewImage={previewImage}
+        setPreviewImage={setPreviewImage}
+      />
       <AddFieldPopup
         visible={addFieldPopupVisible}
         setVisible={setAddFieldPopupVisible}
@@ -273,10 +285,7 @@ const InventoryForm = () => {
         setFields={setFields}
       />
       <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
-      <AddSystemPopup
-        visible={addSystemPopup}
-        setVisible={setAddSystemPopup}
-      />
+      <AddSystemPopup visible={addSystemPopup} setVisible={setAddSystemPopup} />
       <p className="text-sm text-[#828282]">
         Inventory {" > "} {slug ? slug + " > Edit" : "Add New Inventory"}
       </p>
@@ -435,25 +444,26 @@ const InventoryForm = () => {
                   </label>
                   <div>
                     <Upload
-                      beforeUpload={() => {
-                        // Prevent auto-upload, just return false
+                      listType="picture"
+                      beforeUpload={(file) => {
+                        file.preview = URL.createObjectURL(file);
+                        file.url = URL.createObjectURL(file);
                         return false;
                       }}
                       onChange={(info) => {
                         const updatedFileList = info.fileList;
-
-                        // When file is removed, update Formik field value by filtering out the removed file
-                        if (info.file.status === "removed") {
-                          setFieldValue(
-                            "image",
-                            values.image.filter((f) => f.uid !== info.file.uid)
-                          );
-                        } else {
-                          // Update Formik's field with the updated file list
-                          setFieldValue("image", updatedFileList);
-                        }
+                        setFieldValue("image", updatedFileList);
                       }}
-                      fileList={values.image || []} // Default to empty array if assetImage is not yet set
+                      onRemove={(file) => {
+                        setFieldValue(
+                          "image",
+                          values.image.filter((f) => f.uid !== file.uid)
+                        );
+                      }}
+                      onPreview={(file) => {
+                        setPreviewImage(file.preview || file.url);
+                      }}
+                      fileList={values.image || []}
                       accept="image/*"
                       multiple
                     >

@@ -154,8 +154,8 @@ const WorkOrders = () => {
       }
       setFetchingWorkOrders(false);
     };
-    if (!activeLocation) fetchWorkOrders();
-  }, [currentTab]);
+    fetchWorkOrders();
+  }, [activeLocation, activeSystem, currentTab]);
 
   // Dynamically filter columns based on the checkedList
   const filteredColumns = columns.filter((column) =>
@@ -177,10 +177,10 @@ const WorkOrders = () => {
       const fetchFilteredWorkOrders = async () => {
         setFetchingWorkOrders(true);
         try {
-          const { status, data } = await getWorkOrdersByStatus(currentTab, {
-            location: activeLocation ? activeLocation : null,
-            system: activeSystem ? activeSystem : null,
-          });
+          const { status, data } = await getFilteredWorkOrders({
+            site: activeLocation ? activeLocation : "",
+            system: activeSystem ? activeSystem : "",
+          }, currentTab);
 
           if (status === 200) {
             setWorkOrders(data.data);
@@ -258,6 +258,7 @@ const WorkOrders = () => {
           setSearchText={setSearchText}
           unplanned={currentTab === "Unplanned"}
           setFetchingWorkOrders={setFetchingWorkOrders}
+          setWorkOrders={setWorkOrders}
         />
         <Tabs
           size={"small"}

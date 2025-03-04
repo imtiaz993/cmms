@@ -151,7 +151,7 @@ h6 {
   padding-left: 10px !important;
   padding-right: 10px !important;
   background-color: var(--background-color) !important;
-  border-color: var(--primary-text) !important;
+  border-color: var(--border-color) !important;
 }
 
 .ant-drawer-content-wrapper {
@@ -292,4 +292,8 @@ h6 {
 .ant-message-notice-content {
   background: var(--background-secondary-color) !important;
   color: var(--primary-text) !important;
+}
+
+.ant-menu-item-selected span {
+  color: black !important;
 }

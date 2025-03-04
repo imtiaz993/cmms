@@ -7,7 +7,7 @@ import {
   EyeOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Alert, Card, message } from "antd";
+import { Alert, Card, message, Spin } from "antd";
 import {
   deleteCompany,
   getCompany,
@@ -86,7 +86,7 @@ const CompanyDetails = ({ activeTab }) => {
     }
   };
 
-  return (
+  return companyData ? (
     <div className="max-h-[calc(100dvh-140px-16px-70px)] overflow-auto p-[12px_12px_28px_0px]">
       <ConfirmationPopup
         visible={deleteConfirmation}
@@ -156,7 +156,6 @@ const CompanyDetails = ({ activeTab }) => {
                   </p>
                   <Button
                     text="Save Changes"
-                    className="!bg-yellow-500 !shadow-custom !border-white w-full sm:w-32"
                     fullWidth={false}
                     onClick={handleSubmit}
                     disabled={isSubmitting}
@@ -355,6 +354,8 @@ const CompanyDetails = ({ activeTab }) => {
         )}
       </Formik>
     </div>
+  ) : (
+    <Spin size="large" spinning={true} className="text-center w-full !my-80" />
   );
 };
 

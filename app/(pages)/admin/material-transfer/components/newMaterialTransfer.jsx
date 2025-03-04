@@ -179,7 +179,7 @@ const NewMaterialTransfer = () => {
   };
 
   return (
-    <div className="ml-5 md:ml-10">
+    <div className="mx-5 md:mx-10">
       <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
       <AddSystemPopup
         visible={addSystemPopup}

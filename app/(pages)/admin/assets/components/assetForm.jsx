@@ -1,6 +1,6 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { message, Radio, Table, Upload } from "antd";
+import { message, Modal, Radio, Spin, Table, Upload } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import { addAsset, getAssetDetails, updateAsset } from "app/services/assets";
@@ -11,7 +11,12 @@ import { rigs } from "@/constants/rigsAndSystems";
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getFields } from "app/services/customFields";
-import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  LoadingOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import AddFieldPopup from "@/components/addFieldPopup";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
@@ -21,7 +26,7 @@ import AddSubCategoryPopup from "../../settings/sub-categories/components/addSub
 import { getCategories } from "app/services/setUp/categories";
 import { getSubCategories } from "app/services/setUp/subCategories";
 import { editAsset, updateAssets } from "app/redux/slices/assetsSlice";
-import dayjs from "dayjs";
+import ImagePreview from "@/components/imagePreviewPopup";
 
 const columns = [
   {
@@ -53,6 +58,7 @@ const AssetForm = () => {
   const [addSubCategoryPopup, setAddSubCategoryPopup] = useState(false);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const rowSelection = {
     selectedRowKeys,
@@ -169,6 +175,7 @@ const AssetForm = () => {
     serialNumber: Yup.string().required("Serial number is required"),
     maintCategory: Yup.string().required("Maintenance category is required"),
     startDate: Yup.date().required("Start date is required"),
+    // completionDate: Yup.date().required("Completion date is required"),
     criticality: Yup.string().required("Criticality is required"),
     maintStatus: Yup.string().required("Maintenance status is required"),
     assetImages: Yup.array().required("Asset Image is required"),
@@ -268,10 +275,20 @@ const AssetForm = () => {
   };
 
   if ((slug && loading) || (slug && !details))
-    return <p className="ml-10 mt-20 text-center">Loading...</p>;
+    return (
+      <Spin
+        size="large"
+        spinning={true}
+        className="text-center w-full !mt-80"
+      />
+    );
 
   return (
     <div className="mx-5 md:mx-10">
+      <ImagePreview
+        previewImage={previewImage}
+        setPreviewImage={setPreviewImage}
+      />
       <AddFieldPopup
         visible={addFieldPopupVisible}
         setVisible={setAddFieldPopupVisible}
@@ -280,10 +297,7 @@ const AssetForm = () => {
         setFields={setFields}
       />
       <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
-      <AddSystemPopup
-        visible={addSystemPopup}
-        setVisible={setAddSystemPopup}
-      />
+      <AddSystemPopup visible={addSystemPopup} setVisible={setAddSystemPopup} />
       <AddCategoryPopup
         visible={addCategoryPopup}
         setVisible={setAddCategoryPopup}
@@ -323,6 +337,7 @@ const AssetForm = () => {
             serialNumber: details?.dashboard?.serialNumber || "",
             maintCategory: details?.dashboard?.maintCategory?._id || "",
             startDate: details?.dashboard?.startDate || "",
+            // completionDate: details?.dashboard?.completionDate || "",
             criticality: details?.dashboard?.criticality || "",
             maintStatus: details?.dashboard?.maintStatus || "",
             assetImages: details?.dashboard?.assetImages
@@ -496,7 +511,10 @@ const AssetForm = () => {
                   }))}
                 />
                 <DatePickerField name="startDate" label="Start Date" />
-                {console.log("values:", values)}
+                {/* <DatePickerField
+                  name="completionDate"
+                  label="Completion Date"
+                /> */}
                 <div className="md:col-span-2 sm:flex items-center">
                   <label className="text-sm sm:text-right sm:min-w-[115px]">
                     Criticality
@@ -615,27 +633,26 @@ const AssetForm = () => {
                     Upload
                   </label>
                   <Upload
-                    beforeUpload={() => {
-                      // Prevent auto-upload, just return false
+                    listType="picture"
+                    beforeUpload={(file) => {
+                      file.preview = URL.createObjectURL(file);
+                      file.url = URL.createObjectURL(file);
                       return false;
                     }}
                     onChange={(info) => {
                       const updatedFileList = info.fileList;
-
-                      // When file is removed, update Formik field value by filtering out the removed file
-                      if (info.file.status === "removed") {
-                        setFieldValue(
-                          "assetImages",
-                          values.assetImages.filter(
-                            (f) => f.uid !== info.file.uid
-                          )
-                        );
-                      } else {
-                        // Update Formik's field with the updated file list
-                        setFieldValue("assetImages", updatedFileList);
-                      }
+                      setFieldValue("assetImages", updatedFileList);
                     }}
-                    fileList={values.assetImages || []} // Default to empty array if assetImage is not yet set
+                    onRemove={(file) => {
+                      setFieldValue(
+                        "assetImages",
+                        values.assetImages.filter((f) => f.uid !== file.uid)
+                      );
+                    }}
+                    onPreview={(file) => {
+                      setPreviewImage(file.preview || file.url);
+                    }}
+                    fileList={values.assetImages || []}
                     accept="image/*"
                     multiple
                   >

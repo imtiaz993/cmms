@@ -4,17 +4,17 @@ import { Table } from "antd";
 import ActionBar from "./actionBar";
 
 const columns = [
-  { title: "Date", dataIndex: "date", key: "date" },
+  // { title: "Date", dataIndex: "date", key: "date" },
   { title: "Event", dataIndex: "event", key: "event" },
-  { title: "Field", dataIndex: "field", key: "field" },
-  { title: "Changed From", dataIndex: "changedFrom", key: "changedFrom" },
-  { title: "Changed To", dataIndex: "changedTo", key: "changedTo" },
-  { title: "Action By", dataIndex: "actionBy", key: "actionBy" },
+  { title: "Change By", dataIndex: "changeBy", key: "changeBy" },
+  { title: "Change From", dataIndex: "changeFrom", key: "changeFrom" },
+  { title: "Change To", dataIndex: "changeTo", key: "changeTo" },
+  { title: "Fields", dataIndex: "fields", key: "fields" },
 ];
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const History = ({ historyData }) => {
+const History = ({ historyData, setData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
@@ -26,6 +26,7 @@ const History = ({ historyData }) => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
+          setData={setData}
         />
 
         <Table

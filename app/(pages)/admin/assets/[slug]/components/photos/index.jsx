@@ -3,12 +3,19 @@ import { PlusOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { useState } from "react";
 import AddPhotoPopup from "./addPhotoPopup";
+import Link from "next/link";
+import ImagePreview from "@/components/imagePreviewPopup";
 
 const Photos = ({ photos, setData }) => {
   const [addPhotoPopup, setAddPhotoPopup] = useState(false);
+  const [previewImage, setPreviewImage] = useState(false);
 
   return (
     <div>
+      <ImagePreview
+        previewImage={previewImage}
+        setPreviewImage={setPreviewImage}
+      />
       <AddPhotoPopup
         visible={addPhotoPopup}
         setVisible={setAddPhotoPopup}
@@ -40,10 +47,21 @@ const Photos = ({ photos, setData }) => {
                 alt="placeholder"
                 width={200}
                 height={200}
-                className="h-36 w-full object-cover bg-gray-700 rounded-lg shadow-custom"
+                className="h-36 w-full object-cover bg-gray-700 rounded-lg shadow-custom cursor-pointer"
+                onClick={() =>
+                  setPreviewImage(
+                    process.env.NEXT_PUBLIC_S3_BASE_URL + photo.url
+                  )
+                }
               />
               <p className="mt-5 text-sm font-medium">
-                {photo?.name || "IMG #1.JPG"}
+                <Link
+                  href={process.env.NEXT_PUBLIC_S3_BASE_URL + photo.url}
+                  target="_blank"
+                  className="text-tertiary"
+                >
+                  {photo?.name || "IMG #1.JPG"}
+                </Link>
               </p>
             </div>
           ))}
