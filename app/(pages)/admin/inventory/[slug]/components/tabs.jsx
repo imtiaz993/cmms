@@ -54,7 +54,7 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
     {
       key: "history",
       label: "History",
-      children: <History data={data?.events} />,
+      children: <History historyData={data?.history} />,
     },
   ];
   return (
