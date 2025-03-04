@@ -4,7 +4,7 @@ import { DownOutlined, SettingOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import HistoryFilter from "./filtersDropdown";
 
-const ActionBar = ({ checkedList, setCheckedList, columns }) => {
+const ActionBar = ({ checkedList, setCheckedList, columns, setData }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title || key,
@@ -31,6 +31,7 @@ const ActionBar = ({ checkedList, setCheckedList, columns }) => {
                 dropdownRender={() => (
                   <HistoryFilter
                     closeDropdown={() => setFilterDropdown(false)}
+                    setData={setData}
                   />
                 )}
                 trigger={["click"]}

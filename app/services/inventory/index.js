@@ -142,3 +142,17 @@ export const deleteInventory = async (id) => {
     }
   }
 };
+export const getFilteredHistory = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/inventory/getFilteredHistory",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};

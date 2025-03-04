@@ -13,7 +13,7 @@ const columns = [
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const History = ({ historyData }) => {
+const History = ({ historyData, setData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
@@ -25,6 +25,7 @@ const History = ({ historyData }) => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
+          setData={setData}
         />
 
         <Table
