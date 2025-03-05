@@ -90,7 +90,7 @@ export default function Layout({ children }) {
 
   // Dark mode
   const { defaultAlgorithm, darkAlgorithm } = theme;
-  const [isDarkMode, setIsDarkMode] = useState(getDarkMode());
+  const [isDarkMode, setIsDarkMode] = useState(false); //getDarkMode());
 
   useEffect(() => {
     if (isDarkMode) {
@@ -100,7 +100,7 @@ export default function Layout({ children }) {
       document.body.classList.remove("dark-mode");
       document.documentElement.classList.remove("dark");
     }
-    localStorage.setItem("darkMode", isDarkMode.toString());
+    // localStorage.setItem("darkMode", isDarkMode.toString());
   }, [isDarkMode]);
 
   useEffect(() => {

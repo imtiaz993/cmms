@@ -1,6 +1,6 @@
 import { Modal, Upload, message } from "antd";
 import Button from "@/components/common/Button";
-import { addImage } from "app/services/assets";
+import { addImage } from "app/services/inventory";
 import { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import { useParams } from "next/navigation";
@@ -14,27 +14,27 @@ const AddPhotoPopup = ({ visible, setVisible, setData }) => {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     const formData = new FormData();
-    formData.append("asset", slug);
+    formData.append("inventory", slug);
     // formData.append("assetImages", files[0]);
 
     for (let i = 0; i < files.length; i++) {
-      formData.append("assetImage", files[i].originFileObj);
+      formData.append("image", files[i].originFileObj);
     }
 
-    const { status, data } = await addImage(formData);
-    if (status === 200) {
+    // const { status, data } = await addImage(formData);
+    if (false) {
       message.success(data.message);
       setData((prev) => ({
         ...prev,
         dashboard: {
           ...prev.dashboard,
-          assetImages: data.data.assetImages,
+          image: data.data.image,
         },
       }));
       setFiles([]);
       setVisible(false);
     } else {
-      message.error(data.error || "Failed to add photo");
+      message.error(data?.error || "Failed to add photo");
     }
     setIsSubmitting(false);
   };
@@ -56,6 +56,7 @@ const AddPhotoPopup = ({ visible, setVisible, setData }) => {
               outlined
               disabled={isSubmitting}
             />
+
             <Button
               key={"confirm"}
               onClick={handleSubmit}

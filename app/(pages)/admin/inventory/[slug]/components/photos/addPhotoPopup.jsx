@@ -56,7 +56,6 @@ const AddPhotoPopup = ({ visible, setVisible, setData }) => {
               outlined
               disabled={isSubmitting}
             />
-            ,
             <Button
               key={"confirm"}
               onClick={handleSubmit}

@@ -6,6 +6,7 @@ const WOtable = ({
   fetchingWorkOrders,
   rowSelection,
 }) => {
+  console.log("rowSelection", rowSelection);
   return (
     <Table
       // rowClassName="cursor-pointer"
@@ -17,6 +18,7 @@ const WOtable = ({
       scroll={{ x: 1100 }}
       columns={filteredColumns}
       rowSelection={rowSelection}
+      rowKey={"_id"}
       dataSource={filteredData}
       pagination={{
         total: filteredData.length,

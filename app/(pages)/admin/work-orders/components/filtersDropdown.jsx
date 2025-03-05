@@ -4,9 +4,10 @@ import { message } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePickerField from "@/components/common/DatePickerField";
 import { getFilteredWorkOrders } from "app/services/workOrders";
+import { getCategories } from "app/services/setUp/categories";
 
 const validationSchema = Yup.object().shape({
   asset: Yup.string(),
@@ -18,13 +19,35 @@ const validationSchema = Yup.object().shape({
   cost: Yup.number().nullable(),
 });
 
-const WorkOrdersFilter = ({ setWorkOrders, closeDropdown, WOType }) => {
+const WorkOrdersFilter = ({
+  setWorkOrders,
+  closeDropdown,
+  WOType,
+  WOStatus,
+}) => {
   const [isClearing, setIsClearing] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const handleFetchCategories = async () => {
+      const { status, data } = await getCategories();
+      if (status === 200) {
+        setCategories(data.data);
+      } else {
+        message.error(data.error);
+      }
+    };
+    handleFetchCategories();
+  }, []);
 
   const submit = async (values, setSubmitting) => {
     console.log(values);
     !setSubmitting && setIsClearing(true);
-    const { status, data } = await getFilteredWorkOrders(values, WOType);
+    const { status, data } = await getFilteredWorkOrders(
+      values,
+      WOType,
+      WOStatus
+    );
     setSubmitting ? setSubmitting(false) : setIsClearing(false);
 
     if (status === 200) {
@@ -36,6 +59,52 @@ const WorkOrdersFilter = ({ setWorkOrders, closeDropdown, WOType }) => {
     }
   };
 
+  const UnplannedFields = () => {
+    return (
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <InputField name="asset" placeholder="Asset" />
+        <DatePickerField name="dueDate" placeholder="Completion Date" />
+        <SelectField
+          name="category"
+          placeholder="Category"
+          options={categories.map((i) => ({
+            label: i.category,
+            value: i._id,
+          }))}
+        />
+        <DatePickerField name="startDate" placeholder="Start Date" />
+        <SelectField
+          name="criticality"
+          placeholder="Criticality"
+          options={[
+            { label: "High", value: "high" },
+            { label: "Medium", value: "medium" },
+            { label: "Low", value: "low" },
+          ]}
+        />
+        <DatePickerField name="schedule" placeholder="Schedule" />
+        <InputField name="lastPerformed" placeholder="Last Performed" />
+      </div>
+    );
+  };
+
+  const PlannedFields = () => {
+    return (
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <InputField name="asset" placeholder="Asset" />
+        <InputField name="issue" placeholder="Issue #" />
+        <InputField name="description" placeholder="Description" />
+        <InputField name="technician" placeholder="Technician" />
+        <DatePickerField name="createdDate" placeholder="CreatedDate" />
+      </div>
+    );
+  };
+
+  // Dynamically set initialValues based on WOType
+  const initialValues = WOType === "planned"
+    ? { asset: "", issue: "", description: "", technician: "", createdDate: "" }
+    : { asset: "", dueDate: "", category: "", startDate: "", criticality: "", schedule: "", lastPerformed: "" };
+
   return (
     <div
       className="p-4 bg-primary rounded-md max-h-[400px] overflow-auto"
@@ -45,55 +114,39 @@ const WorkOrdersFilter = ({ setWorkOrders, closeDropdown, WOType }) => {
       }}
     >
       <Formik
-        initialValues={{
-          asset: "",
-          workOrder: "",
-          priority: "",
-          created: null,
-          due: null,
-          costCenter: "",
-          cost: "",
-        }}
+        initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           submit(values, setSubmitting);
         }}
+        enableReinitialize // Ensures Formik reinitializes when WOType changes
       >
         {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <InputField name="asset" placeholder="Asset" />
-              <InputField name="workOrder" placeholder="Work Order" />
-              <SelectField name="priority" placeholder="Priority" />
-              <DatePickerField name="created" placeholder="Created" />
-              <DatePickerField name="due" placeholder="Due" />
-              <SelectField name="costCenter" placeholder="Cost Center" />
-              <InputField name="cost" placeholder="Cost" type="number" />
-
-              <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
-                <div>
-                  <Button
-                    outlined
-                    size="small"
-                    text="Clear Filter"
-                    disabled={isSubmitting || isClearing}
-                    isLoading={isClearing}
-                    onClick={() => {
-                      resetForm();
-                      submit({});
-                    }}
-                    style={{ width: "fit-content" }}
-                    className="mr-2"
-                  />
-                  <Button
-                    size="small"
-                    text="Filter"
-                    htmlType="submit"
-                    disabled={isSubmitting || isClearing}
-                    isLoading={isSubmitting}
-                    style={{ width: "fit-content" }}
-                  />
-                </div>
+            {WOType === "planned" ? <UnplannedFields /> : <PlannedFields />}
+            <div className="flex justify-end gap-4 mt-4">
+              <div>
+                <Button
+                  outlined
+                  size="small"
+                  text="Clear Filter"
+                  disabled={isSubmitting || isClearing}
+                  isLoading={isClearing}
+                  onClick={() => {
+                    resetForm(); // Reset form fields
+                    submit({});
+                  }}
+                  style={{ width: "fit-content" }}
+                  className="mr-2"
+                />
+                <Button
+                  size="small"
+                  text="Filter"
+                  htmlType="submit"
+                  disabled={isSubmitting || isClearing}
+                  isLoading={isSubmitting}
+                  style={{ width: "fit-content" }}
+                />
               </div>
             </div>
           </Form>

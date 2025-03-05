@@ -27,6 +27,7 @@ const WorkOrders = () => {
   const [fetchingWorkOrders, setFetchingWorkOrders] = useState(true);
   const [currentTab, setCurrentTab] = useState("Unplanned");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [WOStatus, setWOStatus] = useState("all");
 
   const rowSelection = {
     selectedRowKeys,
@@ -40,8 +41,12 @@ const WorkOrders = () => {
       dataIndex: "asset",
       key: "asset",
       render: (asset) => (
-        <Link href={"#"} className="text-[#017BFE] underline">
-          {asset?.name}
+        <Link
+          href={"/admin/assets/" + asset?._id}
+          target={"_blank"}
+          className="text-[#017BFE] underline"
+        >
+          {asset?.assetID}
         </Link>
       ),
     },
@@ -52,8 +57,8 @@ const WorkOrders = () => {
     },
     {
       title: "Start Date",
-      dataIndex: "date",
-      key: "date",
+      dataIndex: "startDate",
+      key: "startDate",
     },
     {
       title: "Criticality",
@@ -111,7 +116,15 @@ const WorkOrders = () => {
       title: "Asset #",
       dataIndex: "asset",
       key: "asset",
-      render: (asset) => asset?.name,
+      render: (asset) => (
+        <Link
+          href={"/admin/assets/" + asset?._id}
+          target={"_blank"}
+          className="text-[#017BFE] underline"
+        >
+          {asset?.assetID}
+        </Link>
+      ),
     },
   ];
   const columns = [
@@ -141,21 +154,21 @@ const WorkOrders = () => {
     setAddWOVisible(true);
   };
 
-  useEffect(() => {
-    setCheckedList(columns.map((item) => item.key));
-    setSelectedRowKeys([]);
-    const fetchWorkOrders = async () => {
-      setFetchingWorkOrders(true);
-      const { status, data } = await getWorkOrders(currentTab);
-      if (status === 200) {
-        setWorkOrders(data?.data);
-      } else {
-        message.error(data.error || "Failed to fetch work orders");
-      }
-      setFetchingWorkOrders(false);
-    };
-    fetchWorkOrders();
-  }, [activeLocation, activeSystem, currentTab]);
+  // useEffect(() => {
+  //   setCheckedList(columns.map((item) => item.key));
+  //   setSelectedRowKeys([]);
+  //   const fetchWorkOrders = async () => {
+  //     setFetchingWorkOrders(true);
+  //     const { status, data } = await getWorkOrders(currentTab.toLowerCase());
+  //     if (status === 200) {
+  //       setWorkOrders(data?.data);
+  //     } else {
+  //       message.error(data.error || "Failed to fetch work orders");
+  //     }
+  //     setFetchingWorkOrders(false);
+  //   };
+  //   fetchWorkOrders();
+  // }, [activeLocation, activeSystem, currentTab]);
 
   // Dynamically filter columns based on the checkedList
   const filteredColumns = columns.filter((column) =>
@@ -173,32 +186,23 @@ const WorkOrders = () => {
   }, [searchText, workOrders]);
 
   useEffect(() => {
-    if (activeLocation || activeLocation === "") {
-      const fetchFilteredWorkOrders = async () => {
-        setFetchingWorkOrders(true);
-        try {
-          const { status, data } = await getFilteredWorkOrders({
-            site: activeLocation ? activeLocation : "",
-            system: activeSystem ? activeSystem : "",
-          }, currentTab);
-
-          if (status === 200) {
-            setWorkOrders(data.data);
-          } else {
-            message.error(
-              data?.message || "Failed to fetch filtered workorders"
-            );
-          }
-        } catch (error) {
-          message.error("Error fetching filtered workorders");
-        } finally {
-          setFetchingWorkOrders(false);
-        }
-      };
-      fetchFilteredWorkOrders();
-    } else {
-      setWorkOrders(workOrders); // If no filters, use full assets list
-    }
+    setCheckedList(columns.map((item) => item.key));
+    setSelectedRowKeys([]);
+    const fetchFilteredWorkOrders = async () => {
+      setFetchingWorkOrders(true);
+      const { status, data } = await getFilteredWorkOrders(
+        { site: activeLocation ?? "", system: activeSystem ?? "" },
+        currentTab.toLowerCase(),
+        WOStatus
+      );
+      if (status === 200) {
+        setWorkOrders(data.data);
+      } else {
+        message.error(data?.message || "Failed to fetch filtered workorders");
+      }
+      setFetchingWorkOrders(false);
+    };
+    fetchFilteredWorkOrders();
   }, [activeLocation, activeSystem, currentTab]);
 
   const tabs = [
@@ -259,6 +263,8 @@ const WorkOrders = () => {
           unplanned={currentTab === "Unplanned"}
           setFetchingWorkOrders={setFetchingWorkOrders}
           setWorkOrders={setWorkOrders}
+          WOStatus={WOStatus}
+          setWOStatus={setWOStatus}
         />
         <Tabs
           size={"small"}

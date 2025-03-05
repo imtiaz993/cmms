@@ -12,7 +12,7 @@ import {
   LeftOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { Checkbox, Form, message, Radio, Table, Upload } from "antd";
+import { Checkbox, Form, message, Radio, Select, Table, Upload } from "antd";
 import { getAssetDetails } from "app/services/assets";
 import { getFilteredInventory } from "app/services/inventory";
 import { Formik } from "formik";
@@ -21,6 +21,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AssetDetailsPopup from "../../assets/components/assetDetailsPoup";
+import { addUnplannedWorkOrder } from "app/services/workOrders";
 
 const WorkOrderForm = () => {
   const router = useRouter();
@@ -241,7 +242,7 @@ const WorkOrderForm = () => {
         <Formik
           initialValues={{}}
           onSubmit={(values) => {
-            console.log("Values", values);
+            console.log("Values1", values);
 
             const formData = new FormData();
 
@@ -251,32 +252,49 @@ const WorkOrderForm = () => {
               }
             });
 
-            selectedParts.forEach((part, index) => {
-              formData.append(`selectedParts[${index}][_id]`, part._id);
-              formData.append(
-                `selectedParts[${index}][partNumber]`,
-                part.partNumber
-              );
-              formData.append(
-                `selectedParts[${index}][selectedQuantity]`,
-                part.selectedQuantity
-              );
-            });
+            // selectedParts.forEach((part, index) => {
+            //   formData.append(`selectedParts[${index}][_id]`, part._id);
+            //   formData.append(
+            //     `selectedParts[${index}][partNumber]`,
+            //     part.partNumber
+            //   );
+            //   formData.append(
+            //     `selectedParts[${index}][selectedQuantity]`,
+            //     part.selectedQuantity
+            //   );
+            // });
+
+            formData.append(
+              "selectedParts",
+              JSON.stringify(
+                selectedParts.map((item) => {
+                  return {
+                    _id: item._id,
+                    partNumber: item.partNumber,
+                    selectedQuantity: item.selectedQuantity,
+                  };
+                })
+              )
+            );
 
             values.workOrderDocuments.forEach((file) => {
-              formData.append(`workOrderDocuments`, file);
+              formData.append(`workOrderDocuments`, file.originFileObj);
             });
 
             values.workOrderImages.forEach((file) => {
-              formData.append(`workOrderImages`, file);
+              formData.append(`workOrderImages`, file.originFileObj);
             });
             console.log("FormData Entries:");
             for (let pair of formData.entries()) {
               console.log(pair[0], pair[1]);
             }
+            const { status, data } = addUnplannedWorkOrder(formData);
+            if (status === 200) {
+              message.success(data.message);
+            }
           }}
         >
-          {({ values, isSubmitting, handleSubmit, setFieldValue }) => {
+          {({ errors, values, isSubmitting, setFieldValue, submitForm }) => {
             // useEffect(() => {
             //   const filtered = filteredInventory
             //     .filter((item) => values?.parts?.includes(item.partNumber))
@@ -289,9 +307,8 @@ const WorkOrderForm = () => {
             // }, [values.parts, filteredInventory]);
 
             return (
-              <Form onSubmit={handleSubmit}>
+              <Form>
                 <>
-                  {" "}
                   {console.log(
                     "sssssss",
                     filteredInventory.filter((item) =>
@@ -355,17 +372,39 @@ const WorkOrderForm = () => {
                     label="Technician"
                     placeholder="Select Technician..."
                   />
-                  <DatePickerField name="completion" label="Completion" />
-                  <SelectField
-                    name="parts"
-                    label="Parts"
-                    placeholder="Select Parts..."
-                    mode="multiple"
-                    options={filteredInventory.map((i) => ({
-                      value: i.partNumber,
-                      label: `part # ${i.partNumber}`,
-                    }))}
-                  />
+                  <DatePickerField name="dueDate" label="Completion" />
+                  <div className="w-full sm:flex items-center gap-3">
+                    <label
+                      className={`text-sm flex gap-1 items-center ${"sm:justify-end sm:min-w-[115px]"}`}
+                    >
+                      Parts
+                      <span className="text-red-600 text-xl">*</span>
+                    </label>
+                    <Select
+                      name="parts"
+                      // label="Parts"
+                      placeholder="Select Parts..."
+                      mode="multiple"
+                      options={filteredInventory.map((i) => ({
+                        value: i.partNumber,
+                        label: `part # ${i.partNumber}`,
+                      }))}
+                      onChange={(values) => {
+                        const filtered = filteredInventory
+                          .filter((item) => values.includes(item.partNumber))
+                          .map((item) => ({
+                            ...item,
+                            selectedQuantity: item.selectedQuantity ?? 1,
+                          }));
+
+                        setSelectedParts(filtered);
+                      }}
+                      style={{
+                        height: "44px",
+                        width: "100%",
+                      }}
+                    />
+                  </div>
                   <></>
 
                   <Table
@@ -533,14 +572,15 @@ const WorkOrderForm = () => {
                   <Button
                     className="mr-2 !text-base"
                     htmlType="submit"
-                    isLoading={isSubmitting}
-                    onClick={handleSubmit}
-                    disabled={isSubmitting}
+                    // isLoading={isSubmitting}
+                    onClick={submitForm}
+                    // disabled={isSubmitting}
                     size="small"
                     text="Create Work order"
                     fullWidth={false}
                   />
                 </div>
+                {console.log("errors: ", errors)}
               </Form>
             );
           }}

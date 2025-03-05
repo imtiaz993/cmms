@@ -175,10 +175,10 @@ const AssetForm = () => {
     serialNumber: Yup.string().required("Serial number is required"),
     maintCategory: Yup.string().required("Maintenance category is required"),
     startDate: Yup.date().required("Start date is required"),
-    // completionDate: Yup.date().required("Completion date is required"),
+    dueDate: Yup.date().required("Completion date is required"),
     criticality: Yup.string().required("Criticality is required"),
     maintStatus: Yup.string().required("Maintenance status is required"),
-    assetImages: Yup.array().required("Asset Image is required"),
+    assetImages: Yup.array().min(1, "At least one image is required"),
     ...customFieldValidations,
   });
 
@@ -337,7 +337,7 @@ const AssetForm = () => {
             serialNumber: details?.dashboard?.serialNumber || "",
             maintCategory: details?.dashboard?.maintCategory?._id || "",
             startDate: details?.dashboard?.startDate || "",
-            // completionDate: details?.dashboard?.completionDate || "",
+            dueDate: details?.dashboard?.dueDate || "",
             criticality: details?.dashboard?.criticality || "",
             maintStatus: details?.dashboard?.maintStatus || "",
             assetImages: details?.dashboard?.assetImages
@@ -511,10 +511,7 @@ const AssetForm = () => {
                   }))}
                 />
                 <DatePickerField name="startDate" label="Start Date" />
-                {/* <DatePickerField
-                  name="completionDate"
-                  label="Completion Date"
-                /> */}
+                <DatePickerField name="dueDate" label="Completion Date" />
                 <div className="md:col-span-2 sm:flex items-center">
                   <label className="text-sm sm:text-right sm:min-w-[115px]">
                     Criticality
@@ -669,7 +666,7 @@ const AssetForm = () => {
                 <span className="">{values.assetImage.split("/").pop()}</span>
               )}
               <ErrorMessage
-                name="assetImage"
+                name="assetImages"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
