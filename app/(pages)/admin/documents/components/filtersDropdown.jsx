@@ -9,7 +9,7 @@ import SelectField from "@/components/common/SelectField";
 import { getDocumentsByCategory } from "app/services/document";
 
 const validationSchema = Yup.object().shape({
-  inventoryNumber: Yup.string(),
+  title: Yup.string(),
 });
 
 const DocumentsFilter = ({
@@ -20,6 +20,7 @@ const DocumentsFilter = ({
   asset,
   materialTransfer,
   inventory,
+  workorder,
 }) => {
   const [isClearing, setIsClearing] = useState(false);
 
@@ -50,6 +51,7 @@ const DocumentsFilter = ({
           uploadedBy: "",
           createdAt: "",
           materialTransfer: materialTransfer || "",
+          workorder: workorder || "",
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
