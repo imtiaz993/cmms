@@ -27,10 +27,6 @@ export const exportWorkOrders = async (query) => {
 };
 
 export const getWorkOrdersByStatus = async (status, query) => {
-  // Convert query object into query parameters
-  // const queryString = new URLSearchParams(
-  //   Object.entries(query).filter(([_, value]) => value) // Remove empty values
-  // ).toString();
   try {
     const url = `/work-orders/getByStatus?query=${query}${
       status !== "all" && `&status=${status}`
@@ -66,7 +62,7 @@ export const getWorkOrdersByTimeRange = async (timeRange, query) => {
 export const getFilteredWorkOrders = async (values, query, WOStatus) => {
   try {
     const { status, data } = await authRequest({
-      url: `/work-orders/getFilteredWorkOrders?query=${query}${
+      url: `/work-orders/getFilteredWorkOrders${query ? `?query=${query}` : ""}${
         WOStatus ? (WOStatus !== "all" ? `&status=${WOStatus}` : "") : ""
       }`,
       method: "POST",

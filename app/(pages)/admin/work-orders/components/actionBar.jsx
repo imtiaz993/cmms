@@ -8,7 +8,7 @@ import {
   Select,
   Button as AntButton,
 } from "antd";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   DownOutlined,
   ExportOutlined,
@@ -17,6 +17,7 @@ import {
 } from "@ant-design/icons";
 import {
   exportWorkOrders,
+  getFilteredWorkOrders,
   getWorkOrdersByStatus,
 } from "app/services/workOrders";
 import Button from "@/components/common/Button";
@@ -37,6 +38,9 @@ const ActionBar = ({
 }) => {
   const router = useRouter();
   const [filterDropdown, setFilterDropdown] = useState(null);
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
     value: key,
@@ -57,9 +61,10 @@ const ActionBar = ({
   const handleStatusChange = async (value) => {
     console.log("value", value);
     setFetchingWorkOrders(true);
-    const { status, data } = await getWorkOrdersByStatus(
-      value,
-      unplanned ? "unplanned" : "planned"
+    const { status, data } = await getFilteredWorkOrders(
+      { site: activeLocation ?? "", system: activeSystem ?? "" },
+      unplanned ? "unplanned" : "planned",
+      value
     );
 
     if (status === 200) {

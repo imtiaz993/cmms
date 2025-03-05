@@ -15,7 +15,7 @@ import {
 import { Checkbox, Form, message, Radio, Select, Table, Upload } from "antd";
 import { getAssetDetails } from "app/services/assets";
 import { getFilteredInventory } from "app/services/inventory";
-import { Formik } from "formik";
+import { Field, Formik } from "formik";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -245,6 +245,7 @@ const WorkOrderForm = () => {
             console.log("Values1", values);
 
             const formData = new FormData();
+            formData.append("asset", assetId);
 
             Object.entries(values).forEach(([key, value]) => {
               if (key !== "workOrderDocuments" && key !== "workOrderImages") {
@@ -277,13 +278,15 @@ const WorkOrderForm = () => {
               )
             );
 
-            values.workOrderDocuments.forEach((file) => {
-              formData.append(`workOrderDocuments`, file.originFileObj);
-            });
+            values.workOrderDocuments?.length > 0 &&
+              values.workOrderDocuments.forEach((file) => {
+                formData.append(`workOrderDocuments`, file.originFileObj);
+              });
 
-            values.workOrderImages.forEach((file) => {
-              formData.append(`workOrderImages`, file.originFileObj);
-            });
+            values.workOrderImages?.length > 0 &&
+              values.workOrderImages.forEach((file) => {
+                formData.append(`workOrderImages`, file.originFileObj);
+              });
             console.log("FormData Entries:");
             for (let pair of formData.entries()) {
               console.log(pair[0], pair[1]);
@@ -354,17 +357,24 @@ const WorkOrderForm = () => {
                     <label className="text-sm sm:text-right sm:min-w-[115px]">
                       Priority Level
                     </label>
-                    <Radio.Group name="priorityLevel" className="">
-                      <Radio value="High" className="sm:!ml-7">
-                        High
-                      </Radio>
-                      <Radio value="Medium" className="sm:!ml-7">
-                        Medium
-                      </Radio>
-                      <Radio value="Low" className="sm:!ml-7">
-                        Low
-                      </Radio>
-                    </Radio.Group>
+                    <Field name="criticality">
+                      {({ field, form }) => (
+                        <Radio.Group {...field} className="">
+                          <Radio value="Critical" className="!ml-3">
+                            Critical
+                          </Radio>
+                          <Radio value="High" className="sm:!ml-7">
+                            High
+                          </Radio>
+                          <Radio value="Medium" className="sm:!ml-7">
+                            Medium
+                          </Radio>
+                          <Radio value="Low" className="sm:!ml-7">
+                            Low
+                          </Radio>
+                        </Radio.Group>
+                      )}
+                    </Field>
                   </div>
 
                   <InputField
@@ -466,23 +476,30 @@ const WorkOrderForm = () => {
                     <label className="text-sm sm:text-right sm:min-w-[115px]">
                       Maint. Status
                     </label>
-                    <Radio.Group name="priorityLevel" className="">
-                      <Radio value="Active" className="sm:!ml-7">
-                        Active
-                      </Radio>
-                      <Radio value="Damaged Beyond Repair" className="sm:!ml-7">
-                        Damaged Beyond Repair
-                      </Radio>
-                      <Radio value="Out for Repair" className="sm:!ml-7">
-                        Out for Repair
-                      </Radio>
-                      <Radio value="Damaged" className="sm:!ml-7">
-                        Damaged
-                      </Radio>
-                      <Radio value="Dispose" className="sm:!ml-7">
-                        Dispose
-                      </Radio>
-                    </Radio.Group>
+                    <Field name="status">
+                      {({ field, form }) => (
+                        <Radio.Group {...field} className="">
+                          <Radio value="active" className="!ml-3">
+                            Active
+                          </Radio>
+                          <Radio
+                            value="damagedBeyondRepair"
+                            className="sm:!ml-7"
+                          >
+                            Damaged Beyond Repair
+                          </Radio>
+                          <Radio value="outForRepair" className="sm:!ml-7">
+                            Out for Repair
+                          </Radio>
+                          <Radio value="damaged" className="sm:!ml-7">
+                            Damaged
+                          </Radio>
+                          <Radio value="disposed" className="sm:!ml-7">
+                            Disposed
+                          </Radio>
+                        </Radio.Group>
+                      )}
+                    </Field>
                   </div>
                   <p className="md:col-span-2 font-semibold md:text-lg">
                     Upload Image

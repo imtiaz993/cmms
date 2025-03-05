@@ -14,6 +14,7 @@ import ActionBar from "./components/actionBar";
 import UnplannedPreviewPopup from "./components/UnplannedPreviewPopup";
 import PlannedPreviewPopup from "./components/PlannedPreviewPopup";
 import { useSearchParams } from "next/navigation";
+import MaintenanceReschulePopup from "./components/maintenanceReschulePopup";
 
 const WorkOrders = () => {
   const searchParams = useSearchParams();
@@ -83,9 +84,9 @@ const WorkOrders = () => {
   ];
   const unplannedColumns = [
     {
-      title: "Issue #",
-      dataIndex: "issue",
-      key: "issue",
+      title: "Issue ID",
+      dataIndex: "issueID",
+      key: "issueID",
       render: (issue) => (
         <Link href={"#"} className="text-[#017BFE] underline">
           {issue}
@@ -94,13 +95,13 @@ const WorkOrders = () => {
     },
     {
       title: "Description of Issue",
-      dataIndex: "issueIdentification",
-      key: "issueIdentification",
+      dataIndex: "description",
+      key: "description",
     },
     {
       title: "Technician",
-      dataIndex: "technicianAssignment",
-      key: "technicianAssignment",
+      dataIndex: "technician",
+      key: "technician",
     },
     {
       title: "Date Created",
@@ -233,9 +234,10 @@ const WorkOrders = () => {
   return (
     <>
       {addWOVisible && currentTab === "Planned" && (
-        <EarlyMaintenancePopup
+        <MaintenanceReschulePopup
           visible={addWOVisible}
           setVisible={setAddWOVisible}
+          selectedWorkOrders={selectedRowKeys}
         />
       )}
 
