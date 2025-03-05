@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import DatePickerField from "@/components/common/DatePickerField";
 import { getFilteredWorkOrders } from "app/services/workOrders";
 import { getCategories } from "app/services/setUp/categories";
+import { useSelector } from "react-redux";
 
 const validationSchema = Yup.object().shape({
   asset: Yup.string(),
@@ -24,9 +25,11 @@ const WorkOrdersFilter = ({
   closeDropdown,
   WOType,
   WOStatus,
+  asset_id,
 }) => {
   const [isClearing, setIsClearing] = useState(false);
   const [categories, setCategories] = useState([]);
+  const locations = useSelector((state) => state.location.location);
 
   useEffect(() => {
     const handleFetchCategories = async () => {
@@ -51,7 +54,11 @@ const WorkOrdersFilter = ({
     setSubmitting ? setSubmitting(false) : setIsClearing(false);
 
     if (status === 200) {
-      setWorkOrders(data?.data);
+      asset_id
+        ? setWorkOrders((prev) => {
+            return { ...prev, workOrders: data?.data };
+          })
+        : setWorkOrders(data?.data);
       message.success(data?.message || "Assets fetched successfully");
       closeDropdown();
     } else {
@@ -62,6 +69,15 @@ const WorkOrdersFilter = ({
   const UnplannedFields = () => {
     return (
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <SelectField
+          name="site"
+          placeholder="Site"
+          className="!w-full"
+          options={locations.map((i) => ({
+            label: i.site,
+            value: i._id,
+          }))}
+        />
         <InputField name="asset" placeholder="Asset" />
         <DatePickerField name="dueDate" placeholder="Completion Date" />
         <SelectField
@@ -91,6 +107,15 @@ const WorkOrdersFilter = ({
   const PlannedFields = () => {
     return (
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <SelectField
+          name="site"
+          placeholder="Site"
+          className="!w-full"
+          options={locations.map((i) => ({
+            label: i.site,
+            value: i._id,
+          }))}
+        />
         <InputField name="asset" placeholder="Asset" />
         <InputField name="issue" placeholder="Issue #" />
         <InputField name="description" placeholder="Description" />
@@ -101,9 +126,27 @@ const WorkOrdersFilter = ({
   };
 
   // Dynamically set initialValues based on WOType
-  const initialValues = WOType === "planned"
-    ? { asset: "", issue: "", description: "", technician: "", createdDate: "" }
-    : { asset: "", dueDate: "", category: "", startDate: "", criticality: "", schedule: "", lastPerformed: "" };
+  const initialValues =
+    WOType === "unplanned"
+      ? {
+          site: "",
+          asset: "",
+          issue: "",
+          description: "",
+          technician: "",
+          createdDate: "",
+        }
+      : {
+          site: "",
+          asset: "",
+          dueDate: "",
+          category: "",
+          startDate: "",
+          criticality: "",
+          schedule: "",
+          lastPerformed: "",
+          asset_id: asset_id ?? "",
+        };
 
   return (
     <div
@@ -123,7 +166,7 @@ const WorkOrdersFilter = ({
       >
         {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
-            {WOType === "planned" ? <UnplannedFields /> : <PlannedFields />}
+            {WOType === "unplanned" ? <PlannedFields /> : <UnplannedFields />}
             <div className="flex justify-end gap-4 mt-4">
               <div>
                 <Button

@@ -49,7 +49,7 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
     {
       key: "maintenance",
       label: "Maintenance",
-      children: <Maintainance maintenanceData={data?.maintenanceSchedules} />,
+      children: <Maintainance maintenanceData={data?.workOrders} setData={setData} />,
     },
     {
       key: "material-transfer",

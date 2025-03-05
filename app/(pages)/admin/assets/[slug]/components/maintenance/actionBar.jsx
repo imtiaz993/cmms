@@ -3,6 +3,8 @@ import { Checkbox, Dropdown, Button as AntButton, message, Menu } from "antd";
 import { DownOutlined, SettingOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import MaintenanceFilter from "./filtersDropdown";
+import WorkOrdersFilter from "app/(pages)/admin/work-orders/components/filtersDropdown";
+import { useParams } from "next/navigation";
 
 const ActionBar = ({
   checkedList,
@@ -10,8 +12,10 @@ const ActionBar = ({
   columns,
   selectedRowKeys,
   setSelectedRowKeys,
+  setData,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
+  const { slug } = useParams();
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title || key,
     value: key,
@@ -35,9 +39,14 @@ const ActionBar = ({
                 open={filterDropdown}
                 onOpenChange={setFilterDropdown}
                 dropdownRender={() => (
-                  <MaintenanceFilter
+                  <WorkOrdersFilter
+                    setWorkOrders={setData}
                     closeDropdown={() => setFilterDropdown(false)}
+                    asset_id={slug}
                   />
+                  // <MaintenanceFilter
+                  //   closeDropdown={() => setFilterDropdown(false)}
+                  // />
                 )}
                 trigger={["click"]}
                 arrow

@@ -4,7 +4,7 @@ import { message, Table } from "antd";
 import ActionBar from "./actionBar";
 
 const columns = [
-  { title: "Asset #", dataIndex: "assetNumber", key: "assetNumber" },
+  // { title: "Asset #", dataIndex: "assetNumber", key: "assetNumber" },
   { title: "Category", dataIndex: "category", key: "category" },
   { title: "Start Date", dataIndex: "startDate", key: "startDate" },
   {
@@ -23,13 +23,18 @@ const columns = [
       ),
   },
   { title: "Schedule", dataIndex: "schedule", key: "schedule" },
-  { title: "Status", dataIndex: "status", key: "status" },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (status) => <p className="capitalize">{status}</p>,
+  },
   { title: "Last Performed", dataIndex: "lastPerformed", key: "lastPerformed" },
 ];
 
 const defaultCheckedList = columns.map((item) => item.key);
 
-const Maintenance = ({ maintenanceData }) => {
+const Maintenance = ({ maintenanceData, setData }) => {
   // const [maintenanceData, setMaintenanceData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
@@ -71,6 +76,7 @@ const Maintenance = ({ maintenanceData }) => {
           columns={columns}
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
+          setData={setData}
         />
 
         <Table
