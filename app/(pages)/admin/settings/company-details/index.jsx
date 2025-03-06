@@ -32,7 +32,17 @@ const CompanyDetails = ({ activeTab }) => {
   const [companyDelete, setCompanyDelete] = useState(false);
   // const initialValues = ;
   const validationSchema = Yup.object({
+    companyName: Yup.string().required("Company Name is required"),
+    rigManagers: Yup.array().min(1, "At least one Rig Manager is required"),
+    phone: Yup.string().required("Phone Number is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
+    timezone: Yup.string().required("Timezone is required"),
+    currency: Yup.string().required("Currency is required"),
+    dateFormat: Yup.string().required("Date Format is required"),
+    financialYearDay: Yup.string().required("Financial Year Day is required"),
+    financialYearMonth: Yup.string().required(
+      "Financial Year Month is required"
+    ),
   });
   const [rigManagerData, setRigManagerData] = useState(null);
 
@@ -166,6 +176,7 @@ const CompanyDetails = ({ activeTab }) => {
                   name="companyName"
                   placeholder="Company Name"
                   label="Company Name"
+                  required
                 />
                 <SelectField
                   name="country"
@@ -195,11 +206,13 @@ const CompanyDetails = ({ activeTab }) => {
                   name="phone"
                   placeholder="(000) 000-0000"
                   label="Phone Number"
+                  required
                 />
                 <InputField
                   name="email"
                   placeholder="Email@email.com"
                   label="Email Address"
+                  required
                 />
                 <div className="flex items-center justify-between mt-10">
                   <p className="font-semibold md:text-lg">Rig Managers</p>
@@ -306,12 +319,14 @@ const CompanyDetails = ({ activeTab }) => {
                   placeholder="Select Timezone"
                   label="Timezone"
                   options={timeZones}
+                  required
                 />
                 <SelectField
                   name="currency"
                   placeholder="Select Currency"
                   label="Currency"
                   options={currencies}
+                  required
                 />
                 <SelectField
                   name="dateFormat"
@@ -322,6 +337,7 @@ const CompanyDetails = ({ activeTab }) => {
                     { label: "DD/MM/YYYY", value: "DD/MM/YYYY" },
                     { label: "YYYY/MM/DD", value: "YYYY/MM/DD" },
                   ]}
+                  required
                 />
                 <div className="flex flex-col sm:flex-row gap-3">
                   <SelectField
@@ -329,11 +345,13 @@ const CompanyDetails = ({ activeTab }) => {
                     placeholder="Select Month"
                     label="Financial Year Start"
                     options={months.map((i) => ({ label: i, value: i }))}
+                    required
                   />
                   <InputField
                     type="number"
                     name="financialYearDay"
                     placeholder="Day"
+                    required
                   />
                 </div>
                 <p className="font-semibold md:text-lg">
