@@ -4,10 +4,12 @@ import SelectField from "@/components/common/SelectField";
 import { Modal, Radio, message } from "antd";
 import { generateReport } from "app/services/reports";
 import { Field, Form, Formik } from "formik";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
 // Yup validation schema for Maintenance Procedures
 const validationSchema = Yup.object({
+  location: Yup.string().required("Location is required"),
   category: Yup.string().required("Category is required"),
   system: Yup.string().required("System is required"),
   tier3: Yup.string(),
@@ -19,6 +21,7 @@ const validationSchema = Yup.object({
 
 // Formik initial values for Maintenance Procedures
 const initialValues = {
+  location: "",
   category: "",
   system: "",
   tier3: "",
@@ -26,7 +29,9 @@ const initialValues = {
   formType: "pdf", // Default to pdf for radio button
 };
 
-const MaintenanceProceduresPopup = ({ visible, setVisible }) => {
+const MaintenanceProceduresPopup = ({ visible, setVisible, categories }) => {
+  const locations = useSelector((state) => state.location.location);
+  const systems = useSelector((state) => state.system.system);
   // Form submission handler
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
@@ -86,45 +91,42 @@ const MaintenanceProceduresPopup = ({ visible, setVisible }) => {
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
                   <div className="w-full">
                     <SelectField
-                      name="category"
-                      placeholder="Category"
-                      options={[
-                        { value: "category-1", label: "Category 1" },
-                        { value: "category-2", label: "Category 2" },
-                        { value: "category-3", label: "Category 3" },
-                      ]}
+                      name="location"
+                      placeholder="Location"
+                      options={locations.map((i) => ({
+                        label: i.site,
+                        value: i._id,
+                      }))}
                     />
                   </div>
-
                   <div className="w-full">
                     <SelectField
                       name="system"
                       placeholder="System"
-                      options={[
-                        { value: "air-system", label: "Air System" },
-                        { value: "water-system", label: "Water System" },
-                      ]}
+                      options={
+                        values.location &&
+                        systems
+                          .filter((i) => i?.site?._id === values.location)
+                          ?.map((i) => ({
+                            label: i.system,
+                            value: i._id,
+                          }))
+                      }
                     />
                   </div>
-
-                  {Array.from({ length: 2 }).map((_, index) => (
-                    <div key={index} className="w-full">
-                      <SelectField
-                        name={`tier${index + 3}`}
-                        placeholder={`Tier ${index + 3}`}
-                        options={[
-                          {
-                            value: `tier-${index + 3}-1`,
-                            label: `Tier ${index + 3} Option 1`,
-                          },
-                          {
-                            value: `tier-${index + 3}-2`,
-                            label: `Tier ${index + 3} Option 2`,
-                          },
-                        ]}
-                      />
-                    </div>
-                  ))}
+                  <div className="w-full">
+                    <SelectField
+                      name="category"
+                      placeholder="Category"
+                      options={
+                        categories &&
+                        categories?.map((i) => ({
+                          value: i._id,
+                          label: i.category,
+                        }))
+                      }
+                    />
+                  </div>
                 </div>
                 <div className="mt-4">
                   <p className="text-secondary mb-1">Export As</p>

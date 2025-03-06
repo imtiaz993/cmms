@@ -5,14 +5,14 @@ import SelectField from "@/components/common/SelectField";
 import { Checkbox, InputNumber, message, Modal, Radio } from "antd";
 import { generateReport } from "app/services/reports";
 import { Field, Form, Formik } from "formik";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
 // Initial values for the form
 const initialValues = {
-  costCenter: "",
+  location: "",
   fromDate: null,
   toDate: null,
-  criticallyFactor: "",
   craft: "",
   top: null,
   includeWO: false,
@@ -24,24 +24,19 @@ const MaintenanceReusedPopup = ({
   setVisible,
   title,
   type,
-  criticallyFactor,
   includeWO,
   craft,
   top,
 }) => {
+  const locations = useSelector((state) => state.location.location);
   // Dynamically create Yup validation schema inside the component
   const validationSchema = Yup.object({
-    costCenter: Yup.string().required("Cost Center is required"),
+    location: Yup.string().required("Location is required"),
     fromDate: Yup.date().required("From Date is required"),
     toDate: Yup.date().required("To Date is required"),
     formType: Yup.string()
       .oneOf(["pdf", "csv"], "Select a valid export format")
       .required("Export format is required"),
-
-    // Conditionally validate based on props
-    ...(criticallyFactor && {
-      criticallyFactor: Yup.string().required("Critically Factor is required"),
-    }),
 
     ...(craft && {
       craft: Yup.string().required("Craft is required"),
@@ -106,11 +101,21 @@ const MaintenanceReusedPopup = ({
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 items-center">
-                  <div className="w-full">
+                  {/* <div className="w-full">
                     <InputField
                       name="costCenter"
                       placeholder="Cost Center"
                       maxLength={128}
+                    />
+                  </div> */}
+                  <div className="w-full">
+                    <SelectField
+                      name="location"
+                      placeholder="Location"
+                      options={locations.map((i) => ({
+                        label: i.site,
+                        value: i._id,
+                      }))}
                     />
                   </div>
 
@@ -121,27 +126,6 @@ const MaintenanceReusedPopup = ({
                   <div className="w-full">
                     <DatePickerField name="toDate" placeholder="To Date" />
                   </div>
-
-                  {/* Conditionally render fields based on props */}
-                  {criticallyFactor && (
-                    <div className="w-full">
-                      <SelectField
-                        name="criticallyFactor"
-                        placeholder="Critically Factor"
-                        options={[{ value: "factor-1", label: "Factor 1" }]}
-                      />
-                    </div>
-                  )}
-
-                  {craft && (
-                    <div className="w-full">
-                      <SelectField
-                        name="craft"
-                        placeholder="Craft"
-                        options={[{ value: "craft-1", label: "Craft 1" }]}
-                      />
-                    </div>
-                  )}
 
                   {top && (
                     <div className="w-full">

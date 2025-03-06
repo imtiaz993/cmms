@@ -4,12 +4,15 @@ import SelectField from "@/components/common/SelectField";
 import { rigs } from "@/constants/rigsAndSystems";
 import { Checkbox, DatePicker, Modal, Radio, message } from "antd";
 import { generateReport } from "app/services/reports";
+import { getCategories } from "app/services/setUp/categories";
 import { Field, Form, Formik } from "formik";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
 // Yup validation schema
 const validationSchema = Yup.object({
-  costCenter: Yup.string().required("Cost Center is required"),
+  // costCenter: Yup.string().required("Cost Center is required"),
   serialNumber: Yup.string().max(
     128,
     "Serial Number can't exceed 128 characters"
@@ -32,7 +35,7 @@ const validationSchema = Yup.object({
 
 // Formik initial values
 const initialValues = {
-  costCenter: "",
+  // costCenter: "",
   serialNumber: "",
   physicalLocation: "",
   year: "",
@@ -48,7 +51,9 @@ const initialValues = {
   tier6: "",
 };
 
-const AssetSummaryPopup = ({ visible, setVisible }) => {
+const AssetSummaryPopup = ({ visible, setVisible, categories }) => {
+  const locations = useSelector((state) => state.location.location);
+  const systems = useSelector((state) => state.system.system);
   // Form submission handler
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
@@ -104,18 +109,18 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
-                  <div className="w-full">
+                  {/* <div className="w-full">
                     <InputField
                       name="costCenter"
                       placeholder="Cost Center"
                       maxLength={128}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="w-full">
                     <InputField
                       name="serialNumber"
-                      placeholder="Serial Number"
+                      placeholder="Asset Number"
                       maxLength={128}
                     />
                   </div>
@@ -123,11 +128,28 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                   <div className="w-full">
                     <SelectField
                       name="physicalLocation"
-                      placeholder="Physical Location"
-                      options={rigs.map((i) => ({
-                        label: i.name,
-                        value: i.id,
+                      placeholder="Location"
+                      options={locations.map((i) => ({
+                        label: i.site,
+                        value: i._id,
                       }))}
+                    />
+                  </div>
+                  <div className="w-full">
+                    <SelectField
+                      name="system"
+                      placeholder="System"
+                      options={
+                        values.physicalLocation &&
+                        systems
+                          .filter(
+                            (i) => i?.site?._id === values.physicalLocation
+                          )
+                          ?.map((i) => ({
+                            label: i.system,
+                            value: i._id,
+                          }))
+                      }
                     />
                   </div>
 
@@ -139,56 +161,25 @@ const AssetSummaryPopup = ({ visible, setVisible }) => {
                         { value: "2021", label: "2021" },
                         { value: "2022", label: "2022" },
                         { value: "2023", label: "2023" },
+                        { value: "2024", label: "2024" },
+                        { value: "2025", label: "2025" },
                       ]}
                     />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="accountingDept"
-                      placeholder="Accounting Dept"
-                      options={[
-                        { value: "accounting-1", label: "Accounting 1" },
-                        { value: "accounting-2", label: "Accounting 2" },
-                        { value: "accounting-3", label: "Accounting 3" },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Field as={Checkbox} name="expandAssetClass">
-                      Expand Asset Class
-                    </Field>
                   </div>
 
                   <div className="w-full">
                     <SelectField
                       name="category"
                       placeholder="Category"
-                      options={[
-                        { value: "category-1", label: "Category 1" },
-                        { value: "category-2", label: "Category 2" },
-                        { value: "category-3", label: "Category 3" },
-                      ]}
+                      options={
+                        categories &&
+                        categories?.map((i) => ({
+                          value: i._id,
+                          label: i.category,
+                        }))
+                      }
                     />
                   </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="system"
-                      placeholder="System"
-                      options={[{ value: "air-system", label: "Air System" }]}
-                    />
-                  </div>
-
-                  {Array.from({ length: 4 }).map((_, index) => (
-                    <div key={index} className="w-full">
-                      <SelectField
-                        name={`tier${index + 3}`}
-                        placeholder={`Tier ${index + 3}`}
-                      />
-                    </div>
-                  ))}
 
                   <div className="w-full">
                     <Field as={Checkbox} name="childAssets">

@@ -6,10 +6,11 @@ import DatePickerField from "@/components/common/DatePickerField"; // Import Dat
 import { message, Modal, Radio } from "antd";
 import * as Yup from "yup";
 import { generateReport } from "app/services/reports";
+import { useSelector } from "react-redux";
 
 // Validation Schema
 const validationSchema = Yup.object().shape({
-  costCenter: Yup.string().required("Cost Center is required"),
+  location: Yup.string().required("Location is required"),
   assetNumber: Yup.string().required("Asset Number is required"),
   createdFrom: Yup.date().required("Created From is required"),
   createdTo: Yup.date().required("Created To is required"),
@@ -29,7 +30,9 @@ const validationSchema = Yup.object().shape({
   cause: Yup.string().required("Cause is required"),
 });
 
-const WOSummaryPopup = ({ visible, setVisible }) => {
+const WOSummaryPopup = ({ visible, setVisible, categories }) => {
+  const locations = useSelector((state) => state.location.location);
+  const systems = useSelector((state) => state.system.system);
   // Handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
@@ -53,7 +56,7 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
     <div>
       <Formik
         initialValues={{
-          costCenter: "",
+          location: "",
           assetNumber: "",
           createdFrom: "",
           createdTo: "",
@@ -106,11 +109,24 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
-                  <div className="w-full">
+                  {/* <div className="w-full">
                     <InputField
                       name="costCenter"
                       placeholder="Cost Center"
                       maxLength={128}
+                    />
+                  </div> */}
+                  <div className="w-full">
+                    <SelectField
+                      name="location"
+                      placeholder="Location"
+                      options={
+                        locations &&
+                        locations?.map((i) => ({
+                          label: i.site,
+                          value: i._id,
+                        }))
+                      }
                     />
                   </div>
 
@@ -151,26 +167,17 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                     />
                   </div>
 
-                  {/* Select Fields */}
-                  <div className="w-full">
-                    <SelectField
-                      name="assignedTo"
-                      placeholder="Person Doing Work"
-                      options={[
-                        { value: "user1", label: "User 1" },
-                        { value: "user2", label: "User 2" },
-                      ]}
-                    />
-                  </div>
-
                   <div className="w-full">
                     <SelectField
                       name="category"
                       placeholder="Category"
-                      options={[
-                        { value: "cat1", label: "Category 1" },
-                        { value: "cat2", label: "Category 2" },
-                      ]}
+                      options={
+                        categories &&
+                        categories?.map((i) => ({
+                          value: i._id,
+                          label: i.category,
+                        }))
+                      }
                     />
                   </div>
 
@@ -178,82 +185,15 @@ const WOSummaryPopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="system"
                       placeholder="System"
-                      options={[
-                        { value: "sys1", label: "System 1" },
-                        { value: "sys2", label: "System 2" },
-                      ]}
-                    />
-                  </div>
-
-                  {/* Dynamic Select Fields for Tiers */}
-                  {Array.from({ length: 4 }).map((_, index) => (
-                    <div key={index} className="w-full">
-                      <SelectField
-                        name={`tier${index + 3}`}
-                        placeholder={`Tier ${index + 3}`}
-                        options={[
-                          {
-                            value: `tier${index + 3}`,
-                            label: `Tier ${index + 3}`,
-                          },
-                        ]}
-                      />
-                    </div>
-                  ))}
-
-                  {/* Other Select Fields */}
-                  <div className="w-full">
-                    <SelectField
-                      name="type"
-                      placeholder="Type"
-                      options={[
-                        { value: "type1", label: "Type 1" },
-                        { value: "type2", label: "Type 2" },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="status"
-                      placeholder="Status"
-                      options={[
-                        { value: "open", label: "Open" },
-                        { value: "closed", label: "Closed" },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="craft"
-                      placeholder="Craft"
-                      options={[
-                        { value: "craft1", label: "Craft 1" },
-                        { value: "craft2", label: "Craft 2" },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="priority"
-                      placeholder="Priority"
-                      options={[
-                        { value: "high", label: "High" },
-                        { value: "low", label: "Low" },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="cause"
-                      placeholder="Cause"
-                      options={[
-                        { value: "cause1", label: "Cause 1" },
-                        { value: "cause2", label: "Cause 2" },
-                      ]}
+                      options={
+                        values.location &&
+                        systems
+                          .filter((i) => i?.site?._id === values.location)
+                          ?.map((i) => ({
+                            label: i.system,
+                            value: i._id,
+                          }))
+                      }
                     />
                   </div>
                 </div>

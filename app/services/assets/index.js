@@ -43,12 +43,11 @@ export const updateAsset = async (values) => {
   }
 };
 
-export const deleteAsset = async (values) => {
+export const deleteAsset = async (id) => {
   try {
     const { status, data } = await authRequest({
-      url: "/asset/delete",
-      method: "POST",
-      data: values,
+      url: "/asset/delete?slug=" + id,
+      method: "Delete",
     });
     return { status, data };
   } catch (e) {
@@ -99,10 +98,54 @@ export const getAssetDetails = async (id) => {
   }
 };
 
+export const updateStatus = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/asset/updateStatus",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const addCost = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/asset/addCost",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const addImage = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/asset/addImage",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+export const getFilteredHistory = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/asset/getFilteredHistory",
       method: "POST",
       data: values,
     });

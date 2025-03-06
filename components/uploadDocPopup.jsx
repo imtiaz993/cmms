@@ -1,14 +1,16 @@
 import Button from "@/components/common/Button";
 import { message, Modal, Upload } from "antd";
 import { uploadDoc } from "app/services/document";
-import { Form, Formik } from "formik";
+import { ErrorMessage, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import SelectField from "@/components/common/SelectField";
 import InputField from "@/components/common/InputField";
 
 const validationSchema = Yup.object().shape({
-  document: Yup.mixed().required("A file is required").nullable(),
+  document: Yup.array()
+    .min(1, "A file is required")
+    .required("A file is required"),
   documentType: Yup.string().required("Document type is required"),
   description: Yup.string().max(128, "Description is too long").nullable(),
 });
@@ -19,6 +21,8 @@ const UploadDocPopup = ({
   assetSlug,
   materialTransferSlug,
   setDetails,
+  workOrderSlug,
+  inventorySlug,
 }) => {
   const [fileList, setFileList] = useState([]);
   const [fileName, setFileName] = useState(""); // State to store the selected file name
@@ -36,12 +40,15 @@ const UploadDocPopup = ({
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = new FormData();
-    console.log(values);
     formData.append("document", values.document[0]);
     assetSlug
       ? formData.append("asset", assetSlug)
       : materialTransferSlug
       ? formData.append("materialTransfer", materialTransferSlug)
+      : workOrderSlug
+      ? formData.append("workOrder", workOrderSlug)
+      : inventorySlug
+      ? formData.append("inventory", inventorySlug)
       : null;
     formData.append("type", values.documentType);
     formData.append("description", values.description);
@@ -76,7 +83,7 @@ const UploadDocPopup = ({
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ isSubmitting, submitForm, setFieldValue }) => (
+      {({ isSubmitting, submitForm, setFieldValue, resetForm }) => (
         <Form>
           <Modal
             maskClosable={false}
@@ -84,12 +91,18 @@ const UploadDocPopup = ({
               <h1 className="text-lg md:text-2xl mb-5">Upload Document</h1>
             }
             open={visible}
-            onCancel={() => setVisible(false)}
+            onCancel={() => {
+              setVisible(false);
+              resetForm();
+            }}
             footer={
               <div className="my-7">
                 <Button
                   className="mr-2"
-                  onClick={() => setVisible(false)}
+                  onClick={() => {
+                    setVisible(false);
+                    resetForm();
+                  }}
                   outlined
                   size="small"
                   text="Cancel"
@@ -112,6 +125,7 @@ const UploadDocPopup = ({
                 <Upload
                   accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png"
                   fileList={fileList}
+                  name="document"
                   beforeUpload={(file) => {
                     setFieldValue("document", [file]);
                     return false; // prevent upload to server immediately
@@ -123,6 +137,11 @@ const UploadDocPopup = ({
                 </Upload>
                 <p>(Max Size 25 MB)</p>
               </div>
+              <ErrorMessage
+                name={"document"} // Dynamically handle error messages
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
               {fileName && (
                 <div className="mt-2 text-gray-600">
                   <strong>Selected File:</strong> {fileName}

@@ -6,6 +6,7 @@ import { rigs } from "@/constants/rigsAndSystems";
 import { Checkbox, message, Modal, Radio } from "antd";
 import { generateReport } from "app/services/reports";
 import { Field, Form, Formik } from "formik";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
 const ReportsPopup = ({
@@ -19,14 +20,14 @@ const ReportsPopup = ({
   fromToDate,
   includeChildAssets,
   physicalLocation,
-  criticallyFactor,
   date,
   year,
 }) => {
+  const locations = useSelector((state) => state.location.location);
   // Build the validation schema based on props
   const validationSchema = Yup.object({
-    costCenter: costCenter
-      ? Yup.string().required("Cost Center is required")
+    location: costCenter
+      ? Yup.string().required("Location is required")
       : Yup.string(),
     assetNumber: assetNumber
       ? Yup.string().required("Asset Number is required")
@@ -36,9 +37,9 @@ const ReportsPopup = ({
       : Yup.date().notRequired(),
     year: year ? Yup.string().required("Year is required") : Yup.string(),
     dataOnly: dataOnly ? Yup.boolean() : Yup.boolean(),
-    physicalLocation: physicalLocation
-      ? Yup.string().required("Physical Location is required")
-      : Yup.string(),
+    // physicalLocation: physicalLocation
+    //   ? Yup.string().required("Physical Location is required")
+    //   : Yup.string(),
 
     // Only apply validation for `fromDate` and `toDate` if `fromToDate` prop is true
     fromDate: fromToDate
@@ -48,9 +49,6 @@ const ReportsPopup = ({
       ? Yup.date().required("To Date is required")
       : Yup.date().notRequired(),
 
-    criticallyFactor: criticallyFactor
-      ? Yup.string().required("Critically Factor is required")
-      : Yup.string(),
     childAssets: includeChildAssets ? Yup.boolean() : Yup.boolean(),
     formType: Yup.string()
       .oneOf(["pdf", "csv"], "Select a valid export format")
@@ -76,7 +74,7 @@ const ReportsPopup = ({
     <div>
       <Formik
         initialValues={{
-          costCenter: "",
+          location: "",
           assetNumber: "",
           physicalLocation: "",
           date: null,
@@ -84,14 +82,13 @@ const ReportsPopup = ({
           dataOnly: false,
           fromDate: null,
           toDate: null,
-          criticallyFactor: "",
           childAssets: false,
           formType: "pdf", // Default value for form type
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, isSubmitting, submitForm, errors }) => (
+        {({ values, isSubmitting, submitForm, errors, resetForm }) => (
           <Form>
             <Modal
               maskClosable={false}
@@ -101,7 +98,10 @@ const ReportsPopup = ({
                 <div>
                   <Button
                     className="mr-2"
-                    onClick={() => setVisible(false)}
+                    onClick={() => {
+                      setVisible(false);
+                      resetForm();
+                    }}
                     outlined
                     size="small"
                     text="Cancel"
@@ -110,7 +110,6 @@ const ReportsPopup = ({
                   />
                   <Button
                     onClick={() => {
-                      console.log("errors: ", errors);
                       submitForm();
                     }}
                     size="small"
@@ -126,18 +125,26 @@ const ReportsPopup = ({
                 {costCenter && (
                   <div className="mt-4 flex flex-col md:flex-row gap-4 w-full items-end md:items-center">
                     <div className="w-full">
-                      <InputField
-                        name="costCenter"
-                        placeholder="Cost Center"
+                      <SelectField
+                        name="location"
+                        placeholder="Select Location"
+                        label="Location"
+                        labelOnTop
                         maxLength={128}
+                        options={locations.map((i) => ({
+                          label: i.site,
+                          value: i._id,
+                        }))}
                       />
                     </div>
 
                     {assetNumber && (
                       <div className="w-full">
-                        <SelectField
+                        <InputField
                           name="assetNumber"
                           placeholder="Asset Number"
+                          label="Asset Number"
+                          labelOnTop
                           options={[]}
                         />
                       </div>
@@ -145,7 +152,7 @@ const ReportsPopup = ({
 
                     {date && (
                       <div className="w-full">
-                        <DatePickerField name="date" placeholder="Date" />
+                        <DatePickerField name="date" label="Date" />
                       </div>
                     )}
 
@@ -153,8 +160,11 @@ const ReportsPopup = ({
                       <div className="w-full">
                         <SelectField
                           name="year"
-                          placeholder="Year"
+                          placeholder="Select Year"
+                          label="Year"
+                          labelOnTop
                           options={[
+                            { value: "2025", label: "2025" },
                             { value: "2024", label: "2024" },
                             { value: "2023", label: "2023" },
                             { value: "2022", label: "2022" },
@@ -177,34 +187,31 @@ const ReportsPopup = ({
 
                 {physicalLocation && (
                   <div className="mt-4 w-full">
-                    <SelectField
+                    {/* <SelectField
                       name="physicalLocation"
-                      placeholder="Physical Location"
-                      options={rigs.map((i) => ({
+                      placeholder="Select Physical Location"
+                      label="Physical Location"
+                      labelOnTop
+                      options={locations.map((i) => ({
                         label: i.name,
                         value: i.id,
                       }))}
-                    />
+                    /> */}
                   </div>
                 )}
 
                 {fromToDate && (
                   <div className="mt-4 flex flex-col md:flex-row gap-4 w-full">
-                    <DatePickerField name="fromDate" placeholder="From Date" />
-                    <DatePickerField name="toDate" placeholder="To Date" />
+                    <DatePickerField
+                      name="fromDate"
+                      label="From Date"
+                      labelOnTop
+                    />
+                    <DatePickerField name="toDate" label="To Date" labelOnTop />
                   </div>
                 )}
 
                 <div className="mt-4 flex flex-col md:flex-row gap-4 w-full md:items-center">
-                  {criticallyFactor && (
-                    <div className="w-full">
-                      <SelectField
-                        name="criticallyFactor"
-                        placeholder="Critically Factor"
-                        options={[]}
-                      />
-                    </div>
-                  )}
                   {includeChildAssets && (
                     <div className="w-full">
                       <Field as={Checkbox} name="childAssets">

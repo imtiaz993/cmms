@@ -1,19 +1,36 @@
 import { message, Modal, Radio } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Form, Formik } from "formik";
 import Low from "./low";
 import Medium from "./medium";
 import High from "./high";
 import Critical from "./critical";
 import Button from "@/components/common/Button";
-import { Form, Formik } from "formik";
 import ReschedulePopup from "./reschedulePopup";
+import {
+  getDailyWorkOrders,
+  printDailyWorkOrders,
+} from "app/services/dashboard";
 
 const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
+  const [data, setdata] = useState();
   const [selectedTab, setSelectedTab] = useState("Critical"); // State to track the selected tab
   const [batchEdit, setBatchEdit] = useState(false);
   const [reschedulePopup, setReschedulePopup] = useState(false);
   const [print, setPrint] = useState(false);
   const [selectedItems, setSelectedItems] = useState(new Set());
+
+  useEffect(() => {
+    const getDailyWO = async () => {
+      const { status, data } = await getDailyWorkOrders(selectedDate);
+      if (status === 200) {
+        setdata(data?.data);
+      } else {
+        message.error(data?.message || "Failed to get work orders");
+      }
+    };
+    getDailyWO();
+  }, []);
 
   const handleCheckboxChange = (item) => {
     setSelectedItems((prev) => {
@@ -27,40 +44,75 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
     });
   };
 
+  const handlePrint = async () => {
+    const { status, data } = await printDailyWorkOrders({
+      ids: [...selectedItems],
+    });
+    if (status === 200) {
+      window.open(data.data);
+      message.success(data.message || "Printed successfully");
+      setPrint(false);
+    } else {
+      message.error(data.message || "Failed to print");
+    }
+  };
+
   // Function to render the content based on the selected radio button
   const renderContent = () => {
     switch (selectedTab) {
       case "Critical":
-        return (
+        return data.critical.length > 0 ? (
           <Critical
             batchEdit={batchEdit}
             print={print}
             setBatchEditPopup={setReschedulePopup}
+            data={data.critical}
+            selectedItems={selectedItems}
+            handleCheckboxChange={handleCheckboxChange}
           />
+        ) : (
+          <p className="text-center my-10">
+            No Critical Work Orders To Display
+          </p>
         );
       case "High":
-        return (
+        return data.high.length > 0 ? (
           <High
             batchEdit={batchEdit}
             print={print}
             setBatchEditPopup={setReschedulePopup}
+            data={data}
+            selectedItems={selectedItems}
+            handleCheckboxChange={handleCheckboxChange}
           />
+        ) : (
+          <p className="text-center my-10">No High Work Orders To Display</p>
         );
       case "Medium":
-        return (
+        return data.medium.length > 0 ? (
           <Medium
             batchEdit={batchEdit}
             print={print}
             setBatchEditPopup={setReschedulePopup}
+            data={data}
+            selectedItems={selectedItems}
+            handleCheckboxChange={handleCheckboxChange}
           />
+        ) : (
+          <p className="text-center my-10">No Medium Work Orders To Display</p>
         );
       case "Low":
-        return (
+        return data.low.length > 0 ? (
           <Low
             batchEdit={batchEdit}
             print={print}
             setBatchEditPopup={setReschedulePopup}
+            data={data}
+            selectedItems={selectedItems}
+            handleCheckboxChange={handleCheckboxChange}
           />
+        ) : (
+          <p className="text-center my-10">No Low Work Orders To Display</p>
         );
       default:
         return null;
@@ -69,12 +121,15 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
 
   return (
     <div>
-      <ReschedulePopup
-        visible={reschedulePopup}
-        setVisible={setReschedulePopup}
-        batchEdit={batchEdit}
-        setBatchEdit={setBatchEdit}
-      />
+      {reschedulePopup && (
+        <ReschedulePopup
+          visible={reschedulePopup}
+          setVisible={setReschedulePopup}
+          batchEdit={batchEdit}
+          setBatchEdit={setBatchEdit}
+          selectedItems={[...selectedItems]}
+        />
+      )}
       <Formik initialValues={{}} onSubmit={(values) => console.log(values)}>
         {({ values, setFieldValue }) => (
           <Form>
@@ -147,15 +202,20 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
                         if (batchEdit) {
                           setReschedulePopup(true);
                         } else {
-                          setPrint(!print);
-                          message.success("Printed successfully");
+                          handlePrint();
                         }
                       }}
                     />
                   </div>
                 )}
                 {/* Render content based on selected radio button */}
-                <div>{renderContent()}</div>
+                <div>
+                  {data ? (
+                    renderContent()
+                  ) : (
+                    <p className="text-center my-10">Loading...</p>
+                  )}
+                </div>
               </div>
             </Modal>
           </Form>

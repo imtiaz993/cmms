@@ -108,7 +108,7 @@ const AddFieldForm = ({ onAddField }) => {
               placeholder="Select field type"
               value={values.type || undefined}
               onChange={(value) => setFieldValue("type", value)}
-              style={{ height: "36px", width: "100%", marginTop: "12px" }}
+              style={{ height: "44px", width: "100%", marginTop: "12px" }}
             >
               <Option value="text">Text</Option>
               <Option value="number">Number</Option>
@@ -184,7 +184,7 @@ const AddFieldPopup = ({ visible, setVisible, module, fields, setFields }) => {
       bodyProps={{ style: { minHeight: "200px" } }}
       // destroyOnClose
     >
-      <Tabs defaultActiveKey="1">
+      <Tabs defaultActiveKey="2">
         <TabPane tab="Existing Fields" key="1">
           <ExistingFields fields={fields} onDelete={handleDeleteField} />
         </TabPane>

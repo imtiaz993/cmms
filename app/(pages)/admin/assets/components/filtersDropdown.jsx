@@ -8,16 +8,19 @@ import SelectField from "@/components/common/SelectField";
 import { getFilteredAssets } from "app/services/assets";
 import { rigs, systems } from "@/constants/rigsAndSystems";
 import DatePickerField from "@/components/common/DatePickerField";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAssets, setAssetsLoading } from "app/redux/slices/assetsSlice";
 
 const validationSchema = Yup.object().shape({
   assetNumber: Yup.string(),
 });
 
-const AssetFilter = ({ closeDropdown }) => {
+const AssetFilter = ({ closeDropdown, setFilteredAssets, options }) => {
   const [isClearing, setIsClearing] = useState(false);
   const dispatch = useDispatch();
+  const locations = useSelector((state) => state.location.location);
+  const systems = useSelector((state) => state.system.system);
+
   const submit = async (values, setSubmitting) => {
     console.log(values);
     !setSubmitting && setIsClearing(true);
@@ -26,7 +29,8 @@ const AssetFilter = ({ closeDropdown }) => {
     setSubmitting ? setSubmitting(false) : setIsClearing(false);
     if (status === 200) {
       message.success(data?.message || "Assets fetched successfully");
-      dispatch(setAssets(data?.data));
+      // dispatch(setAssets(data?.data));
+      setFilteredAssets(data?.data);
       closeDropdown();
     } else {
       message.error(data?.message || "Failed to fetch assets");
@@ -44,66 +48,66 @@ const AssetFilter = ({ closeDropdown }) => {
     >
       <Formik
         initialValues={{
-          physicalLocation: "",
-          mainSystem: "",
+          site: "",
+          system: "",
+          assetID: "",
           serialNumber: "",
-          assetNumber: "",
-          make: "",
           model: "",
-          part: "",
           criticality: "",
           maintStatus: "",
-          installedDate: "",
+          purchaseDate: "",
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           submit(values, setSubmitting);
         }}
       >
-        {({ isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
+        {({ values, isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               <SelectField
-                name="physicalLocation"
-                placeholder="Physical Location (Rig)"
-                options={rigs
-                  .slice(0, rigs.length - 2)
-                  .map((i) => ({ label: i.name, value: i.id }))}
-              />
-
-              <SelectField
-                name="mainSystem"
-                placeholder="Main System"
-                options={systems.map((i) => ({
-                  label: i.name,
-                  value: i.id,
+                name="site"
+                placeholder="Site"
+                className="!w-full"
+                options={locations.map((i) => ({
+                  label: i.site,
+                  value: i._id,
                 }))}
               />
+              <SelectField
+                name="system"
+                placeholder="System"
+                options={
+                  values.site &&
+                  systems
+                    .filter((i) => i?.site?._id === values.site)
+                    ?.map((i) => ({
+                      label: i.system,
+                      value: i._id,
+                    }))
+                }
+              />
+              <InputField name="assetID" placeholder="Asset #" />
               <InputField name="serialNumber" placeholder="Serial #" />
-              <InputField name="assetNumber" placeholder="Asset #" />
-              <InputField name="make" placeholder="Make" />
               <InputField name="model" placeholder="Model" />
-              <InputField name="part" placeholder="Part #" />
               <SelectField
                 name="criticality"
-                placeholder="Criticality"
+                placeholder="Priority"
                 options={[
-                  { value: "high", label: "High" },
-                  { value: "medium", label: "Medium" },
-                  { value: "low", label: "Low" },
+                  { value: "Critical", label: "Critical" },
+                  { value: "High", label: "High" },
+                  { value: "Medium", label: "Medium" },
+                  { value: "Low", label: "Low" },
                 ]}
               />
               <SelectField
                 name="maintStatus"
-                placeholder="Maint. Status"
-                options={[
-                  { value: "active", label: "Active" },
-                  { value: "inactive", label: "Inactive" },
-                ]}
+                placeholder="Status"
+                options={options}
               />
               <DatePickerField
-                name="installedDate"
-                placeholder="Installed Date"
+                name="purchaseDate"
+                placeholder="Purchase Date"
               />
               <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
                 <div>

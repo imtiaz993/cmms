@@ -43,6 +43,34 @@ export const getFilteredInventory = async (values) => {
   }
 };
 
+export const updateInventoryApi = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/inventory/update",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const getInventoryDetails = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: `/inventory/view/?inventory=${id}`,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const exportInventory = async () => {
   try {
     const { status, data } = await authRequest({
@@ -60,6 +88,64 @@ export const changeInventoryToAsset = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/inventory/changeToAsset",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const updateStatus = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/inventory/updateStatus",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const addImage = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/inventory/addImage",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const deleteInventory = async (id) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/inventory/delete?slug=" + id,
+      method: "Delete",
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+export const getFilteredHistory = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/inventory/getFilteredHistory",
       method: "POST",
       data: values,
     });

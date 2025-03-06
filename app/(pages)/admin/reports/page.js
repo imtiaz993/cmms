@@ -4,16 +4,19 @@ import AssetReports from "./components/assetReports";
 import MaintenanceReports from "./components/maintenanceReports";
 import AnalyticsReports from "./components/analyticsReports";
 import Readings from "./components/reading";
+import { useEffect, useState } from "react";
+import { getCategories } from "app/services/setUp/categories";
 
 const Reports = () => {
+  const [categories, setCategories] = useState([]);
   const tabs = [
     {
       label: "Assets",
-      children: <AssetReports />,
+      children: <AssetReports categories={categories} />,
     },
     {
       label: "Maintenance",
-      children: <MaintenanceReports />,
+      children: <MaintenanceReports categories={categories} />,
     },
     {
       label: "Analytics",
@@ -24,13 +27,26 @@ const Reports = () => {
       children: <Readings />,
     },
   ];
+
+  useEffect(() => {
+    const handleFetchCategories = async () => {
+      const { status, data } = await getCategories();
+      if (status === 200) {
+        
+        setCategories(data.data);
+      } else {
+        message.error(data.error);
+      }
+    };
+    handleFetchCategories();
+  }, []);
   return (
     <div className="pb-4 pt-3">
       <Tabs
-        type="card"
+        animated
         size={"small"}
         items={tabs.map((i, index) => ({ ...i, key: index }))}
-        tabBarStyle={{ borderColor: "white" }}
+        // tabBarStyle={{ borderColor: "white" }}
         className="reports-tabs"
       />
     </div>

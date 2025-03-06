@@ -429,15 +429,7 @@ const MaintenanceCard = ({ dashboardDetails }) => {
         scroll={{ x: 700 }}
         columns={columns}
         dataSource={data}
-        pagination={{
-          total: data.total,
-          current: 1,
-          pageSize: 10,
-          showSizeChanger: true,
-          showTotal: (total, range) =>
-            `${range[0]}-${range[1]} of ${total} items`,
-          onChange: () => {},
-        }}
+        pagination={false}
         style={{
           marginTop: 16,
           overflow: "auto",
@@ -554,7 +546,7 @@ const TotalOpenWorkOrdersCard = ({ dashboardDetails }) => {
 
 const Dashboard = ({ dashboardDetails }) => {
   return (
-    <div className="p-5">
+    <div className="p-5 pl-0">
       <WorkOrderCard dashboardDetails={dashboardDetails} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>

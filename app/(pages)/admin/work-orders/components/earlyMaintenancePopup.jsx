@@ -4,8 +4,10 @@ import { Checkbox, Dropdown, Menu, message, Modal, Space, Table } from "antd";
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import { SettingOutlined } from "@ant-design/icons";
-import { useState } from "react";
-import CreatePlannedWOPopup from "../../assets/[slug]/components/work-orders/createPlannedWOPopup";
+import { useEffect, useState } from "react";
+import CreatePlannedWOPopup from "./createPlannedWOPopup";
+import { getEarlyMaintenanceData } from "app/services/workOrders";
+import dayjs from "dayjs";
 
 const validationSchema = Yup.object().shape({
   costCenter: Yup.string(),
@@ -14,8 +16,8 @@ const validationSchema = Yup.object().shape({
 const columns = [
   {
     title: "Asset",
-    dataIndex: "asset",
-    key: "asset",
+    dataIndex: "assetNumber",
+    key: "assetNumber",
   },
   {
     title: "Event Type",
@@ -24,13 +26,19 @@ const columns = [
   },
   {
     title: "Frequency",
-    dataIndex: "frequency",
+    dataIndex: "duration",
     key: "frequency",
   },
   {
     title: "Next Scheduled Date",
-    dataIndex: "nextScheduledDate",
-    key: "nextScheduledDate",
+    dataIndex: "maintStartDate",
+    key: "maintStartDate",
+    render: (_, record) => {
+      // Convert timestamp to Date object
+      const date = dayjs(record.maintStartDate).format("MMM DD, YYYY");
+      // Use date-fns to format the date as MM/DD/YYYY
+      return date;
+    },
   },
   {
     title: "",
@@ -46,48 +54,34 @@ const columns = [
   },
 ];
 
-const data = [
-  {
-    key: "1",
-    asset: "CBV-755982",
-    eventType: "General",
-    frequency: "180 Day",
-    nextScheduledDate: "March 26, 2025",
-  },
-  {
-    key: "2",
-    asset: "CBV-755982",
-    eventType: "General",
-    frequency: "180 Day",
-    nextScheduledDate: "March 26, 2025",
-  },
-  {
-    key: "3",
-    asset: "CBV-755982",
-    eventType: "General",
-    frequency: "180 Day",
-    nextScheduledDate: "March 26, 2025",
-  },
-  {
-    key: "4",
-    asset: "CBV-755982",
-    eventType: "General",
-    frequency: "180 Day",
-    nextScheduledDate: "March 26, 2025",
-  },
-];
-
 const defaultCheckedList = columns.map((item) => item.key);
 
 const EarlyMaintenancePopup = ({ visible, setVisible }) => {
+  const [data, setData] = useState();
+  const [fetching, setFetching] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const [createPlannedWOPopup, setCreatePlannedWOPopup] = useState(false);
+  const [plannedWOAsset, setPlannedWOAsset] = useState("");
 
-  const options = columns.map(({ key, title }, index) => ({
+  const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
     value: key,
     key: index,
   }));
+
+  useEffect(() => {
+    const getData = async () => {
+      setFetching(true);
+      const { status, data } = await getEarlyMaintenanceData();
+      if (status === 200) {
+        setData(data.data);
+      } else {
+        message.error(data.error || "Failed to fetch data");
+      }
+      setFetching(false);
+    };
+    getData();
+  }, []);
 
   const handleCheckboxChange = (value) => {
     const newCheckedList = checkedList.includes(value)
@@ -102,18 +96,16 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
         costCenter: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
-        console.log(values);
-
-        handleSubmit(values, setSubmitting, resetForm);
-      }}
     >
-      {({ isSubmitting, handleSubmit }) => (
-        <Form onSubmit={handleSubmit}>
-          <CreatePlannedWOPopup
-            visible={createPlannedWOPopup}
-            setVisible={setCreatePlannedWOPopup}
-          />
+      {({ isSubmitting }) => (
+        <Form>
+          {createPlannedWOPopup && (
+            <CreatePlannedWOPopup
+              visible={createPlannedWOPopup}
+              setVisible={setCreatePlannedWOPopup}
+              asset={plannedWOAsset}
+            />
+          )}
           <Modal
             maskClosable={false}
             title={
@@ -131,15 +123,6 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
                   outlined
                   size="small"
                   text="Cancel"
-                  fullWidth={false}
-                  disabled={isSubmitting}
-                />
-
-                <Button
-                  className=""
-                  onClick={() => setVisible(false)}
-                  size="small"
-                  text="Create Work Order"
                   fullWidth={false}
                   disabled={isSubmitting}
                 />
@@ -186,9 +169,9 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
                     placement="bottomCenter"
                   >
                     <Button
-                      text="Column Settings"
+                      text="Settings"
                       outlined
-                      style={{ padding: "4px 24px" }}
+                      style={{ padding: "0px 15px" }}
                       prefix={<SettingOutlined />}
                     />
                   </Dropdown>
@@ -196,27 +179,29 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
               </div>
               <div className="flex justify-end">
                 <p className="text-secondary">
-                  Total Documents: <span>{"(" + data.length + ")"}</span>
+                  Total Documents:{" "}
+                  {fetching ? "..." : <span>{"(" + data?.length + ")"}</span>}
                 </p>
               </div>
               <Table
-                loading={false}
+                loading={fetching}
                 size={"large"}
                 // scroll={{ x: 1100 }}
                 onRow={(row) => ({
-                  onClick: () => setCreatePlannedWOPopup(true),
+                  onClick: () => {
+                    setPlannedWOAsset(row._id);
+                    setCreatePlannedWOPopup(true);
+                  },
                   style: { cursor: "pointer" },
                 })}
                 columns={columns}
                 dataSource={data}
                 pagination={{
-                  total: data.total,
-                  current: 1,
-                  pageSize: 10,
+                  total: data?.total,
+                  // pageSize: 10,
                   showSizeChanger: true,
                   showTotal: (total, range) =>
                     `${range[0]}-${range[1]} of ${total} items`,
-                  onChange: () => {},
                 }}
                 style={{
                   marginTop: 16,

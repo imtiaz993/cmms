@@ -1,32 +1,152 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Select, message } from "antd";
-import { login } from "app/services/auth";
+import { message } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import DatePickerField from "@/components/common/DatePickerField";
+import { getFilteredWorkOrders } from "app/services/workOrders";
+import { getCategories } from "app/services/setUp/categories";
+import { useSelector } from "react-redux";
 
 const validationSchema = Yup.object().shape({
-  assetNumber: Yup.string(),
+  asset: Yup.string(),
+  workOrder: Yup.string(),
+  priority: Yup.string(),
+  created: Yup.date().nullable(),
+  due: Yup.date().nullable(),
+  costCenter: Yup.string(),
+  cost: Yup.number().nullable(),
 });
 
-const AssetFilter = ({ closeDropdown }) => {
+const WorkOrdersFilter = ({
+  setWorkOrders,
+  closeDropdown,
+  WOType,
+  WOStatus,
+  asset_id,
+}) => {
   const [isClearing, setIsClearing] = useState(false);
-  const handleSubmit = async (values, setSubmitting) => {
-    console.log(values);
+  const [categories, setCategories] = useState([]);
+  const locations = useSelector((state) => state.location.location);
+
+  useEffect(() => {
+    const handleFetchCategories = async () => {
+      const { status, data } = await getCategories();
+      if (status === 200) {
+        setCategories(data.data);
+      } else {
+        message.error(data.error);
+      }
+    };
+    handleFetchCategories();
+  }, []);
+
+  const submit = async (values, setSubmitting) => {
     console.log(values);
     !setSubmitting && setIsClearing(true);
-    const status = 200;
-    const data = null;
+    const { status, data } = await getFilteredWorkOrders(
+      values,
+      WOType,
+      WOStatus
+    );
     setSubmitting ? setSubmitting(false) : setIsClearing(false);
+
     if (status === 200) {
+      asset_id
+        ? setWorkOrders((prev) => {
+            return { ...prev, workOrders: data?.data };
+          })
+        : setWorkOrders(data?.data);
       message.success(data?.message || "Assets fetched successfully");
       closeDropdown();
     } else {
       message.error(data?.message || "Failed to fetch assets");
     }
   };
+
+  const UnplannedFields = () => {
+    return (
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <SelectField
+          name="site"
+          placeholder="Site"
+          className="!w-full"
+          options={locations.map((i) => ({
+            label: i.site,
+            value: i._id,
+          }))}
+        />
+        <InputField name="asset" placeholder="Asset" />
+        <DatePickerField name="dueDate" placeholder="Completion Date" />
+        <SelectField
+          name="category"
+          placeholder="Category"
+          options={categories.map((i) => ({
+            label: i.category,
+            value: i._id,
+          }))}
+        />
+        <DatePickerField name="startDate" placeholder="Start Date" />
+        <SelectField
+          name="criticality"
+          placeholder="Criticality"
+          options={[
+            { label: "High", value: "high" },
+            { label: "Medium", value: "medium" },
+            { label: "Low", value: "low" },
+          ]}
+        />
+        <DatePickerField name="schedule" placeholder="Schedule" />
+        <InputField name="lastPerformed" placeholder="Last Performed" />
+      </div>
+    );
+  };
+
+  const PlannedFields = () => {
+    return (
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <SelectField
+          name="site"
+          placeholder="Site"
+          className="!w-full"
+          options={locations.map((i) => ({
+            label: i.site,
+            value: i._id,
+          }))}
+        />
+        <InputField name="asset" placeholder="Asset" />
+        <InputField name="issue" placeholder="Issue #" />
+        <InputField name="description" placeholder="Description" />
+        <InputField name="technician" placeholder="Technician" />
+        <DatePickerField name="createdDate" placeholder="CreatedDate" />
+      </div>
+    );
+  };
+
+  // Dynamically set initialValues based on WOType
+  const initialValues =
+    WOType === "unplanned"
+      ? {
+          site: "",
+          asset: "",
+          issue: "",
+          description: "",
+          technician: "",
+          createdDate: "",
+        }
+      : {
+          site: "",
+          asset: "",
+          dueDate: "",
+          category: "",
+          startDate: "",
+          criticality: "",
+          schedule: "",
+          lastPerformed: "",
+          asset_id: asset_id ?? "",
+        };
 
   return (
     <div
@@ -37,79 +157,39 @@ const AssetFilter = ({ closeDropdown }) => {
       }}
     >
       <Formik
-        initialValues={{
-          assetNumber: "",
-          assetDescription: "",
-          altId: "",
-          serialNumber: "",
-          barcode: "",
-          oemSerialNumber: "",
-          physicalLocation: "",
-          accountingDept: "",
-          status: "",
-          category: "",
-          system: "",
-          tier3: "",
-          tier4: "",
-          tier5: "",
-          tier6: "",
-        }}
+        initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          handleSubmit(values, setSubmitting);
+          submit(values, setSubmitting);
         }}
+        enableReinitialize // Ensures Formik reinitializes when WOType changes
       >
         {({ isSubmitting, handleSubmit, resetForm }) => (
           <Form onSubmit={handleSubmit}>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <InputField name="assetNumber" placeholder="Asset #" />
-              <InputField
-                name="assetDescription"
-                placeholder="Asset Description"
-              />
-              <InputField name="altId" placeholder="Alt ID #" />
-              <InputField name="serialNumber" placeholder="Serial #" />
-              <InputField name="barcode" placeholder="Barcode" />
-              <InputField name="oemSerialNumber" placeholder="OEM Serial #" />
-              <SelectField
-                name="physicalLocation"
-                placeholder="Physical Location"
-              />
-              <SelectField
-                name="accountingDept"
-                placeholder="Accounting Dept."
-              />
-              <SelectField name="status" placeholder="Status" />
-              <SelectField name="category" placeholder="Category" />
-              <SelectField name="system" placeholder="System" />
-              <SelectField name="tier3" placeholder="Tier 3" />
-              <SelectField name="tier4" placeholder="Tier 4" />
-              <SelectField name="tier5" placeholder="Tier 5" />
-              <SelectField name="tier6" placeholder="Tier 6" />
-              <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
-                <div>
-                  <Button
-                    outlined
-                    size="small"
-                    text="Clear Filter"
-                    disabled={isSubmitting || isClearing}
-                    isLoading={isClearing}
-                    onClick={() => {
-                      resetForm();
-                      handleSubmit({});
-                    }}
-                    style={{ width: "fit-content" }}
-                    className="mr-2"
-                  />
-                  <Button
-                    size="small"
-                    text="Filter"
-                    htmlType="submit"
-                    disabled={isSubmitting || isClearing}
-                    isLoading={isSubmitting}
-                    style={{ width: "fit-content" }}
-                  />
-                </div>
+            {WOType === "unplanned" ? <PlannedFields /> : <UnplannedFields />}
+            <div className="flex justify-end gap-4 mt-4">
+              <div>
+                <Button
+                  outlined
+                  size="small"
+                  text="Clear Filter"
+                  disabled={isSubmitting || isClearing}
+                  isLoading={isClearing}
+                  onClick={() => {
+                    resetForm(); // Reset form fields
+                    submit({});
+                  }}
+                  style={{ width: "fit-content" }}
+                  className="mr-2"
+                />
+                <Button
+                  size="small"
+                  text="Filter"
+                  htmlType="submit"
+                  disabled={isSubmitting || isClearing}
+                  isLoading={isSubmitting}
+                  style={{ width: "fit-content" }}
+                />
               </div>
             </div>
           </Form>
@@ -119,4 +199,4 @@ const AssetFilter = ({ closeDropdown }) => {
   );
 };
 
-export default AssetFilter;
+export default WorkOrdersFilter;

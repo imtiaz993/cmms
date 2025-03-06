@@ -1,112 +1,50 @@
-import { Table } from "antd";
-import ActionBar from "./components/actionBar";
+"use client";
 import { useState } from "react";
+import { Table } from "antd";
+import ActionBar from "./actionBar";
 
 const columns = [
-  {
-    title: "Date",
-    dataIndex: "date",
-    key: "date",
-  },
-  {
-    title: "Cost Center",
-    dataIndex: "costCenter",
-    key: "costCenter",
-  },
-
-  {
-    title: "Asset",
-    dataIndex: "asset",
-    key: "asset",
-  },
-  {
-    title: "Parent Asset",
-    dataIndex: "parentAsset",
-    key: "parentAsset",
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
-    key: "status",
-  },
-  {
-    title: "Location",
-    dataIndex: "location",
-    key: "location",
-  },
-  {
-    title: "Change Summary",
-    dataIndex: "changeSummary",
-    key: "changeSummary",
-  },
-  {
-    title: "Created By",
-    dataIndex: "createdBy",
-    key: "createdBy",
-  },
+  // { title: "Date", dataIndex: "date", key: "date" },
+  { title: "Event", dataIndex: "event", key: "event" },
+  { title: "Change By", dataIndex: "changeBy", key: "changeBy" },
+  { title: "Change From", dataIndex: "changeFrom", key: "changeFrom" },
+  { title: "Change To", dataIndex: "changeTo", key: "changeTo" },
+  { title: "Fields", dataIndex: "fields", key: "fields" },
 ];
 
-const data = [
-  {
-    date: "February 16, 2024",
-    costCenter: "Rig 26 - Hydraulic Systems",
-    asset: "04233889RY",
-    parentAsset: "-",
-    status: "In Full Service",
-    location: "-",
-    changeSummary: "-",
-    createdBy: "Bilberry, Danielle",
-  },
-  {
-    date: "February 15, 2024",
-    costCenter: "Rig 26 - Hydraulic Systems",
-    asset: "04233889RY",
-    parentAsset: "-",
-    status: "In Full Service",
-    location: "-",
-    changeSummary: "-",
-    createdBy: "Bilberry, Danielle",
-  },
-  {
-    date: "February 14, 2024",
-    costCenter: "Rig 26 - Hydraulic Systems",
-    asset: "04233889RY",
-    parentAsset: "-",
-    status: "In Full Service",
-    location: "-",
-    changeSummary: "-",
-    createdBy: "Bilberry, Danielle",
-  },
-];
 const defaultCheckedList = columns.map((item) => item.key);
 
-const HistoryAssetDetail = () => {
+const History = ({ historyData, setData }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
 
   return (
-    <div className="px-3 lg:px-6 pb-4 pt-3">
+    <div className="px-3 lg:px-5 pb-4 mt-1">
       <div>
-        <ActionBar checkedList={checkedList} setCheckedList={setCheckedList} columns={columns} />
-        <div className="flex justify-end">
-          <p className="text-secondary">
-            Total Historical Updates: <span>{"(" + data.length + ")"}</span>
-          </p>
-        </div>
+        <ActionBar
+          checkedList={checkedList}
+          setCheckedList={setCheckedList}
+          columns={columns}
+          setData={setData}
+        />
+
         <Table
-          loading={false}
+          loading={isLoading}
           size={"large"}
-          scroll={{ x: 1100 }}
+          scroll={{ x: 1400 }}
           columns={newColumns}
-          dataSource={data}
+          dataSource={
+            historyData &&
+            historyData.length > 0 &&
+            historyData.map((i, index) => ({ ...i, key: index }))
+          }
           pagination={{
-            total: data.total,
-            current: 1,
-            pageSize: 10,
+            total: historyData?.length,
             showSizeChanger: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
-            onChange: () => {},
+            className: "custom-pagination",
           }}
           style={{
             marginTop: 16,
@@ -118,4 +56,4 @@ const HistoryAssetDetail = () => {
   );
 };
 
-export default HistoryAssetDetail;
+export default History;

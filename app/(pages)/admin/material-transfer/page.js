@@ -2,71 +2,83 @@
 import { useEffect, useMemo, useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
-import { EyeFilled } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
+import { EyeFilled, EyeOutlined } from "@ant-design/icons";
+import { useRouter, useSearchParams } from "next/navigation";
 import PreviewPopup from "@/components/previewPopup";
-import { getMaterialTransferData } from "app/services/materialTransfer";
+import {
+  getFilteredMT,
+  getMaterialTransferData,
+} from "app/services/materialTransfer";
 import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
 import { rigs } from "@/constants/rigsAndSystems";
+import Link from "next/link";
+import { EditPagePencil } from "@/icons/index";
+import { getAdminsManagers } from "app/services/common";
 
 const MaterialTransfer = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const [materialTransferData, setMaterialTransferData] = useState();
   const [fetchingData, setFetchingData] = useState(true);
   const [previewPopupVisible, setPreviewPopupVisible] = useState(false);
   const [searchText, setSearchText] = useState(""); // State for search text
-  const router = useRouter();
 
   const columns = [
     {
-      title: "Origin",
-      dataIndex: "origination",
-      key: "origination",
-      render: (origination) => rigs.find((i) => i.id === origination).name,
+      title: "Material Transfer #",
+      dataIndex: "_id",
+      key: "_id",
+      // render: (_id) => (
+      //   <span>
+      //     {_id}
+      //   </span>
+      // ),
     },
     {
-      title: "Destination",
-      dataIndex: "destination",
-      key: "destination",
-      render: (destination) => rigs.find((i) => i.id === destination).name,
+      title: "Description",
+      dataIndex: "comments",
+      key: "description",
     },
     {
-      title: "Creator",
+      title: "Created By",
       dataIndex: "createdBy",
       key: "createdBy",
     },
     {
-      title: "Created Date",
+      title: "Created At",
       dataIndex: "createdAt",
       key: "createdAt",
     },
-
     {
-      title: "Transporter",
-      dataIndex: "transporter",
-      key: "transporter",
+      title: "Origin",
+      dataIndex: "origiationSites",
+      key: "origination",
+      render: (origiationSites) =>
+        origiationSites?.map((i) => i.site).join(","),
     },
     {
-      title: "Material Transfer Type",
-      dataIndex: "materialTransferType",
-      key: "materialTransferType",
-    },
-    {
-      title: "Comments",
-      dataIndex: "comments",
-      key: "comments",
+      title: "Destination",
+      dataIndex: "destinationSite",
+      key: "destination",
+      render: (destinationSite) => destinationSite?.site,
     },
     {
       title: "",
-      dataIndex: "download",
-      key: "download",
-      render: () => (
-        <EyeFilled
-          onClick={(e) => {
-            e.stopPropagation();
-            setPreviewPopupVisible(true);
-          }}
-          style={{ fontSize: "20px", cursor: "pointer" }}
-        />
+      dataIndex: "actions",
+      key: "actions",
+      render: (_, record) => (
+        <div className="flex gap-3">
+          <EyeOutlined
+            onClick={(e) => {
+              // e.stopPropagation();
+              // setPreviewPopupVisible(true);
+              router.push(`/admin/material-transfer/${record._id}`);
+            }}
+            style={{ fontSize: "20px", cursor: "pointer" }}
+          />
+        </div>
       ),
     },
   ];
@@ -75,8 +87,8 @@ const MaterialTransfer = () => {
   const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
     useState(false);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-  const [selectedInventory, setSelectedInventory] = useState([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  // const [selectedInventory, setSelectedInventory] = useState([]);
+  const [superUsers, setSuperUsers] = useState([]);
 
   const handleFetchData = async () => {
     const { status, data } = await getMaterialTransferData();
@@ -88,8 +100,20 @@ const MaterialTransfer = () => {
       message.error(data.error || "Failed to fetch data");
     }
   };
+  const handleFetchSuperUsers = async () => {
+    setFetchingData(true);
+    const { status, data } = await getAdminsManagers();
+    if (status === 200) {
+      setSuperUsers(data.data);
+      setFetchingData(false);
+    } else {
+      message.error(data.error);
+      setFetchingData(false);
+    }
+  };
   useEffect(() => {
-    handleFetchData();
+    handleFetchSuperUsers();
+    if (!activeLocation) handleFetchData();
   }, []);
 
   const filteredData = useMemo(() => {
@@ -101,13 +125,44 @@ const MaterialTransfer = () => {
     );
   }, [searchText, materialTransferData, checkedList]);
 
+  useEffect(() => {
+    if (activeLocation || activeLocation == "") {
+      const fetchFilteredMaterials = async () => {
+        setFetchingData(true);
+        try {
+          const { status, data } = await getFilteredMT({
+            location: activeLocation ? activeLocation : null,
+            system: activeSystem ? activeSystem : null,
+          });
+
+          if (status === 200) {
+            setMaterialTransferData(data.data);
+          } else {
+            message.error(
+              data?.message || "Failed to fetch filtered materials transfer"
+            );
+          }
+        } catch (error) {
+          message.error("Error fetching filtered materials transfer");
+        } finally {
+          setFetchingData(false);
+        }
+      };
+
+      fetchFilteredMaterials();
+    } else {
+      setMaterialTransferData(materialTransferData); // If no filters, use full assets list
+    }
+  }, [activeLocation, activeSystem]);
+  console.log(materialTransferData);
+
   return (
-    <div className="h-[calc(100dvh-140px)] overflow-auto px-3 lg:px-6 pb-4 pt-3">
+    <div className="max-h-[calc(100dvh-140px-16px-60px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
       <PreviewPopup
         visible={previewPopupVisible}
         setVisible={setPreviewPopupVisible}
       />
-      {addMaterialTransferVisible && (
+      {/* {addMaterialTransferVisible && (
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
           setAddMaterialTransferVisible={setAddMaterialTransferVisible}
@@ -117,7 +172,7 @@ const MaterialTransfer = () => {
           setSelectedRowKeys={setSelectedRowKeys}
           setMaterialTransferData={setMaterialTransferData}
         />
-      )}
+      )} */}
       <div>
         <ActionBar
           showAddMaterialTransferModal={() =>
@@ -129,21 +184,17 @@ const MaterialTransfer = () => {
           setSearchText={setSearchText}
           setMaterialTransferData={setMaterialTransferData}
           setFetchingData={setFetchingData}
+          superUsers={superUsers}
         />
-        <p className="text-secondary text-end">
-          Total Material Transfer:{" "}
-          <span>{"(" + materialTransferData?.length + ")"}</span>
-        </p>
         <Table
-          rowClassName="cursor-pointer"
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: () => {
-                console.log("record", record);
-                router.push(`/admin/material-transfer/${record?._id}`);
-              },
-            };
-          }}
+          // onRow={(record, rowIndex) => {
+          //   return {
+          //     onClick: () => {
+          //       console.log("record", record);
+          //       router.push(`/admin/material-transfer/${record?._id}`);
+          //     },
+          //   };
+          // }}
           loading={fetchingData}
           size={"large"}
           scroll={{ x: 1100 }}
@@ -153,15 +204,14 @@ const MaterialTransfer = () => {
             filteredData.length > 0 &&
             filteredData.map((i, index) => ({ ...i, key: index }))
           }
-          // pagination={{
-          //   total: filteredData?.length,
-          //   current: 1,
-          //   pageSize: 10,
-          //   showSizeChanger: true,
-          //   showTotal: (total, range) =>
-          //     `${range[0]}-${range[1]} of ${total} items`,
-          //   onChange: () => {},
-          // }}
+          pagination={{
+            total: filteredData?.length,
+            // pageSize: 10,
+            showSizeChanger: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`,
+            className: "custom-pagination",
+          }}
           style={{
             marginTop: 16,
             overflow: "auto",

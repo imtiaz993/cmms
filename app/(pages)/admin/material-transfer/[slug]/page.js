@@ -6,10 +6,21 @@ import {
   ExclamationCircleOutlined,
   ExportOutlined,
   FolderFilled,
+  LeftOutlined,
   MailOutlined,
   PrinterFilled,
 } from "@ant-design/icons";
-import { Badge, Card, Dropdown, Menu, message, Steps, Table, Tabs } from "antd";
+import {
+  Badge,
+  Card,
+  Dropdown,
+  Menu,
+  message,
+  Spin,
+  Steps,
+  Table,
+  Tabs,
+} from "antd";
 import ViewAssetsDetailsPopup from "./viewAssetsDetailsPopup";
 import { useEffect, useState } from "react";
 import UploadLinkDocPopup from "../../../../../components/uploadLinkDocPopup";
@@ -17,12 +28,16 @@ import UploadDocPopup from "../../../../../components/uploadDocPopup";
 import { usePathname, useRouter } from "next/navigation";
 import AddAssetPopupMT from "@/components/addAssetPopupInMT";
 import {
+  completeMaterialTransfer,
+  cancelMaterialTransfer,
   emailMaterialTransferDetails,
   getMaterialTransferDetails,
   printMaterialTransferDetails,
 } from "app/services/materialTransfer";
 import AddInventoryPopupMT from "@/components/addInventoryPopupInMT";
 import dayjs from "dayjs";
+import Documents from "./documents";
+import { getAdminsManagers } from "app/services/common";
 
 import { Input } from "antd";
 import { useSelector } from "react-redux";
@@ -70,6 +85,7 @@ const MaterialTransferDetail = () => {
   const [addAssetPopup, setAddAssetPopup] = useState(false);
   const [addInventoryPopup, setAddInventoryPopup] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [superUsers, setSuperUsers] = useState([]);
   const router = useRouter();
   // Extract the slug from the URL
   const pathname = usePathname();
@@ -78,206 +94,29 @@ const MaterialTransferDetail = () => {
 
   const { Step } = Steps;
 
-  const tabs = [
-    {
-      label: "Assets",
-      children: (
-        <div>
-          <ViewAssetsDetailsPopup
-            visible={assetDetailsPopup}
-            setVisible={setAssetDetailsPopup}
-            columns={[
-              {
-                title: "Asset Number",
-                dataIndex: "id",
-                key: "id",
-                render: (id) => assets.find((i) => i._id === id).assetNumber,
-              },
-              {
-                title: "Description",
-                dataIndex: "description",
-                key: "description",
-              },
-              {
-                title: "Condition",
-                dataIndex: "condition",
-                key: "condition",
-              },
-              {
-                title: "Trans. Reason",
-                dataIndex: "transferReason",
-                key: "transferReason",
-              },
-            ]}
-            data={data}
-          />
-          <AddAssetPopupMT
-            visible={addAssetPopup}
-            setVisible={setAddAssetPopup}
-            materialTransferId={slug}
-            setDetails={setDetails}
-          />
-
-          <div className="flex gap-3 justify-end mt-3 xl:mt-0">
-            {/* <Button
-              type="primary"
-              className="!h-7 md:!h-9"
-              onClick={() => setAssetDetailsPopup(true)}
-              fullWidth={false}
-              text="View Details"
-            /> */}
-
-            <Button
-              type="primary"
-              className="!h-7 md:!h-9"
-              fullWidth={false}
-              text="Add Assets"
-              onClick={() => setAddAssetPopup(true)}
-            />
-            <Button
-              type="primary"
-              className="!h-7 md:!h-9"
-              fullWidth={false}
-              text="Export"
-              onClick={() => message.info("Export will be available soon.")}
-              prefix={<ExportOutlined />}
-            />
-          </div>
-          <Table
-            loading={false}
-            size={"small"}
-            columns={[
-              {
-                title: "Asset Number",
-                dataIndex: "id",
-                key: "id",
-                render: (id) => assets.find((i) => i._id === id)?.assetNumber,
-              },
-              {
-                title: "Condition",
-                dataIndex: "condition",
-                key: "condition",
-              },
-              {
-                title: "Trans. Reason",
-                dataIndex: "transferReason",
-                key: "transferReason",
-              },
-            ]}
-            dataSource={details?.materialTransfer.assets}
-            pagination={{
-              total: data.length,
-              current: 1,
-              pageSize: 5,
-              showSizeChanger: true,
-              showTotal: (total, range) =>
-                `${range[0]}-${range[1]} of ${total} items`,
-              onChange: () => {},
-            }}
-            style={{
-              overflow: "auto",
-              marginTop: 16,
-            }}
-          />
-        </div>
-      ),
-    },
-    {
-      label: "Inventory",
-      children: (
-        <>
-          <div>
-            {addInventoryPopup && (
-              <AddInventoryPopupMT
-                visible={addInventoryPopup}
-                setVisible={setAddInventoryPopup}
-                selectedRowKeys={selectedRowKeys}
-                setSelectedRowKeys={setSelectedRowKeys}
-                materialTransferId={slug}
-              />
-            )}
-            {console.log("selected: ", selectedRowKeys)}
-            <div className="text-end mt-3 xl:mt-0">
-              <Button
-                type="primary"
-                className="!h-7 md:!h-9"
-                fullWidth={false}
-                text="Add Inventory"
-                onClick={() => setAddInventoryPopup(true)}
-              />
-            </div>
-          </div>
-          {details?.materialTransfer.inventory.length > 0 ? (
-            <Table
-              loading={false}
-              size={"small"}
-              columns={[
-                {
-                  title: "",
-                  dataIndex: "",
-                  key: "",
-                  render: (text, record, index) => index + 1,
-                },
-                {
-                  title: "Inventory Id",
-                  dataIndex: "_id",
-                  key: "_id",
-                  render: (_id) =>
-                    inventory.find((i) => i._id === _id).partName,
-                },
-              ]}
-              dataSource={selectedRowKeys.map((id) => ({
-                _id: id,
-              }))}
-              pagination={{
-                total: details?.materialTransfer.inventory.length,
-                current: 1,
-                pageSize: 5,
-                showSizeChanger: true,
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: () => {},
-              }}
-              style={{
-                overflow: "auto",
-                marginTop: 16,
-              }}
-            />
-          ) : (
-            <div className="text-center my-7">
-              <ExclamationCircleOutlined /> Data not available
-            </div>
-          )}
-        </>
-      ),
-    },
-    {
-      label: "Misc",
-      children: (
-        <div className="text-ellipsisxt-center my-7">
-          <TextArea
-            value={details?.materialTransfer.misc}
-            className={` !border-[#d9d9d9] dark:!border-[#424242] placeholder:!text-[#BFBFBF] dark:placeholder:!text-[#4F4F4F] resize-none`}
-            style={{ width: "100%" }}
-          />
-        </div>
-      ),
-    },
-  ];
-
+  const fetchData = async () => {
+    const { status, data } = await getMaterialTransferDetails(slug);
+    if (status === 200) {
+      console.log(data);
+      setDetails(data?.data);
+      setSelectedRowKeys(data?.data?.materialTransfer.inventory);
+    } else {
+      message.error(data?.message || "Failed to fetch data");
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const { status, data } = await getMaterialTransferDetails(slug);
+    const handleFetchSuperUsers = async () => {
+      const { status, data } = await getAdminsManagers();
       if (status === 200) {
-        console.log(data);
-        setDetails(data?.data);
-        setSelectedRowKeys(data?.data?.materialTransfer.inventory);
+        setSuperUsers(data.data);
       } else {
-        message.error(data?.message || "Failed to fetch data");
+        message.error(data.error);
       }
     };
+    handleFetchSuperUsers();
     fetchData();
   }, []);
+  console.log(details);
 
   const handleEmail = async () => {
     const { status, data } = await emailMaterialTransferDetails(slug);
@@ -298,8 +137,83 @@ const MaterialTransferDetail = () => {
     }
   };
 
-  return (
-    <div className="p-7 overflow-auto h-[calc(100dvh-130px)]">
+  const handleComplete = async () => {
+    const { status, data } = await completeMaterialTransfer(
+      details?.materialTransfer._id
+    );
+    if (status === 200) {
+      fetchData();
+      message.success(
+        data.message || "Material Transfer Completed Successfully"
+      );
+    } else {
+      message.error(data.message || "Failed to complete");
+    }
+  };
+
+  const handleCancel = async () => {
+    const { status, data } = await cancelMaterialTransfer(
+      details?.materialTransfer._id
+    );
+    if (status === 200) {
+      fetchData();
+      message.success(
+        data.message || "Material Transfer Cancelled Successfully"
+      );
+    } else {
+      message.error(data.message || "Failed to cancel");
+    }
+  };
+
+  const columns = [
+    {
+      title:
+        details?.materialTransfer?.inventories?.length > 0
+          ? "Part #"
+          : "Asset #",
+      dataIndex:
+        details?.materialTransfer?.inventories?.length > 0
+          ? "inventory"
+          : "asset",
+      key:
+        details?.materialTransfer?.inventories?.length > 0
+          ? "partNumber"
+          : "assetID",
+      render: (data) => data?.partNumber || data?.assetID,
+    },
+    {
+      title: "Location",
+      dataIndex:
+        details?.materialTransfer?.inventories?.length > 0
+          ? "inventory"
+          : "asset",
+      key: "site",
+      render: (data, record) => <span>{data?.site}</span>,
+    },
+    {
+      title: "Description",
+      dataIndex:
+        details?.materialTransfer?.inventories?.length > 0
+          ? "inventory"
+          : "asset",
+      key: "description",
+      render: (data, record) => <span>{data?.description}</span>,
+    },
+    ...(details?.materialTransfer?.inventories?.length > 0
+      ? [
+          {
+            title: "Quantity",
+            dataIndex: "quantity",
+            key: "quantity",
+          },
+        ]
+      : []),
+  ];
+
+  console.log("columsn", details?.materialTransfer?.inventories?.length);
+
+  return details ? (
+    <div className="pt-0 p-7 overflow-auto h-[calc(100dvh-130px)]">
       <UploadLinkDocPopup
         visible={uploadLinkDocVisible}
         setVisible={setUploadLinkDocVisible}
@@ -312,13 +226,19 @@ const MaterialTransferDetail = () => {
         materialTransferSlug={slug}
         setDetails={setDetails}
       />
-      <div className="flex justify-between gap-3 mb-5">
-        <Button
-          prefix={<ArrowLeftOutlined />}
-          onClick={() => router.back()}
-          fullWidth={false}
-          outlined
-        />
+      <p className="text-sm text-[#828282]">
+        Material Transfer {" > "} {details?.materialTransfer?._id}
+      </p>
+      <div className="flex justify-between gap-3 my-5">
+        <div>
+          <Button
+            text="Back to Material Transfer"
+            onClick={() => router.push("/admin/material-transfer")}
+            className="!bg-[#3F3F3F] !border-none"
+            fullWidth={false}
+            prefix={<LeftOutlined />}
+          />
+        </div>
         <div className="">
           <Button
             text="Email"
@@ -334,6 +254,24 @@ const MaterialTransferDetail = () => {
             className="ml-3"
             onClick={() => handlePrint()}
           />
+          {details?.materialTransfer?.status !== "cancelled" &&
+            details?.materialTransfer?.status !== "confirmed" && (
+              <Button
+                text="Cancel"
+                fullWidth={false}
+                className="ml-3"
+                onClick={() => handleCancel()}
+              />
+            )}
+          {details?.materialTransfer?.status !== "cancelled" &&
+            details?.materialTransfer?.status !== "confirmed" && (
+              <Button
+                text="Complete"
+                fullWidth={false}
+                className="ml-3"
+                onClick={() => handleComplete()}
+              />
+            )}
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-5">
@@ -346,7 +284,10 @@ const MaterialTransferDetail = () => {
                 <span className="px-2 py-1 bg-secondary rounded-full">
                   <FolderFilled />
                 </span>
-                TRF14687000001 <p className="text-xs font-normal">(Approved)</p>
+                {details?.materialTransfer?._id}{" "}
+                <p className="text-xs font-normal">
+                  ({details?.materialTransfer?.status})
+                </p>
               </div>
             }
           >
@@ -354,35 +295,29 @@ const MaterialTransferDetail = () => {
               <div>
                 <span className="opacity-70 mr-3">Origin</span>
                 <span className="">
-                  {
-                    rigs.find(
-                      (i) => i.id === details?.materialTransfer.origination
-                    )?.name
-                  }
+                  {details?.materialTransfer.origiationSites
+                    .map((i) => i.site)
+                    .join(",")}
                 </span>
               </div>
-              <div>
+              {/* <div>
                 <span className="opacity-70 mr-3">Transporter</span>
                 <span className="">
                   {details?.materialTransfer.transporter}
                 </span>
-              </div>
+              </div> */}
               <div>
                 <span className="opacity-70 mr-3">Destination</span>
                 <span className="">
-                  {
-                    rigs.find(
-                      (i) => i.id === details?.materialTransfer.destination
-                    )?.name
-                  }
+                  {details?.materialTransfer.destinationSite?.site}
                 </span>
               </div>
-              <div>
+              {/* <div>
                 <span className="opacity-70 mr-3">Attention To</span>
                 <span className="">
                   {details?.materialTransfer.attentionTo}
                 </span>
-              </div>
+              </div> */}
             </div>
           </Card>
           <Card
@@ -404,34 +339,18 @@ const MaterialTransferDetail = () => {
                   )}
                 </span>
               </div>
-              <div className="flex">
+              {/* <div className="flex">
                 <span className="opacity-70 mr-3 block">
                   Material Transfer Type
                 </span>
                 <span className="">
                   {details?.materialTransfer.materialTransferType}
                 </span>
-              </div>
+              </div> */}
               <div className="md:col-span-2">
                 <span className="opacity-70 mr-3">Comments</span>
                 <span className="">{details?.materialTransfer.comments}</span>
               </div>
-            </div>
-          </Card>
-          <Card
-            loading={false}
-            className="!bg-primary"
-            title={null}
-            style={{ marginTop: "20px" }}
-          >
-            <div className="">
-              <Tabs
-                type="card"
-                size={"small"}
-                items={tabs.map((i, index) => ({ ...i, key: index }))}
-                tabBarStyle={{ borderColor: "white" }}
-                className="reports-tabs"
-              />
             </div>
           </Card>
         </div>
@@ -439,17 +358,17 @@ const MaterialTransferDetail = () => {
           <Card
             loading={false}
             title={<p>Workflow Status</p>}
-            extra={
-              <Button
-                outlined
-                size="small"
-                fullWidth={false}
-                className="!text-xs !h-7 mr-3"
-                text="Export"
-                prefix={<ExportOutlined />}
-                onClick={() => message.info("Export will be available soon.")}
-              />
-            }
+            // extra={
+            //   <Button
+            //     outlined
+            //     size="small"
+            //     fullWidth={false}
+            //     className="!text-xs !h-7 mr-3"
+            //     text="Export"
+            //     prefix={<ExportOutlined />}
+            //     onClick={() => message.info("Export will be available soon.")}
+            //   />
+            // }
           >
             <Steps
               direction="vertical"
@@ -457,160 +376,92 @@ const MaterialTransferDetail = () => {
               progressDot
             >
               <Step
-                title={
-                  <p className="text-sm">
-                    Ship ({" "}
-                    {
-                      rigs.find(
-                        (i) => i.id === details?.materialTransfer.origination
-                      )?.name
-                    }{" "}
-                    to{" "}
-                    {
-                      rigs.find(
-                        (i) => i.id === details?.materialTransfer.destination
-                      )?.name
-                    }
-                    )
-                  </p>
-                }
+                title={<p className="text-sm">Ship</p>}
                 description={
                   <div>
                     <p>
-                      <span className="text-[#52c41a]">Approved</span> by Rig 23
-                      Manager
+                      <span className="text-[#52c41a]">Created</span> by{" "}
+                      {details?.materialTransfer.createdBy}
                     </p>
                   </div>
                 }
               />
               <Step
-                title={
-                  <p className="text-sm">
-                    Receive ({" "}
-                    {
-                      rigs.find(
-                        (i) => i.id === details?.materialTransfer.origination
-                      )?.name
-                    }{" "}
-                    to{" "}
-                    {
-                      rigs.find(
-                        (i) => i.id === details?.materialTransfer.destination
-                      )?.name
-                    }
-                    ))
-                  </p>
-                }
+                title={<p className="text-sm">Receive</p>}
                 description={
                   <div>
                     <p>
-                      <span className="text-[#52c41a]">Approved</span> by
-                      Midland Yard
+                      <span className="text-[#52c41a] capitalize">
+                        {details?.materialTransfer.status}
+                      </span>
+                      {details?.materialTransfer.receivedBy ? "by " : ""}
+                      {details?.materialTransfer?.receivedBy}
                     </p>
                   </div>
                 }
               />
             </Steps>
           </Card>
-          <Card
-            loading={false}
-            className="!bg-primary"
-            title={
-              <div className="flex items-center justify-between gap-3">
-                <Badge count={0}>
-                  <h1 className="text-base">Material Transfer Documents</h1>
-                </Badge>
-                <div>
-                  <Button
-                    outlined
-                    size="small"
-                    text="View Details"
-                    fullWidth={false}
-                    className="!text-xs !h-7 mr-3"
-                    disabled
-                  />
-                  <Dropdown
-                    dropdownRender={() => (
-                      <Menu>
-                        <Menu.ItemGroup title={null}>
-                          <Menu.Item
-                            key={0}
-                            style={{ display: "flex", alignItems: "center" }}
-                            onClick={() => setUploadDocVisible(true)}
-                          >
-                            Upload Document
-                          </Menu.Item>
-                          <Menu.Item
-                            key={1}
-                            style={{ display: "flex", alignItems: "center" }}
-                            onClick={() => setUploadLinkDocVisible(true)}
-                          >
-                            Link Document
-                          </Menu.Item>
-                        </Menu.ItemGroup>
-                      </Menu>
-                    )}
-                    trigger={["click"]}
-                    arrow
-                    // placement="bottomCenter"
-                  >
-                    <Button
-                      outlined
-                      size="small"
-                      text="Upload"
-                      fullWidth={false}
-                      className="!text-xs !h-7"
-                    />
-                  </Dropdown>
-                </div>
-              </div>
-            }
-            style={{ marginTop: "20px" }}
-          >
-            {details?.documents?.length > 0 ? (
-              <Table
-                columns={[
-                  {
-                    title: "Document Name",
-                    dataIndex: "title",
-                    key: "title",
-                  },
-                  {
-                    title: "Document Type",
-                    dataIndex: "type",
-                    key: "type",
-                  },
-                  {
-                    title: "Description",
-                    dataIndex: "description",
-                    key: "description",
-                  },
-                  {
-                    title: "",
-                    dataIndex: "link",
-                    key: "link",
-                    render: (link) => (
-                      <a href={link} target="_blank">
-                        <DownloadOutlined
-                          style={{ fontSize: "20px", cursor: "pointer" }}
-                        />
-                      </a>
-                    ),
-                  },
-                ]}
-                dataSource={details?.documents}
-                pagination={false}
-                size="small"
-              />
-            ) : (
-              <div className="text-center my-7">
-                <ExclamationCircleOutlined /> No data to display
-              </div>
-            )}
-          </Card>
         </div>
       </div>
+      <div>
+        <Card
+          loading={false}
+          className="!bg-primary"
+          style={{ marginTop: "20px" }}
+          title={
+            <div className="flex items-center justify-between gap-3">
+              <Badge count={0}>
+                <h1 className="text-base">Material Transfered</h1>
+              </Badge>
+            </div>
+          }
+        >
+          <div className="">
+            {details?.materialTransfer?.assets?.length > 0
+              ? console.log("assets", details?.materialTransfer?.assets)
+              : console.log(
+                  "inventories",
+                  details?.materialTransfer?.inventories
+                )}
+            <Table
+              loading={false}
+              scroll={{ x: 700 }}
+              columns={columns}
+              dataSource={
+                details?.materialTransfer?.assets?.length > 0
+                  ? details?.materialTransfer?.assets
+                  : details?.materialTransfer?.inventories
+              }
+              pagination={false}
+              style={{
+                overflow: "auto",
+              }}
+            />
+          </div>
+        </Card>
+        <Card
+          loading={false}
+          className="!bg-primary"
+          title={
+            <div className="flex items-center justify-between gap-3">
+              <Badge count={0}>
+                <h1 className="text-base">Material Transfer Documents</h1>
+              </Badge>
+            </div>
+          }
+          style={{ marginTop: "20px" }}
+        >
+          <Documents
+            documentsData={details?.documents}
+            setData={setDetails}
+            superUsers={superUsers}
+          />
+        </Card>
+      </div>
     </div>
+  ) : (
+    <Spin size="large" spinning={true} className="text-center w-full !mt-80" />
   );
 };
 

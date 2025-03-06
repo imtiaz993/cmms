@@ -27,4 +27,7 @@ module.exports = {
     };
     return config;
   },
+  images: {
+    domains: ["hivesolutions.s3.us-west-1.amazonaws.com"],
+  },
 };

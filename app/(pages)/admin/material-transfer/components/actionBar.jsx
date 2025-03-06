@@ -1,6 +1,15 @@
 import { useState } from "react";
-import { Checkbox, Dropdown, Input, Menu, message, Select } from "antd";
 import {
+  Checkbox,
+  Dropdown,
+  Input,
+  Menu,
+  message,
+  Select,
+  Button as AntButton,
+} from "antd";
+import {
+  DownOutlined,
   ExportOutlined,
   FilterOutlined,
   PlusOutlined,
@@ -14,6 +23,7 @@ import {
   getMaterialTransferByStatus,
   printMaterialTransfer,
 } from "app/services/materialTransfer";
+import { SearchIcon } from "@/icons/index";
 
 const ActionBar = ({
   showAddMaterialTransferModal,
@@ -23,6 +33,7 @@ const ActionBar = ({
   setSearchText,
   setMaterialTransferData,
   setFetchingData,
+  superUsers,
 }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
@@ -62,95 +73,110 @@ const ActionBar = ({
     }
   };
   return (
-    <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mb-3">
-      <Input.Search
-        placeholder="Search..."
-        onChange={handleSearchChange}
-        className="sm:!w-[300px] searchBar"
-      />
-      <div className="grid  md:flex sm:grid-cols-3 items-center gap-2">
-        <Dropdown
-          open={filterDropdown}
-          onOpenChange={setFilterDropdown}
-          dropdownRender={() => (
-            <MaterialTransferFilter
-              setMaterialTransferData={setMaterialTransferData}
-              closeDropdown={() => setFilterDropdown(false)}
+    <>
+      <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-3 mt-5">
+        <div className="flex gap-3 w-full md:w-auto">
+          <Input
+            placeholder="Search"
+            prefix={<SearchIcon />}
+            onChange={handleSearchChange}
+            className="sm:!w-[362px] searchBar"
+            allowClear
+          />
+          <Dropdown
+            open={filterDropdown}
+            onOpenChange={setFilterDropdown}
+            dropdownRender={() => (
+              <MaterialTransferFilter
+                setMaterialTransferData={setMaterialTransferData}
+                closeDropdown={() => setFilterDropdown(false)}
+                superUsers={superUsers}
+              />
+            )}
+            trigger={["click"]}
+            arrow
+            placement="bottomCenter"
+          >
+            <AntButton
+              text="Filter"
+              style={{ padding: "4px 0px", height: "44px" }}
+              className="flex !justify-between w-full md:min-w-36 !p-3"
+            >
+              <span> Filter</span>
+              <DownOutlined />
+            </AntButton>
+            {/* <Button
+              text="Filter"
+              outlined
+              style={{ padding: "4px 0px" }}
+              prefix={<FilterOutlined />}
+              onClick={() => setFilterDropdown(!filterDropdown)}
+            /> */}
+          </Dropdown>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:flex items-center gap-2 md:gap-3">
+          <Dropdown
+            dropdownRender={() => (
+              <Menu>
+                <Menu.ItemGroup title="Select Columns">
+                  {options.map((option) => (
+                    <Menu.Item
+                      key={option.value}
+                      style={{ display: "flex", alignItems: "center" }}
+                      onClick={(e) => e?.stopPropagation()}
+                    >
+                      <Checkbox
+                        value={option.value}
+                        checked={checkedList.includes(option.value)}
+                        onChange={() => {
+                          handleCheckboxChange(option.value);
+                        }}
+                      >
+                        {option.label}
+                      </Checkbox>
+                    </Menu.Item>
+                  ))}
+                </Menu.ItemGroup>
+              </Menu>
+            )}
+            trigger={["click"]}
+            arrow
+            placement="bottomCenter"
+          >
+            <Button
+              text="Settings"
+              outlined
+              style={{ padding: "0px 15px" }}
+              prefix={<SettingOutlined />}
             />
-          )}
-          trigger={["click"]}
-          arrow
-          placement="bottomCenter"
-        >
-          <Button
-            text="Filter"
+          </Dropdown>
+
+          {/* <Button
+            text="Print"
             outlined
             style={{ padding: "4px 0px" }}
-            prefix={<FilterOutlined />}
-            onClick={() => setFilterDropdown(!filterDropdown)}
-          />
-        </Dropdown>
-        <Dropdown
-          dropdownRender={() => (
-            <Menu>
-              <Menu.ItemGroup title="Select Columns">
-                {options.map((option) => (
-                  <Menu.Item
-                    key={option.value}
-                    style={{ display: "flex", alignItems: "center" }}
-                    onClick={(e) => e?.stopPropagation()}
-                  >
-                    <Checkbox
-                      value={option.value}
-                      checked={checkedList.includes(option.value)}
-                      onChange={() => {
-                        handleCheckboxChange(option.value);
-                      }}
-                    >
-                      {option.label}
-                    </Checkbox>
-                  </Menu.Item>
-                ))}
-              </Menu.ItemGroup>
-            </Menu>
-          )}
-          trigger={["click"]}
-          arrow
-          placement="bottomCenter"
-        >
+            fullWidth={false}
+            prefix={<PrinterOutlined />}
+            onClick={handlePrint}
+          /> */}
+
           <Button
-            text="Column Settings"
+            text="Export"
             outlined
-            style={{ padding: "4px 24px" }}
-            prefix={<SettingOutlined />}
+            style={{ padding: "4px 0px" }}
+            prefix={<ExportOutlined />}
+            onClick={handleExport}
           />
-        </Dropdown>
-
-        <Button
-          text="Print"
-          outlined
-          style={{ padding: "4px 0px" }}
-          fullWidth={false}
-          prefix={<PrinterOutlined />}
-          onClick={handlePrint}
-        />
-
-        <Button
-          text="Export"
-          outlined
-          style={{ padding: "4px 0px" }}
-          prefix={<ExportOutlined />}
-          onClick={handleExport}
-        />
-        <Button
-          text="New Material Transfer"
-          onClick={showAddMaterialTransferModal}
-          outlined
-          style={{ padding: "4px 35px" }}
-          prefix={<PlusOutlined />}
-        />
+          {/* <Button
+            text="New Material Transfer"
+            onClick={showAddMaterialTransferModal}
+            style={{ padding: "4px 35px" }}
+            prefix={<PlusOutlined />}
+          /> */}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

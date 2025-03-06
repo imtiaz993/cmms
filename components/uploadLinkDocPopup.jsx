@@ -19,6 +19,7 @@ const UploadLinkDocPopup = ({
   setDetails,
   materialTransferSlug,
   assetSlug,
+  workOrderSlug,
 }) => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
@@ -26,8 +27,9 @@ const UploadLinkDocPopup = ({
       ? { ...values, materialTransfer: materialTransferSlug }
       : assetSlug
       ? { ...values, asset: assetSlug }
+      : workOrderSlug
+      ? { ...values, workOrder: workOrderSlug }
       : values;
-    console.log(finalValues);
 
     const { status, data } = await uploadLinkDoc(finalValues);
     if (status === 200) {
@@ -55,18 +57,24 @@ const UploadLinkDocPopup = ({
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ isSubmitting, submitForm }) => (
+      {({ isSubmitting, submitForm, resetForm }) => (
         <Form>
           <Modal
             maskClosable={false}
             title={<h1 className="text-lg md:text-2xl mb-5">Link Document</h1>}
             open={visible}
-            onCancel={() => setVisible(false)}
+            onCancel={() => {
+              setVisible(false);
+              resetForm();
+            }}
             footer={
               <div className="mt-7">
                 <Button
                   className="mr-2"
-                  onClick={() => setVisible(false)}
+                  onClick={() => {
+                    setVisible(false);
+                    resetForm();
+                  }}
                   outlined
                   size="small"
                   text="Cancel"

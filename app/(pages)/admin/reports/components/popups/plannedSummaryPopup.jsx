@@ -5,12 +5,15 @@ import SelectField from "@/components/common/SelectField";
 import { message, Modal, Radio } from "antd";
 import { generateReport } from "app/services/reports";
 import { Field, Form, Formik } from "formik";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
 const PlannedSummaryPopup = ({ visible, setVisible }) => {
+  const locations = useSelector((state) => state.location.location);
+  const systems = useSelector((state) => state.system.system);
   // Validation schema for the form
   const validationSchema = Yup.object({
-    costCenter: Yup.string().required("Cost Center is required"),
+    // costCenter: Yup.string().required("Cost Center is required"),
     assetNumber: Yup.string().required("Asset Number is required"),
     physicalLocation: Yup.string().required("Physical Location is required"),
     createdFrom: Yup.date().required("Created Between From is required"),
@@ -48,7 +51,7 @@ const PlannedSummaryPopup = ({ visible, setVisible }) => {
     <div>
       <Formik
         initialValues={{
-          costCenter: "",
+          // costCenter: "",
           assetNumber: "",
           physicalLocation: "",
           createdFrom: null,
@@ -93,13 +96,13 @@ const PlannedSummaryPopup = ({ visible, setVisible }) => {
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
-                  <div className="w-full">
+                  {/* <div className="w-full">
                     <InputField
                       name="costCenter"
                       placeholder="Cost Center"
                       maxLength={128}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="w-full">
                     <InputField
@@ -113,12 +116,10 @@ const PlannedSummaryPopup = ({ visible, setVisible }) => {
                     <SelectField
                       name="physicalLocation"
                       placeholder="Physical Location"
-                      options={[
-                        {
-                          value: "Rig Hpu",
-                          label: "Rig Hpu",
-                        },
-                      ]}
+                      options={locations.map((i) => ({
+                        label: i.site,
+                        value: i._id,
+                      }))}
                     />
                   </div>
 
@@ -147,40 +148,6 @@ const PlannedSummaryPopup = ({ visible, setVisible }) => {
                     <DatePickerField
                       name="closedTo"
                       placeholder="Closed Between To"
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="assignedTo"
-                      placeholder="Assigned To"
-                      options={[{ value: "manager", label: "Manager" }]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="priority"
-                      placeholder="Priority"
-                      options={[
-                        {
-                          value: "High",
-                          label: "High",
-                        },
-                      ]}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <SelectField
-                      name="companyDoingWork"
-                      placeholder="Company Doing Work"
-                      options={[
-                        {
-                          value: "Company 1",
-                          label: "Company 1",
-                        },
-                      ]}
                     />
                   </div>
                 </div>

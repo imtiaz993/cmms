@@ -2,6 +2,7 @@ import { Input, List } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import ReportsPopup from "./popups/reportsPopup";
+import { SearchIcon } from "@/icons/index";
 
 const AnalyticsReports = () => {
   const [popup, setPopup] = useState(false);
@@ -47,10 +48,11 @@ const AnalyticsReports = () => {
   const [filteredData, setFilteredData] = useState(reportsData);
 
   return (
-    <div className="px-3 mt-2 h-[calc(100dvh-210px)] overflow-auto lg:px-6">
-      <div className="sticky top-0 z-10 !h-12 flex justify-end">
-        <Input.Search
-          placeholder="Search Reports"
+    <div className="px-5 mt-2 h-[calc(100dvh-210px-60px)] overflow-auto lg:px-10">
+      <div className="mt-3">
+        <Input
+          placeholder="Search"
+          prefix={<SearchIcon />}
           onChange={(e) => {
             const value = e.target.value.toLowerCase();
             setFilteredData(
@@ -61,89 +63,88 @@ const AnalyticsReports = () => {
               )
             );
           }}
-          style={{ height: "36px" }}
-          className="sm:!w-[300px] searchBar"
+          className="sm:!w-[362px] searchBar"
+          allowClear
         />
       </div>
-      <ReportsPopup
-        visible={popup === "Defect and Cost Analysis"}
-        setVisible={setPopup}
-        title="Defect and Cost Analysis Report"
-        type="analytics"
-        fromToDate
-        includeChildAssets
-      />
+      <>
+        <ReportsPopup
+          visible={popup === "Defect and Cost Analysis"}
+          setVisible={setPopup}
+          title="Defect and Cost Analysis Report"
+          type="analytics"
+          fromToDate
+          includeChildAssets
+        />
 
-      <ReportsPopup
-        visible={popup === "Asset Class Trend Summary"}
-        setVisible={setPopup}
-        title="Asset Class Trend Summary Report"
-        type="analytics"
-        year
-      />
+        <ReportsPopup
+          visible={popup === "Asset Class Trend Summary"}
+          setVisible={setPopup}
+          title="Asset Class Trend Summary Report"
+          type="analytics"
+          year
+        />
 
-      <ReportsPopup
-        visible={popup === "Corrective Maintenance Measurables"}
-        setVisible={setPopup}
-        title="Corrective Maintenance Measurables Report"
-        type="analytics"
-        year
-      />
+        <ReportsPopup
+          visible={popup === "Corrective Maintenance Measurables"}
+          setVisible={setPopup}
+          title="Corrective Maintenance Measurables Report"
+          type="analytics"
+          year
+        />
 
-      <ReportsPopup
-        visible={popup === "Maintenance Cost Breakdown"}
-        setVisible={setPopup}
-        title="Maintenance Cost Breakdown Report"
-        type="analytics"
-        fromToDate
-        includeChildAssets
-      />
+        <ReportsPopup
+          visible={popup === "Maintenance Cost Breakdown"}
+          setVisible={setPopup}
+          title="Maintenance Cost Breakdown Report"
+          type="analytics"
+          fromToDate
+          includeChildAssets
+        />
 
-      <ReportsPopup
-        visible={popup === "Monthly Maintenance Cost Breakdown"}
-        setVisible={setPopup}
-        title="Monthly Maintenance Cost Breakdown Report"
-        type="analytics"
-        year
-      />
+        <ReportsPopup
+          visible={popup === "Monthly Maintenance Cost Breakdown"}
+          setVisible={setPopup}
+          title="Monthly Maintenance Cost Breakdown Report"
+          type="analytics"
+          year
+        />
 
-      <ReportsPopup
-        visible={popup === "Maintenance and Reliability"}
-        setVisible={setPopup}
-        title="Maintenance and Reliability Report"
-        type="analytics"
-        fromToDate
-        includeChildAssets
-      />
+        <ReportsPopup
+          visible={popup === "Maintenance and Reliability"}
+          setVisible={setPopup}
+          title="Maintenance and Reliability Report"
+          type="analytics"
+          fromToDate
+          includeChildAssets
+        />
 
-      <ReportsPopup
-        visible={popup === "Exponential Smoothing Forecast"}
-        setVisible={setPopup}
-        title="Exponential Smoothing Forecast Report"
-        type="analytics"
-      />
+        <ReportsPopup
+          visible={popup === "Exponential Smoothing Forecast"}
+          setVisible={setPopup}
+          title="Exponential Smoothing Forecast Report"
+          type="analytics"
+        />
+      </>
 
-      <div className="bg-primary px-2">
-        <List
-          itemLayout=""
-          dataSource={filteredData.map((i, index) => ({ ...i, key: index }))}
-          renderItem={(item) => (
-            <List.Item
-              actions={[
+      <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        {filteredData.length > 0 &&
+          filteredData.map((item, index) => (
+            <div
+              className="bg-primary rounded-lg shadow-custom p-5 cursor-pointer"
+              key={index}
+              onClick={() => setPopup(item.title)}
+            >
+              <h2 className="text-sm font-semibold">{item.title}</h2>
+              <div className="flex justify-between gap-2">
+                <p className="text-sm">{item.description}</p>
                 <FileTextOutlined
                   key="file-text-icon"
                   style={{ fontSize: "24px", cursor: "pointer" }}
-                  onClick={() => setPopup(item.title)}
-                />,
-              ]}
-            >
-              <List.Item.Meta
-                title={<p>{item.title}</p>}
-                description={item.description}
-              />
-            </List.Item>
-          )}
-        />
+                />
+              </div>
+            </div>
+          ))}
       </div>
     </div>
   );
