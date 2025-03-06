@@ -19,18 +19,26 @@ export const getDashboardStats = async (activeLocation, activeSystem) => {
   }
 };
 
-export const getDashboardSchedule = async (activeLocation, activeSystem) => {
+export const getDashboardSchedule = async (
+  date,
+  activeLocation,
+  activeSystem
+) => {
   try {
-    const { status, data } = await authRequest({
-      url: `/dashboard/schedule${
-        activeLocation || activeSystem
-          ? `?${activeLocation ? `activeLocation=${activeLocation}` : ""}${
-              activeLocation && activeSystem ? "&" : ""
-            }${activeSystem ? `activeSystem=${activeSystem}` : ""}`
-          : ""
-      }`,
-    });
-    return { status, data };
+    if (date) {
+      const { status, data } = await authRequest({
+        url: `/dashboard/schedule?date=${date} ${
+          activeLocation || activeSystem
+            ? `&${activeLocation ? `activeLocation=${activeLocation}` : ""}${
+                activeLocation && activeSystem ? "&" : ""
+              }${activeSystem ? `activeSystem=${activeSystem}` : ""}`
+            : ""
+        }`,
+      });
+      return { status, data };
+    } else {
+      throw new Error("Date unavailable");
+    }
   } catch (e) {
     if (e.data) {
       return { status: e.status, data: e.data };

@@ -35,7 +35,8 @@ textarea:focus {
   --primary-text: #000000;
   --secondary-text: #282828;
   --tertiary-text: #3f3f3f;
-  --shadow-custom: 0px 5px 20px 0px #0000000d;
+  /* --shadow-custom: 0px 5px 20px 0px #0000000d; */
+  --shadow-custom: 0px 4px 20px 0px #efbf6026;
   --border-color: #d6d6d6;
 }
 
