@@ -23,6 +23,7 @@ import {
   setAssetsLoading,
 } from "app/redux/slices/assetsSlice";
 import { jwtDecode } from "jwt-decode";
+import FcmTokenComp from "app/firebaseForeground";
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -112,6 +113,7 @@ export default function Layout({ children }) {
     <ConfigProvider
       theme={{ algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm }}
     >
+      <FcmTokenComp />
       <div>
         <Appbar
           setOpenSidebar={setOpenSidebar}
