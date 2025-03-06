@@ -5,8 +5,6 @@ import firebaseApp from "../firebase/firebase";
 import { useEffect } from "react";
 
 export default function FcmTokenComp() {
-    console.log("TEST");
-    
   const { notificationPermissionStatus } = useFcmToken();
 
   useEffect(() => {
