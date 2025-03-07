@@ -184,20 +184,16 @@ const ActionBar = ({
           />
 
           <div>
-            <Button
-              text={`${
-                unplanned ? "New Work Order" : "New Maintenance Schedule"
-              }`}
-              onClick={
-                unplanned
-                  ? () => router.push("/admin/new/work-order")
-                  : showAddWOModal
-              }
-              // outlined
-              style={{ padding: "4px 10px" }}
-              className="!text-xs md:!text-sm"
-              prefix={<PlusOutlined />}
-            />
+            {!unplanned && (
+              <Button
+                text={`New Maintenance Schedule`}
+                onClick={showAddWOModal}
+                // outlined
+                style={{ padding: "4px 10px" }}
+                className="!text-xs md:!text-sm"
+                prefix={<PlusOutlined />}
+              />
+            )}
           </div>
         </div>
       </div>

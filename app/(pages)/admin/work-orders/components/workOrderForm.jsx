@@ -32,7 +32,7 @@ const WorkOrderForm = () => {
   const [partsLoading, setPartsLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [filteredInventory, setFilteredInventory] = useState([]);
-  const [assetDetails, setAssetDetails] = useState([]);
+  const [assetDetails, setAssetDetails] = useState();
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
   const [selectedParts, setSelectedParts] = useState([]);
   const handleIncrease = (record) => {
@@ -197,7 +197,7 @@ const WorkOrderForm = () => {
     let specificAsset = assets?.filter((item) => item._id == assetId);
     setAssetDetails(specificAsset);
   }, [assets, assetId]);
-
+  
   useEffect(() => {
     const fetchFilteredInventory = async () => {
       try {
@@ -208,7 +208,7 @@ const WorkOrderForm = () => {
         if (status === 200) {
           setFilteredInventory(data.data);
         } else {
-          message.error(data?.message || "Failed to fetch filtered inventory");
+          message.error(data?.error || "Failed to fetch filtered inventory");
         }
       } catch (error) {
         message.error("Error fetching filtered inventory");
@@ -216,7 +216,7 @@ const WorkOrderForm = () => {
       }
     };
 
-    fetchFilteredInventory();
+    assetDetails && fetchFilteredInventory();
   }, [assetDetails]);
 
   return (
