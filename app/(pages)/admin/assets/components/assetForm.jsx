@@ -367,7 +367,7 @@ const AssetForm = () => {
             brand: details?.dashboard?.brand || "",
             model: details?.dashboard?.model || "",
             serialNumber: details?.dashboard?.serialNumber || "",
-            maintCategory: details?.dashboard?.maintCategory?._id || "",
+            maintCategory: details?.dashboard?.maintCategory || "",
             startDate: details?.dashboard?.startDate || "",
             dueDate: details?.dashboard?.dueDate || "",
             criticality: details?.dashboard?.criticality || "",

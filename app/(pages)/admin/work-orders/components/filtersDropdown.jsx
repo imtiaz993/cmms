@@ -11,13 +11,7 @@ import { getCategories } from "app/services/setUp/categories";
 import { useSelector } from "react-redux";
 
 const validationSchema = Yup.object().shape({
-  asset: Yup.string(),
-  workOrder: Yup.string(),
-  priority: Yup.string(),
-  created: Yup.date().nullable(),
-  due: Yup.date().nullable(),
-  costCenter: Yup.string(),
-  cost: Yup.number().nullable(),
+  createdAt: Yup.date().nullable(),
 });
 
 const WorkOrdersFilter = ({
@@ -120,7 +114,7 @@ const WorkOrdersFilter = ({
         <InputField name="issue" placeholder="Issue #" />
         <InputField name="description" placeholder="Description" />
         <InputField name="technician" placeholder="Technician" />
-        <DatePickerField name="createdDate" placeholder="CreatedDate" />
+        <DatePickerField name="createdAt" placeholder="Created Date" />
       </div>
     );
   };
@@ -134,7 +128,7 @@ const WorkOrdersFilter = ({
           issue: "",
           description: "",
           technician: "",
-          createdDate: "",
+          createdAt: "",
         }
       : {
           site: "",
