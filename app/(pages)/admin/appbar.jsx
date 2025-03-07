@@ -13,6 +13,7 @@ import {
 import DarkModeToggle from "react-dark-mode-toggle";
 import Image from "next/image";
 import { getUser } from "@/utils/index";
+import { Logo } from "@/icons/index";
 
 const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
   const router = useRouter();
@@ -57,11 +58,18 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
     <div
       className={`bg-primary h-16 flex justify-between items-center px-3 md:px-11 shadow-custom`}
     >
-      <Link href="/admin/dashboard" className="flex gap-3 items-center">
-        <Image src="/images/hive-logo.png" alt="logo" width={50} height={50} />
-        <h1 className="text-2xl md:text-3xl headerLogo text-[#0F0E13] dark:text-[#D8A444]">
+      <Link href="/admin/dashboard" className="">
+        {/* <Image src="/images/hive-logo.png" alt="logo" width={50} height={50} /> */}
+        {/* <h1 className="text-2xl md:text-3xl headerLogo text-[#0F0E13] dark:text-[#D8A444]">
           Hive Solutions
-        </h1>
+        </h1> */}
+        <Image
+          src={`/images/logo-with-text-${isDarkMode ? "dark" : "light"}.png`}
+          alt="logo"
+          width={1000}
+          height={1000}
+          className="h-full w-auto"
+        />
       </Link>
       <div className="flex flex-row">
         <DarkModeToggle
