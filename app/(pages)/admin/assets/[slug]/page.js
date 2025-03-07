@@ -312,13 +312,6 @@ const AssetDetail = () => {
                   <p className="p-2 md:px-3 md:py-2 border border-b-0">
                     {details?.subCategory.subCategory || "-"}
                   </p>
-                  <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
-                    Assigned to
-                  </p>
-
-                  <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                    {"---"}
-                  </p>
                   <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border">
                     Status
                   </p>

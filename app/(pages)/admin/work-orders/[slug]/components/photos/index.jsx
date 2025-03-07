@@ -59,7 +59,7 @@ const Photos = ({ photos, setData }) => {
             <div className="" key={index}>
               <Image
                 src={
-                  process.env.NEXT_PUBLIC_S3_BASE_URL + photo.url ||
+                  process.env.NEXT_PUBLIC_S3_BASE_URL + photo ||
                   "/images/profile-image.jpg"
                 }
                 alt="placeholder"
@@ -67,25 +67,25 @@ const Photos = ({ photos, setData }) => {
                 height={200}
                 className="h-36 w-full object-cover bg-gray-700 rounded-lg shadow-custom cursor-pointer"
                 onClick={() =>
-                  setPreviewImage(
-                    process.env.NEXT_PUBLIC_S3_BASE_URL + photo.url
-                  )
+                  setPreviewImage(process.env.NEXT_PUBLIC_S3_BASE_URL + photo)
                 }
               />
               <p className="mt-5 text-sm font-medium">
                 <Link
-                  href={process.env.NEXT_PUBLIC_S3_BASE_URL + photo.url}
+                  href={process.env.NEXT_PUBLIC_S3_BASE_URL + photo}
                   target="_blank"
                   className="text-tertiary"
                 >
-                  {photo?.name || "IMG #1.JPG"}
+                  {photo || "IMG #1.JPG"}
                 </Link>
               </p>
             </div>
           ))
         ) : (
           <div className="col-span-2 md:col-span-3 lg:col-span-4 xl:col-span-5 2xl:col-span-6">
-            <p className="text-sm font-medium text-center mt-10 mb-20">No Photos Found</p>
+            <p className="text-sm font-medium text-center mt-10 mb-20">
+              No Photos Found
+            </p>
           </div>
         )}
       </div>
