@@ -10,7 +10,6 @@ import {
   EditOutlined,
   ExclamationCircleFilled,
   LeftOutlined,
-  PrinterOutlined,
   SwapOutlined,
   ToolOutlined,
   TruckOutlined,
@@ -180,14 +179,6 @@ const InventoryDetails = () => {
               onClick={() => setDeleteAssetPopup(true)}
               outlined
             /> */}
-              <Button
-                text="Print"
-                prefix={<PrinterOutlined />}
-                fullWidth={false}
-                className="!h-11"
-                // onClick={}
-                outlined
-              />
               <Button
                 text="Edit Inventory"
                 prefix={<EditOutlined />}
