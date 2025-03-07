@@ -27,7 +27,7 @@ const WorkOrderForm = () => {
   const router = useRouter();
   const assetId = useSearchParams().get("Id");
   const { assets, isLoading, error } = useSelector((state) => state.assets);
-  const locations = useSelector((state) => state.location.location);
+  // const locations = useSelector((state) => state.location.location);
 
   const [partsLoading, setPartsLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -197,7 +197,7 @@ const WorkOrderForm = () => {
     let specificAsset = assets?.filter((item) => item._id == assetId);
     setAssetDetails(specificAsset);
   }, [assets, assetId]);
-  
+
   useEffect(() => {
     const fetchFilteredInventory = async () => {
       try {
@@ -219,6 +219,66 @@ const WorkOrderForm = () => {
     assetDetails && fetchFilteredInventory();
   }, [assetDetails]);
 
+  const handleSubmit = async (values) => {
+    console.log("Values1", values);
+
+    const formData = new FormData();
+    formData.append("asset", assetId);
+
+    Object.entries(values).forEach(([key, value]) => {
+      if (key !== "workOrderDocuments" && key !== "workOrderImages") {
+        formData.append(key, value);
+      }
+    });
+
+    // selectedParts.forEach((part, index) => {
+    //   formData.append(`selectedParts[${index}][_id]`, part._id);
+    //   formData.append(
+    //     `selectedParts[${index}][partNumber]`,
+    //     part.partNumber
+    //   );
+    //   formData.append(
+    //     `selectedParts[${index}][selectedQuantity]`,
+    //     part.selectedQuantity
+    //   );
+    // });
+
+    formData.append(
+      "selectedParts",
+      JSON.stringify(
+        selectedParts.map((item) => {
+          return {
+            _id: item._id,
+            partNumber: item.partNumber,
+            selectedQuantity: item.selectedQuantity,
+          };
+        })
+      )
+    );
+
+    values.workOrderDocuments?.length > 0 &&
+      values.workOrderDocuments.forEach((file) => {
+        formData.append(`workOrderDocuments`, file.originFileObj);
+      });
+
+    values.workOrderImages?.length > 0 &&
+      values.workOrderImages.forEach((file) => {
+        formData.append(`workOrderImages`, file.originFileObj);
+      });
+    console.log("FormData Entries:");
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+    const { status, data } = await addUnplannedWorkOrder(formData);
+    console.log("Status and Data:", status, data);
+    if (status === 200) {
+      message.success(data.message);
+      router.push("/admin/work-orders");
+    } else {
+      message.error(data.error ?? "Failed to add work order");
+    }
+  };
+
   return (
     <div className="px-5 md:px-10">
       <p className="text-sm text-[#828282]">
@@ -239,67 +299,7 @@ const WorkOrderForm = () => {
       <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto mt-5 bg-primary shadow-custom rounded-lg p-4">
         <p className="text-2xl font-semibold mb-5">Unplanned Work Order Form</p>
 
-        <Formik
-          initialValues={{}}
-          onSubmit={(values) => {
-            console.log("Values1", values);
-
-            const formData = new FormData();
-            formData.append("asset", assetId);
-
-            Object.entries(values).forEach(([key, value]) => {
-              if (key !== "workOrderDocuments" && key !== "workOrderImages") {
-                formData.append(key, value);
-              }
-            });
-
-            // selectedParts.forEach((part, index) => {
-            //   formData.append(`selectedParts[${index}][_id]`, part._id);
-            //   formData.append(
-            //     `selectedParts[${index}][partNumber]`,
-            //     part.partNumber
-            //   );
-            //   formData.append(
-            //     `selectedParts[${index}][selectedQuantity]`,
-            //     part.selectedQuantity
-            //   );
-            // });
-
-            formData.append(
-              "selectedParts",
-              JSON.stringify(
-                selectedParts.map((item) => {
-                  return {
-                    _id: item._id,
-                    partNumber: item.partNumber,
-                    selectedQuantity: item.selectedQuantity,
-                  };
-                })
-              )
-            );
-
-            values.workOrderDocuments?.length > 0 &&
-              values.workOrderDocuments.forEach((file) => {
-                formData.append(`workOrderDocuments`, file.originFileObj);
-              });
-
-            values.workOrderImages?.length > 0 &&
-              values.workOrderImages.forEach((file) => {
-                formData.append(`workOrderImages`, file.originFileObj);
-              });
-            console.log("FormData Entries:");
-            for (let pair of formData.entries()) {
-              console.log(pair[0], pair[1]);
-            }
-            const { status, data } = addUnplannedWorkOrder(formData);
-            if (status === 200) {
-              message.success(data.message);
-              router.push("/admin/work-orders");
-            } else {
-              message.error(data.error || "Failed to add work order");
-            }
-          }}
-        >
+        <Formik initialValues={{}} onSubmit={handleSubmit}>
           {({ errors, values, isSubmitting, setFieldValue, submitForm }) => {
             // useEffect(() => {
             //   const filtered = filteredInventory
@@ -385,7 +385,7 @@ const WorkOrderForm = () => {
                     label="Technician"
                     placeholder="Select Technician..."
                   />
-                  <DatePickerField name="dueDate" label="Completion" />
+                  <DatePickerField name="completionDate" label="Completion" />
                   <div className="w-full sm:flex items-center gap-3">
                     <label
                       className={`text-sm flex gap-1 items-center ${"sm:justify-end sm:min-w-[115px]"}`}
@@ -458,7 +458,7 @@ const WorkOrderForm = () => {
                     label="Final Status"
                     placeholder="Select Status..."
                   />
-                  <SelectField
+                  {/* <SelectField
                     name="site"
                     label="Site"
                     placeholder="Site"
@@ -467,7 +467,7 @@ const WorkOrderForm = () => {
                       label: i.site,
                       value: i._id,
                     }))}
-                  />
+                  /> */}
                   <div className="md:col-span-2">
                     <TextAreaField
                       name="summary"

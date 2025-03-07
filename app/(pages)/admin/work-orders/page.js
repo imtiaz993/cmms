@@ -70,6 +70,12 @@ const WorkOrders = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (status) => <p className="capitalize">{status}</p>,
+    },
+    {
+      title: "Due Date",
+      dataIndex: "endDate",
+      key: "dueDate",
     },
     {
       title: "Schedule",
@@ -87,8 +93,11 @@ const WorkOrders = () => {
       title: "Issue ID",
       dataIndex: "issueID",
       key: "issueID",
-      render: (issue) => (
-        <Link href={"#"} className="text-[#017BFE] underline">
+      render: (issue, record) => (
+        <Link
+          href={"/admin/work-orders/" + record._id}
+          className="text-[#017BFE] underline"
+        >
           {issue}
         </Link>
       ),
@@ -112,6 +121,17 @@ const WorkOrders = () => {
       title: "Time Created",
       dataIndex: "createdAt",
       key: "createdAt",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => <p className="capitalize">{status}</p>,
+    },
+    {
+      title: "Due Date",
+      dataIndex: "endDate",
+      key: "dueDate",
     },
     {
       title: "Asset #",

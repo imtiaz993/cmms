@@ -231,13 +231,8 @@ export default function Layout({ children }) {
                           if (value) {
                             router.push(
                               `/admin/${currentPage}${
-                                value || activeSystem
-                                  ? `?${value ? `location=${value}` : ""}
-                                ${value && activeSystem ? "&" : ""}${
-                                      activeSystem ? `system=` : ""
-                                    }`
-                                  : ""
-                              }`
+                                value && `?location=${value}`
+                              } `
                             );
                           } else {
                             router.push(`/admin/${currentPage}`);
@@ -278,7 +273,9 @@ export default function Layout({ children }) {
                           allowClear={true}
                           onChange={(value) =>
                             router.push(
-                              `/admin/${currentPage}?location=${activeLocation}&system=${value}`
+                              `/admin/${currentPage}?location=${activeLocation}${
+                                value ? `&system=${value}` : ""
+                              }`
                             )
                           }
                           options={

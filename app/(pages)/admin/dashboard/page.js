@@ -125,58 +125,55 @@ const Dashboard = () => {
             }
           >
             <div className="">
-              <Spin spinning={loadingStats || !stats} className="">
-                <div className="mx-6 font-medium text-sm pb-2">
-                  {stats?.upcomingWorkOrders?.length > 0 &&
-                    stats.upcomingWorkOrders.slice(0, 7).map((item, index) => {
-                      const date = dayjs(item?.date);
-                      const isToday =
-                        date.format("MM/DD/YYYY") ===
-                        dayjs().format("MM/DD/YYYY");
-                      const showDate =
-                        stats.upcomingWorkOrders[index - 1]?.date !==
-                        item?.date;
-
-                      return (
-                        <div key={item._id}>
-                          {showDate && (
-                            <p
-                              className={`px-2 py-1 ${
-                                index === 0
-                                  ? "bg-secondary"
-                                  : "border-t border-[#D6D6D6]"
-                              }`}
+              <div className="mx-6 font-medium text-sm pb-2">
+                <Spin spinning={loadingStats || !stats} className="w-full">
+                  {Object.keys(stats?.upcomingWorkOrders || {}).map(
+                    (dateKey, index) => (
+                      <div key={dateKey}>
+                        <p
+                          className={`px-2 py-1 ${
+                            index === 0
+                              ? "bg-secondary"
+                              : "border-t border-[#D6D6D6]"
+                          }`}
+                        >
+                          <strong>
+                            {dayjs(dateKey).isSame(dayjs(), "day") && "Today "}
+                            {dayjs(dateKey).format("MM/DD/YYYY")}
+                          </strong>
+                        </p>
+                        {(stats.upcomingWorkOrders[dateKey] || []).length >
+                        0 ? (
+                          stats.upcomingWorkOrders[dateKey].map((wo) => (
+                            <Link
+                              key={wo._id}
+                              href={`/admin/work-orders/${wo._id}`}
+                              className="flex gap-1 my-1 px-2 hover:bg-bg_secondary rounded-sm hover:shadow-custom"
                             >
-                              <strong>
-                                {isToday && "Today"} {date.format("MM/DD/YYYY")}
-                              </strong>
-                            </p>
-                          )}
-                          <Link
-                            href={`/admin/work-orders/${item._id}`}
-                            className="flex gap-1 my-1 px-2 hover:bg-bg_secondary rounded-sm hover:shadow-custom"
-                          >
-                            <p className="mt-1">
-                              <Octagon
-                                color={
-                                  criticalityColors[item.criticality] ||
-                                  "#B3B3B3"
-                                }
-                              />
-                            </p>
-                            <div>
-                              <p>
-                                {item?.asset.site?.site} -{" "}
-                                {item?.asset.system?.system}
-                              </p>
-                              <p>Asset ID: {item?.asset.assetID}</p>
-                            </div>
-                          </Link>
-                        </div>
-                      );
-                    })}
-                </div>
-              </Spin>
+                              <span className="mt-1">
+                                <Octagon
+                                  color={
+                                    criticalityColors[wo.criticality] ||
+                                    "#B3B3B3"
+                                  }
+                                />
+                              </span>
+                              <div>
+                                <p>
+                                  {wo.site?.site} - {wo.system?.system}
+                                </p>
+                                <p>Asset ID: {wo.assetID}</p>
+                              </div>
+                            </Link>
+                          ))
+                        ) : (
+                          <p className="text-center my-3">No work orders</p>
+                        )}
+                      </div>
+                    )
+                  )}
+                </Spin>
+              </div>
               {/* <div className="mx-6 font-medium text-sm py-2 border-t border-[#D6D6D6] opacity-70">
                 <p className="px-2">
                   <strong>Tomorrow</strong> 2/28/2021

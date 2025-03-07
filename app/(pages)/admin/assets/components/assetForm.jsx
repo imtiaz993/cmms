@@ -273,6 +273,39 @@ const AssetForm = () => {
     setSubmitting(false);
   };
 
+  const maintenanceCategories = [
+    "Preventive Maintenance",
+    "Predictive Maintenance",
+    "Corrective Maintenance",
+    "Emergency Maintenance",
+    "Shutdown & Turnaround",
+    "Safety & Compliance",
+    "Equipment Upgrade",
+    "Facility Maintenance",
+    "Rotating Equipment Maintenance",
+    "Static Equipment Maintenance",
+    "Electrical System Maintenance",
+    "Instrumentation & Control Maintenance",
+    "Piping & Pipeline Maintenance",
+    "Corrosion Control",
+    "HVAC & Utility Systems",
+    "Regulatory Inspections",
+    "Leak Detection & Repair",
+    "Process Optimization",
+    "Calibration Work Orders",
+    "Lubrication Management",
+    "Structural Integrity Checks",
+    "Material Transfer & Handling",
+    "Spare Parts Replacement",
+    "Energy Efficiency Improvements",
+    "Fire & Gas System Maintenance",
+    "Environmental Compliance",
+    "Boiler & Steam System Maintenance",
+    "Cooling Tower Maintenance",
+    "Tank Farm Maintenance",
+    "SCADA & Automation Maintenance",
+  ];
+
   if ((slug && loading) || (slug && !details))
     return (
       <Spin
@@ -334,7 +367,7 @@ const AssetForm = () => {
             brand: details?.dashboard?.brand || "",
             model: details?.dashboard?.model || "",
             serialNumber: details?.dashboard?.serialNumber || "",
-            maintCategory: details?.dashboard?.maintCategory?._id || "",
+            maintCategory: details?.dashboard?.maintCategory || "",
             startDate: details?.dashboard?.startDate || "",
             dueDate: details?.dashboard?.dueDate || "",
             criticality: details?.dashboard?.criticality || "",
@@ -504,9 +537,9 @@ const AssetForm = () => {
                   name="maintCategory"
                   placeholder="Category"
                   label="Category"
-                  options={categories.map((i) => ({
-                    label: i.category,
-                    value: i._id,
+                  options={maintenanceCategories.map((i) => ({
+                    label: i,
+                    value: i,
                   }))}
                 />
                 <DatePickerField name="startDate" label="Start Date" />
@@ -518,16 +551,16 @@ const AssetForm = () => {
                   <Field name="criticality">
                     {({ field, form }) => (
                       <Radio.Group {...field} className="">
-                        <Radio value="Critical" className="!ml-3">
+                        <Radio value="critical" className="!ml-3">
                           Critical
                         </Radio>
-                        <Radio value="High" className="sm:!ml-7">
+                        <Radio value="high" className="sm:!ml-7">
                           High
                         </Radio>
-                        <Radio value="Medium" className="sm:!ml-7">
+                        <Radio value="medium" className="sm:!ml-7">
                           Medium
                         </Radio>
-                        <Radio value="Low" className="sm:!ml-7">
+                        <Radio value="low" className="sm:!ml-7">
                           Low
                         </Radio>
                       </Radio.Group>
