@@ -251,18 +251,16 @@ const AssetForm = () => {
       const { status, data } = response;
 
       if (status === 200) {
-        message.success(
-          data?.message ||
-            (slug ? "Asset Updated successfully" : "Asset Added successfully")
-        );
-
         // Update Redux store accordingly
         if (slug) {
           dispatch(editAsset(data.data));
           setDetails((prev) => ({ ...prev, dashboard: data.data }));
+          message.success("Asset updated successfully");
         } else {
+          message.success("Asset added successfully");
           dispatch(updateAssets(data.data));
         }
+        router.push("/admin/assets");
         resetForm();
       } else {
         message.error(data.error || "Failed to process request");

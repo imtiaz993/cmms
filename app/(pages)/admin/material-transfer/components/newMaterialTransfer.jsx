@@ -171,6 +171,7 @@ const NewMaterialTransfer = () => {
     });
     if (status === 200) {
       message.success(data?.message || "Material Trasnfer Added Successfully");
+      router.push("/admin/material-transfer");
       setSubmitting(false);
     } else {
       message.error(data?.error || "Failed to save material transfer");
@@ -181,10 +182,7 @@ const NewMaterialTransfer = () => {
   return (
     <div className="mx-5 md:mx-10">
       <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
-      <AddSystemPopup
-        visible={addSystemPopup}
-        setVisible={setAddSystemPopup}
-      />
+      <AddSystemPopup visible={addSystemPopup} setVisible={setAddSystemPopup} />
       <p className="text-sm text-[#828282]">
         Material Transfer {" > "} Add Material Transfer
       </p>

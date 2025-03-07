@@ -16,7 +16,10 @@ import { useEffect, useMemo, useState } from "react";
 import { getFields } from "app/services/customFields";
 import AddFieldPopup from "@/components/addFieldPopup";
 import { useDispatch, useSelector } from "react-redux";
-import { updateInventory } from "app/redux/slices/inventoriesSlice";
+import {
+  editInventory,
+  updateInventory,
+} from "app/redux/slices/inventoriesSlice";
 import { useParams, useRouter } from "next/navigation";
 import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
@@ -236,20 +239,16 @@ const InventoryForm = () => {
       const { status, data } = response;
 
       if (status === 200) {
-        message.success(
-          data?.message ||
-            (slug
-              ? "Inventory Updated successfully"
-              : "Inventory Added successfully")
-        );
-
         // Update Redux store accordingly
         if (slug) {
-          // dispatch(editAsset(data.data));
           // setDetails((prev) => ({ ...prev, dashboard: data.data }));
+          dispatch(editInventory(data.data));
+          message.success("Inventory Updated successfully");
         } else {
+          message.success("Inventory Added successfully");
           dispatch(updateInventory(data.data));
         }
+        router.push("/admin/inventory");
         resetForm();
       } else {
         message.error(data.error || "Failed to process request");

@@ -294,6 +294,9 @@ const WorkOrderForm = () => {
             const { status, data } = addUnplannedWorkOrder(formData);
             if (status === 200) {
               message.success(data.message);
+              router.push("/admin/work-orders");
+            } else {
+              message.error(data.error || "Failed to add work order");
             }
           }}
         >
