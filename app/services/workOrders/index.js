@@ -62,9 +62,9 @@ export const getWorkOrdersByTimeRange = async (timeRange, query) => {
 export const getFilteredWorkOrders = async (values, query, WOStatus) => {
   try {
     const { status, data } = await authRequest({
-      url: `/work-orders/getFilteredWorkOrders${query ? `?query=${query}` : ""}${
-        WOStatus ? (WOStatus !== "all" ? `&status=${WOStatus}` : "") : ""
-      }`,
+      url: `/work-orders/getFilteredWorkOrders${
+        query ? `?query=${query}` : ""
+      }${WOStatus ? (WOStatus !== "all" ? `&status=${WOStatus}` : "") : ""}`,
       method: "POST",
       data: values,
     });
@@ -248,6 +248,21 @@ export const addCostinWO = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/work-orders/addCostinWO",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const addImage = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/work-orders/addImage",
       method: "POST",
       data: values,
     });

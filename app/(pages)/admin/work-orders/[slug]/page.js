@@ -43,7 +43,7 @@ const WorkOrdersDetail = () => {
       key: "photos",
       label: "Photos",
       children: (
-        <Photos photos={workOrder?.dashboard?.image} setData={setWorkOrder} />
+        <Photos photos={workOrder?.workOrderImages} setData={setWorkOrder} />
       ),
     },
     {
