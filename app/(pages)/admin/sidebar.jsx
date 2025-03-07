@@ -70,6 +70,9 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
   return (
     <div className="rounded-tr-xl bg-primary overflow-hidden shadow-custom">
       <div className=" max-h-[calc(100dvh-16px-60px-16px)] min-h-[calc(100dvh-16px-60px-16px)] overflow-auto hidden lg:block lg:w-[250px] p-5 pt-7 select-none">
+        <div className="mx-1 py-2 text-center bg-[#0F0E13] text-[#efbf60] rounded text-2xl font-medium">
+          YARDHOUSE
+        </div>
         <Menu
           mode="inline"
           defaultSelectedKeys={[currentPage]}
