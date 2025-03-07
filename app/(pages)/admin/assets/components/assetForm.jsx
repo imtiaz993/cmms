@@ -273,6 +273,39 @@ const AssetForm = () => {
     setSubmitting(false);
   };
 
+  const maintenanceCategories = [
+    "Preventive Maintenance",
+    "Predictive Maintenance",
+    "Corrective Maintenance",
+    "Emergency Maintenance",
+    "Shutdown & Turnaround",
+    "Safety & Compliance",
+    "Equipment Upgrade",
+    "Facility Maintenance",
+    "Rotating Equipment Maintenance",
+    "Static Equipment Maintenance",
+    "Electrical System Maintenance",
+    "Instrumentation & Control Maintenance",
+    "Piping & Pipeline Maintenance",
+    "Corrosion Control",
+    "HVAC & Utility Systems",
+    "Regulatory Inspections",
+    "Leak Detection & Repair",
+    "Process Optimization",
+    "Calibration Work Orders",
+    "Lubrication Management",
+    "Structural Integrity Checks",
+    "Material Transfer & Handling",
+    "Spare Parts Replacement",
+    "Energy Efficiency Improvements",
+    "Fire & Gas System Maintenance",
+    "Environmental Compliance",
+    "Boiler & Steam System Maintenance",
+    "Cooling Tower Maintenance",
+    "Tank Farm Maintenance",
+    "SCADA & Automation Maintenance",
+  ];
+
   if ((slug && loading) || (slug && !details))
     return (
       <Spin
@@ -504,9 +537,9 @@ const AssetForm = () => {
                   name="maintCategory"
                   placeholder="Category"
                   label="Category"
-                  options={categories.map((i) => ({
-                    label: i.category,
-                    value: i._id,
+                  options={maintenanceCategories.map((i) => ({
+                    label: i,
+                    value: i,
                   }))}
                 />
                 <DatePickerField name="startDate" label="Start Date" />
