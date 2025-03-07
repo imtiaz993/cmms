@@ -242,10 +242,53 @@ const WorkOrdersDetail = () => {
       <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto mt-5 px-5 md:px-10">
         <div className="bg-primary shadow-custom rounded-lg p-4">
           <div className="flex flex-col gap-5">
-            <h1 className="text-xl md:text-2xl font-bold">
-              Asset: {workOrder?.asset.assetNumber}
-            </h1>
-
+            <div className="flex justify-between">
+              <h1 className="text-xl md:text-2xl font-bold">
+                Asset: {workOrder?.asset.assetID}
+              </h1>
+              <div className="flex justify-end gap-3 mb-5">
+                {!["cancelled", "completed"].includes(workOrder?.status) && (
+                  <Button
+                    text="Cancel Work Order"
+                    prefix={<CloseCircleOutlined />}
+                    fullWidth={false}
+                    className="ml-3"
+                    onClick={handleCancelWO}
+                    disabled={isSubmitting}
+                    outlined
+                  />
+                )}
+                {workOrder?.startTime === null ? (
+                  <Button
+                    text="Start"
+                    prefix={<LoginOutlined />}
+                    fullWidth={false}
+                    onClick={handleStart}
+                    className="ml-3"
+                  />
+                ) : (
+                  workOrder?.stopTime === null && (
+                    <Button
+                      text="Stop"
+                      prefix={<LogoutOutlined />}
+                      fullWidth={false}
+                      onClick={handleStop}
+                      className="ml-3"
+                    />
+                  )
+                )}
+                {!["cancelled", "completed"].includes(workOrder?.status) && (
+                  <Button
+                    text="Mark Completed"
+                    prefix={<PlusOutlined />}
+                    fullWidth={false}
+                    onClick={handleComplete}
+                    disabled={isSubmitting}
+                    className="ml-3"
+                  />
+                )}
+              </div>
+            </div>
             <p className="text-lg font-semibold">Maintenance Details</p>
             <div className="flex gap-5">
               <p className="min-w-32 mt-2">Asset Info.</p>
@@ -346,46 +389,6 @@ const WorkOrdersDetail = () => {
               style={{ marginTop: 12, overflow: "auto" }}
             />
             <div className="flex justify-end gap-3 mb-5">
-              {!["cancelled", "completed"].includes(workOrder?.status) && (
-                <Button
-                  text="Cancel Work Order"
-                  prefix={<CloseCircleOutlined />}
-                  fullWidth={false}
-                  className="ml-3"
-                  onClick={handleCancelWO}
-                  disabled={isSubmitting}
-                  outlined
-                />
-              )}
-              {workOrder?.startTime === null ? (
-                <Button
-                  text="Start"
-                  prefix={<LoginOutlined />}
-                  fullWidth={false}
-                  onClick={handleStart}
-                  className="ml-3"
-                />
-              ) : (
-                workOrder?.stopTime === null && (
-                  <Button
-                    text="Stop"
-                    prefix={<LogoutOutlined />}
-                    fullWidth={false}
-                    onClick={handleStop}
-                    className="ml-3"
-                  />
-                )
-              )}
-              {!["cancelled", "completed"].includes(workOrder?.status) && (
-                <Button
-                  text="Mark Completed"
-                  prefix={<PlusOutlined />}
-                  fullWidth={false}
-                  onClick={handleComplete}
-                  disabled={isSubmitting}
-                  className="ml-3"
-                />
-              )}
               <Button
                 text="Save Updates"
                 prefix={<SaveOutlined />}
