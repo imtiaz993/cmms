@@ -27,7 +27,7 @@ const WorkOrderForm = () => {
   const router = useRouter();
   const assetId = useSearchParams().get("Id");
   const { assets, isLoading, error } = useSelector((state) => state.assets);
-  const locations = useSelector((state) => state.location.location);
+  // const locations = useSelector((state) => state.location.location);
 
   const [partsLoading, setPartsLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -197,7 +197,7 @@ const WorkOrderForm = () => {
     let specificAsset = assets?.filter((item) => item._id == assetId);
     setAssetDetails(specificAsset);
   }, [assets, assetId]);
-  
+
   useEffect(() => {
     const fetchFilteredInventory = async () => {
       try {
@@ -458,7 +458,7 @@ const WorkOrderForm = () => {
                     label="Final Status"
                     placeholder="Select Status..."
                   />
-                  <SelectField
+                  {/* <SelectField
                     name="site"
                     label="Site"
                     placeholder="Site"
@@ -467,7 +467,7 @@ const WorkOrderForm = () => {
                       label: i.site,
                       value: i._id,
                     }))}
-                  />
+                  /> */}
                   <div className="md:col-span-2">
                     <TextAreaField
                       name="summary"

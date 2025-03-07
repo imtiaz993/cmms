@@ -518,16 +518,16 @@ const AssetForm = () => {
                   <Field name="criticality">
                     {({ field, form }) => (
                       <Radio.Group {...field} className="">
-                        <Radio value="Critical" className="!ml-3">
+                        <Radio value="critical" className="!ml-3">
                           Critical
                         </Radio>
-                        <Radio value="High" className="sm:!ml-7">
+                        <Radio value="high" className="sm:!ml-7">
                           High
                         </Radio>
-                        <Radio value="Medium" className="sm:!ml-7">
+                        <Radio value="medium" className="sm:!ml-7">
                           Medium
                         </Radio>
-                        <Radio value="Low" className="sm:!ml-7">
+                        <Radio value="low" className="sm:!ml-7">
                           Low
                         </Radio>
                       </Radio.Group>
