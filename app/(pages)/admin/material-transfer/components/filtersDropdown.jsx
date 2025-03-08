@@ -7,6 +7,7 @@ import DatePickerField from "@/components/common/DatePickerField";
 import { getFilteredMT } from "app/services/materialTransfer";
 import { useSelector } from "react-redux";
 import SelectField from "@/components/common/SelectField";
+import { useSearchParams } from "next/navigation";
 
 const MaterialTransferFilter = ({
   setMaterialTransferData,
@@ -18,6 +19,9 @@ const MaterialTransferFilter = ({
   0;
   const [isClearing, setIsClearing] = useState(false);
   const locations = useSelector((state) => state.location.location);
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const submit = async (values, setSubmitting) => {
     console.log(values);
     !setSubmitting && setIsClearing(true);
@@ -50,6 +54,8 @@ const MaterialTransferFilter = ({
           destination: "",
           createdBy: "",
           // Transporter: "",
+          site: activeLocation,
+          system: activeSystem,
         }}
         onSubmit={(values, { setSubmitting }) => {
           submit(values, setSubmitting);

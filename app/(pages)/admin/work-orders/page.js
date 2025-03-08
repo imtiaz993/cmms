@@ -114,13 +114,13 @@ const WorkOrders = () => {
     },
     {
       title: "Date Created",
-      dataIndex: "createdAt",
-      key: "createdAt",
+      dataIndex: "date",
+      key: "date",
     },
     {
       title: "Time Created",
-      dataIndex: "createdAt",
-      key: "createdAt",
+      dataIndex: "time",
+      key: "time",
     },
     {
       title: "Status",
@@ -234,7 +234,7 @@ const WorkOrders = () => {
           filteredColumns={filteredColumns}
           filteredData={displayedData}
           fetchingWorkOrders={fetchingWorkOrders}
-          rowSelection={rowSelection}
+          rowSelection={false}
         />
       ),
     },

@@ -163,7 +163,7 @@ const Documents = () => {
         setFetchingDocuments(true);
         try {
           const { status, data } = await getDocumentsByCategory({
-            location: activeLocation ? activeLocation : null,
+            site: activeLocation ? activeLocation : null,
             system: activeSystem ? activeSystem : null,
           });
 

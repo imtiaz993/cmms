@@ -5,22 +5,17 @@ import {
   Input,
   Menu,
   message,
-  Select,
   Button as AntButton,
 } from "antd";
 import {
   DownOutlined,
   ExportOutlined,
-  FilterOutlined,
-  PlusOutlined,
-  PrinterOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import MaterialTransferFilter from "./filtersDropdown";
 import {
   exportMaterialTransfer,
-  getMaterialTransferByStatus,
   printMaterialTransfer,
 } from "app/services/materialTransfer";
 import { SearchIcon } from "@/icons/index";
@@ -80,7 +75,7 @@ const ActionBar = ({
             placeholder="Search"
             prefix={<SearchIcon />}
             onChange={handleSearchChange}
-            className="sm:!w-[362px] searchBar"
+            className="xl:!w-[362px] searchBar"
             allowClear
           />
           <Dropdown
@@ -100,7 +95,7 @@ const ActionBar = ({
             <AntButton
               text="Filter"
               style={{ padding: "4px 0px", height: "44px" }}
-              className="flex !justify-between w-full md:min-w-36 !p-3"
+              className="flex !justify-between w-full xl:w-36 !p-3"
             >
               <span> Filter</span>
               <DownOutlined />

@@ -133,7 +133,7 @@ const Dashboard = () => {
                         <p
                           className={`px-2 py-1 ${
                             index === 0
-                              ? "bg-secondary"
+                              ? "bg-secondary text-black"
                               : "border-t border-[#D6D6D6]"
                           }`}
                         >
@@ -145,11 +145,7 @@ const Dashboard = () => {
                         {(stats.upcomingWorkOrders[dateKey] || []).length >
                         0 ? (
                           stats.upcomingWorkOrders[dateKey].map((wo) => (
-                            <Link
-                              key={wo._id}
-                              href={`/admin/work-orders/${wo._id}`}
-                              className="flex gap-1 my-1 px-2 hover:bg-bg_secondary rounded-sm hover:shadow-custom"
-                            >
+                            <div key={wo._id} className="flex gap-1 my-1 px-2">
                               <span className="mt-1">
                                 <Octagon
                                   color={
@@ -158,13 +154,11 @@ const Dashboard = () => {
                                   }
                                 />
                               </span>
-                              <div>
-                                <p>
-                                  {wo.site?.site} - {wo.system?.system}
-                                </p>
+                              <p>
+                                {wo.site?.site} - {wo.system?.system}
                                 <p>Asset ID: {wo.assetID}</p>
-                              </div>
-                            </Link>
+                              </p>
+                            </div>
                           ))
                         ) : (
                           <p className="text-center my-3">No work orders</p>
