@@ -1,9 +1,8 @@
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
-import { rigs } from "@/constants/rigsAndSystems";
 import { DeleteOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
-import { Input, message, Table } from "antd";
+import { message, Table } from "antd";
 import { Form, Formik } from "formik";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
