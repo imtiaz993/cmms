@@ -11,24 +11,19 @@ import {
 import {
   AppstoreOutlined,
   DeleteOutlined,
-  DollarCircleOutlined,
   DollarOutlined,
   DownOutlined,
   ExclamationCircleFilled,
   ExportOutlined,
-  FilterOutlined,
-  LogoutOutlined,
   PlusOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
   SwapOutlined,
   TruckOutlined,
-  WarningFilled,
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import InventoryFilter from "./filtersDropdown";
 import AddMaterialTransferPopup from "../../material-transfer/components/addMaterialTransferPopup";
-import AddFieldPopup from "../../../../../components/addFieldPopup";
 import { exportInventory, updateStatus } from "app/services/inventory";
 import CreatePurchaseOrderPopup from "../purchase-order/createPurchaseOrderPopup";
 import ChangeToAssetPopup from "./changeToAssetPopup";
