@@ -40,6 +40,7 @@ const ActionBar = ({
   setFilteredAssets,
   selectedRowKeys,
   selectedRowsData,
+  addToShippingCart,
 }) => {
   const router = useRouter();
   const [showHierarchy, setShowHierarchy] = useState(false);
@@ -143,15 +144,18 @@ const ActionBar = ({
       value: "materialTransfer",
     },
   ];
+
   const handleAction = (value) => {
     if (selectedRowKeys.length === 0) setActionError(true);
-    else if (value !== "materialTransfer") setActionPopup(value);
+    else setActionPopup(value);
   };
   const handleActionConfirm = async () => {
     if (actionPopup === "workorder") {
       let Id = selectedRowsData[0]._id;
 
       router.push(`/admin/new/work-order?Id=${Id}`);
+    } else if (actionPopup === "materialTransfer") {
+      addToShippingCart(selectedRowKeys);
     } else {
       const { status, data } = await updateStatus({
         assets: [...selectedRowKeys],
