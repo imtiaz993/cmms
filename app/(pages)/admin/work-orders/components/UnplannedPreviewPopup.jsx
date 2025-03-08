@@ -61,12 +61,14 @@ const UnplannedPreviewPopup = ({ visible, setVisible, workOrder }) => {
             Date Created
           </p>
           <p className="p-2 md:px-3 md:py-2 border border-b-0">
-            {workOrder?.createdAt || "-"}
+            {workOrder?.date || "-"}
           </p>
           <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
             Time Created
           </p>
-          <p className="p-2 md:px-3 md:py-2 border border-b-0">{"-"}</p>
+          <p className="p-2 md:px-3 md:py-2 border border-b-0">
+            {workOrder?.time || "-"}
+          </p>
           <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
             Criticality
           </p>
@@ -76,20 +78,18 @@ const UnplannedPreviewPopup = ({ visible, setVisible, workOrder }) => {
           <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
             Asset #
           </p>
-          <p className="p-2 md:px-3 md:py-2 border border-b-0">
-            {workOrder?.asset.assetID || "-"}
-          </p>
-          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
+          {
+            <Link href={`/admin/assets/${workOrder?.asset?._id}`}>
+              <p className="p-2 md:px-3 md:py-2 border border-b-0 text-inherit">
+                {workOrder?.asset.assetID || "-"}
+              </p>
+            </Link>
+          }
+          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0">
             Description of Issue
           </p>
-          <p className="p-2 md:px-3 md:py-2 border border-b-0">
-            {workOrder?.description || "-"}
-          </p>
-          <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0">
-            Image
-          </p>
           <p className="p-2 md:px-3 md:py-2 border">
-            <a className="underline"> View Image </a> <EyeOutlined />
+            {workOrder?.description || "-"}
           </p>
         </div>
       </Modal>
