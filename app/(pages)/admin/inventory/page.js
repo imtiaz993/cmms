@@ -18,6 +18,7 @@ import { setMaterialTransfer } from "app/redux/slices/saveMaterialTransferData";
 import ConfirmationPopup from "@/components/confirmationPopup";
 import Link from "next/link";
 import { setInventory } from "app/redux/slices/inventoriesSlice";
+import { updateShippingCart } from "app/redux/slices/inventoryShippingCartSlice";
 
 const Inventory = () => {
   const searchParams = useSearchParams();
@@ -101,6 +102,9 @@ const Inventory = () => {
   const [isFiltering, setIsFiltering] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
+  const { inventoryShippingCart } = useSelector(
+    (state) => state.inventoryShippingCart
+  );
 
   const rowSelection = {
     selectedRowKeys,
@@ -151,17 +155,17 @@ const Inventory = () => {
     }
   }, [activeLocation, activeSystem]);
 
-  const saveMaterialTransfer = async (assetsData) => {
-    const matchedInventory = filteredInventory.filter((inventory) =>
-      assetsData.includes(inventory._id)
+  const addToShippingCart = async (inventoryList) => {
+    const matchedAssets = filteredInventory.filter((asset) =>
+      inventoryList.includes(asset._id)
     );
 
-    dispatch(
-      setMaterialTransfer(
-        matchedInventory.map((i) => ({ ...i, selectedQuantity: 1 }))
-      )
-    );
-    router.push("/admin/new/material-transfer?materialType=inventory");
+    // Dispatch updateShippingCart for each matched asset
+    matchedAssets.forEach((asset) => {
+      dispatch(updateShippingCart(asset));
+    });
+    message.success("Assets added to shipping cart");
+    setSelectedRowKeys([]);
   };
 
   const handleDelete = async (id) => {
@@ -188,13 +192,15 @@ const Inventory = () => {
       <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
         <Button
           text={
-            selectedRowKeys.length > 0
-              ? "Shipping Cart (" + selectedRowKeys.length + ")"
+            inventoryShippingCart.length > 0
+              ? "Shipping Cart (" + inventoryShippingCart.length + ")"
               : "Shipping Cart"
           }
           fullWidth={false}
           prefix={<ShoppingCartOutlined />}
-          onClick={() => saveMaterialTransfer(selectedRowKeys)}
+          onClick={() =>
+            router.push("/admin/new/material-transfer?materialType=inventory")
+          }
         />
       </div>
       <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
@@ -213,6 +219,7 @@ const Inventory = () => {
             setSelectedRowKeys={setSelectedRowKeys}
             setSearchText={setSearchText}
             setFilteredInventory={setFilteredInventory}
+            addToShippingCart={addToShippingCart}
             // setInventory={setInventory}
           />
           {/* <div className="flex gap-3 justify-end">

@@ -23,7 +23,6 @@ import {
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import InventoryFilter from "./filtersDropdown";
-import AddMaterialTransferPopup from "../../material-transfer/components/addMaterialTransferPopup";
 import { exportInventory, updateStatus } from "app/services/inventory";
 import CreatePurchaseOrderPopup from "../purchase-order/createPurchaseOrderPopup";
 import ChangeToAssetPopup from "./changeToAssetPopup";
@@ -39,9 +38,8 @@ const ActionBar = ({
   setSelectedRowKeys,
   setSearchText,
   setFilteredInventory,
+  addToShippingCart,
 }) => {
-  const [addMaterialTransferVisible, setAddMaterialTransferVisible] =
-    useState(false);
   const [changeToAssetVisible, setChangeToAssetVisible] = useState(false);
   const [filterDropdown, setFilterDropdown] = useState(null);
   const [actionPopup, setActionPopup] = useState(false);
@@ -136,42 +134,37 @@ const ActionBar = ({
     {
       label: (
         <p>
-          <ShoppingCartOutlined />
-          Add to Shipping Cart
+          <ShoppingCartOutlined /> Add to Shipping Cart
         </p>
       ),
-      value: "shipping_cart",
-    },
-    {
-      label: (
-        <p>
-          <SwapOutlined /> Material Transfer
-        </p>
-      ),
-      value: "materialTransfer",
+      value: "shippingCart",
     },
   ];
   const handleAction = (value) => {
     if (selectedRowKeys.length === 0) setActionError(true);
-    else if (value !== "materialTransfer") setActionPopup(value);
+    else setActionPopup(value);
   };
 
   const handleActionConfirm = async () => {
-    const { status, data } = await updateStatus({
-      inventory: [...selectedRowKeys],
-      status: actionPopup,
-    });
-    if (status === 200) {
-      message.success(data?.message || "Inventory updated successfully");
-      setFilteredInventory((prev) =>
-        prev.map((i) =>
-          selectedRowKeys.includes(i._id)
-            ? { ...i, maintStatus: actionPopup }
-            : i
-        )
-      );
+    if (actionPopup === "shippingCart") {
+      addToShippingCart(selectedRowKeys);
     } else {
-      message.error(data.error);
+      const { status, data } = await updateStatus({
+        inventory: [...selectedRowKeys],
+        status: actionPopup,
+      });
+      if (status === 200) {
+        message.success(data?.message || "Inventory updated successfully");
+        setFilteredInventory((prev) =>
+          prev.map((i) =>
+            selectedRowKeys.includes(i._id)
+              ? { ...i, maintStatus: actionPopup }
+              : i
+          )
+        );
+      } else {
+        message.error(data.error);
+      }
     }
     //  else if (data.error === "Asset is not available") {
     //   selectedRowKeys.length > 1 && selectedRowKeys.map((id) => {
@@ -200,14 +193,14 @@ const ActionBar = ({
         onCancel={() => message.info("Action cancelled")}
         cancelText={"Cancel"}
       />
-      {addMaterialTransferVisible && (
+      {/* {addMaterialTransferVisible && (
         <AddMaterialTransferPopup
           addMaterialTransferVisible={addMaterialTransferVisible}
           setAddMaterialTransferVisible={setAddMaterialTransferVisible}
           selectedRowKeys={selectedRowKeys}
           setSelectedRowKeys={setSelectedRowKeys}
         />
-      )}
+      )} */}
       {changeToAssetVisible && (
         <ChangeToAssetPopup
           addAssetVisible={changeToAssetVisible}

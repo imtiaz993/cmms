@@ -273,7 +273,6 @@ const Assets = () => {
     });
     message.success("Assets added to shipping cart");
     setSelectedRowKeys([]);
-    // router.push("/admin/new/material-transfer?materialType=asset");
   };
 
   const handleDelete = async (id) => {

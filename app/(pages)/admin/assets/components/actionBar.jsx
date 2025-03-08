@@ -138,10 +138,10 @@ const ActionBar = ({
     {
       label: (
         <p>
-          <SwapOutlined /> Material Transfer
+          <SwapOutlined /> Add to Shipping Cart
         </p>
       ),
-      value: "materialTransfer",
+      value: "shippingCart",
     },
   ];
 
@@ -154,7 +154,7 @@ const ActionBar = ({
       let Id = selectedRowsData[0]._id;
 
       router.push(`/admin/new/work-order?Id=${Id}`);
-    } else if (actionPopup === "materialTransfer") {
+    } else if (actionPopup === "shippingCart") {
       addToShippingCart(selectedRowKeys);
     } else {
       const { status, data } = await updateStatus({
@@ -242,8 +242,7 @@ const ActionBar = ({
                 closeDropdown={() => setFilterDropdown(false)}
                 setFilteredAssets={setFilteredAssets}
                 options={actionOptions.filter(
-                  (o) =>
-                    o.value !== "materialTransfer" && o.value !== "workorder"
+                  (o) => o.value !== "shippingCart" && o.value !== "workorder"
                 )}
               />
             )}
