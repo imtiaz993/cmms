@@ -14,7 +14,6 @@ import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { deleteInventory, getFilteredInventory } from "app/services/inventory";
 import { EditPagePencil } from "@/icons/index";
-import { setMaterialTransfer } from "app/redux/slices/saveMaterialTransferData";
 import ConfirmationPopup from "@/components/confirmationPopup";
 import Link from "next/link";
 import { setInventory } from "app/redux/slices/inventoriesSlice";
@@ -156,15 +155,16 @@ const Inventory = () => {
   }, [activeLocation, activeSystem]);
 
   const addToShippingCart = async (inventoryList) => {
-    const matchedAssets = filteredInventory.filter((asset) =>
-      inventoryList.includes(asset._id)
+    const matchedInventory = filteredInventory.filter((i) =>
+      inventoryList.includes(i._id)
     );
 
-    // Dispatch updateShippingCart for each matched asset
-    matchedAssets.forEach((asset) => {
-      dispatch(updateShippingCart(asset));
+    // Dispatch updateShippingCart for each matched inventory
+    matchedInventory.forEach((i) => {
+      dispatch(updateShippingCart({ ...i, selectedQuantity: 1 }));
     });
-    message.success("Assets added to shipping cart");
+
+    message.success("Inventory added to shipping cart");
     setSelectedRowKeys([]);
   };
 

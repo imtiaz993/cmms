@@ -21,7 +21,6 @@ import {
 import Link from "next/link";
 import AssetDetailsPopup from "./components/assetDetailsPoup";
 import Button from "@/components/common/Button";
-import { setMaterialTransfer } from "app/redux/slices/saveMaterialTransferData";
 import { setAssets } from "app/redux/slices/assetsSlice";
 import ConfirmationPopup from "@/components/confirmationPopup";
 import { updateShippingCart } from "app/redux/slices/assetsShippingCartSlice";

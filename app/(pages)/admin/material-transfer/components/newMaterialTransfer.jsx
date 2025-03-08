@@ -11,10 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
 import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
 import * as Yup from "yup";
-import {
-  setMaterialTransfer,
-  updateMaterialTransfer,
-} from "app/redux/slices/saveMaterialTransferData";
+import { setShippingCart as setAssetsShippingCart } from "app/redux/slices/assetsShippingCartSlice";
+import { setShippingCart as setInventoryShippingCart } from "app/redux/slices/inventoryShippingCartSlice";
 import { addMaterialTransfer } from "app/services/materialTransfer";
 
 const NewMaterialTransfer = () => {
@@ -25,9 +23,12 @@ const NewMaterialTransfer = () => {
   const systems = useSelector((state) => state.system.system);
   const [addSitePopup, setAddSitePopup] = useState(false);
   const [addSystemPopup, setAddSystemPopup] = useState(false);
-  const assetsMaterialTransfer = useSelector(
-    (state) => state.materialTransfer?.materialTransfer
+  const assetsMaterialTransfer = useSelector((state) =>
+    materialType === "asset"
+      ? state.assetsShippingCart?.assetsShippingCart
+      : state.inventoryShippingCart?.inventoryShippingCart
   );
+  console.log(" assetsMaterialTransfer", assetsMaterialTransfer);
 
   const columns = [
     {
@@ -62,6 +63,7 @@ const NewMaterialTransfer = () => {
                 <Button
                   text="-"
                   onClick={() => {
+                    console.log("updatedData", updatedData);
                     if (record.selectedQuantity > 1) {
                       const updatedData = assetsMaterialTransfer.map((item) =>
                         item._id == record._id
@@ -71,7 +73,7 @@ const NewMaterialTransfer = () => {
                             }
                           : item
                       );
-                      dispatch(setMaterialTransfer(updatedData));
+                      dispatch(setInventoryShippingCart(updatedData));
                     }
                   }}
                   className="!text-black"
@@ -96,7 +98,7 @@ const NewMaterialTransfer = () => {
                             }
                           : item
                       );
-                      dispatch(setMaterialTransfer(updatedData));
+                      dispatch(setInventoryShippingCart(updatedData));
                     }
                   }}
                   className="!text-black"
@@ -122,7 +124,11 @@ const NewMaterialTransfer = () => {
             const updatedData = assetsMaterialTransfer.filter(
               (item) => item._id !== record._id
             );
-            dispatch(setMaterialTransfer(updatedData));
+            if (materialType === "inventory") {
+              dispatch(setInventoryShippingCart(updatedData));
+            } else {
+              dispatch(setAssetsShippingCart(updatedData));
+            }
           }}
         />
       ),
