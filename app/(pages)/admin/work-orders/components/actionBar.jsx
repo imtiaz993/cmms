@@ -82,6 +82,7 @@ const ActionBar = ({
     );
     if (status === 200) {
       message.success("Export initiated");
+      window.open(data.data);
     } else {
       message.error(data.error || "Failed to export data");
     }

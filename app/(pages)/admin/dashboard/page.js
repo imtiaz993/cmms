@@ -230,6 +230,7 @@ const Dashboard = () => {
                 schedule={schedule}
                 setLoadingSchedule={setLoadingSchedule}
                 getSchedule={getSchedule}
+                setSchedule={setSchedule}
               />
             </Spin>
           </Card>
