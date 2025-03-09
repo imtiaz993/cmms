@@ -10,6 +10,7 @@ import {
   EditOutlined,
   ExclamationCircleFilled,
   LeftOutlined,
+  ShoppingCartOutlined,
   SwapOutlined,
   ToolOutlined,
   TruckOutlined,
@@ -23,6 +24,8 @@ import ConfirmationPopup from "@/components/confirmationPopup";
 import { LinkBroken } from "@/icons/index";
 import { getAdminsManagers } from "app/services/common";
 import { getInventoryDetails } from "app/services/inventory";
+import { useDispatch, useSelector } from "react-redux";
+import { updateShippingCart } from "app/redux/slices/inventoryShippingCartSlice";
 
 const InventoryDetails = () => {
   const [data, setData] = useState();
@@ -31,6 +34,10 @@ const InventoryDetails = () => {
   const router = useRouter();
   const { slug } = useParams();
   const [superUsers, setSuperUsers] = useState([]);
+  const dispatch = useDispatch();
+  const { inventoryShippingCart } = useSelector(
+    (state) => state.inventoryShippingCart
+  );
 
   useEffect(() => {
     const getAsset = async () => {
@@ -115,28 +122,37 @@ const InventoryDetails = () => {
     {
       label: (
         <p>
-          <SwapOutlined /> Material Transfer
+          <SwapOutlined /> Add to Shipping Cart
         </p>
       ),
-      value: "materialTransfer",
+      value: "addToShippingCart",
     },
   ];
 
+  const addToShippingCart = async () => {
+    dispatch(updateShippingCart({ ...details, selectedQuantity: 1 }));
+    message.success("Inventory added to shipping cart");
+  };
+
   const handleAction = (value) => {
-    if (value !== "materialTransfer") setActionPopup(value);
+    setActionPopup(value);
   };
 
   const handleActionConfirm = async () => {
-    const { status, data } = await updateStatus({
-      assets: [slug],
-      status: actionPopup,
-    });
-    if (status === 200) {
-      message.success(data?.message || "Asset updated successfully");
-      setData((prev) => ({
-        ...prev,
-        dashboard: { ...prev.dashboard, maintStatus: actionPopup },
-      }));
+    if (actionPopup === "addToShippingCart") {
+      addToShippingCart();
+    } else {
+      const { status, data } = await updateStatus({
+        assets: [slug],
+        status: actionPopup,
+      });
+      if (status === 200) {
+        message.success(data?.message || "Asset updated successfully");
+        setData((prev) => ({
+          ...prev,
+          dashboard: { ...prev.dashboard, maintStatus: actionPopup },
+        }));
+      }
     }
   };
 
@@ -161,6 +177,20 @@ const InventoryDetails = () => {
           fullWidth={false}
           prefix={<LeftOutlined />}
         />
+        <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
+          <Button
+            text={
+              inventoryShippingCart.length > 0
+                ? "Shipping Cart (" + inventoryShippingCart.length + ")"
+                : "Shipping Cart"
+            }
+            fullWidth={false}
+            prefix={<ShoppingCartOutlined />}
+            onClick={() =>
+              router.push("/admin/new/material-transfer?materialType=inventory")
+            }
+          />
+        </div>
         <div className="bg-primary rounded-lg p-3 md:p-5 mt-5 shadow-custom">
           <div className="md:flex justify-between gap-5 mb-5">
             <p className="hidden md:block text-left text-lg md:text-2xl font-semibold">

@@ -3,8 +3,6 @@
 import Button from "@/components/common/Button";
 import Tabs from "./components/tabs";
 import {
-  ArrowDownOutlined,
-  ArrowLeftOutlined,
   CheckCircleOutlined,
   DeleteOutlined,
   DollarOutlined,
@@ -12,35 +10,35 @@ import {
   EditOutlined,
   ExclamationCircleFilled,
   LeftOutlined,
-  PlusOutlined,
+  ShoppingCartOutlined,
   SwapOutlined,
   ToolOutlined,
   TruckOutlined,
-  WarningFilled,
   WarningOutlined,
 } from "@ant-design/icons";
 import { message, Select, Spin } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  deleteAsset,
-  getAssetDetails,
-  updateStatus,
-} from "app/services/assets";
+import { getAssetDetails, updateStatus } from "app/services/assets";
 import CreateAssetPopup from "../components/createAssetPopup";
 import ConfirmationPopup from "@/components/confirmationPopup";
 import { LinkBroken } from "@/icons/index";
 import { getAdminsManagers } from "app/services/common";
+import { useDispatch, useSelector } from "react-redux";
+import { updateShippingCart } from "app/redux/slices/assetsShippingCartSlice";
 
 const AssetDetail = () => {
   const [data, setData] = useState();
   const [details, setDetails] = useState();
   const [editAssetPopup, setEditAssetPopup] = useState(false);
-  const [deleteAssetPopup, setDeleteAssetPopup] = useState(false);
   const [actionPopup, setActionPopup] = useState(false);
   const router = useRouter();
   const { slug } = useParams();
   const [superUsers, setSuperUsers] = useState([]);
+  const dispatch = useDispatch();
+  const { assetsShippingCart } = useSelector(
+    (state) => state.assetsShippingCart
+  );
 
   useEffect(() => {
     const getAsset = async () => {
@@ -135,31 +133,40 @@ const AssetDetail = () => {
     {
       label: (
         <p>
-          <SwapOutlined /> Material Transfer
+          <SwapOutlined /> Add to shipping cart
         </p>
       ),
-      value: "materialTransfer",
+      value: "addToShippingCart",
     },
   ];
 
+  const addToShippingCart = async () => {
+    dispatch(updateShippingCart(details));
+    message.success("Asset added to shipping cart");
+  };
+
   const handleAction = (value) => {
-    if (value !== "materialTransfer") setActionPopup(value);
+    setActionPopup(value);
   };
 
   const handleActionConfirm = async () => {
-    const { status, data } = await updateStatus({
-      assets: [slug],
-      status: actionPopup,
-    });
-    if (status === 200) {
-      message.success(data?.message || "Asset updated successfully");
-      setData((prev) => ({
-        ...prev,
-        dashboard: { ...prev.dashboard, maintStatus: actionPopup },
-      }));
-      setDetails((prev) => ({ ...prev, maintStatus: actionPopup }));
+    if (actionPopup === "addToShippingCart") {
+      addToShippingCart();
     } else {
-      message.error(data.error);
+      const { status, data } = await updateStatus({
+        assets: [slug],
+        status: actionPopup,
+      });
+      if (status === 200) {
+        message.success(data?.message || "Asset updated successfully");
+        setData((prev) => ({
+          ...prev,
+          dashboard: { ...prev.dashboard, maintStatus: actionPopup },
+        }));
+        setDetails((prev) => ({ ...prev, maintStatus: actionPopup }));
+      } else {
+        message.error(data.error);
+      }
     }
   };
 
@@ -201,6 +208,20 @@ const AssetDetail = () => {
               fullWidth={false}
               prefix={<LeftOutlined />}
             />
+            <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
+              <Button
+                text={
+                  assetsShippingCart.length > 0
+                    ? "Shipping Cart (" + assetsShippingCart.length + ")"
+                    : "Shipping Cart"
+                }
+                fullWidth={false}
+                prefix={<ShoppingCartOutlined />}
+                onClick={() =>
+                  router.push("/admin/new/material-transfer?materialType=asset")
+                }
+              />
+            </div>
             <div className="bg-primary rounded-lg p-3 md:p-5 mt-5 shadow-custom">
               <div className="md:flex justify-between gap-5 mb-5">
                 <p className="hidden md:block text-left text-lg md:text-2xl font-semibold">
