@@ -334,9 +334,10 @@ const WorkOrderForm = () => {
                     rowKey="_id"
                     dataSource={assetDetails}
                     style={{ marginTop: 5 }}
+                    pagination={false}
                   />
                 </div>
-                <div className="grid md:grid-cols-2 gap-4 md:gap-8">
+                <div className="grid md:grid-cols-2 gap-4 md:gap-8 mt-5">
                   <p className="md:col-span-2 font-semibold md:text-lg">
                     Work Order Details
                   </p>

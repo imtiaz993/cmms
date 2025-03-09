@@ -3,6 +3,7 @@
 import Button from "@/components/common/Button";
 import Tabs from "./components/tabs";
 import {
+  AppstoreOutlined,
   CheckCircleOutlined,
   DeleteOutlined,
   DollarOutlined,
@@ -66,10 +67,10 @@ const InventoryDetails = () => {
     {
       label: (
         <p>
-          <ToolOutlined /> New Work Order
+          <AppstoreOutlined /> Assign to Asset
         </p>
       ),
-      value: "workorder",
+      value: "assignToAsset",
     },
     {
       label: (
@@ -77,7 +78,7 @@ const InventoryDetails = () => {
           <ExclamationCircleFilled /> Damaged beyond repair
         </p>
       ),
-      value: "damaged",
+      value: "damagedBeyondRepair",
     },
     {
       label: (
@@ -85,7 +86,7 @@ const InventoryDetails = () => {
           <LinkBroken /> Broken
         </p>
       ),
-      value: "repair",
+      value: "broken",
     },
     {
       label: (
@@ -111,21 +112,21 @@ const InventoryDetails = () => {
       ),
       value: "sell",
     },
+    // {
+    //   label: (
+    //     <p>
+    //       <CheckCircleOutlined /> Active
+    //     </p>
+    //   ),
+    //   value: "active",
+    // },
     {
       label: (
         <p>
-          <CheckCircleOutlined /> Active
+          <ShoppingCartOutlined /> Add to Shipping Cart
         </p>
       ),
-      value: "active",
-    },
-    {
-      label: (
-        <p>
-          <SwapOutlined /> Add to Shipping Cart
-        </p>
-      ),
-      value: "addToShippingCart",
+      value: "shippingCart",
     },
   ];
 
@@ -139,7 +140,7 @@ const InventoryDetails = () => {
   };
 
   const handleActionConfirm = async () => {
-    if (actionPopup === "addToShippingCart") {
+    if (actionPopup === "shippingCart") {
       addToShippingCart();
     } else {
       const { status, data } = await updateStatus({

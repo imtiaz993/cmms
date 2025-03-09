@@ -136,7 +136,7 @@ const AssetDetail = () => {
           <SwapOutlined /> Add to shipping cart
         </p>
       ),
-      value: "addToShippingCart",
+      value: "shippingCart",
     },
   ];
 
@@ -150,7 +150,9 @@ const AssetDetail = () => {
   };
 
   const handleActionConfirm = async () => {
-    if (actionPopup === "addToShippingCart") {
+    if (actionPopup === "workorder") {
+      router.push(`/admin/new/work-order?Id=${slug}`);
+    } else if (actionPopup === "shippingCart") {
       addToShippingCart();
     } else {
       const { status, data } = await updateStatus({

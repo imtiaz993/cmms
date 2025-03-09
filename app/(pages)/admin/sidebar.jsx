@@ -18,6 +18,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
   const pathname = usePathname();
   const currentPage = pathname.split("/")[2] || "dashboard";
   const slashNewPages = pathname.split("/")[3];
+  console.log("slashNewPages", slashNewPages);
 
   const items = [
     {
@@ -84,7 +85,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
                     ? "assets"
                     : slashNewPages === "work-order"
                     ? "work-orders"
-                    : "",
+                    : slashNewPages,
                 ]
           }
           onClick={onClick}
@@ -105,7 +106,18 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
         <div className="select-none">
           <Menu
             mode="inline"
-            defaultSelectedKeys={[currentPage || "dashboard"]}
+            defaultSelectedKeys={[currentPage]}
+            selectedKeys={
+              currentPage !== "new"
+                ? [currentPage || "dashboard"]
+                : [
+                    slashNewPages === "asset"
+                      ? "assets"
+                      : slashNewPages === "work-order"
+                      ? "work-orders"
+                      : slashNewPages,
+                  ]
+            }
             onClick={onClick}
             items={items}
             style={{ border: "none" }}
