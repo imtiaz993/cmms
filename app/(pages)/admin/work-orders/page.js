@@ -209,21 +209,35 @@ const WorkOrders = () => {
   useEffect(() => {
     setCheckedList(columns.map((item) => item.key));
     setSelectedRowKeys([]);
+
+    let isMounted = true; // Flag to track if the effect is still active
+
     const fetchFilteredWorkOrders = async () => {
       setFetchingWorkOrders(true);
+      const currentTabLower = currentTab.toLowerCase(); // Capture current tab at the time of fetch
       const { status, data } = await getFilteredWorkOrders(
         { site: activeLocation ?? "", system: activeSystem ?? "" },
-        currentTab.toLowerCase(),
+        currentTabLower,
         WOStatus
       );
-      if (status === 200) {
-        setWorkOrders(data.data);
-      } else {
-        message.error(data?.message || "Failed to fetch filtered workorders");
+
+      // Only update state if the component is still mounted and the tab hasn't changed
+      if (isMounted && currentTab.toLowerCase() === currentTabLower) {
+        if (status === 200) {
+          setWorkOrders(data.data);
+        } else {
+          message.error(data?.message || "Failed to fetch filtered workorders");
+        }
       }
       setFetchingWorkOrders(false);
     };
+
     fetchFilteredWorkOrders();
+
+    // Cleanup function to prevent updates after unmount or tab change
+    return () => {
+      isMounted = false;
+    };
   }, [activeLocation, activeSystem, currentTab]);
 
   const tabs = [
