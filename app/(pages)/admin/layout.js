@@ -51,6 +51,7 @@ import {
   setSystemLoading,
 } from "app/redux/slices/systemsSlice";
 import { getSystems } from "app/services/setUp/systems";
+import FcmTokenComp from "app/firebaseForeground";
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -202,6 +203,7 @@ export default function Layout({ children }) {
         algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
       }}
     >
+      <FcmTokenComp />
       <div>
         <Appbar
           setOpenSidebar={setOpenSidebar}
