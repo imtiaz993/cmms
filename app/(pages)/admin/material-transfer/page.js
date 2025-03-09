@@ -2,17 +2,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./components/actionBar";
-import { EyeFilled, EyeOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import { useRouter, useSearchParams } from "next/navigation";
 import PreviewPopup from "@/components/previewPopup";
 import {
   getFilteredMT,
   getMaterialTransferData,
 } from "app/services/materialTransfer";
-import AddMaterialTransferPopup from "./components/addMaterialTransferPopup";
-import { rigs } from "@/constants/rigsAndSystems";
-import Link from "next/link";
-import { EditPagePencil } from "@/icons/index";
 import { getAdminsManagers } from "app/services/common";
 
 const MaterialTransfer = () => {
@@ -131,7 +127,7 @@ const MaterialTransfer = () => {
         setFetchingData(true);
         try {
           const { status, data } = await getFilteredMT({
-            location: activeLocation ? activeLocation : null,
+            site: activeLocation ? activeLocation : null,
             system: activeSystem ? activeSystem : null,
           });
 

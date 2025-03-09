@@ -76,9 +76,11 @@ const PlannedPreviewPopup = ({ visible, setVisible, workOrder }) => {
           <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0">
             Asset #
           </p>
-          <p className="p-2 md:px-3 md:py-2 border">
-            {workOrder?.asset.assetID || "-"}
-          </p>
+          <Link href={`/admin/assets/${workOrder?.asset._id}`}>
+            <p className="p-2 md:px-3 md:py-2 border text-inherit">
+              {workOrder?.asset.assetID || "-"}
+            </p>
+          </Link>
           {/* <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0">
             Category
           </p>
