@@ -174,6 +174,7 @@ const AssetForm = () => {
     brand: Yup.string().required("Brand is required"),
     model: Yup.string().required("Model is required"),
     serialNumber: Yup.string().required("Serial number is required"),
+    cost: Yup.number().required("Cost is required"),
     maintCategory: Yup.string().required("Maintenance category is required"),
     startDate: Yup.date().required("Start date is required"),
     dueDate: Yup.date().required("Completion date is required"),
@@ -367,6 +368,7 @@ const AssetForm = () => {
             brand: details?.dashboard?.brand || "",
             model: details?.dashboard?.model || "",
             serialNumber: details?.dashboard?.serialNumber || "",
+            cost: details?.dashboard?.cost || "",
             maintCategory: details?.dashboard?.maintCategory || "",
             startDate: details?.dashboard?.startDate || "",
             dueDate: details?.dashboard?.dueDate || "",
@@ -507,6 +509,12 @@ const AssetForm = () => {
                   name="serialNumber"
                   placeholder="Serial #"
                   label="Serial #"
+                />
+                <InputField
+                  name="cost"
+                  type="number"
+                  placeholder="0.00"
+                  label="Cost"
                 />
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Asset Maintenance

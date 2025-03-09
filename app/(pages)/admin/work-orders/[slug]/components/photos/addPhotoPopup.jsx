@@ -26,7 +26,7 @@ const AddPhotoPopup = ({ visible, setVisible, setData }) => {
       message.success(data.message);
       setData((prev) => ({
         ...prev,
-        workOrderImages: data.data.image,
+        workOrderImages: data.data.workOrderImages,
       }));
       setFiles([]);
       setVisible(false);

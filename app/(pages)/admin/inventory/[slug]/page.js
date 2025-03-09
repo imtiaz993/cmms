@@ -257,6 +257,15 @@ const InventoryDetails = () => {
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
                 {details?.quantity || "-"}
               </p>
+
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
+                Cost
+              </p>
+
+              <p className="p-2 md:px-3 md:py-2 border border-b-0">
+                {details?.cost || "-"}
+              </p>
+
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border">
                 Description
               </p>
@@ -290,6 +299,12 @@ const InventoryDetails = () => {
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
                 {details?.tagId || "-"}
+              </p>
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
+                Invoice #
+              </p>
+              <p className="p-2 md:px-3 md:py-2 border border-b-0">
+                {details?.invoiceNumber || "-"}
               </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border">
                 Status

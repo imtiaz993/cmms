@@ -215,6 +215,8 @@ export default function Layout({ children }) {
             params={`?location=${activeLocation || ""}&system=${
               activeSystem || ""
             }`}
+            site={locations.find((i) => i._id === activeLocation)?.site}
+            system={systems.find((i) => i._id === activeSystem)?.system}
           />
           <div className="w-full lg:w-[calc(100%-251px)]">
             {!["new", "profile", "change-password"].includes(currentPage) &&

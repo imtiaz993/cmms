@@ -13,7 +13,7 @@ import {
 } from "@ant-design/icons";
 import { getUser } from "@/utils/index";
 
-const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
+const Sidebar = ({ openSidebar, setOpenSidebar, params, site, system }) => {
   const router = useRouter();
   const pathname = usePathname();
   const currentPage = pathname.split("/")[2] || "dashboard";
@@ -71,8 +71,9 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
   return (
     <div className="rounded-tr-xl bg-primary overflow-hidden shadow-custom">
       <div className=" max-h-[calc(100dvh-16px-60px-16px)] min-h-[calc(100dvh-16px-60px-16px)] overflow-auto hidden lg:block lg:w-[250px] p-5 pt-7 select-none">
-        <div className="mx-1 py-2 text-center bg-[#0F0E13] text-[#efbf60] rounded text-2xl font-medium">
-          YARDHOUSE
+        <div className="mx-1 p-2 bg-[#0F0E13] rounded text-lg font-medium">
+          <p className="text-[#efbf60]">Site: {site ?? "All"} </p>
+          <p className="text-[#efbf60]">System: {system ?? "All"}</p>
         </div>
         <Menu
           mode="inline"
