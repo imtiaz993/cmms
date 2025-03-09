@@ -51,7 +51,12 @@ const initialValues = {
   tier6: "",
 };
 
-const AssetSummaryPopup = ({ visible, setVisible, categories }) => {
+const AssetSummaryPopup = ({
+  visible,
+  setVisible,
+  categories,
+  isInventory,
+}) => {
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
   // Form submission handler
@@ -59,8 +64,8 @@ const AssetSummaryPopup = ({ visible, setVisible, categories }) => {
     setSubmitting(true);
     const { status, data } = await generateReport(
       values,
-      "Asset Summary Report",
-      "asset"
+      isInventory ? "Inventory Summary Report" : "Asset Summary Report",
+      isInventory ? "inventory" : "asset"
     );
     if (status === 200) {
       window.open(data.data);
@@ -105,7 +110,11 @@ const AssetSummaryPopup = ({ visible, setVisible, categories }) => {
                   />
                 </div>
               }
-              title="Generate Asset Summary Report"
+              title={
+                isInventory
+                  ? "Generate Inventory Summary Report"
+                  : "Generate Asset Summary Report"
+              }
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
