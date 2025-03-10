@@ -3,6 +3,7 @@
 import Button from "@/components/common/Button";
 import Tabs from "./components/tabs";
 import {
+  AppstoreOutlined,
   CheckCircleOutlined,
   DeleteOutlined,
   DollarOutlined,
@@ -10,7 +11,7 @@ import {
   EditOutlined,
   ExclamationCircleFilled,
   LeftOutlined,
-  PrinterOutlined,
+  ShoppingCartOutlined,
   SwapOutlined,
   ToolOutlined,
   TruckOutlined,
@@ -24,6 +25,8 @@ import ConfirmationPopup from "@/components/confirmationPopup";
 import { LinkBroken } from "@/icons/index";
 import { getAdminsManagers } from "app/services/common";
 import { getInventoryDetails } from "app/services/inventory";
+import { useDispatch, useSelector } from "react-redux";
+import { updateShippingCart } from "app/redux/slices/inventoryShippingCartSlice";
 
 const InventoryDetails = () => {
   const [data, setData] = useState();
@@ -32,6 +35,10 @@ const InventoryDetails = () => {
   const router = useRouter();
   const { slug } = useParams();
   const [superUsers, setSuperUsers] = useState([]);
+  const dispatch = useDispatch();
+  const { inventoryShippingCart } = useSelector(
+    (state) => state.inventoryShippingCart
+  );
 
   useEffect(() => {
     const getAsset = async () => {
@@ -60,10 +67,10 @@ const InventoryDetails = () => {
     {
       label: (
         <p>
-          <ToolOutlined /> New Work Order
+          <AppstoreOutlined /> Assign to Asset
         </p>
       ),
-      value: "workorder",
+      value: "assignToAsset",
     },
     {
       label: (
@@ -71,7 +78,7 @@ const InventoryDetails = () => {
           <ExclamationCircleFilled /> Damaged beyond repair
         </p>
       ),
-      value: "damaged",
+      value: "damagedBeyondRepair",
     },
     {
       label: (
@@ -79,7 +86,7 @@ const InventoryDetails = () => {
           <LinkBroken /> Broken
         </p>
       ),
-      value: "repair",
+      value: "broken",
     },
     {
       label: (
@@ -105,39 +112,48 @@ const InventoryDetails = () => {
       ),
       value: "sell",
     },
+    // {
+    //   label: (
+    //     <p>
+    //       <CheckCircleOutlined /> Active
+    //     </p>
+    //   ),
+    //   value: "active",
+    // },
     {
       label: (
         <p>
-          <CheckCircleOutlined /> Active
+          <ShoppingCartOutlined /> Add to Shipping Cart
         </p>
       ),
-      value: "active",
-    },
-    {
-      label: (
-        <p>
-          <SwapOutlined /> Material Transfer
-        </p>
-      ),
-      value: "materialTransfer",
+      value: "shippingCart",
     },
   ];
 
+  const addToShippingCart = async () => {
+    dispatch(updateShippingCart({ ...details, selectedQuantity: 1 }));
+    message.success("Inventory added to shipping cart");
+  };
+
   const handleAction = (value) => {
-    if (value !== "materialTransfer") setActionPopup(value);
+    setActionPopup(value);
   };
 
   const handleActionConfirm = async () => {
-    const { status, data } = await updateStatus({
-      assets: [slug],
-      status: actionPopup,
-    });
-    if (status === 200) {
-      message.success(data?.message || "Asset updated successfully");
-      setData((prev) => ({
-        ...prev,
-        dashboard: { ...prev.dashboard, maintStatus: actionPopup },
-      }));
+    if (actionPopup === "shippingCart") {
+      addToShippingCart();
+    } else {
+      const { status, data } = await updateStatus({
+        assets: [slug],
+        status: actionPopup,
+      });
+      if (status === 200) {
+        message.success(data?.message || "Asset updated successfully");
+        setData((prev) => ({
+          ...prev,
+          dashboard: { ...prev.dashboard, maintStatus: actionPopup },
+        }));
+      }
     }
   };
 
@@ -162,6 +178,20 @@ const InventoryDetails = () => {
           fullWidth={false}
           prefix={<LeftOutlined />}
         />
+        <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
+          <Button
+            text={
+              inventoryShippingCart.length > 0
+                ? "Shipping Cart (" + inventoryShippingCart.length + ")"
+                : "Shipping Cart"
+            }
+            fullWidth={false}
+            prefix={<ShoppingCartOutlined />}
+            onClick={() =>
+              router.push("/admin/new/material-transfer?materialType=inventory")
+            }
+          />
+        </div>
         <div className="bg-primary rounded-lg p-3 md:p-5 mt-5 shadow-custom">
           <div className="md:flex justify-between gap-5 mb-5">
             <p className="hidden md:block text-left text-lg md:text-2xl font-semibold">
@@ -180,14 +210,6 @@ const InventoryDetails = () => {
               onClick={() => setDeleteAssetPopup(true)}
               outlined
             /> */}
-              <Button
-                text="Print"
-                prefix={<PrinterOutlined />}
-                fullWidth={false}
-                className="!h-11"
-                // onClick={}
-                outlined
-              />
               <Button
                 text="Edit Inventory"
                 prefix={<EditOutlined />}
@@ -235,6 +257,15 @@ const InventoryDetails = () => {
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
                 {details?.quantity || "-"}
               </p>
+
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
+                Cost
+              </p>
+
+              <p className="p-2 md:px-3 md:py-2 border border-b-0">
+                {details?.cost || "-"}
+              </p>
+
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border">
                 Description
               </p>
@@ -268,6 +299,12 @@ const InventoryDetails = () => {
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
                 {details?.tagId || "-"}
+              </p>
+              <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
+                Invoice #
+              </p>
+              <p className="p-2 md:px-3 md:py-2 border border-b-0">
+                {details?.invoiceNumber || "-"}
               </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border">
                 Status

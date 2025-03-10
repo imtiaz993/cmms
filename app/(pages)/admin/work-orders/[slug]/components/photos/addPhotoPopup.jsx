@@ -1,9 +1,9 @@
 import { Modal, Upload, message } from "antd";
 import Button from "@/components/common/Button";
-import { addImage } from "app/services/inventory";
 import { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import { useParams } from "next/navigation";
+import { addImage } from "app/services/workOrders";
 
 const AddPhotoPopup = ({ visible, setVisible, setData }) => {
   const [files, setFiles] = useState([]);
@@ -14,27 +14,24 @@ const AddPhotoPopup = ({ visible, setVisible, setData }) => {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     const formData = new FormData();
-    formData.append("inventory", slug);
+    formData.append("workOrder", slug);
     // formData.append("assetImages", files[0]);
 
     for (let i = 0; i < files.length; i++) {
       formData.append("image", files[i].originFileObj);
     }
 
-    // const { status, data } = await addImage(formData);
-    if (false) {
+    const { status, data } = await addImage(formData);
+    if (status === 200) {
       message.success(data.message);
       setData((prev) => ({
         ...prev,
-        dashboard: {
-          ...prev.dashboard,
-          image: data.data.image,
-        },
+        workOrderImages: data.data.workOrderImages,
       }));
       setFiles([]);
       setVisible(false);
     } else {
-      message.error(data?.error || "Failed to add photo");
+      // message.error(data?.error || "Failed to add photo");
     }
     setIsSubmitting(false);
   };

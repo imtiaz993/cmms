@@ -1,25 +1,35 @@
 "use client";
-import { Badge, Calendar } from "antd";
-import { useState } from "react";
+import { Badge, Calendar, Spin } from "antd";
+import { useState, useRef } from "react";
 import DailyBatchPopup from "./scheduleComponents/dailyBatchPopup";
-import dayjs from "dayjs";
 
-const Schedule = ({ schedule, loadingSchedule }) => {
+const Schedule = ({ schedule, setLoadingSchedule, getSchedule }) => {
   const [selectedDate, setSelectedDate] = useState("");
+  const [loading, setLoading] = useState(false); // Add loading state
+  const calendarRef = useRef(null);
 
   const getScheduleData = (date) => {
-    const scheduleItem = schedule.find(
-      (item) =>
-        dayjs(item.date).format("YYYY-MM-DD") === date.format("YYYY-MM-DD")
-    );
-    return scheduleItem ? scheduleItem.data : null;
+    const dateString = date.format("YYYY-MM-DD");
+    return schedule?.dailyCounts[dateString] || null;
+  };
+
+  const handleSelect = (date, { source }) => {
+    if (source === "date") {
+      const dateString = date.format("YYYY-MM-DD");
+      setSelectedDate(dateString);
+    }
+  };
+
+  const handlePanelChange = async (date) => {
+    setLoading(true); // Start loading
+    await getSchedule(date.format("YYYY-MM-DD")); // Assuming getSchedule is async
+    setLoading(false); // Stop loading
+    console.log("Panel changed:", date);
   };
 
   const cellRender = (current, info) => {
     if (info.type === "date") {
       const data = getScheduleData(current);
-
-      // Log only when data is found
       if (data) {
         return (
           <div className="m-0 p-0">
@@ -47,7 +57,6 @@ const Schedule = ({ schedule, loadingSchedule }) => {
         );
       }
     }
-
     return info.originNode;
   };
 
@@ -57,14 +66,19 @@ const Schedule = ({ schedule, loadingSchedule }) => {
         <DailyBatchPopup
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
+          data={schedule?.dailyCounts[selectedDate] || null}
+          getSchedule={getSchedule}
         />
       )}
-      <Calendar
-        cellRender={cellRender}
-        onSelect={(date) => setSelectedDate(date.format("YYYY-MM-DD"))}
-        className="[&_.ant-picker-content]:!min-w-[800px] overflow-auto" 
-        // headerRender={() => <h2>January 2025</h2>}
-      />
+      <Spin spinning={loading}>
+        <Calendar
+          ref={calendarRef}
+          cellRender={cellRender}
+          onSelect={handleSelect}
+          onPanelChange={handlePanelChange}
+          className="[&_.ant-picker-content]:!min-w-[800px] overflow-auto"
+        />
+      </Spin>
     </div>
   );
 };

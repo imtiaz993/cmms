@@ -21,9 +21,9 @@ import {
 import Link from "next/link";
 import AssetDetailsPopup from "./components/assetDetailsPoup";
 import Button from "@/components/common/Button";
-import { setMaterialTransfer } from "app/redux/slices/saveMaterialTransferData";
 import { setAssets } from "app/redux/slices/assetsSlice";
 import ConfirmationPopup from "@/components/confirmationPopup";
+import { updateShippingCart } from "app/redux/slices/assetsShippingCartSlice";
 
 // Common column structure
 // const baseColumns = [
@@ -56,12 +56,17 @@ const Assets = () => {
   const [searchText, setSearchText] = useState(""); // State for search text
   const router = useRouter();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [selectedRowsData, setselectedRowsData] = useState([])
+  const [selectedRowsData, setselectedRowsData] = useState([]);
   const [filteredAssets, setFilteredAssets] = useState([]);
   const [isFiltering, setIsFiltering] = useState(false);
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const dispatch = useDispatch();
+  const { assetsShippingCart } = useSelector(
+    (state) => state.assetsShippingCart
+  );
+
+  console.log("assetsShippingCart", assetsShippingCart);
 
   // Filter columns dynamically based on checkedList
   const mainColumns = [
@@ -175,7 +180,7 @@ const Assets = () => {
   const rowSelection = {
     selectedRowKeys,
     onChange: (keys, rows) => {
-      setselectedRowsData(rows)
+      setselectedRowsData(rows);
       setSelectedRowKeys(keys);
     },
   };
@@ -206,17 +211,17 @@ const Assets = () => {
       size="small"
       rowKey="_id"
       rowSelection={rowSelection}
-    // expandable={{
-    //   expandedRowRender: (parentRecord) => (
-    //     <Table
-    //       columns={childColumns}
-    //       dataSource={[parentRecord]} // Single child data for further nesting
-    //       pagination={false}
-    //       size="small"
-    //       rowKey="key"
-    //     />
-    //   ),
-    // }}
+      // expandable={{
+      //   expandedRowRender: (parentRecord) => (
+      //     <Table
+      //       columns={childColumns}
+      //       dataSource={[parentRecord]} // Single child data for further nesting
+      //       pagination={false}
+      //       size="small"
+      //       rowKey="key"
+      //     />
+      //   ),
+      // }}
     />
   );
 
@@ -256,13 +261,17 @@ const Assets = () => {
     }
   }, [activeLocation, activeSystem]);
 
-  const saveMaterialTransfer = async (assetsData) => {
+  const addToShippingCart = async (assetsData) => {
     const matchedAssets = filteredAssets.filter((asset) =>
       assetsData.includes(asset._id)
     );
 
-    dispatch(setMaterialTransfer(matchedAssets));
-    router.push("/admin/new/material-transfer?materialType=asset");
+    // Dispatch updateShippingCart for each matched asset
+    matchedAssets.forEach((asset) => {
+      dispatch(updateShippingCart(asset));
+    });
+    message.success("Assets added to shipping cart");
+    setSelectedRowKeys([]);
   };
 
   const handleDelete = async (id) => {
@@ -289,15 +298,15 @@ const Assets = () => {
       <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
         <Button
           text={
-            selectedRowKeys.length > 0
-              ? "Shipping Cart (" + selectedRowKeys.length + ")"
+            assetsShippingCart.length > 0
+              ? "Shipping Cart (" + assetsShippingCart.length + ")"
               : "Shipping Cart"
           }
           fullWidth={false}
           prefix={<ShoppingCartOutlined />}
-          onClick={() => {
-            saveMaterialTransfer(selectedRowKeys);
-          }}
+          onClick={() =>
+            router.push("/admin/new/material-transfer?materialType=asset")
+          }
         />
       </div>
       <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
@@ -315,7 +324,7 @@ const Assets = () => {
           setFilteredAssets={setFilteredAssets}
           selectedRowKeys={selectedRowKeys}
           selectedRowsData={selectedRowsData}
-
+          addToShippingCart={addToShippingCart}
         />
         {console.log("displayedAssets", filteredAssets, displayedAssets)}
         <Table
@@ -335,12 +344,12 @@ const Assets = () => {
             className: "custom-pagination",
           }}
           style={{ marginTop: 16 }}
-        // rowKey="key"
-        // expandable={{
-        //   expandedRowRender,
-        //   expandedRowKeys,
-        //   onExpand: handleRowExpand,
-        // }}
+          // rowKey="key"
+          // expandable={{
+          //   expandedRowRender,
+          //   expandedRowKeys,
+          //   onExpand: handleRowExpand,
+          // }}
         />
       </div>
     </>

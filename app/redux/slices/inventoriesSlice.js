@@ -18,6 +18,15 @@ const inventoriesSlice = createSlice({
     updateInventory(state, action) {
       state.inventory.push(action.payload);
     },
+    editInventory(state, action) {
+      const updatedInventory = action.payload;
+      state.inventory = state.inventory.map((inventory) => {
+        if (inventory._id === updatedInventory._id) {
+          return updatedInventory;
+        }
+        return inventory;
+      });
+    },
     // Action to set the loading state
     setInventoryLoading(state, action) {
       state.isLoading = action.payload;
@@ -33,6 +42,7 @@ const inventoriesSlice = createSlice({
 export const {
   setInventory,
   updateInventory,
+  editInventory,
   setInventoryLoading,
   setInventoryError,
 } = inventoriesSlice.actions;

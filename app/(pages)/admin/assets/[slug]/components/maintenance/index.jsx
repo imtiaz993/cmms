@@ -2,11 +2,25 @@
 import { useEffect, useState } from "react";
 import { message, Table } from "antd";
 import ActionBar from "./actionBar";
+import Link from "next/link";
+import { EyeOutlined } from "@ant-design/icons";
 
 const columns = [
   // { title: "Asset #", dataIndex: "assetNumber", key: "assetNumber" },
-  { title: "Category", dataIndex: "category", key: "category" },
-  { title: "Start Date", dataIndex: "startDate", key: "startDate" },
+  {
+    title: "Issue ID",
+    dataIndex: "issueID",
+    key: "issueID",
+    render: (issue, record) => (
+      <Link
+        href={"/admin/work-orders/" + record._id}
+        className="text-[#017BFE] underline"
+      >
+        {issue}
+      </Link>
+    ),
+  },
+  { title: "Start Date", dataIndex: "date", key: "date" },
   {
     title: "Criticality",
     dataIndex: "criticality",
@@ -30,6 +44,16 @@ const columns = [
     render: (status) => <p className="capitalize">{status}</p>,
   },
   { title: "Last Performed", dataIndex: "lastPerformed", key: "lastPerformed" },
+  {
+    title: "",
+    dataIndex: "_id",
+    key: "actions",
+    render: (id) => (
+      <Link href={`/admin/work-orders/${id}`} className="text-tertiary">
+        <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+      </Link>
+    ),
+  },
 ];
 
 const defaultCheckedList = columns.map((item) => item.key);

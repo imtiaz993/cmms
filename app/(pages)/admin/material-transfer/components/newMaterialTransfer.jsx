@@ -1,9 +1,8 @@
 import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
-import { rigs } from "@/constants/rigsAndSystems";
 import { DeleteOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
-import { Input, message, Table } from "antd";
+import { message, Table } from "antd";
 import { Form, Formik } from "formik";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -11,10 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
 import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
 import * as Yup from "yup";
-import {
-  setMaterialTransfer,
-  updateMaterialTransfer,
-} from "app/redux/slices/saveMaterialTransferData";
+import { setShippingCart as setAssetsShippingCart } from "app/redux/slices/assetsShippingCartSlice";
+import { setShippingCart as setInventoryShippingCart } from "app/redux/slices/inventoryShippingCartSlice";
 import { addMaterialTransfer } from "app/services/materialTransfer";
 
 const NewMaterialTransfer = () => {
@@ -25,9 +22,12 @@ const NewMaterialTransfer = () => {
   const systems = useSelector((state) => state.system.system);
   const [addSitePopup, setAddSitePopup] = useState(false);
   const [addSystemPopup, setAddSystemPopup] = useState(false);
-  const assetsMaterialTransfer = useSelector(
-    (state) => state.materialTransfer?.materialTransfer
+  const assetsMaterialTransfer = useSelector((state) =>
+    materialType === "asset"
+      ? state.assetsShippingCart?.assetsShippingCart
+      : state.inventoryShippingCart?.inventoryShippingCart
   );
+  console.log(" assetsMaterialTransfer", assetsMaterialTransfer);
 
   const columns = [
     {
@@ -71,7 +71,7 @@ const NewMaterialTransfer = () => {
                             }
                           : item
                       );
-                      dispatch(setMaterialTransfer(updatedData));
+                      dispatch(setInventoryShippingCart(updatedData));
                     }
                   }}
                   className="!text-black"
@@ -96,7 +96,7 @@ const NewMaterialTransfer = () => {
                             }
                           : item
                       );
-                      dispatch(setMaterialTransfer(updatedData));
+                      dispatch(setInventoryShippingCart(updatedData));
                     }
                   }}
                   className="!text-black"
@@ -122,7 +122,11 @@ const NewMaterialTransfer = () => {
             const updatedData = assetsMaterialTransfer.filter(
               (item) => item._id !== record._id
             );
-            dispatch(setMaterialTransfer(updatedData));
+            if (materialType === "inventory") {
+              dispatch(setInventoryShippingCart(updatedData));
+            } else {
+              dispatch(setAssetsShippingCart(updatedData));
+            }
           }}
         />
       ),
@@ -171,6 +175,7 @@ const NewMaterialTransfer = () => {
     });
     if (status === 200) {
       message.success(data?.message || "Material Trasnfer Added Successfully");
+      router.push("/admin/material-transfer");
       setSubmitting(false);
     } else {
       message.error(data?.error || "Failed to save material transfer");
@@ -181,10 +186,7 @@ const NewMaterialTransfer = () => {
   return (
     <div className="mx-5 md:mx-10">
       <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
-      <AddSystemPopup
-        visible={addSystemPopup}
-        setVisible={setAddSystemPopup}
-      />
+      <AddSystemPopup visible={addSystemPopup} setVisible={setAddSystemPopup} />
       <p className="text-sm text-[#828282]">
         Material Transfer {" > "} Add Material Transfer
       </p>

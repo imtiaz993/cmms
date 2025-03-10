@@ -13,11 +13,12 @@ import {
 } from "@ant-design/icons";
 import { getUser } from "@/utils/index";
 
-const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
+const Sidebar = ({ openSidebar, setOpenSidebar, params, site, system }) => {
   const router = useRouter();
   const pathname = usePathname();
   const currentPage = pathname.split("/")[2] || "dashboard";
   const slashNewPages = pathname.split("/")[3];
+  console.log("slashNewPages", slashNewPages);
 
   const items = [
     {
@@ -70,6 +71,10 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
   return (
     <div className="rounded-tr-xl bg-primary overflow-hidden shadow-custom">
       <div className=" max-h-[calc(100dvh-16px-60px-16px)] min-h-[calc(100dvh-16px-60px-16px)] overflow-auto hidden lg:block lg:w-[250px] p-5 pt-7 select-none">
+        <div className="mx-1 p-2 bg-[#0F0E13] rounded text-lg font-medium">
+          <p className="text-[#efbf60]">Site: {site ?? "All"} </p>
+          <p className="text-[#efbf60]">System: {system ?? "All"}</p>
+        </div>
         <Menu
           mode="inline"
           defaultSelectedKeys={[currentPage]}
@@ -81,7 +86,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
                     ? "assets"
                     : slashNewPages === "work-order"
                     ? "work-orders"
-                    : "",
+                    : slashNewPages,
                 ]
           }
           onClick={onClick}
@@ -102,7 +107,18 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params }) => {
         <div className="select-none">
           <Menu
             mode="inline"
-            defaultSelectedKeys={[currentPage || "dashboard"]}
+            defaultSelectedKeys={[currentPage]}
+            selectedKeys={
+              currentPage !== "new"
+                ? [currentPage || "dashboard"]
+                : [
+                    slashNewPages === "asset"
+                      ? "assets"
+                      : slashNewPages === "work-order"
+                      ? "work-orders"
+                      : slashNewPages,
+                  ]
+            }
             onClick={onClick}
             items={items}
             style={{ border: "none" }}

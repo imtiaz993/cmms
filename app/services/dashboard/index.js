@@ -3,13 +3,9 @@ import { authRequest } from "../requestHandler";
 export const getDashboardStats = async (activeLocation, activeSystem) => {
   try {
     const { status, data } = await authRequest({
-      url: `/dashboard/get${
-        activeLocation || activeSystem
-          ? `?${activeLocation ? `activeLocation=${activeLocation}` : ""}${
-              activeLocation && activeSystem ? "&" : ""
-            }${activeSystem ? `activeSystem=${activeSystem}` : ""}`
-          : ""
-      }`,
+      url: `/dashboard/get${`?${activeLocation && `site=${activeLocation}`}${
+        activeSystem && `&system=${activeSystem}`
+      }`}`,
     });
     return { status, data };
   } catch (e) {
@@ -19,18 +15,22 @@ export const getDashboardStats = async (activeLocation, activeSystem) => {
   }
 };
 
-export const getDashboardSchedule = async (activeLocation, activeSystem) => {
+export const getDashboardSchedule = async (
+  date,
+  activeLocation,
+  activeSystem
+) => {
   try {
-    const { status, data } = await authRequest({
-      url: `/dashboard/schedule${
-        activeLocation || activeSystem
-          ? `?${activeLocation ? `activeLocation=${activeLocation}` : ""}${
-              activeLocation && activeSystem ? "&" : ""
-            }${activeSystem ? `activeSystem=${activeSystem}` : ""}`
-          : ""
-      }`,
-    });
-    return { status, data };
+    if (date) {
+      const { status, data } = await authRequest({
+        url: `/dashboard/schedule?date=${date}&${
+          activeLocation && `site=${activeLocation}`
+        }${activeSystem && `&system=${activeSystem}`}`,
+      });
+      return { status, data };
+    } else {
+      throw new Error("Date unavailable");
+    }
   } catch (e) {
     if (e.data) {
       return { status: e.status, data: e.data };

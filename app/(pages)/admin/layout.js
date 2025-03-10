@@ -91,8 +91,26 @@ export default function Layout({ children }) {
 
   // Dark mode
   const { defaultAlgorithm, darkAlgorithm } = theme;
-  const [isDarkMode, setIsDarkMode] = useState(false); //getDarkMode());
+  // Initialize dark mode state
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Set initial state from localStorage on mount
+  useEffect(() => {
+    const storedDarkMode = getDarkMode();
+    if (storedDarkMode !== isDarkMode) {
+      setIsDarkMode(storedDarkMode); // Only update if different to avoid infinite loop
+    }
+    // Apply classes immediately
+    if (storedDarkMode) {
+      document.body.classList.add("dark-mode");
+      document.documentElement.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      document.documentElement.classList.remove("dark");
+    }
+  }, []); // Runs only on mount
+
+  // Sync classes and localStorage when isDarkMode changes
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add("dark-mode");
@@ -101,7 +119,7 @@ export default function Layout({ children }) {
       document.body.classList.remove("dark-mode");
       document.documentElement.classList.remove("dark");
     }
-    // localStorage.setItem("darkMode", isDarkMode.toString());
+    localStorage.setItem("darkMode", isDarkMode.toString());
   }, [isDarkMode]);
 
   useEffect(() => {
@@ -217,6 +235,8 @@ export default function Layout({ children }) {
             params={`?location=${activeLocation || ""}&system=${
               activeSystem || ""
             }`}
+            site={locations.find((i) => i._id === activeLocation)?.site}
+            system={systems.find((i) => i._id === activeSystem)?.system}
           />
           <div className="w-full lg:w-[calc(100%-251px)]">
             {!["new", "profile", "change-password"].includes(currentPage) &&
@@ -233,13 +253,8 @@ export default function Layout({ children }) {
                           if (value) {
                             router.push(
                               `/admin/${currentPage}${
-                                value || activeSystem
-                                  ? `?${value ? `location=${value}` : ""}
-                                ${value && activeSystem ? "&" : ""}${
-                                      activeSystem ? `system=` : ""
-                                    }`
-                                  : ""
-                              }`
+                                value && `?location=${value}`
+                              } `
                             );
                           } else {
                             router.push(`/admin/${currentPage}`);
@@ -280,7 +295,9 @@ export default function Layout({ children }) {
                           allowClear={true}
                           onChange={(value) =>
                             router.push(
-                              `/admin/${currentPage}?location=${activeLocation}&system=${value}`
+                              `/admin/${currentPage}?location=${activeLocation}${
+                                value ? `&system=${value}` : ""
+                              }`
                             )
                           }
                           options={

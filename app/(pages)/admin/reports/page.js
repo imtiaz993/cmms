@@ -6,6 +6,7 @@ import AnalyticsReports from "./components/analyticsReports";
 import Readings from "./components/reading";
 import { useEffect, useState } from "react";
 import { getCategories } from "app/services/setUp/categories";
+import InventoryReports from "./components/inventoryReports";
 
 const Reports = () => {
   const [categories, setCategories] = useState([]);
@@ -13,6 +14,10 @@ const Reports = () => {
     {
       label: "Assets",
       children: <AssetReports categories={categories} />,
+    },
+    {
+      label: "Inventory",
+      children: <InventoryReports categories={categories} />,
     },
     {
       label: "Maintenance",
@@ -32,7 +37,6 @@ const Reports = () => {
     const handleFetchCategories = async () => {
       const { status, data } = await getCategories();
       if (status === 200) {
-        
         setCategories(data.data);
       } else {
         message.error(data.error);

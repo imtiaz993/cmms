@@ -9,6 +9,8 @@ import {
 } from "app/services/dashboard";
 import { Octagon } from "@/icons/index";
 import { useSearchParams } from "next/navigation";
+import dayjs from "dayjs";
+import Link from "next/link";
 
 const ColumnChart = dynamic(() => import("./components/columnChart"), {
   ssr: false,
@@ -27,6 +29,21 @@ const Dashboard = () => {
   const [loadingSchedule, setLoadingSchedule] = useState(true);
   const [activeManHoursTab, setActiveManHoursTab] = useState("30 Days");
 
+  const getSchedule = async (date = "2025-03-05") => {
+    const { status, data } = await getDashboardSchedule(
+      date,
+      activeLocation,
+      activeSystem
+    );
+    if (status === 200) {
+      setSchedule(data.data);
+      setLoadingSchedule(false);
+    } else {
+      message.error(data?.message || "Failed to get schedule");
+      setLoadingSchedule(false);
+    }
+  };
+
   useEffect(() => {
     const getStats = async () => {
       const { status, data } = await getDashboardStats(
@@ -41,23 +58,16 @@ const Dashboard = () => {
         message.error(data?.message || "Failed to get stats");
       }
     };
-    const getSchedule = async () => {
-      const { status, data } = await getDashboardSchedule(
-        activeLocation,
-        activeSystem
-      );
-      if (status === 200) {
-        setSchedule(data.data);
-        setLoadingSchedule(false);
-      } else {
-        setLoadingSchedule(false);
-        message.error(data?.message || "Failed to get schedule");
-      }
-    };
-
     getStats();
     getSchedule();
   }, [activeLocation, activeSystem]);
+
+  const criticalityColors = {
+    critical: "#DA1E28",
+    high: "#FF832B",
+    medium: "#FFD75F",
+    low: "#B3B3B3",
+  };
 
   return (
     <div className="flex flex-col gap-6 h-[calc(100dvh-140px-40px-40px)] overflow-auto px-3 lg:px-6 pt-3">
@@ -114,41 +124,51 @@ const Dashboard = () => {
               </h2>
             }
           >
-            <div className="overflow-auto">
-              <div className="mx-6 font-medium text-sm py-2">
-                <p className="bg-secondary px-2 py-1">
-                  <strong>Today</strong> 2/27/2021
-                </p>
-                <div className="flex gap-1 mt-2 px-2">
-                  <p className="mt-1">
-                    <Octagon color="#DA1E28" />
-                  </p>
-                  <div>
-                    <p className="">Rig #21 - Pump System</p>
-                    <p>Hydraulic Pump Maintenance</p>
-                  </div>
-                </div>
-                <div className="flex gap-1 mt-2 px-2">
-                  <p className="mt-1">
-                    <Octagon color="#FF832B" />
-                  </p>
-                  <div>
-                    <p className="">Rig #21 - Pump System</p>
-                    <p>Hydraulic Pump Maintenance</p>
-                  </div>
-                </div>
-
-                <div className="flex gap-1 mt-2 px-2">
-                  <p className="mt-1">
-                    <Octagon color="#FFD75F" />
-                  </p>
-                  <div>
-                    <p className="">Rig #21 - Pump System</p>
-                    <p>Hydraulic Pump Maintenance</p>
-                  </div>
-                </div>
+            <div className="">
+              <div className="mx-6 font-medium text-sm pb-2">
+                <Spin spinning={loadingStats || !stats} className="w-full">
+                  {Object.keys(stats?.upcomingWorkOrders || {}).map(
+                    (dateKey, index) => (
+                      <div key={dateKey}>
+                        <p
+                          className={`px-2 py-1 ${
+                            index === 0
+                              ? "bg-secondary text-black"
+                              : "border-t border-[#D6D6D6]"
+                          }`}
+                        >
+                          <strong>
+                            {dayjs(dateKey).isSame(dayjs(), "day") && "Today "}
+                            {dayjs(dateKey).format("MM/DD/YYYY")}
+                          </strong>
+                        </p>
+                        {(stats.upcomingWorkOrders[dateKey] || []).length >
+                        0 ? (
+                          stats.upcomingWorkOrders[dateKey].map((wo) => (
+                            <div key={wo._id} className="flex gap-1 my-1 px-2">
+                              <span className="mt-1">
+                                <Octagon
+                                  color={
+                                    criticalityColors[wo.criticality] ||
+                                    "#B3B3B3"
+                                  }
+                                />
+                              </span>
+                              <p>
+                                {wo.site?.site} - {wo.system?.system}
+                                <p>Asset ID: {wo.assetID}</p>
+                              </p>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-center my-3">No work orders</p>
+                        )}
+                      </div>
+                    )
+                  )}
+                </Spin>
               </div>
-              <div className="mx-6 font-medium text-sm py-2 border-t border-[#D6D6D6] opacity-70">
+              {/* <div className="mx-6 font-medium text-sm py-2 border-t border-[#D6D6D6] opacity-70">
                 <p className="px-2">
                   <strong>Tomorrow</strong> 2/28/2021
                 </p>
@@ -170,30 +190,7 @@ const Dashboard = () => {
                     <p>Hydraulic Pump Maintenance</p>
                   </div>
                 </div>
-              </div>
-              <div className="mx-6 font-medium text-sm py-2 border-t border-[#D6D6D6] opacity-70">
-                <p className="px-2">
-                  <strong>Wednesday</strong> 2/28/2021
-                </p>
-                {/* <div className="flex gap-1 mt-2 px-2">
-                  <p className="mt-1">
-                    <Octagon color="#DA1E28" />
-                  </p>
-                  <div>
-                    <p className="">Rig #21 - Pump System</p>
-                    <p>Hydraulic Pump Maintenance</p>
-                  </div>
-                </div>
-                <div className="flex gap-1 mt-2 px-2">
-                  <p className="mt-1">
-                    <Octagon color="#FF832B" />
-                  </p>
-                  <div>
-                    <p className="">Rig #21 - Pump System</p>
-                    <p>Hydraulic Pump Maintenance</p>
-                  </div>
-                </div> */}
-              </div>
+              </div> */}
             </div>
           </Card>
         </div>
@@ -228,18 +225,14 @@ const Dashboard = () => {
             className="!bg-primary shadow-custom"
             style={{ overflow: "hidden" }}
           >
-            <div>
-              {schedule ? (
-                <Schedule
-                  schedule={schedule}
-                  loadingSchedule={loadingSchedule}
-                />
-              ) : (
-                <p className="text-center my-20">
-                  <Spin spinning={true} />
-                </p>
-              )}
-            </div>
+            <Spin spinning={!schedule && loadingSchedule}>
+              <Schedule
+                schedule={schedule}
+                setLoadingSchedule={setLoadingSchedule}
+                getSchedule={getSchedule}
+                setSchedule={setSchedule}
+              />
+            </Spin>
           </Card>
         </div>
       </div>

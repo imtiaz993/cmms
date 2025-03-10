@@ -17,7 +17,7 @@ import {
   PlusOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AddFieldPopup from "@/components/addFieldPopup";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
 import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
@@ -59,6 +59,7 @@ const AssetForm = () => {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [previewImage, setPreviewImage] = useState(null);
+  const dispatch = useDispatch();
 
   const rowSelection = {
     selectedRowKeys,
@@ -173,6 +174,7 @@ const AssetForm = () => {
     brand: Yup.string().required("Brand is required"),
     model: Yup.string().required("Model is required"),
     serialNumber: Yup.string().required("Serial number is required"),
+    cost: Yup.number().required("Cost is required"),
     maintCategory: Yup.string().required("Maintenance category is required"),
     startDate: Yup.date().required("Start date is required"),
     dueDate: Yup.date().required("Completion date is required"),
@@ -250,18 +252,16 @@ const AssetForm = () => {
       const { status, data } = response;
 
       if (status === 200) {
-        message.success(
-          data?.message ||
-            (slug ? "Asset Updated successfully" : "Asset Added successfully")
-        );
-
         // Update Redux store accordingly
         if (slug) {
           dispatch(editAsset(data.data));
           setDetails((prev) => ({ ...prev, dashboard: data.data }));
+          message.success("Asset updated successfully");
         } else {
+          message.success("Asset added successfully");
           dispatch(updateAssets(data.data));
         }
+        router.push("/admin/assets");
         resetForm();
       } else {
         message.error(data.error || "Failed to process request");
@@ -273,6 +273,39 @@ const AssetForm = () => {
 
     setSubmitting(false);
   };
+
+  const maintenanceCategories = [
+    "Preventive Maintenance",
+    "Predictive Maintenance",
+    "Corrective Maintenance",
+    "Emergency Maintenance",
+    "Shutdown & Turnaround",
+    "Safety & Compliance",
+    "Equipment Upgrade",
+    "Facility Maintenance",
+    "Rotating Equipment Maintenance",
+    "Static Equipment Maintenance",
+    "Electrical System Maintenance",
+    "Instrumentation & Control Maintenance",
+    "Piping & Pipeline Maintenance",
+    "Corrosion Control",
+    "HVAC & Utility Systems",
+    "Regulatory Inspections",
+    "Leak Detection & Repair",
+    "Process Optimization",
+    "Calibration Work Orders",
+    "Lubrication Management",
+    "Structural Integrity Checks",
+    "Material Transfer & Handling",
+    "Spare Parts Replacement",
+    "Energy Efficiency Improvements",
+    "Fire & Gas System Maintenance",
+    "Environmental Compliance",
+    "Boiler & Steam System Maintenance",
+    "Cooling Tower Maintenance",
+    "Tank Farm Maintenance",
+    "SCADA & Automation Maintenance",
+  ];
 
   if ((slug && loading) || (slug && !details))
     return (
@@ -335,7 +368,8 @@ const AssetForm = () => {
             brand: details?.dashboard?.brand || "",
             model: details?.dashboard?.model || "",
             serialNumber: details?.dashboard?.serialNumber || "",
-            maintCategory: details?.dashboard?.maintCategory?._id || "",
+            cost: details?.dashboard?.cost || "",
+            maintCategory: details?.dashboard?.maintCategory || "",
             startDate: details?.dashboard?.startDate || "",
             dueDate: details?.dashboard?.dueDate || "",
             criticality: details?.dashboard?.criticality || "",
@@ -476,6 +510,12 @@ const AssetForm = () => {
                   placeholder="Serial #"
                   label="Serial #"
                 />
+                <InputField
+                  name="cost"
+                  type="number"
+                  placeholder="0.00"
+                  label="Cost"
+                />
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Asset Maintenance
                 </p>
@@ -505,9 +545,9 @@ const AssetForm = () => {
                   name="maintCategory"
                   placeholder="Category"
                   label="Category"
-                  options={categories.map((i) => ({
-                    label: i.category,
-                    value: i._id,
+                  options={maintenanceCategories.map((i) => ({
+                    label: i,
+                    value: i,
                   }))}
                 />
                 <DatePickerField name="startDate" label="Start Date" />
@@ -519,16 +559,16 @@ const AssetForm = () => {
                   <Field name="criticality">
                     {({ field, form }) => (
                       <Radio.Group {...field} className="">
-                        <Radio value="Critical" className="!ml-3">
+                        <Radio value="critical" className="!ml-3">
                           Critical
                         </Radio>
-                        <Radio value="High" className="sm:!ml-7">
+                        <Radio value="high" className="sm:!ml-7">
                           High
                         </Radio>
-                        <Radio value="Medium" className="sm:!ml-7">
+                        <Radio value="medium" className="sm:!ml-7">
                           Medium
                         </Radio>
-                        <Radio value="Low" className="sm:!ml-7">
+                        <Radio value="low" className="sm:!ml-7">
                           Low
                         </Radio>
                       </Radio.Group>

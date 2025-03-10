@@ -7,6 +7,7 @@ import Button from "@/components/common/Button";
 import DatePickerField from "@/components/common/DatePickerField";
 import SelectField from "@/components/common/SelectField";
 import { getDocumentsByCategory } from "app/services/document";
+import { useSearchParams } from "next/navigation";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string(),
@@ -23,6 +24,9 @@ const DocumentsFilter = ({
   workorder,
 }) => {
   const [isClearing, setIsClearing] = useState(false);
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
 
   const submit = async (values, setSubmitting) => {
     !setSubmitting && setIsClearing(true);
@@ -52,6 +56,8 @@ const DocumentsFilter = ({
           createdAt: "",
           materialTransfer: materialTransfer || "",
           workorder: workorder || "",
+          site: activeLocation,
+          system: activeSystem,
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {

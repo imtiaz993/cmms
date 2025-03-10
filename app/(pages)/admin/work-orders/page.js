@@ -70,6 +70,12 @@ const WorkOrders = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (status) => <p className="capitalize">{status}</p>,
+    },
+    {
+      title: "Due Date",
+      dataIndex: "endDate",
+      key: "dueDate",
     },
     {
       title: "Schedule",
@@ -87,8 +93,11 @@ const WorkOrders = () => {
       title: "Issue ID",
       dataIndex: "issueID",
       key: "issueID",
-      render: (issue) => (
-        <Link href={"#"} className="text-[#017BFE] underline">
+      render: (issue, record) => (
+        <Link
+          href={"/admin/work-orders/" + record._id}
+          className="text-[#017BFE] underline"
+        >
           {issue}
         </Link>
       ),
@@ -105,13 +114,24 @@ const WorkOrders = () => {
     },
     {
       title: "Date Created",
-      dataIndex: "createdAt",
-      key: "createdAt",
+      dataIndex: "date",
+      key: "date",
     },
     {
       title: "Time Created",
-      dataIndex: "createdAt",
-      key: "createdAt",
+      dataIndex: "time",
+      key: "time",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => <p className="capitalize">{status}</p>,
+    },
+    {
+      title: "Due Date",
+      dataIndex: "endDate",
+      key: "dueDate",
     },
     {
       title: "Asset #",
@@ -189,21 +209,35 @@ const WorkOrders = () => {
   useEffect(() => {
     setCheckedList(columns.map((item) => item.key));
     setSelectedRowKeys([]);
+
+    let isMounted = true; // Flag to track if the effect is still active
+
     const fetchFilteredWorkOrders = async () => {
       setFetchingWorkOrders(true);
+      const currentTabLower = currentTab.toLowerCase(); // Capture current tab at the time of fetch
       const { status, data } = await getFilteredWorkOrders(
         { site: activeLocation ?? "", system: activeSystem ?? "" },
-        currentTab.toLowerCase(),
+        currentTabLower,
         WOStatus
       );
-      if (status === 200) {
-        setWorkOrders(data.data);
-      } else {
-        message.error(data?.message || "Failed to fetch filtered workorders");
+
+      // Only update state if the component is still mounted and the tab hasn't changed
+      if (isMounted && currentTab.toLowerCase() === currentTabLower) {
+        if (status === 200) {
+          setWorkOrders(data.data);
+        } else {
+          message.error(data?.message || "Failed to fetch filtered workorders");
+        }
       }
       setFetchingWorkOrders(false);
     };
+
     fetchFilteredWorkOrders();
+
+    // Cleanup function to prevent updates after unmount or tab change
+    return () => {
+      isMounted = false;
+    };
   }, [activeLocation, activeSystem, currentTab]);
 
   const tabs = [
@@ -214,7 +248,7 @@ const WorkOrders = () => {
           filteredColumns={filteredColumns}
           filteredData={displayedData}
           fetchingWorkOrders={fetchingWorkOrders}
-          rowSelection={rowSelection}
+          rowSelection={false}
         />
       ),
     },

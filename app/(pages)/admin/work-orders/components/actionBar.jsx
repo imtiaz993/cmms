@@ -82,6 +82,7 @@ const ActionBar = ({
     );
     if (status === 200) {
       message.success("Export initiated");
+      window.open(data.data);
     } else {
       message.error(data.error || "Failed to export data");
     }
@@ -184,20 +185,16 @@ const ActionBar = ({
           />
 
           <div>
-            <Button
-              text={`${
-                unplanned ? "New Work Order" : "New Maintenance Schedule"
-              }`}
-              onClick={
-                unplanned
-                  ? () => router.push("/admin/new/work-order")
-                  : showAddWOModal
-              }
-              // outlined
-              style={{ padding: "4px 10px" }}
-              className="!text-xs md:!text-sm"
-              prefix={<PlusOutlined />}
-            />
+            {!unplanned && (
+              <Button
+                text={`New Maintenance Schedule`}
+                onClick={showAddWOModal}
+                // outlined
+                style={{ padding: "4px 10px" }}
+                className="!text-xs md:!text-sm"
+                prefix={<PlusOutlined />}
+              />
+            )}
           </div>
         </div>
       </div>
