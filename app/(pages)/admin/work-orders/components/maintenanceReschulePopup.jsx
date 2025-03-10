@@ -7,6 +7,7 @@ const MaintenanceReschulePopup = ({
   visible,
   setVisible,
   selectedWorkOrders,
+  onSuccess,
 }) => {
   const [date, setDate] = useState(null);
   const [isSubmitting, setSubmitting] = useState(false);
@@ -19,6 +20,7 @@ const MaintenanceReschulePopup = ({
     if (status === 200) {
       message.success(data.message || "Rescheduled Successfully");
       setVisible(false);
+      onSuccess && onSuccess();
     } else {
       message.error(data.message || "Failed to reschedule");
     }

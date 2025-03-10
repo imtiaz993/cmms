@@ -74,7 +74,7 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
         overflowY: "auto",
         width: "300px",
       }}
-      className="bg-white p-4"
+      className="bg-bg_secondary p-4 rounded-lg"
     >
       {loading ? (
         <div key="loading">

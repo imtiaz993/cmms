@@ -3,12 +3,24 @@ import { Card, Checkbox, Typography } from "antd";
 import { useRouter } from "next/navigation";
 const CriticalityWorkOrder = ({
   batchEdit,
-  setBatchEditPopup,
+  setReschedulePopup,
   data,
   selectedWorkOrders,
-  handleCheckboxChange,
+  setSelectedWorkOrders,
 }) => {
   const { Text } = Typography;
+
+  const handleCheckboxChange = (id) => {
+    setSelectedWorkOrders((prev) => {
+      const newSelected = new Set(prev);
+      if (newSelected.has(id)) {
+        newSelected.delete(id);
+      } else {
+        newSelected.add(id);
+      }
+      return newSelected;
+    });
+  };
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -42,7 +54,8 @@ const CriticalityWorkOrder = ({
                   className="cursor-pointer"
                   onClick={(e) => {
                     // e.stopPropagation();
-                    setBatchEditPopup(true);
+                    setReschedulePopup(true);
+                    setSelectedWorkOrders(new Set([item._id]));
                   }}
                 />
               )

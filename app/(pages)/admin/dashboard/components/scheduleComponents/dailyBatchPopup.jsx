@@ -16,18 +16,6 @@ const DailyBatchPopup = ({
   const [reschedulePopup, setReschedulePopup] = useState(false);
   const [selectedWorkOrders, setSelectedWorkOrders] = useState(new Set());
 
-  const handleCheckboxChange = (item) => {
-    setSelectedWorkOrders((prev) => {
-      const newSelected = new Set(prev);
-      if (newSelected.has(item)) {
-        newSelected.delete(item);
-      } else {
-        newSelected.add(item);
-      }
-      return newSelected;
-    });
-  };
-
   // Function to render the content based on the selected radio button
   const renderContent = () => {
     switch (selectedTab) {
@@ -35,10 +23,10 @@ const DailyBatchPopup = ({
         return data.criticalArray.length > 0 ? (
           <CriticalityWorkOrder
             batchEdit={batchEdit}
-            setBatchEditPopup={setReschedulePopup}
+            setReschedulePopup={setReschedulePopup}
             data={data.criticalArray}
             selectedWorkOrders={selectedWorkOrders}
-            handleCheckboxChange={handleCheckboxChange}
+            setSelectedWorkOrders={setSelectedWorkOrders}
           />
         ) : (
           <p className="text-center my-10">
@@ -49,10 +37,10 @@ const DailyBatchPopup = ({
         return data.highArray.length > 0 ? (
           <CriticalityWorkOrder
             batchEdit={batchEdit}
-            setBatchEditPopup={setReschedulePopup}
+            setReschedulePopup={setReschedulePopup}
             data={data.highArray}
             selectedWorkOrders={selectedWorkOrders}
-            handleCheckboxChange={handleCheckboxChange}
+            setSelectedWorkOrders={setSelectedWorkOrders}
           />
         ) : (
           <p className="text-center my-10">No High Work Orders To Display</p>
@@ -61,10 +49,10 @@ const DailyBatchPopup = ({
         return data.mediumArray.length > 0 ? (
           <CriticalityWorkOrder
             batchEdit={batchEdit}
-            setBatchEditPopup={setReschedulePopup}
+            setReschedulePopup={setReschedulePopup}
             data={data.mediumArray}
             selectedWorkOrders={selectedWorkOrders}
-            handleCheckboxChange={handleCheckboxChange}
+            setSelectedWorkOrders={setSelectedWorkOrders}
           />
         ) : (
           <p className="text-center my-10">No Medium Work Orders To Display</p>
@@ -73,10 +61,10 @@ const DailyBatchPopup = ({
         return data.lowArray.length > 0 ? (
           <CriticalityWorkOrder
             batchEdit={batchEdit}
-            setBatchEditPopup={setReschedulePopup}
+            setReschedulePopup={setReschedulePopup}
             data={data.lowArray}
             selectedWorkOrders={selectedWorkOrders}
-            handleCheckboxChange={handleCheckboxChange}
+            setSelectedWorkOrders={setSelectedWorkOrders}
           />
         ) : (
           <p className="text-center my-10">No Low Work Orders To Display</p>
@@ -88,20 +76,21 @@ const DailyBatchPopup = ({
 
   return (
     <div>
-      {reschedulePopup && (
-        <MaintenanceReschulePopup
-          visible={reschedulePopup}
-          setVisible={(value) => {
-            setReschedulePopup(value);
-            setSelectedWorkOrders(new Set());
-            setBatchEdit(value);
-            getSchedule();
-          }}
-          // batchEdit={batchEdit}
-          // setBatchEdit={setBatchEdit}
-          selectedWorkOrders={[...selectedWorkOrders]}
-        />
-      )}{" "}
+      {/* {reschedulePopup && ( */}
+      <MaintenanceReschulePopup
+        visible={reschedulePopup}
+        setVisible={setReschedulePopup}
+        onSuccess={() => {
+          setSelectedWorkOrders(new Set());
+          setBatchEdit(false);
+          setSelectedDate("");
+          getSchedule();
+        }}
+        // batchEdit={batchEdit}
+        // setBatchEdit={setBatchEdit}
+        selectedWorkOrders={[...selectedWorkOrders]}
+      />
+      {/* )}{" "} */}
       {console.log("selected Items: ", selectedWorkOrders)}
       <Formik initialValues={{}} onSubmit={(values) => console.log(values)}>
         {({ values, setFieldValue }) => (
@@ -145,7 +134,10 @@ const DailyBatchPopup = ({
                       text="Batch Edit"
                       style={{ width: "fit-content" }}
                       className="mr-2"
-                      onClick={() => setBatchEdit(!batchEdit)}
+                      onClick={() => {
+                        setSelectedWorkOrders(new Set());
+                        setBatchEdit(!batchEdit);
+                      }}
                     />
                   </div>
                 </div>
