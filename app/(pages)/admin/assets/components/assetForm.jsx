@@ -5,7 +5,6 @@ import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import {
   addAsset,
-  assignToAsset,
   getAssetDetails,
   updateAsset,
 } from "app/services/assets";
@@ -32,7 +31,7 @@ import { getCategories } from "app/services/setUp/categories";
 import { getSubCategories } from "app/services/setUp/subCategories";
 import { editAsset, updateAssets } from "app/redux/slices/assetsSlice";
 import ImagePreview from "@/components/imagePreviewPopup";
-import { getInventoryDetails } from "app/services/inventory";
+import { assignToAsset, getInventoryDetails } from "app/services/inventory";
 
 const columns = [
   {
