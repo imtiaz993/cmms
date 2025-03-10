@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Avatar, Dropdown } from "antd";
+import { Avatar, Dropdown, Menu, Spin } from "antd";
 import {
   UserOutlined,
   DownOutlined,
@@ -14,10 +14,13 @@ import DarkModeToggle from "react-dark-mode-toggle";
 import Image from "next/image";
 import { getUser } from "@/utils/index";
 import { Logo } from "@/icons/index";
+import { getNotifications } from "app/services/notifications";
 
 const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
   const router = useRouter();
   const [userName, setUserName] = useState("");
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // Fetch user data from localStorage on the client
   useEffect(() => {
@@ -25,6 +28,16 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
     setUserName(user?.name);
   }, []);
 
+  const fetchNotifications = async () => {
+    setLoading(true);
+    const { status, data } = await getNotifications();
+    if (status == 200) {
+      setLoading(false);
+      setNotifications(data.data);
+    } else {
+      setLoading(false);
+    }
+  };
   const dropdownItems = [
     {
       label: (
@@ -54,6 +67,43 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
     },
   ];
 
+  const notificationMenu = (
+    <div
+      style={{
+        maxHeight: "300px",
+        overflowY: "auto",
+        width: "300px",
+      }}
+      className="bg-white p-4"
+    >
+      {loading ? (
+        <div key="loading">
+          <div className="flex justify-center w-full py-5">
+            <Spin />
+          </div>
+        </div>
+      ) : notifications.length > 0 ? (
+        notifications.map((notification) => (
+          <div key={notification.id} className="mb-2">
+            <div>
+              <div className="flex justify-between items-center">
+                <p>{notification.event}</p>
+                <span className="text-xs text-[#888]">
+                  {new Date(notification.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+              <span className="text-xs text-[#888]">
+                {notification.message}
+              </span>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div key="empty">No new notifications</div>
+      )}
+    </div>
+  );
+
   return (
     <div
       className={`bg-primary h-16 flex justify-between items-center px-3 md:px-11 shadow-custom`}
@@ -79,9 +129,20 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
           className="mr-2 md:mr-4"
         />
         <div className="flex items-center">
-          <span>
-            <BellOutlined className="mr-2 md:mr-4 text-2xl" />
-          </span>
+          <Dropdown
+            overlay={notificationMenu}
+            trigger={["click"]}
+            onOpenChange={(open) => {
+              if (open) {
+                fetchNotifications();
+              }
+            }}
+            placement="bottomRight"
+          >
+            <span className="cursor-pointer">
+              <BellOutlined className="mr-2 md:mr-4 text-2xl" />
+            </span>
+          </Dropdown>
           <Dropdown
             menu={{
               items: dropdownItems.map((i, index) => ({ ...i, key: index })),
