@@ -46,7 +46,6 @@ self.addEventListener("push", (e) => {
         const newData = oldData.json();
         newData.data = {
           ...newData.data,
-          ...newData.notification,
         };
         delete newData.notification;
         return newData;
@@ -67,18 +66,18 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage((payload) => {
   // console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
-  const { title, body, image, icon, ...restPayload } = payload.data;
+  const { title, body, ...restPayload } = payload.data;
   const notificationOptions = {
     body,
-    icon: image || "/icons/firebase-logo.png", // path to your "fallback" firebase notification logo
+    icon: "/icons/firebase-logo.png", // path to your "fallback" firebase notification logo
     data: restPayload,
   };
   return self.registration.showNotification(title, notificationOptions);
 });
 
 self.addEventListener("notificationclick", (event) => {
-  if (event?.notification?.data && event?.notification?.data?.link) {
-    self.clients.openWindow(event.notification.data.link);
+  if (event?.notification?.data && event?.notification?.data?.id) {
+    self.clients.openWindow(event.notification.data.id);
   }
 
   // close notification after click

@@ -14,6 +14,8 @@ import {
 } from "@ant-design/icons";
 import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
+import { generateNotificationToken } from "../../../../firebase/firebase";
+import { sendToken } from "app/services/firebase";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -28,10 +30,15 @@ const Login = () => {
 
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     const { status, data } = await login(values);
+    const token = await generateNotificationToken();
+
     setSubmitting(false);
     if (status === 200) {
       localStorage.setItem("user", JSON.stringify(data.data));
       localStorage.setItem("token", data.token);
+      if (token) {
+        await sendToken({ fcmToken: token });
+      }
       message.success(data.message);
       if (data?.data?.role === "supervisor") {
         router?.replace("/supervisor/dashboard");
@@ -39,7 +46,7 @@ const Login = () => {
       if (data?.data?.role === "admin" || data?.data?.role === "rigManager") {
         router?.replace("/admin/dashboard");
       }
-      
+
       resetForm();
     } else {
       message.error(data.error);

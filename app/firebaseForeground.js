@@ -1,19 +1,28 @@
 "use client";
 import useFcmToken from "../hooks/useFCMToken";
-import { getMessaging, onMessage } from "firebase/messaging";
-import firebaseApp from "../firebase/firebase";
+import { onMessage } from "firebase/messaging";
+import { messaging } from "../firebase/firebase";
 import { useEffect } from "react";
+import { notification } from "antd";
 
 export default function FcmTokenComp() {
   const { notificationPermissionStatus } = useFcmToken();
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotification = (payload) => {
+    api.info({
+      message: payload.data.title,
+      description: payload.data.body,
+      placement: "topRight",
+    });
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined" && "serviceWorker" in navigator) {
       if (notificationPermissionStatus === "granted") {
-        const messaging = getMessaging(firebaseApp);
-        const unsubscribe = onMessage(messaging, (payload) =>
-          console.log("Foreground push notification received:", payload)
-        );
+        const unsubscribe = onMessage(messaging, (payload) => {
+          openNotification(payload);
+        });
         return () => {
           unsubscribe(); // Unsubscribe from the onMessage event on cleanup
         };
@@ -21,5 +30,5 @@ export default function FcmTokenComp() {
     }
   }, [notificationPermissionStatus]);
 
-  return null; // This component is primarily for handling foreground notifications
+  return contextHolder; // This component is primarily for handling foreground notifications
 }

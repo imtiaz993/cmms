@@ -2,7 +2,7 @@ import { authRequest } from "../requestHandler";
 export const sendToken = async (values) => {
   try {
     const { status, data } = await authRequest({
-      url: "/token",
+      url: "/auth/addFCM",
       method: "POST",
       data: values,
     });
