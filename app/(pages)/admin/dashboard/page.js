@@ -39,7 +39,7 @@ const Dashboard = () => {
       setSchedule(data.data);
       setLoadingSchedule(false);
     } else {
-      message.error(data?.error || "Failed to get schedule");
+      message.error(data?.message || "Failed to get schedule");
       setLoadingSchedule(false);
     }
   };
@@ -230,6 +230,7 @@ const Dashboard = () => {
                 schedule={schedule}
                 setLoadingSchedule={setLoadingSchedule}
                 getSchedule={getSchedule}
+                setSchedule={setSchedule}
               />
             </Spin>
           </Card>

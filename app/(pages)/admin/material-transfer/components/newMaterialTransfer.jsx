@@ -62,7 +62,6 @@ const NewMaterialTransfer = () => {
                 <Button
                   text="-"
                   onClick={() => {
-                    console.log("updatedData", updatedData);
                     if (record.selectedQuantity > 1) {
                       const updatedData = assetsMaterialTransfer.map((item) =>
                         item._id == record._id

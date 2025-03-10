@@ -2,7 +2,6 @@
 import { Badge, Calendar, Spin } from "antd";
 import { useState, useRef } from "react";
 import DailyBatchPopup from "./scheduleComponents/dailyBatchPopup";
-import dayjs from "dayjs";
 
 const Schedule = ({ schedule, setLoadingSchedule, getSchedule }) => {
   const [selectedDate, setSelectedDate] = useState("");
@@ -67,6 +66,8 @@ const Schedule = ({ schedule, setLoadingSchedule, getSchedule }) => {
         <DailyBatchPopup
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
+          data={schedule?.dailyCounts[selectedDate] || null}
+          getSchedule={getSchedule}
         />
       )}
       <Spin spinning={loading}>

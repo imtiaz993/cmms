@@ -1,71 +1,76 @@
 import { CalendarFilled, WarningFilled } from "@ant-design/icons";
 import { Card, Checkbox, Typography } from "antd";
 import { useRouter } from "next/navigation";
-const Critical = ({
+const CriticalityWorkOrder = ({
   batchEdit,
-  print,
   setBatchEditPopup,
   data,
-  selectedItems,
+  selectedWorkOrders,
   handleCheckboxChange,
 }) => {
   const { Text } = Typography;
-  const router = useRouter();
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {data &&
         data.length > 0 &&
         data.map((item, index) => (
-          // {Array.from({ length: 10 }).map((key, index) => (
           <Card
             size="small"
-            title={"11M1948377"}
+            title={
+              <Text
+                className="w-full"
+                ellipsis={{
+                  tooltip: item.assetID,
+                }}
+              >
+                {"AssetID: " + item.assetID}
+              </Text>
+            }
             headStyle={{
               backgroundColor: "#ff4d4f",
             }}
             extra={
-              batchEdit || print ? (
+              batchEdit ? (
                 <Checkbox
-                  onClick={(e) => e.stopPropagation()}
-                  onChange={(e) => handleCheckboxChange(index)}
-                  checked={selectedItems.has(index)}
+                  // onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => handleCheckboxChange(item._id)}
+                  checked={selectedWorkOrders.has(item._id)}
                 />
               ) : (
                 <CalendarFilled
                   className="cursor-pointer"
                   onClick={(e) => {
-                    e.stopPropagation();
+                    // e.stopPropagation();
                     setBatchEditPopup(true);
                   }}
                 />
               )
             }
-            onClick={() => router.push("/admin/work-orders/PWO013942000998")}
+            // onClick={() => router.push("/admin/work-orders/PWO013942000998")}
             className="cursor-pointer"
-            key={index}
+            key={item._id}
           >
             <Text
               className="w-full"
               ellipsis={{
-                tooltip: "AC Powered 1500 HP Oderco Drawworks installed",
+                tooltip: item.description,
               }}
             >
-              AC Powered 1500 HP Oderco Drawworks installed dsalkdja d jalskdj
-              lak
+              {item.description}
             </Text>
             <Text
               className="w-full"
-              ellipsis={{ tooltip: "I am ellipsis now!" }}
+              // ellipsis={{ tooltip: "I am ellipsis now!" }}
             >
-              Floorhand
+              Due Date: {item.dueDate}
             </Text>
             <p className="flex justify-between">
               <Text
                 className="w-full"
-                ellipsis={{ tooltip: "I am ellipsis now!" }}
+                // ellipsis={{ tooltip: "I am ellipsis now!" }}
               >
-                Daily Checklist (1 Day) - 0
+                {item.maintCategory}
               </Text>
               <WarningFilled />
             </p>
@@ -75,4 +80,4 @@ const Critical = ({
   );
 };
 
-export default Critical;
+export default CriticalityWorkOrder;

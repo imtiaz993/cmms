@@ -167,6 +167,7 @@ const InventoryForm = () => {
     tagId: Yup.string().required("Tag ID is required"),
     description: Yup.string().required("Description is required"),
     quantity: Yup.number().required("Quantity is required"),
+    cost: Yup.number().required("Cost is required"),
     notes: Yup.string().required("Notes is required"),
     image: Yup.array().min(1, "At least one image is required"),
     ...customFieldValidations,
@@ -313,6 +314,7 @@ const InventoryForm = () => {
             tagId: details?.tagId || "",
             description: details?.description || "",
             quantity: details?.quantity || "",
+            cost: details?.cost || "",
             notes: details?.notes || "",
             image: details?.image
               ? details.image.map((i) => {
@@ -433,6 +435,12 @@ const InventoryForm = () => {
                   name="quantity"
                   placeholder="00"
                   label="Quantity"
+                  type="number"
+                />
+                <InputField
+                  name="cost"
+                  placeholder="0.00"
+                  label="Cost"
                   type="number"
                 />
                 <InputField name="notes" placeholder="Model" label="Notes" />

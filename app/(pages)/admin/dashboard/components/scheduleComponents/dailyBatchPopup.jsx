@@ -1,39 +1,23 @@
-import { message, Modal, Radio } from "antd";
-import { useEffect, useState } from "react";
+import { Modal, Radio } from "antd";
+import { useState } from "react";
 import { Form, Formik } from "formik";
-import Low from "./low";
-import Medium from "./medium";
-import High from "./high";
-import Critical from "./critical";
+import CriticalityWorkOrder from "./criticalityWorkOrder";
 import Button from "@/components/common/Button";
-import ReschedulePopup from "./reschedulePopup";
-import {
-  getDailyWorkOrders,
-  printDailyWorkOrders,
-} from "app/services/dashboard";
+import MaintenanceReschulePopup from "app/(pages)/admin/work-orders/components/maintenanceReschulePopup";
 
-const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
-  const [data, setdata] = useState();
+const DailyBatchPopup = ({
+  selectedDate,
+  setSelectedDate,
+  data,
+  getSchedule,
+}) => {
   const [selectedTab, setSelectedTab] = useState("Critical"); // State to track the selected tab
   const [batchEdit, setBatchEdit] = useState(false);
   const [reschedulePopup, setReschedulePopup] = useState(false);
-  const [print, setPrint] = useState(false);
-  const [selectedItems, setSelectedItems] = useState(new Set());
-
-  useEffect(() => {
-    const getDailyWO = async () => {
-      const { status, data } = await getDailyWorkOrders(selectedDate);
-      if (status === 200) {
-        setdata(data?.data);
-      } else {
-        message.error(data?.message || "Failed to get work orders");
-      }
-    };
-    getDailyWO();
-  }, []);
+  const [selectedWorkOrders, setSelectedWorkOrders] = useState(new Set());
 
   const handleCheckboxChange = (item) => {
-    setSelectedItems((prev) => {
+    setSelectedWorkOrders((prev) => {
       const newSelected = new Set(prev);
       if (newSelected.has(item)) {
         newSelected.delete(item);
@@ -44,30 +28,16 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
     });
   };
 
-  const handlePrint = async () => {
-    const { status, data } = await printDailyWorkOrders({
-      ids: [...selectedItems],
-    });
-    if (status === 200) {
-      window.open(data.data);
-      message.success(data.message || "Printed successfully");
-      setPrint(false);
-    } else {
-      message.error(data.message || "Failed to print");
-    }
-  };
-
   // Function to render the content based on the selected radio button
   const renderContent = () => {
     switch (selectedTab) {
       case "Critical":
-        return data.critical.length > 0 ? (
-          <Critical
+        return data.criticalArray.length > 0 ? (
+          <CriticalityWorkOrder
             batchEdit={batchEdit}
-            print={print}
             setBatchEditPopup={setReschedulePopup}
-            data={data.critical}
-            selectedItems={selectedItems}
+            data={data.criticalArray}
+            selectedWorkOrders={selectedWorkOrders}
             handleCheckboxChange={handleCheckboxChange}
           />
         ) : (
@@ -76,39 +46,36 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
           </p>
         );
       case "High":
-        return data.high.length > 0 ? (
-          <High
+        return data.highArray.length > 0 ? (
+          <CriticalityWorkOrder
             batchEdit={batchEdit}
-            print={print}
             setBatchEditPopup={setReschedulePopup}
-            data={data}
-            selectedItems={selectedItems}
+            data={data.highArray}
+            selectedWorkOrders={selectedWorkOrders}
             handleCheckboxChange={handleCheckboxChange}
           />
         ) : (
           <p className="text-center my-10">No High Work Orders To Display</p>
         );
       case "Medium":
-        return data.medium.length > 0 ? (
-          <Medium
+        return data.mediumArray.length > 0 ? (
+          <CriticalityWorkOrder
             batchEdit={batchEdit}
-            print={print}
             setBatchEditPopup={setReschedulePopup}
-            data={data}
-            selectedItems={selectedItems}
+            data={data.mediumArray}
+            selectedWorkOrders={selectedWorkOrders}
             handleCheckboxChange={handleCheckboxChange}
           />
         ) : (
           <p className="text-center my-10">No Medium Work Orders To Display</p>
         );
       case "Low":
-        return data.low.length > 0 ? (
-          <Low
+        return data.lowArray.length > 0 ? (
+          <CriticalityWorkOrder
             batchEdit={batchEdit}
-            print={print}
             setBatchEditPopup={setReschedulePopup}
-            data={data}
-            selectedItems={selectedItems}
+            data={data.lowArray}
+            selectedWorkOrders={selectedWorkOrders}
             handleCheckboxChange={handleCheckboxChange}
           />
         ) : (
@@ -122,14 +89,20 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
   return (
     <div>
       {reschedulePopup && (
-        <ReschedulePopup
+        <MaintenanceReschulePopup
           visible={reschedulePopup}
-          setVisible={setReschedulePopup}
-          batchEdit={batchEdit}
-          setBatchEdit={setBatchEdit}
-          selectedItems={[...selectedItems]}
+          setVisible={(value) => {
+            setReschedulePopup(value);
+            setSelectedWorkOrders(new Set());
+            setBatchEdit(value);
+            getSchedule();
+          }}
+          // batchEdit={batchEdit}
+          // setBatchEdit={setBatchEdit}
+          selectedWorkOrders={[...selectedWorkOrders]}
         />
-      )}
+      )}{" "}
+      {console.log("selected Items: ", selectedWorkOrders)}
       <Formik initialValues={{}} onSubmit={(values) => console.log(values)}>
         {({ values, setFieldValue }) => (
           <Form>
@@ -169,41 +142,23 @@ const DailyBatchPopup = ({ selectedDate, setSelectedDate }) => {
                     <Button
                       outlined
                       size="small"
-                      text="Print"
-                      style={{ width: "fit-content" }}
-                      className="mr-2"
-                      onClick={() => {
-                        setBatchEdit(false);
-                        setPrint(!print);
-                      }}
-                    />
-                    <Button
-                      outlined
-                      size="small"
                       text="Batch Edit"
                       style={{ width: "fit-content" }}
                       className="mr-2"
-                      onClick={() => {
-                        setPrint(false);
-                        setBatchEdit(!batchEdit);
-                      }}
+                      onClick={() => setBatchEdit(!batchEdit)}
                     />
                   </div>
                 </div>
                 {/* Render selected items and button */}
-                {(batchEdit || print) && (
+                {batchEdit && (
                   <div className="flex justify-between items-center my-4">
-                    <div>{selectedItems.size} selected</div>
+                    <div>{selectedWorkOrders.size} selected</div>
                     <Button
-                      text={batchEdit ? "Reschedule" : print && "Print"}
+                      text={"Reschedule"}
                       fullWidth={false}
                       style={{ padding: "4px 10px" }}
                       onClick={() => {
-                        if (batchEdit) {
-                          setReschedulePopup(true);
-                        } else {
-                          handlePrint();
-                        }
+                        setReschedulePopup(true);
                       }}
                     />
                   </div>
