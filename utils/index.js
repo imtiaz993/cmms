@@ -12,12 +12,7 @@ export const getUser = () => {
 export const getDarkMode = () => {
   if (typeof window !== "undefined") {
     const storedMode = localStorage.getItem("darkMode");
-    const isDark = storedMode === "true";
-    if (isDark) {
-      document.body.classList.add("dark-mode");
-      document.documentElement.classList.add("dark");
-    }
-    return isDark;
+    return storedMode === "true"; // Return boolean, no class manipulation here
   }
-  return null; // Default to light mode if window is undefined
+  return false; // Default to light mode if window is undefined
 };

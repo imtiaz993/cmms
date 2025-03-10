@@ -90,8 +90,26 @@ export default function Layout({ children }) {
 
   // Dark mode
   const { defaultAlgorithm, darkAlgorithm } = theme;
-  const [isDarkMode, setIsDarkMode] = useState(false); //getDarkMode());
+  // Initialize dark mode state
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Set initial state from localStorage on mount
+  useEffect(() => {
+    const storedDarkMode = getDarkMode();
+    if (storedDarkMode !== isDarkMode) {
+      setIsDarkMode(storedDarkMode); // Only update if different to avoid infinite loop
+    }
+    // Apply classes immediately
+    if (storedDarkMode) {
+      document.body.classList.add("dark-mode");
+      document.documentElement.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      document.documentElement.classList.remove("dark");
+    }
+  }, []); // Runs only on mount
+
+  // Sync classes and localStorage when isDarkMode changes
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add("dark-mode");
@@ -100,7 +118,7 @@ export default function Layout({ children }) {
       document.body.classList.remove("dark-mode");
       document.documentElement.classList.remove("dark");
     }
-    // localStorage.setItem("darkMode", isDarkMode.toString());
+    localStorage.setItem("darkMode", isDarkMode.toString());
   }, [isDarkMode]);
 
   useEffect(() => {
