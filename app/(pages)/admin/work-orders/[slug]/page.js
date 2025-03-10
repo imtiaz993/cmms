@@ -29,6 +29,7 @@ import Documents from "./components/documents";
 import Photos from "./components/photos";
 import { getAdminsManagers } from "app/services/common";
 import TextArea from "antd/es/input/TextArea";
+import AddManHoursPopup from "./components/addManHoursPopup";
 
 const WorkOrdersDetail = () => {
   const [workOrder, setWorkOrder] = useState();
@@ -37,6 +38,7 @@ const WorkOrdersDetail = () => {
   const [superUsers, setSuperUsers] = useState([]);
   const [isSubmitting, setSubmitting] = useState(false);
   const [inspections, setInspections] = useState([]);
+  const [manHoursPopup, setManHoursPopup] = useState(false);
 
   const tabs = [
     {
@@ -155,7 +157,7 @@ const WorkOrdersDetail = () => {
           name={"comments" + record._id}
           placeholder="Add Comments"
           maxLength={150}
-          className="placeholder:!text-[#717171] resize-none !border-none"
+          className="placeholder:!text-[#717171] resize-none !border-none !bg-transparent !text-tertiary"
           value={comments}
           onChange={(e) =>
             setInspections((prev) =>
@@ -225,6 +227,13 @@ const WorkOrdersDetail = () => {
 
   return workOrder ? (
     <div>
+      <AddManHoursPopup
+        visible={manHoursPopup}
+        setVisible={setManHoursPopup}
+        setWorkOrder={setWorkOrder}
+        superUsers={superUsers}
+        slug={slug}
+      />
       <div className="mx-5 md:mx-10">
         <p className="text-sm text-[#828282]">
           Work Order {" > "} Planned Work Order
@@ -247,36 +256,43 @@ const WorkOrdersDetail = () => {
                 Asset: {workOrder?.asset.assetID}
               </h1>
               <div className="flex justify-end gap-3 mb-5">
+                {/* {workOrder?.startReadingTime === null ? ( */}
+                <Button
+                  text="Start"
+                  prefix={<LoginOutlined />}
+                  fullWidth={false}
+                  onClick={handleStart}
+                  outlined
+                />
+                {/* ) : (
+                  workOrder?.stopTime === null && ( */}
+                <Button
+                  text="Stop"
+                  prefix={<LogoutOutlined />}
+                  fullWidth={false}
+                  onClick={handleStop}
+                  outlined
+                />
+                {/* )
+                )} */}
+                <Button
+                  text="Add Manual Hours"
+                  prefix={<LogoutOutlined />}
+                  fullWidth={false}
+                  onClick={() => setManHoursPopup(true)}
+                  outlined
+                />
                 {!["cancelled", "completed"].includes(workOrder?.status) && (
                   <Button
                     text="Cancel Work Order"
                     prefix={<CloseCircleOutlined />}
                     fullWidth={false}
-                    className="ml-3"
                     onClick={handleCancelWO}
                     disabled={isSubmitting}
                     outlined
                   />
                 )}
-                {workOrder?.startTime === null ? (
-                  <Button
-                    text="Start"
-                    prefix={<LoginOutlined />}
-                    fullWidth={false}
-                    onClick={handleStart}
-                    className="ml-3"
-                  />
-                ) : (
-                  workOrder?.stopTime === null && (
-                    <Button
-                      text="Stop"
-                      prefix={<LogoutOutlined />}
-                      fullWidth={false}
-                      onClick={handleStop}
-                      className="ml-3"
-                    />
-                  )
-                )}
+
                 {!["cancelled", "completed"].includes(workOrder?.status) && (
                   <Button
                     text="Mark Completed"
@@ -284,7 +300,6 @@ const WorkOrdersDetail = () => {
                     fullWidth={false}
                     onClick={handleComplete}
                     disabled={isSubmitting}
-                    className="ml-3"
                   />
                 )}
               </div>
