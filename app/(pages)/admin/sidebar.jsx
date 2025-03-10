@@ -72,7 +72,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params, site, system }) => {
     <div className="rounded-tr-xl bg-primary overflow-hidden shadow-custom">
       <div className=" max-h-[calc(100dvh-16px-60px-16px)] min-h-[calc(100dvh-16px-60px-16px)] overflow-auto hidden lg:block lg:w-[250px] p-5 pt-7 select-none">
         {site && (
-          <div className="mx-1 p-2 bg-[#0F0E13] rounded text-lg font-medium">
+          <div className="mx-1 p-2 bg-[#0F0E13] rounded text-xl text-center font-medium">
             <p className="text-[#efbf60]">{site}</p>
           </div>
         )}
