@@ -3,11 +3,7 @@ import * as Yup from "yup";
 import { message, Modal, Radio, Spin, Table, Upload } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-import {
-  addAsset,
-  getAssetDetails,
-  updateAsset,
-} from "app/services/assets";
+import { addAsset, getAssetDetails, updateAsset } from "app/services/assets";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
@@ -78,7 +74,6 @@ const AssetForm = () => {
           ...data?.data,
           dashboard: {
             ...data?.data?.dashboard,
-            assetID: "Assigned: Part # " + data?.data?.dashboard?.partNumber,
             assetImages: data?.data?.dashboard?.image,
           },
         });
