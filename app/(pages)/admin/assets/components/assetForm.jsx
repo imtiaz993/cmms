@@ -3,13 +3,18 @@ import * as Yup from "yup";
 import { message, Modal, Radio, Spin, Table, Upload } from "antd";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-import { addAsset, getAssetDetails, updateAsset } from "app/services/assets";
+import {
+  addAsset,
+  assignToAsset,
+  getAssetDetails,
+  updateAsset,
+} from "app/services/assets";
 import SelectField from "@/components/common/SelectField";
 import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
 import { rigs } from "@/constants/rigsAndSystems";
 import { useEffect, useMemo, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { getFields } from "app/services/customFields";
 import {
   LeftOutlined,
@@ -27,6 +32,7 @@ import { getCategories } from "app/services/setUp/categories";
 import { getSubCategories } from "app/services/setUp/subCategories";
 import { editAsset, updateAssets } from "app/redux/slices/assetsSlice";
 import ImagePreview from "@/components/imagePreviewPopup";
+import { getInventoryDetails } from "app/services/inventory";
 
 const columns = [
   {
@@ -60,6 +66,32 @@ const AssetForm = () => {
   const [subCategories, setSubCategories] = useState([]);
   const [previewImage, setPreviewImage] = useState(null);
   const dispatch = useDispatch();
+
+  const searchParams = useSearchParams();
+  const inventory = searchParams.get("inventory");
+
+  useEffect(() => {
+    const getInventory = async () => {
+      const { status, data } = await getInventoryDetails(inventory);
+      if (status === 200) {
+        console.log(data);
+        setDetails({
+          ...data?.data,
+          dashboard: {
+            ...data?.data?.dashboard,
+            assetID: "Assigned: Part # " + data?.data?.dashboard?.partNumber,
+            assetImages: data?.data?.dashboard?.image,
+          },
+        });
+      } else {
+        message.error(data?.message || "Failed to fetch data");
+      }
+    };
+
+    if (inventory) {
+      getInventory();
+    }
+  }, [inventory]);
 
   const rowSelection = {
     selectedRowKeys,
@@ -244,6 +276,10 @@ const AssetForm = () => {
         // Update asset
         formData.append("asset", slug);
         response = await updateAsset(formData);
+      } else if (inventory) {
+        //convert Iventory to asset
+        formData.append("inventory", inventory);
+        response = await assignToAsset(formData);
       } else {
         // Add new asset
         response = await addAsset(formData);
@@ -307,7 +343,7 @@ const AssetForm = () => {
     "SCADA & Automation Maintenance",
   ];
 
-  if ((slug && loading) || (slug && !details))
+  if ((slug && loading) || (slug && !details) || (inventory && !details))
     return (
       <Spin
         size="large"
@@ -343,7 +379,12 @@ const AssetForm = () => {
         categories={categories}
       />
       <p className="text-sm text-[#828282]">
-        Asset {" > "} {slug ? slug + " > Edit" : "Add New Asset"}
+        Asset {" > "}{" "}
+        {slug
+          ? slug + " > Edit"
+          : inventory
+          ? "Assign to Asset > " + inventory
+          : "Add New Asset"}
       </p>
       <Button
         text="Back to Assets"
@@ -354,7 +395,7 @@ const AssetForm = () => {
       />
       <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto mt-5 bg-primary shadow-custom rounded-lg p-4">
         <p className="text-2xl font-semibold mb-5">
-          {slug ? "Edit " : "Add New "} Asset
+          {slug ? "Edit " : inventory ? "Assign to " : "Add New "} Asset
         </p>
         <Formik
           initialValues={{
@@ -727,7 +768,13 @@ const AssetForm = () => {
                   onClick={handleSubmit}
                   disabled={isSubmitting}
                   size="small"
-                  text={slug ? "Update Asset" : "Add New Asset"}
+                  text={
+                    slug
+                      ? "Update Asset"
+                      : inventory
+                      ? "Assign to Asset"
+                      : "Add New Asset"
+                  }
                   fullWidth={false}
                 />
               </div>

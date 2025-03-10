@@ -142,6 +142,8 @@ const InventoryDetails = () => {
   const handleActionConfirm = async () => {
     if (actionPopup === "shippingCart") {
       addToShippingCart();
+    } else if (actionPopup === "assignToAsset") {
+      router.push(`/admin/new/asset?inventory=${slug}`);
     } else {
       const { status, data } = await updateStatus({
         assets: [slug],

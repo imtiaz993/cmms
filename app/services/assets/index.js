@@ -43,6 +43,21 @@ export const updateAsset = async (values) => {
   }
 };
 
+export const assignToAsset = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/asset/assign",
+      method: "POST",
+      data: values,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
 export const deleteAsset = async (id) => {
   try {
     const { status, data } = await authRequest({
