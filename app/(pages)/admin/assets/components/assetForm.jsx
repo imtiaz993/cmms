@@ -9,7 +9,7 @@ import DatePickerField from "@/components/common/DatePickerField";
 import TextAreaField from "@/components/common/TextAreaField";
 import { rigs } from "@/constants/rigsAndSystems";
 import { useEffect, useMemo, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { getFields } from "app/services/customFields";
 import {
   LeftOutlined,
@@ -27,6 +27,7 @@ import { getCategories } from "app/services/setUp/categories";
 import { getSubCategories } from "app/services/setUp/subCategories";
 import { editAsset, updateAssets } from "app/redux/slices/assetsSlice";
 import ImagePreview from "@/components/imagePreviewPopup";
+import { assignToAsset, getInventoryDetails } from "app/services/inventory";
 
 const columns = [
   {
@@ -60,6 +61,31 @@ const AssetForm = () => {
   const [subCategories, setSubCategories] = useState([]);
   const [previewImage, setPreviewImage] = useState(null);
   const dispatch = useDispatch();
+
+  const searchParams = useSearchParams();
+  const inventory = searchParams.get("inventory");
+
+  useEffect(() => {
+    const getInventory = async () => {
+      const { status, data } = await getInventoryDetails(inventory);
+      if (status === 200) {
+        console.log(data);
+        setDetails({
+          ...data?.data,
+          dashboard: {
+            ...data?.data?.dashboard,
+            assetImages: data?.data?.dashboard?.image,
+          },
+        });
+      } else {
+        message.error(data?.message || "Failed to fetch data");
+      }
+    };
+
+    if (inventory) {
+      getInventory();
+    }
+  }, [inventory]);
 
   const rowSelection = {
     selectedRowKeys,
@@ -166,22 +192,22 @@ const AssetForm = () => {
   const validationSchema = Yup.object().shape({
     site: Yup.string().required("Site is required"),
     system: Yup.string().required("System is required"),
-    category: Yup.string().required("Category is required"),
-    subCategory: Yup.string().required("Sub-category is required"),
+    category: Yup.string(),
+    subCategory: Yup.string(),
     assetID: Yup.string().required("Asset number is required"),
-    purchaseDate: Yup.date().required("Purchase date is required"),
-    description: Yup.string().required("Description is required"),
-    brand: Yup.string().required("Brand is required"),
-    model: Yup.string().required("Model is required"),
-    serialNumber: Yup.string().required("Serial number is required"),
-    cost: Yup.number().required("Cost is required"),
-    maintCategory: Yup.string().required("Maintenance category is required"),
+    purchaseDate: Yup.date(),
+    description: Yup.string(),
+    brand: Yup.string(),
+    model: Yup.string(),
+    serialNumber: Yup.string(),
+    cost: Yup.number(),
+    maintCategory: Yup.string(),
     startDate: Yup.date().required("Start date is required"),
-    dueDate: Yup.date().required("Completion date is required"),
+    dueDate: Yup.date(),
     criticality: Yup.string().required("Criticality is required"),
-    maintStatus: Yup.string().required("Maintenance status is required"),
-    assetImages: Yup.array().min(1, "At least one image is required"),
-    ...customFieldValidations,
+    maintStatus: Yup.string(),
+    assetImages: Yup.array(),
+    // ...customFieldValidations,
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -244,6 +270,10 @@ const AssetForm = () => {
         // Update asset
         formData.append("asset", slug);
         response = await updateAsset(formData);
+      } else if (inventory) {
+        //convert Iventory to asset
+        formData.append("inventory", inventory);
+        response = await assignToAsset(formData);
       } else {
         // Add new asset
         response = await addAsset(formData);
@@ -307,7 +337,7 @@ const AssetForm = () => {
     "SCADA & Automation Maintenance",
   ];
 
-  if ((slug && loading) || (slug && !details))
+  if ((slug && loading) || (slug && !details) || (inventory && !details))
     return (
       <Spin
         size="large"
@@ -343,7 +373,12 @@ const AssetForm = () => {
         categories={categories}
       />
       <p className="text-sm text-[#828282]">
-        Asset {" > "} {slug ? slug + " > Edit" : "Add New Asset"}
+        Asset {" > "}{" "}
+        {slug
+          ? slug + " > Edit"
+          : inventory
+          ? "Assign to Asset > " + inventory
+          : "Add New Asset"}
       </p>
       <Button
         text="Back to Assets"
@@ -354,7 +389,7 @@ const AssetForm = () => {
       />
       <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto mt-5 bg-primary shadow-custom rounded-lg p-4">
         <p className="text-2xl font-semibold mb-5">
-          {slug ? "Edit " : "Add New "} Asset
+          {slug ? "Edit " : inventory ? "Assign to " : "Add New "} Asset
         </p>
         <Formik
           initialValues={{
@@ -413,6 +448,7 @@ const AssetForm = () => {
                       label: i.site,
                       value: i._id,
                     }))}
+                    required
                   />
                   <Button
                     text="New"
@@ -436,6 +472,7 @@ const AssetForm = () => {
                           value: i._id,
                         }))
                     }
+                    required
                   />
                   <Button
                     text="New"
@@ -493,6 +530,7 @@ const AssetForm = () => {
                   name="assetID"
                   placeholder="Asset ID"
                   label="Asset ID"
+                  required
                 />
                 <DatePickerField name="purchaseDate" label="Purchase Date" />
                 <div className="md:col-span-2">
@@ -550,30 +588,37 @@ const AssetForm = () => {
                     value: i,
                   }))}
                 />
-                <DatePickerField name="startDate" label="Start Date" />
+                <DatePickerField name="startDate" label="Start Date" required />
                 <DatePickerField name="dueDate" label="Completion Date" />
-                <div className="md:col-span-2 sm:flex items-center">
-                  <label className="text-sm sm:text-right sm:min-w-[115px]">
-                    Criticality
-                  </label>
-                  <Field name="criticality">
-                    {({ field, form }) => (
-                      <Radio.Group {...field} className="">
-                        <Radio value="critical" className="!ml-3">
-                          Critical
-                        </Radio>
-                        <Radio value="high" className="sm:!ml-7">
-                          High
-                        </Radio>
-                        <Radio value="medium" className="sm:!ml-7">
-                          Medium
-                        </Radio>
-                        <Radio value="low" className="sm:!ml-7">
-                          Low
-                        </Radio>
-                      </Radio.Group>
-                    )}
-                  </Field>
+                <div className="md:col-span-2">
+                  <div className="sm:flex items-center">
+                    <label className="text-sm sm:text-right sm:min-w-[115px]">
+                      Criticality
+                    </label>
+                    <Field name="criticality">
+                      {({ field, form }) => (
+                        <Radio.Group {...field} className="">
+                          <Radio value="critical" className="!ml-3">
+                            Critical
+                          </Radio>
+                          <Radio value="high" className="sm:!ml-7">
+                            High
+                          </Radio>
+                          <Radio value="medium" className="sm:!ml-7">
+                            Medium
+                          </Radio>
+                          <Radio value="low" className="sm:!ml-7">
+                            Low
+                          </Radio>
+                        </Radio.Group>
+                      )}
+                    </Field>
+                  </div>
+                  <ErrorMessage
+                    name="criticality"
+                    component="div"
+                    className="text-red-500 text-sm mt-1 sm:ml-32"
+                  />
                 </div>
                 <div className="md:col-span-2 sm:flex items-center">
                   <label className="text-sm sm:text-right sm:min-w-[115px]">
@@ -727,7 +772,13 @@ const AssetForm = () => {
                   onClick={handleSubmit}
                   disabled={isSubmitting}
                   size="small"
-                  text={slug ? "Update Asset" : "Add New Asset"}
+                  text={
+                    slug
+                      ? "Update Asset"
+                      : inventory
+                      ? "Assign to Asset"
+                      : "Add New Asset"
+                  }
                   fullWidth={false}
                 />
               </div>

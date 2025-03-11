@@ -9,8 +9,6 @@ import * as Yup from "yup";
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Required"),
   link: Yup.string().required("Required"),
-  type: Yup.string().required("Required"),
-  description: Yup.string().required("Required"),
 });
 
 const UploadLinkDocPopup = ({
@@ -103,18 +101,10 @@ const UploadLinkDocPopup = ({
               <Divider /> */}
               <div className="mt-4 grid md:grid-cols-3 gap-4 w-full items-end md:items-center">
                 <div className="w-full">
-                  <InputField
-                    name="title"
-                    placeholder="Link Title"
-                    maxLength={50}
-                  />
+                  <InputField name="title" placeholder="Link Title" required />
                 </div>
                 <div className="w-full md:col-span-2">
-                  <InputField
-                    name="link"
-                    placeholder="Link Url"
-                    maxLength={128}
-                  />
+                  <InputField name="link" placeholder="Link Url" required />
                 </div>
 
                 <div className="w-full">

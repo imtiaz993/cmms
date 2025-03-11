@@ -124,8 +124,8 @@ const Dashboard = () => {
               </h2>
             }
           >
-            <div className="">
-              <div className="mx-6 font-medium text-sm pb-2">
+            <div className="h-96">
+              <div className="px-6 font-medium text-sm pb-2 overflow-auto h-full">
                 <Spin spinning={loadingStats || !stats} className="w-full">
                   {Object.keys(stats?.upcomingWorkOrders || {}).map(
                     (dateKey, index) => (
@@ -168,29 +168,6 @@ const Dashboard = () => {
                   )}
                 </Spin>
               </div>
-              {/* <div className="mx-6 font-medium text-sm py-2 border-t border-[#D6D6D6] opacity-70">
-                <p className="px-2">
-                  <strong>Tomorrow</strong> 2/28/2021
-                </p>
-                <div className="flex gap-1 mt-2 px-2">
-                  <p className="mt-1">
-                    <Octagon color="#DA1E28" />
-                  </p>
-                  <div>
-                    <p className="">Rig #21 - Pump System</p>
-                    <p>Hydraulic Pump Maintenance</p>
-                  </div>
-                </div>
-                <div className="flex gap-1 mt-2 px-2">
-                  <p className="mt-1">
-                    <Octagon color="#FF832B" />
-                  </p>
-                  <div>
-                    <p className="">Rig #21 - Pump System</p>
-                    <p>Hydraulic Pump Maintenance</p>
-                  </div>
-                </div>
-              </div> */}
             </div>
           </Card>
         </div>

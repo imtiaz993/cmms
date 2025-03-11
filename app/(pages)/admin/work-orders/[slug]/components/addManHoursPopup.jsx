@@ -31,12 +31,15 @@ const validationSchema = Yup.object({
     otherwise: (schema) => schema.nullable(),
   }),
   performedBy: Yup.string().required("Performed By is required"),
-  companyDoingWork: Yup.string().required("Company Doing Work is required"),
-  rate: Yup.string().required("Rate is required"),
-  comment: Yup.string().max(150, "Comment cannot exceed 150 characters"),
 });
 
-const AddManHoursPopup = ({ visible, setVisible, setWorkOrder, slug }) => {
+const AddManHoursPopup = ({
+  visible,
+  setVisible,
+  setWorkOrder,
+  superUsers,
+  slug,
+}) => {
   const handleSubmit = async (values, setSubmitting, resetForm) => {
     console.log(values);
     if (
@@ -63,22 +66,25 @@ const AddManHoursPopup = ({ visible, setVisible, setWorkOrder, slug }) => {
         console.error("Invalid clockIn or clockOut date/time");
       }
     }
-
+    // Inline filtering of empty strings
+    values = Object.fromEntries(
+      Object.entries(values).filter(([_, value]) => value !== "")
+    );
     const { status, data } = await addManHours({
       ...values,
       workOrder: slug,
     });
     if (status === 200) {
       console.log(data);
-      setWorkOrder((prev) => ({
-        ...prev,
-        manHours: [...prev.manHours, data?.data],
-      }));
+      // setWorkOrder((prev) => ({
+      //   ...prev,
+      //   manHours: [...prev.manHours, data?.data],
+      // }));
       message.success(data?.message || "Work order added successfully");
     } else {
       message.error(data?.message || "Failed to add work order");
     }
-    setSubmitting(false);
+    setSubmitting(true);
     resetForm();
     setVisible(false);
   };
@@ -93,9 +99,6 @@ const AddManHoursPopup = ({ visible, setVisible, setWorkOrder, slug }) => {
           clockInTime: "",
           clockOutTime: "",
           performedBy: "",
-          companyDoingWork: "",
-          rate: "",
-          comment: "",
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -131,9 +134,9 @@ const AddManHoursPopup = ({ visible, setVisible, setWorkOrder, slug }) => {
                   />
                 </div>
               }
-              width={800}
+              width={500}
             >
-              <div className="grid md:grid-cols-3 gap-4">
+              <div className="flex flex-col gap-4 mt-4">
                 {/* Type Field using Formik Field */}
                 <SelectField
                   name="type"
@@ -155,11 +158,11 @@ const AddManHoursPopup = ({ visible, setVisible, setWorkOrder, slug }) => {
 
                 {values.type === "clockInClockOut" && (
                   <>
-                    <div className="grid md:grid-cols-2 gap-4 md:col-span-2">
+                    <div className="flex flex-col md:flex-row gap-4">
                       <DatePickerField name="clockIn" placeholder="Clock In" />
                       <TimePickerField name="clockInTime" placeholder="Time" />
                     </div>
-                    <div className="grid md:grid-cols-2 gap-4 md:col-span-2">
+                    <div className="flex flex-col md:flex-row gap-4">
                       <DatePickerField
                         name="clockOut"
                         placeholder="Clock Out"
@@ -169,30 +172,14 @@ const AddManHoursPopup = ({ visible, setVisible, setWorkOrder, slug }) => {
                   </>
                 )}
 
-                <InputField name="performedBy" placeholder="Performed By" />
-                <InputField
-                  name="companyDoingWork"
-                  placeholder="Company Doing Work"
-                />
-
-                {/* Rate Dropdown */}
                 <SelectField
-                  name="rate"
-                  placeholder="Rate"
-                  className="w-full"
-                  options={[
-                    { label: "Normal", value: "normal" },
-                    { label: "Double", value: "double" },
-                    { label: "Overtime", value: "overtime" },
-                  ]}
+                  name="performedBy"
+                  placeholder="Performed By"
+                  options={superUsers.map((user) => ({
+                    label: user?.name,
+                    value: user?._id,
+                  }))}
                 />
-                <div className="col-span-3 -mb-4">
-                  <TextAreaField
-                    name="comment"
-                    placeholder="Add Comment"
-                    maxLength={150}
-                  />
-                </div>
               </div>
             </Modal>
           </Form>

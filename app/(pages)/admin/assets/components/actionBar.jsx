@@ -192,7 +192,9 @@ const ActionBar = ({
       selectedRowKeys.length > 1 && actionPopup === "workorder";
     let message = isMultipleRows
       ? "Please select only one asset"
-      : "Are you sure you want to perform this action on selected Assets?";
+      : `Are you sure you want to perform this action on selected ${
+          selectedRowKeys.length > 1 ? "Assets" : "Asset"
+        }`;
     return { message, onConfirm: isMultipleRows ? false : handleActionConfirm };
   };
   return (

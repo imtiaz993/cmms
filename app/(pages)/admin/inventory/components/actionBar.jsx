@@ -29,6 +29,7 @@ import ChangeToAssetPopup from "./changeToAssetPopup";
 import Link from "next/link";
 import { LinkBroken, SearchIcon } from "@/icons/index";
 import ConfirmationPopup from "@/components/confirmationPopup";
+import { useRouter } from "next/navigation";
 
 const ActionBar = ({
   columns,
@@ -44,6 +45,7 @@ const ActionBar = ({
   const [filterDropdown, setFilterDropdown] = useState(null);
   const [actionPopup, setActionPopup] = useState(false);
   const [actionError, setActionError] = useState(false);
+  const router = useRouter();
 
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
@@ -140,6 +142,7 @@ const ActionBar = ({
       value: "shippingCart",
     },
   ];
+
   const handleAction = (value) => {
     if (selectedRowKeys.length === 0) setActionError(true);
     else setActionPopup(value);
@@ -148,6 +151,8 @@ const ActionBar = ({
   const handleActionConfirm = async () => {
     if (actionPopup === "shippingCart") {
       addToShippingCart(selectedRowKeys);
+    } else if (actionPopup === "assignToAsset") {
+      router.push(`/admin/new/asset?inventory=${selectedRowKeys[0]}`);
     } else {
       const { status, data } = await updateStatus({
         inventory: [...selectedRowKeys],
@@ -166,13 +171,17 @@ const ActionBar = ({
         message.error(data.error);
       }
     }
-    //  else if (data.error === "Asset is not available") {
-    //   selectedRowKeys.length > 1 && selectedRowKeys.map((id) => {
-    //     data.
-    //   })
+  };
 
-    //   )
-    // }
+  const modalMessage = () => {
+    let isMultipleRows =
+      selectedRowKeys.length > 1 && actionPopup === "assignToAsset";
+    let message = isMultipleRows
+      ? "Please select only one inventory"
+      : `Are you sure you want to perform this action on selected ${
+          selectedRowKeys.length > 1 ? "Inventories" : "Inventory"
+        }`;
+    return { message, onConfirm: isMultipleRows ? false : handleActionConfirm };
   };
 
   return (
@@ -181,8 +190,8 @@ const ActionBar = ({
         visible={actionPopup}
         setVisible={setActionPopup}
         title={actionOptions.find((o) => o.value === actionPopup)?.label}
-        message="Are you sure you want to perform this action on selected Inventory?"
-        onConfirm={handleActionConfirm}
+        message={modalMessage().message}
+        onConfirm={modalMessage().onConfirm}
         onCancel={() => message.info("Action cancelled")}
       />
       <ConfirmationPopup

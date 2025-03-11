@@ -11,8 +11,8 @@ const validationSchema = Yup.object().shape({
   document: Yup.array()
     .min(1, "A file is required")
     .required("A file is required"),
-  documentType: Yup.string().required("Document type is required"),
-  description: Yup.string().max(128, "Description is too long").nullable(),
+  // documentType: Yup.string().required("Document type is required"),
+  // description: Yup.string().max(128, "Description is too long").nullable(),
 });
 
 const UploadDocPopup = ({
@@ -134,6 +134,8 @@ const UploadDocPopup = ({
                   showUploadList={false}
                 >
                   <Button text="Select File" fullWidth={false} outlined />
+
+                  <span className="text-red-600 text-xl"> *</span>
                 </Upload>
                 <p>(Max Size 25 MB)</p>
               </div>
