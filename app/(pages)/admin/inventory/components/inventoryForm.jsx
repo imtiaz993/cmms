@@ -161,16 +161,16 @@ const InventoryForm = () => {
   const validationSchema = Yup.object().shape({
     site: Yup.string().required("Site is required"),
     system: Yup.string().required("System is required"),
-    invoiceNumber: Yup.string().required("Invoice Number is required"),
-    receivedDate: Yup.date().required("Received Date is required"),
+    invoiceNumber: Yup.string(),
+    receivedDate: Yup.date(),
     partNumber: Yup.string().required("Part Number is required"),
-    tagId: Yup.string().required("Tag ID is required"),
-    description: Yup.string().required("Description is required"),
+    tagId: Yup.string(),
+    description: Yup.string(),
     quantity: Yup.number().required("Quantity is required"),
-    cost: Yup.number().required("Cost is required"),
-    notes: Yup.string().required("Notes is required"),
-    image: Yup.array().min(1, "At least one image is required"),
-    ...customFieldValidations,
+    cost: Yup.number(),
+    notes: Yup.string(),
+    image: Yup.array(),
+    // ...customFieldValidations,
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -348,6 +348,7 @@ const InventoryForm = () => {
                       label: i.site,
                       value: i._id,
                     }))}
+                    required
                   />
                   <Button
                     text="New"
@@ -371,6 +372,7 @@ const InventoryForm = () => {
                           value: i._id,
                         }))
                     }
+                    required
                   />
                   <Button
                     text="New"
@@ -421,6 +423,7 @@ const InventoryForm = () => {
                   name="partNumber"
                   placeholder="Part #"
                   label="Part #"
+                  required
                 />
                 <InputField name="tagId" placeholder="Tag ID" label="Tag ID" />
                 <div className="md:col-span-2">
@@ -436,6 +439,7 @@ const InventoryForm = () => {
                   placeholder="00"
                   label="Quantity"
                   type="number"
+                  required
                 />
                 <InputField
                   name="cost"

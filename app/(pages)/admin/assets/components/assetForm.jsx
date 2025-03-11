@@ -192,22 +192,22 @@ const AssetForm = () => {
   const validationSchema = Yup.object().shape({
     site: Yup.string().required("Site is required"),
     system: Yup.string().required("System is required"),
-    category: Yup.string().required("Category is required"),
-    subCategory: Yup.string().required("Sub-category is required"),
+    category: Yup.string(),
+    subCategory: Yup.string(),
     assetID: Yup.string().required("Asset number is required"),
-    purchaseDate: Yup.date().required("Purchase date is required"),
-    description: Yup.string().required("Description is required"),
-    brand: Yup.string().required("Brand is required"),
-    model: Yup.string().required("Model is required"),
-    serialNumber: Yup.string().required("Serial number is required"),
-    cost: Yup.number().required("Cost is required"),
-    maintCategory: Yup.string().required("Maintenance category is required"),
+    purchaseDate: Yup.date(),
+    description: Yup.string(),
+    brand: Yup.string(),
+    model: Yup.string(),
+    serialNumber: Yup.string(),
+    cost: Yup.number(),
+    maintCategory: Yup.string(),
     startDate: Yup.date().required("Start date is required"),
-    dueDate: Yup.date().required("Completion date is required"),
+    dueDate: Yup.date(),
     criticality: Yup.string().required("Criticality is required"),
-    maintStatus: Yup.string().required("Maintenance status is required"),
-    assetImages: Yup.array().min(1, "At least one image is required"),
-    ...customFieldValidations,
+    maintStatus: Yup.string(),
+    assetImages: Yup.array(),
+    // ...customFieldValidations,
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -448,6 +448,7 @@ const AssetForm = () => {
                       label: i.site,
                       value: i._id,
                     }))}
+                    required
                   />
                   <Button
                     text="New"
@@ -471,6 +472,7 @@ const AssetForm = () => {
                           value: i._id,
                         }))
                     }
+                    required
                   />
                   <Button
                     text="New"
@@ -528,6 +530,7 @@ const AssetForm = () => {
                   name="assetID"
                   placeholder="Asset ID"
                   label="Asset ID"
+                  required
                 />
                 <DatePickerField name="purchaseDate" label="Purchase Date" />
                 <div className="md:col-span-2">
@@ -585,30 +588,37 @@ const AssetForm = () => {
                     value: i,
                   }))}
                 />
-                <DatePickerField name="startDate" label="Start Date" />
+                <DatePickerField name="startDate" label="Start Date" required />
                 <DatePickerField name="dueDate" label="Completion Date" />
-                <div className="md:col-span-2 sm:flex items-center">
-                  <label className="text-sm sm:text-right sm:min-w-[115px]">
-                    Criticality
-                  </label>
-                  <Field name="criticality">
-                    {({ field, form }) => (
-                      <Radio.Group {...field} className="">
-                        <Radio value="critical" className="!ml-3">
-                          Critical
-                        </Radio>
-                        <Radio value="high" className="sm:!ml-7">
-                          High
-                        </Radio>
-                        <Radio value="medium" className="sm:!ml-7">
-                          Medium
-                        </Radio>
-                        <Radio value="low" className="sm:!ml-7">
-                          Low
-                        </Radio>
-                      </Radio.Group>
-                    )}
-                  </Field>
+                <div className="md:col-span-2">
+                  <div className="sm:flex items-center">
+                    <label className="text-sm sm:text-right sm:min-w-[115px]">
+                      Criticality
+                    </label>
+                    <Field name="criticality">
+                      {({ field, form }) => (
+                        <Radio.Group {...field} className="">
+                          <Radio value="critical" className="!ml-3">
+                            Critical
+                          </Radio>
+                          <Radio value="high" className="sm:!ml-7">
+                            High
+                          </Radio>
+                          <Radio value="medium" className="sm:!ml-7">
+                            Medium
+                          </Radio>
+                          <Radio value="low" className="sm:!ml-7">
+                            Low
+                          </Radio>
+                        </Radio.Group>
+                      )}
+                    </Field>
+                  </div>
+                  <ErrorMessage
+                    name="criticality"
+                    component="div"
+                    className="text-red-500 text-sm mt-1 sm:ml-32"
+                  />
                 </div>
                 <div className="md:col-span-2 sm:flex items-center">
                   <label className="text-sm sm:text-right sm:min-w-[115px]">

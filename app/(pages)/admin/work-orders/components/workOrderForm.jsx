@@ -6,6 +6,7 @@ import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
 import TimePickerField from "@/components/common/TimePickerField";
 import { EditPagePencil } from "@/icons/index";
+import * as Yup from "yup";
 import {
   DeleteOutlined,
   EyeOutlined,
@@ -299,7 +300,13 @@ const WorkOrderForm = () => {
       <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto mt-5 bg-primary shadow-custom rounded-lg p-4">
         <p className="text-2xl font-semibold mb-5">Unplanned Work Order Form</p>
 
-        <Formik initialValues={{}} onSubmit={handleSubmit}>
+        <Formik
+          initialValues={{}}
+          validationSchema={Yup.object().shape({
+            issueID: Yup.string().required("Issue ID is required"),
+          })}
+          onSubmit={handleSubmit}
+        >
           {({ errors, values, isSubmitting, setFieldValue, submitForm }) => {
             // useEffect(() => {
             //   const filtered = filteredInventory
@@ -347,7 +354,7 @@ const WorkOrderForm = () => {
                     placeholder="Issue ID"
                     label="Issue ID"
                   />
-                  <></>
+                  <div></div>
                   <DatePickerField name="date" label="Date" />
                   <TimePickerField name="time" label="Time" />
                   <div className="md:col-span-2">
@@ -392,7 +399,6 @@ const WorkOrderForm = () => {
                       className={`text-sm flex gap-1 items-center ${"sm:justify-end sm:min-w-[115px]"}`}
                     >
                       Parts
-                      <span className="text-red-600 text-xl">*</span>
                     </label>
                     <Select
                       name="parts"
