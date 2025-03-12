@@ -186,12 +186,12 @@ export const saveWorkOrder = async (id, values) => {
   }
 };
 
-export const startWorkOrder = async (id) => {
+export const startWorkOrder = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/work-orders/startWorkOrder",
       method: "POST",
-      data: { workOrder: id },
+      data: values,
     });
     return { status, data };
   } catch (e) {
@@ -201,12 +201,12 @@ export const startWorkOrder = async (id) => {
   }
 };
 
-export const endWorkOrder = async (id) => {
+export const endWorkOrder = async (values) => {
   try {
     const { status, data } = await authRequest({
       url: "/work-orders/endWorkOrder",
       method: "POST",
-      data: { workOrder: id },
+      data: values,
     });
     return { status, data };
   } catch (e) {

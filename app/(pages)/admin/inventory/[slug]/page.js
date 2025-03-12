@@ -91,10 +91,10 @@ const InventoryDetails = () => {
     {
       label: (
         <p>
-          <DeleteOutlined /> Dispose
+          <DeleteOutlined /> Disposed
         </p>
       ),
-      value: "dispose",
+      value: "disposed",
     },
     {
       label: (

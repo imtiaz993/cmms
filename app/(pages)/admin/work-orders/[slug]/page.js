@@ -30,6 +30,7 @@ import Photos from "./components/photos";
 import { getAdminsManagers } from "app/services/common";
 import TextArea from "antd/es/input/TextArea";
 import AddManHoursPopup from "./components/addManHoursPopup";
+import dayjs from "dayjs";
 
 const WorkOrdersDetail = () => {
   const [workOrder, setWorkOrder] = useState();
@@ -196,20 +197,31 @@ const WorkOrdersDetail = () => {
   };
 
   const handleStart = async () => {
-    const { status, data } = await startWorkOrder(slug);
+    const currentTime = dayjs();
+    const { status, data } = await startWorkOrder({
+      workOrder: slug,
+      startDate: currentTime.format("MM-DD-YYYY"),
+      startTime: currentTime.format("HH:mm:ss"),
+    });
     if (status === 200) {
       message.success(data.message || "Work order started successfully");
-      setWorkOrder({ ...workOrder, startTime: data?.data });
+      setWorkOrder({ ...workOrder, timeStart: currentTime });
     } else {
       message.error(data.message || "Failed to start work order");
     }
   };
+  console.log("workOrder", workOrder);
 
   const handleStop = async () => {
-    const { status, data } = await endWorkOrder(slug);
+    const currentTime = dayjs();
+    const { status, data } = await endWorkOrder({
+      workOrder: slug,
+      endDate: currentTime.format("MM-DD-YYYY"),
+      endTime: currentTime.format("HH:mm:ss"),
+    });
     if (status === 200) {
       message.success(data.message || "Work order stopped successfully");
-      setWorkOrder({ ...workOrder, endTime: data?.data });
+      setWorkOrder({ ...workOrder, timeEnd: null, timeStart: null });
     } else {
       message.error(data.message || "Failed to Stop work order");
     }
@@ -248,6 +260,7 @@ const WorkOrdersDetail = () => {
           />
         </div>
       </div>
+
       <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto mt-5 px-5 md:px-10">
         <div className="bg-primary shadow-custom rounded-lg p-4">
           <div className="flex flex-col gap-5">
@@ -256,51 +269,47 @@ const WorkOrdersDetail = () => {
                 Asset: {workOrder?.asset.assetID}
               </h1>
               <div className="flex justify-end gap-3 mb-5">
-                {/* {workOrder?.startReadingTime === null ? ( */}
-                <Button
-                  text="Start"
-                  prefix={<LoginOutlined />}
-                  fullWidth={false}
-                  onClick={handleStart}
-                  outlined
-                />
-                {/* ) : (
-                  workOrder?.stopTime === null && ( */}
-                <Button
-                  text="Stop"
-                  prefix={<LogoutOutlined />}
-                  fullWidth={false}
-                  onClick={handleStop}
-                  outlined
-                />
-                {/* )
-                )} */}
-                <Button
-                  text="Add Manual Hours"
-                  prefix={<LogoutOutlined />}
-                  fullWidth={false}
-                  onClick={() => setManHoursPopup(true)}
-                  outlined
-                />
                 {!["cancelled", "completed"].includes(workOrder?.status) && (
-                  <Button
-                    text="Cancel Work Order"
-                    prefix={<CloseCircleOutlined />}
-                    fullWidth={false}
-                    onClick={handleCancelWO}
-                    disabled={isSubmitting}
-                    outlined
-                  />
-                )}
-
-                {!["cancelled", "completed"].includes(workOrder?.status) && (
-                  <Button
-                    text="Mark Completed"
-                    prefix={<PlusOutlined />}
-                    fullWidth={false}
-                    onClick={handleComplete}
-                    disabled={isSubmitting}
-                  />
+                  <>
+                    {workOrder?.timeStart === null && (
+                      <Button
+                        text="Start"
+                        prefix={<LoginOutlined />}
+                        fullWidth={false}
+                        onClick={handleStart}
+                        outlined
+                      />
+                    )}
+                    <Button
+                      text="Stop"
+                      prefix={<LogoutOutlined />}
+                      fullWidth={false}
+                      onClick={handleStop}
+                      outlined
+                    />
+                    <Button
+                      text="Add Manual Hours"
+                      prefix={<LogoutOutlined />}
+                      fullWidth={false}
+                      onClick={() => setManHoursPopup(true)}
+                      outlined
+                    />
+                    <Button
+                      text="Cancel Work Order"
+                      prefix={<CloseCircleOutlined />}
+                      fullWidth={false}
+                      onClick={handleCancelWO}
+                      disabled={isSubmitting}
+                      outlined
+                    />
+                    <Button
+                      text="Mark Completed"
+                      prefix={<PlusOutlined />}
+                      fullWidth={false}
+                      onClick={handleComplete}
+                      disabled={isSubmitting}
+                    />
+                  </>
                 )}
               </div>
             </div>
@@ -415,7 +424,7 @@ const WorkOrdersDetail = () => {
             </div>
           </div>
         </div>
-        <div className="bg-primary shadow-custom rounded-lg p-4 mt-5">
+        <div className="bg-primary shadow-custom rounded-lg p-4 mb-5 mt-5">
           <Tabs
             defaultActiveKey={"photos"}
             animated
