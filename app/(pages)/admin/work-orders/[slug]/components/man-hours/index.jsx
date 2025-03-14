@@ -5,7 +5,7 @@ import { useState } from "react";
 import { EyeOutlined } from "@ant-design/icons";
 import { title } from "process";
 
-const ManHours = ({ manHoursData, superUsers, setData }) => {
+const ManHours = ({ manHoursData, superUsers, setWorkOrder }) => {
   const columns = [
     {
       title: "Man Hours",
@@ -27,19 +27,6 @@ const ManHours = ({ manHoursData, superUsers, setData }) => {
       render: (addedBy) =>
         superUsers.find((user) => user._id === addedBy)?.name,
     },
-    {
-      title: "View Work Order",
-      dataIndex: "workOrder",
-      key: "workOrder",
-      render: (workOrder) => (
-        <Link
-          href={`/admin/work-orders/${workOrder}`}
-          className="text-tertiary"
-        >
-          <EyeOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
-        </Link>
-      ),
-    },
   ];
   const [isLoading, setIsLoading] = useState(false);
   const defaultCheckedList = columns.map((item) => item.key);
@@ -53,7 +40,7 @@ const ManHours = ({ manHoursData, superUsers, setData }) => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
-          setData={setData}
+          setWorkOrder={setWorkOrder}
           superUsers={superUsers}
         />
 

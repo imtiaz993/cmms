@@ -51,6 +51,7 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
         <ManHours
           manHoursData={data?.dashboard?.manHours}
           superUsers={superUsers}
+          setData={setData}
         />
       ),
     },
