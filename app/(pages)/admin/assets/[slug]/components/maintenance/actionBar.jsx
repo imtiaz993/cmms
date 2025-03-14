@@ -2,18 +2,10 @@ import { useState } from "react";
 import { Checkbox, Dropdown, Button as AntButton, message, Menu } from "antd";
 import { DownOutlined, SettingOutlined } from "@ant-design/icons";
 import Button from "@/components/common/Button";
-import MaintenanceFilter from "./filtersDropdown";
 import WorkOrdersFilter from "app/(pages)/admin/work-orders/components/filtersDropdown";
 import { useParams } from "next/navigation";
 
-const ActionBar = ({
-  checkedList,
-  setCheckedList,
-  columns,
-  selectedRowKeys,
-  setSelectedRowKeys,
-  setData,
-}) => {
+const ActionBar = ({ checkedList, setCheckedList, columns, setData }) => {
   const [filterDropdown, setFilterDropdown] = useState(null);
   const { slug } = useParams();
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({

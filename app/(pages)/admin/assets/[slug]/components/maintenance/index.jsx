@@ -26,11 +26,11 @@ const columns = [
     dataIndex: "criticality",
     key: "criticality",
     render: (criticality) =>
-      criticality === "critical" ? (
+      criticality === "Critical" ? (
         <p className="text-red-500">Critical</p>
-      ) : criticality === "high" ? (
+      ) : criticality === "High" ? (
         <p className="text-orange-500">High</p>
-      ) : criticality === "medium" ? (
+      ) : criticality === "Medium" ? (
         <p className="text-yellow-500">Medium</p>
       ) : (
         <p className="text-green-500 capitalize">{criticality}</p>
@@ -59,37 +59,9 @@ const columns = [
 const defaultCheckedList = columns.map((item) => item.key);
 
 const Maintenance = ({ maintenanceData, setData }) => {
-  // const [maintenanceData, setMaintenanceData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newColumns = columns.filter((item) => checkedList.includes(item.key));
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys, rows) => {
-      setSelectedRowKeys(keys);
-    },
-  };
-
-  // useEffect(() => {
-  //   const fetchHistory = async () => {
-  //     setIsLoading(true);
-  //     // const { status, data } = null;
-  //     const status = null,
-  //       data = null;
-  //     if (status === 200) {
-  //       setMaintenanceData(data?.data);
-  //       message.success(
-  //         data?.message || "Maintenance Data fetched successfully"
-  //       );
-  //     } else {
-  //       message.error(data?.message || "Failed to fetch maintenance data");
-  //     }
-  //     setIsLoading(false);
-  //   };
-  //   fetchHistory();
-  // }, []);
 
   return (
     <div className="px-3 lg:px-5 pb-4 mt-1">
@@ -98,8 +70,6 @@ const Maintenance = ({ maintenanceData, setData }) => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
-          selectedRowKeys={selectedRowKeys}
-          setSelectedRowKeys={setSelectedRowKeys}
           setData={setData}
         />
 
@@ -108,8 +78,6 @@ const Maintenance = ({ maintenanceData, setData }) => {
           size={"large"}
           scroll={{ x: 1400 }}
           columns={newColumns}
-          rowSelection={rowSelection}
-          rowKey="_id"
           dataSource={
             maintenanceData &&
             maintenanceData.length > 0 &&

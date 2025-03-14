@@ -1,14 +1,16 @@
 import { Input, message, Table } from "antd";
-import { getReadings } from "app/services/reports";
+import { getFilteredReadings, getReadings } from "app/services/reports";
 import { useEffect, useMemo, useState } from "react";
 import ActionBar from "./readingComponents/actionBar";
 import { SearchIcon } from "@/icons/index";
+import { useSearchParams } from "next/navigation";
 
 const columns = [
   {
     title: "System",
     dataIndex: "system",
     key: "system",
+    render: (system) => system.system,
   },
   {
     title: "Asset #",
@@ -24,26 +26,28 @@ const columns = [
     title: "Hours in Service",
     dataIndex: "activeHours",
     key: "hoursInService",
+    render: (activeHours) => activeHours && parseFloat(activeHours).toFixed(5),
   },
   {
     title: "Days in Service",
     dataIndex: "activeHours",
     key: "daysInService",
-    render: (activeHours, record) =>
-      activeHours && (activeHours !== 0 ? Math.floor(activeHours / 24) : 0),
+    render: (activeHours) =>
+      activeHours && parseFloat(activeHours / 24).toFixed(5),
   },
   {
     title: "Hours in Downtime",
     dataIndex: "inActiveHours",
     key: "hoursDowntime",
+    render: (inActiveHours) =>
+      inActiveHours && parseFloat(inActiveHours).toFixed(5),
   },
   {
     title: "Days in Downtime",
     dataIndex: "inActiveHours",
     key: "daysDowntime",
-    render: (inActiveHours, record) =>
-      inActiveHours &&
-      (inActiveHours !== 0 ? Math.floor(inActiveHours / 24) : 0),
+    render: (inActiveHours) =>
+      inActiveHours && parseFloat(inActiveHours / 24).toFixed(5),
   },
 ];
 
@@ -85,6 +89,9 @@ const data = [
 const defaultCheckedList = columns.map((item) => item.key);
 
 const Readings = () => {
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const activeSystem = searchParams.get("system") || "";
   const [readings, setReadings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
@@ -109,7 +116,10 @@ const Readings = () => {
   useEffect(() => {
     const handleFetchReadings = async () => {
       setIsLoading(true);
-      const { status, data } = await getReadings();
+      const { status, data } = await getFilteredReadings({
+        site: activeLocation ? activeLocation : null,
+        system: activeSystem ? activeSystem : null,
+      });
       if (status === 200) {
         setReadings(data.data);
       } else {
@@ -136,6 +146,7 @@ const Readings = () => {
           checkedList={checkedList}
           setCheckedList={setCheckedList}
           columns={columns}
+          setReadings={setReadings}
         />
 
         <Table
