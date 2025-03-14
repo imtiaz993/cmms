@@ -173,14 +173,14 @@ const InventoryDetails = () => {
         <p className="text-sm text-[#828282]">
           Inventory {" > " + details?.partNumber}
         </p>
-        <Button
-          text="Back to Inventory"
-          onClick={() => router.push("/admin/inventory")}
-          className="mt-4 !bg-[#3F3F3F] !border-none"
-          fullWidth={false}
-          prefix={<LeftOutlined />}
-        />
-        <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
+        <div className="mt-4 mr-5 flex justify-between">
+          <Button
+            text="Back to Inventory"
+            onClick={() => router.push("/admin/inventory")}
+            className="!bg-[#3F3F3F] !border-none"
+            fullWidth={false}
+            prefix={<LeftOutlined />}
+          />
           <Button
             text={
               inventoryShippingCart.length > 0
@@ -220,6 +220,7 @@ const InventoryDetails = () => {
                 onClick={() => router.push(`/admin/inventory/${slug}/edit`)}
                 outlined
               />
+              <div className="md:hidden"></div>
               <Select
                 value={null}
                 name="actions"
