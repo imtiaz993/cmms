@@ -31,6 +31,7 @@ import { getAdminsManagers } from "app/services/common";
 import TextArea from "antd/es/input/TextArea";
 import AddManHoursPopup from "./components/addManHoursPopup";
 import dayjs from "dayjs";
+import ManHours from "./components/man-hours";
 
 const WorkOrdersDetail = () => {
   const [workOrder, setWorkOrder] = useState();
@@ -57,6 +58,17 @@ const WorkOrdersDetail = () => {
           documentsData={workOrder?.documents}
           setData={setWorkOrder}
           superUsers={superUsers}
+        />
+      ),
+    },
+    {
+      key: "man-hours",
+      label: "Man Hours",
+      children: (
+        <ManHours
+          manHoursData={workOrder?.manHours}
+          superUsers={superUsers}
+          setWorkOrder={setWorkOrder}
         />
       ),
     },

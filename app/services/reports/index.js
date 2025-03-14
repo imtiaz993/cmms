@@ -29,10 +29,25 @@ export const generateReport = async (values, reportName, reportType) => {
   }
 };
 
-export const exportReadings = async (hierarchy) => {
+export const exportReadings = async () => {
   try {
     const { status, data } = await authRequest({
-      url: `/readings/export?hierarchy=${hierarchy}`,
+      url: `/readings/export`,
+    });
+    return { status, data };
+  } catch (e) {
+    if (e.data) {
+      return { status: e.status, data: e.data };
+    }
+  }
+};
+
+export const getFilteredReadings = async (values) => {
+  try {
+    const { status, data } = await authRequest({
+      url: "/readings/filtered",
+      method: "POST",
+      data: values,
     });
     return { status, data };
   } catch (e) {
