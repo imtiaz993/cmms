@@ -5,7 +5,7 @@ const ManHours = ({ manHoursData, superUsers }) => {
     <div className="md:mt-1 grid grid-cols-2 md:grid-cols-3 gap-5">
       {manHoursData &&
         manHoursData?.map((item, i) => (
-          <div className="p-5 rounded-lg shadow-custom bg-bg_secondary border">
+          <div className="p-5 rounded-lg shadow-custom bg-bg_secondary border" key={i}>
             <p className="text-sm font-medium">
               {parseFloat((item?.manHours).toFixed(5))} Hours
             </p>
