@@ -101,10 +101,10 @@ const AssetDetail = () => {
     {
       label: (
         <p>
-          <DeleteOutlined /> Dispose
+          <DeleteOutlined /> Disposed
         </p>
       ),
-      value: "dispose",
+      value: "disposed",
     },
     {
       label: (
@@ -203,14 +203,14 @@ const AssetDetail = () => {
             <p className="text-sm text-[#828282]">
               Assets {" > " + details?.assetID}
             </p>
-            <Button
-              text="Back to Assets"
-              onClick={() => router.push("/admin/assets")}
-              className="mt-4 !bg-[#3F3F3F] !border-none"
-              fullWidth={false}
-              prefix={<LeftOutlined />}
-            />
-            <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
+            <div className="mt-4 mr-5 flex justify-between">
+              <Button
+                text="Back to Assets"
+                onClick={() => router.push("/admin/assets")}
+                className="!bg-[#3F3F3F] !border-none"
+                fullWidth={false}
+                prefix={<LeftOutlined />}
+              />
               <Button
                 text={
                   assetsShippingCart.length > 0
@@ -250,6 +250,7 @@ const AssetDetail = () => {
                     onClick={() => router.push(`/admin/assets/${slug}/edit`)}
                     outlined
                   />
+                  <div className="md:hidden"></div>
                   <Select
                     value={null}
                     name="actions"

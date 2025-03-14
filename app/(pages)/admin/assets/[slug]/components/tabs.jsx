@@ -44,12 +44,23 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
         />
       ),
     },
-    { key: "manHours", label: "Man Hours", children: <ManHours /> },
+    {
+      key: "manHours",
+      label: "Man Hours",
+      children: (
+        <ManHours
+          manHoursData={data?.dashboard?.manHours}
+          superUsers={superUsers}
+        />
+      ),
+    },
 
     {
       key: "maintenance",
       label: "Maintenance",
-      children: <Maintainance maintenanceData={data?.workOrders} setData={setData} />,
+      children: (
+        <Maintainance maintenanceData={data?.workOrders} setData={setData} />
+      ),
     },
     {
       key: "material-transfer",

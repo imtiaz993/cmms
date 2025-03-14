@@ -3,8 +3,8 @@ import { authRequest } from "../requestHandler";
 export const getReadings = async () => {
   try {
     const { status, data } = await authRequest({
-      url: "/readings/get",
-      method: "POST",
+      url: "/readings/all",
+      method: "GET",
     });
     return { status, data };
   } catch (e) {

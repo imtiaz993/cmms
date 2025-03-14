@@ -6,34 +6,44 @@ import { SearchIcon } from "@/icons/index";
 
 const columns = [
   {
-    title: "Location",
-    dataIndex: "location",
-    key: "location",
+    title: "System",
+    dataIndex: "system",
+    key: "system",
   },
   {
     title: "Asset #",
-    dataIndex: "assetNo",
-    key: "assetNo",
+    dataIndex: "assetID",
+    key: "assetID",
   },
   {
     title: "Serial #",
-    dataIndex: "serialNo",
-    key: "serialNo",
+    dataIndex: "serialNumber",
+    key: "serialNumber",
   },
   {
-    title: "Hours / Days in Service",
-    dataIndex: "hoursDaysInService",
-    key: "hoursDaysInService",
+    title: "Hours in Service",
+    dataIndex: "activeHours",
+    key: "hoursInService",
+  },
+  {
+    title: "Days in Service",
+    dataIndex: "activeHours",
+    key: "daysInService",
+    render: (activeHours, record) =>
+      activeHours && (activeHours !== 0 ? Math.floor(activeHours / 24) : 0),
   },
   {
     title: "Hours in Downtime",
-    dataIndex: "hoursDowntime",
+    dataIndex: "inActiveHours",
     key: "hoursDowntime",
   },
   {
     title: "Days in Downtime",
-    dataIndex: "daysDowntime",
+    dataIndex: "inActiveHours",
     key: "daysDowntime",
+    render: (inActiveHours, record) =>
+      inActiveHours &&
+      (inActiveHours !== 0 ? Math.floor(inActiveHours / 24) : 0),
   },
 ];
 
