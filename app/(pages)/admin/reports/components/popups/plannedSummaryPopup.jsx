@@ -8,21 +8,31 @@ import { Field, Form, Formik } from "formik";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
-const PlannedSummaryPopup = ({ visible, setVisible }) => {
+const PlannedSummaryPopup = ({
+  visible,
+  setVisible,
+  title,
+  categories,
+  endPoint,
+}) => {
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
+  const assets = useSelector((state) => state.assets.assets);
+
   // Validation schema for the form
   const validationSchema = Yup.object({
     // costCenter: Yup.string().required("Cost Center is required"),
-    assetNumber: Yup.string().required("Asset Number is required"),
-    physicalLocation: Yup.string().required("Physical Location is required"),
+    asset: Yup.string().required("Asset is required"),
+    site: Yup.string().required("Site is required"),
     createdFrom: Yup.date().required("Created Between From is required"),
     createdTo: Yup.date().required("Created Between To is required"),
     closesdFrom: Yup.date().required("Closed Between From is required"),
     closedTo: Yup.date().required("Closed Between To is required"),
-    assignedTo: Yup.string().required("Assigned To is required"),
-    priority: Yup.string().required("Priority is required"),
-    companyDoingWork: Yup.string().required("Company Doing Work is required"),
+    category: Yup.string(),
+    system: Yup.string(),
+    // assignedTo: Yup.string().required("Assigned To is required"),
+    // priority: Yup.string().required("Priority is required"),
+    // companyDoingWork: Yup.string().required("Company Doing Work is required"),
     formType: Yup.string()
       .oneOf(["pdf", "csv"], "Select a valid export format")
       .required("Export format is required"),
@@ -32,11 +42,7 @@ const PlannedSummaryPopup = ({ visible, setVisible }) => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
     // Placeholder for actual report generation function
-    const { status, data } = await generateReport(
-      values,
-      "Planned Maintenance Summary Report",
-      "maintenance"
-    );
+    const { status, data } = await generateReport(values, endPoint);
     if (status === 200) {
       window.open(data.data);
       message.success(data.message || "Report generated successfully");
@@ -52,15 +58,17 @@ const PlannedSummaryPopup = ({ visible, setVisible }) => {
       <Formik
         initialValues={{
           // costCenter: "",
-          assetNumber: "",
-          physicalLocation: "",
+          asset: "",
+          site: "",
           createdFrom: null,
           createdTo: null,
           closesdFrom: null,
           closedTo: null,
-          assignedTo: "",
-          priority: "",
-          companyDoingWork: "",
+          category: "",
+          system: "",
+          // assignedTo: "",
+          // priority: "",
+          // companyDoingWork: "",
           formType: "pdf", // Default value for form type
         }}
         validationSchema={validationSchema} // Use Yup validation schema
@@ -92,7 +100,7 @@ const PlannedSummaryPopup = ({ visible, setVisible }) => {
                   />
                 </div>
               }
-              title="Generate Planned Maintenance Summary Report"
+              title={"Generate " + title}
             >
               <div>
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
@@ -105,51 +113,106 @@ const PlannedSummaryPopup = ({ visible, setVisible }) => {
                   </div> */}
 
                   <div className="w-full">
-                    <InputField
-                      name="assetNumber"
-                      placeholder="Asset Number"
-                      maxLength={128}
+                    <SelectField
+                      name="asset"
+                      placeholder="Select Asset"
+                      label="Asset"
+                      labelOnTop
+                      options={assets.map((i) => ({
+                        label: i.assetID,
+                        value: i._id,
+                      }))}
+                      required
+                      showSearch
                     />
                   </div>
 
-                  <div className="w-full md:col-span-2">
+                  <div className="w-full">
                     <SelectField
-                      name="physicalLocation"
-                      placeholder="Physical Location"
+                      name="site"
+                      label="Site"
+                      labelOnTop
+                      placeholder="Select Site"
                       options={locations.map((i) => ({
                         label: i.site,
                         value: i._id,
                       }))}
+                      required
                     />
                   </div>
 
                   <div className="w-full">
                     <DatePickerField
                       name="createdFrom"
-                      placeholder="Created Between From"
+                      label="Created Between From"
+                      labelOnTop
+                      required
                     />
                   </div>
 
                   <div className="w-full">
                     <DatePickerField
                       name="createdTo"
-                      placeholder="Created Between To"
+                      label="Created Between To"
+                      labelOnTop
+                      required
                     />
                   </div>
 
                   <div className="w-full">
                     <DatePickerField
                       name="closesdFrom"
-                      placeholder="Closed Between From"
+                      label="Closed Between From"
+                      labelOnTop
+                      required
                     />
                   </div>
 
                   <div className="w-full">
                     <DatePickerField
                       name="closedTo"
-                      placeholder="Closed Between To"
+                      label="Closed Between To"
+                      labelOnTop
+                      required
                     />
                   </div>
+                  {categories && (
+                    <>
+                      <div className="w-full">
+                        <SelectField
+                          name="category"
+                          label="Category"
+                          labelOnTop
+                          placeholder="Select Category"
+                          options={
+                            categories &&
+                            categories?.map((i) => ({
+                              value: i._id,
+                              label: i.category,
+                            }))
+                          }
+                        />
+                      </div>
+
+                      <div className="w-full">
+                        <SelectField
+                          name="system"
+                          label="System"
+                          labelOnTop
+                          placeholder="Select System"
+                          options={
+                            values.site &&
+                            systems
+                              .filter((i) => i?.site?._id === values.site)
+                              ?.map((i) => ({
+                                label: i.system,
+                                value: i._id,
+                              }))
+                          }
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="mt-4">

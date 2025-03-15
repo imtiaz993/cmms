@@ -38,6 +38,7 @@ const reportsData = [
     title: "Maintenance Forecast by Craft",
     description:
       "This report shows all the upcoming planned maintenance work orders and the date they are expected to be created. It lists them by facility, zone, and groups them by the craft that these jobs are assigned to.",
+    endPoint: "maintenance-schedule",
   },
   {
     title: "Maintenance Forecast by Zone",
@@ -53,6 +54,7 @@ const reportsData = [
     title: "Planned Maintenance Summary",
     description:
       "This report shows a summary of all planned maintenance jobs in the system for a facility for a given date range. Jobs that are past due and/or closed late are highlighted.",
+    endPoint: "planned-maintenance-summary",
   },
   {
     title: "Unplanned Maintenance Details",
@@ -63,6 +65,7 @@ const reportsData = [
     title: "Unplanned Maintenance Summary",
     description:
       "This report shows a summary of all unplanned maintenance jobs in the system for a facility for a given date range. It lists the problem, the number of hours spent on the job, and the downtime incurred with each job.",
+    endPoint: "unplanned-maintenance-summary",
   },
   {
     title: "Unplanned Work Order Survey",
@@ -73,6 +76,7 @@ const reportsData = [
     title: "Work Orders Past Due",
     description:
       "This report shows planned work orders that are past due. The first one is a summary of all planned work orders that are past due and no delay reasons have been identified, and the second one lists all planned work orders that have delay reasons identified and are still past due.",
+    endPoint: "past-due-work-orders",
   },
   {
     title: "Work Order Personnel Summary",
@@ -88,6 +92,7 @@ const reportsData = [
     title: "Work Order Summary",
     description:
       "This report displays work order details such as work order number, assets, cost center, and status, and can be filtered using a comprehensive set of conditions.",
+    endPoint: "work-order-summary",
   },
   {
     title: "Work Orders With Delay Reasons",
@@ -111,6 +116,7 @@ const reportsData = [
     title: "Planned WOs vs Unplanned WOs",
     description:
       "Display the pie charts of planned vs unplanned WOs in a time range.",
+    endPoint: "planned-vs-unplanned",
   },
 ];
 const MaintenanceReports = ({ categories }) => {
@@ -185,6 +191,7 @@ const MaintenanceReports = ({ categories }) => {
           title="Maintenance Forecast by Craft Report"
           type="maintenance"
           fromToDate
+          endPoint="maintenance-schedule"
         />
 
         <ReportsPopup
@@ -204,6 +211,8 @@ const MaintenanceReports = ({ categories }) => {
         <PlannedSummaryPopup
           visible={popup === "Planned Maintenance Summary"}
           setVisible={setPopup}
+          title="Planned Maintenance Summary Report"
+          endPoint="planned-maintenance-summary"
         />
 
         <UnplannedDetailsPopup
@@ -211,9 +220,11 @@ const MaintenanceReports = ({ categories }) => {
           setVisible={setPopup}
         />
 
-        <UnplannedSummaryPopup
+        <PlannedSummaryPopup //unplanned
           visible={popup === "Unplanned Maintenance Summary"}
           setVisible={setPopup}
+          title="Unplanned Maintenance Summary Report"
+          endPoint="unplanned-maintenance-summary"
         />
 
         <MaintenanceReusedPopup
@@ -230,6 +241,7 @@ const MaintenanceReports = ({ categories }) => {
           title="Work Order Past Due Report"
           type="maintenance"
           dataOnly
+          endPoint="past-due-work-orders"
         />
 
         <WOPersonnelSummaryPopup
@@ -243,10 +255,12 @@ const MaintenanceReports = ({ categories }) => {
           categories={categories}
         />
 
-        <WOSummaryPopup
+        <PlannedSummaryPopup //WOSummaryPopup
           visible={popup === "Work Order Summary"}
           setVisible={setPopup}
+          title="Work Order Summary Report"
           categories={categories}
+          endPoint="work-order-summary"
         />
 
         <ReportsPopup
@@ -279,6 +293,7 @@ const MaintenanceReports = ({ categories }) => {
           title="Planned WOs vs Unplanned WOs Report"
           type="maintenance"
           fromToDate
+          endPoint="planned-vs-unplanned"
         />
       </>
 

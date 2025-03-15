@@ -202,8 +202,16 @@ const AssetForm = () => {
     serialNumber: Yup.string(),
     cost: Yup.number(),
     maintCategory: Yup.string(),
-    startDate: Yup.date().required("Start date is required"),
-    dueDate: Yup.date(),
+    startDate: Yup.date()
+      .min(
+        new Date(new Date().setHours(0, 0, 0, 0)),
+        "Start date cannot be before today"
+      )
+      .required("Start date is required"),
+    dueDate: Yup.date().min(
+      Yup.ref("startDate"),
+      "Due date cannot be before start date"
+    ),
     criticality: Yup.string().required("Criticality is required"),
     maintStatus: Yup.string(),
     assetImages: Yup.array(),

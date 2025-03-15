@@ -14,10 +14,10 @@ export const getReadings = async () => {
   }
 };
 
-export const generateReport = async (values, reportName, reportType) => {
+export const generateReport = async (values, endPoint) => {
   try {
     const { status, data } = await authRequest({
-      url: "/readings/generateReport",
+      url: `/reports/` + endPoint,
       method: "POST",
       data: values,
     });

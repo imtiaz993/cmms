@@ -304,6 +304,11 @@ const WorkOrderForm = () => {
           initialValues={{}}
           validationSchema={Yup.object().shape({
             issueID: Yup.string().required("Issue ID is required"),
+            date: Yup.date(),
+            completionDate: Yup.date().min(
+              Yup.ref("date"),
+              "Completion Date must be after Date"
+            ),
           })}
           onSubmit={handleSubmit}
         >

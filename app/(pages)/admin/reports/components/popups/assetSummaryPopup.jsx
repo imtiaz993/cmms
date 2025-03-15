@@ -2,10 +2,10 @@ import Button from "@/components/common/Button";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
 import { rigs } from "@/constants/rigsAndSystems";
-import { Checkbox, DatePicker, Modal, Radio, message } from "antd";
+import { Checkbox, DatePicker, Modal, Radio, Select, message } from "antd";
 import { generateReport } from "app/services/reports";
 import { getCategories } from "app/services/setUp/categories";
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -13,42 +13,29 @@ import * as Yup from "yup";
 // Yup validation schema
 const validationSchema = Yup.object({
   // costCenter: Yup.string().required("Cost Center is required"),
-  serialNumber: Yup.string().max(
-    128,
-    "Serial Number can't exceed 128 characters"
-  ),
-  physicalLocation: Yup.string().required("Physical Location is required"),
+  asset: Yup.string().required("Asset is required"),
+  site: Yup.string().required("Physical Location is required"),
   year: Yup.string().required("Year is required"),
-  accountingDept: Yup.string().required("Accounting Dept is required"),
   category: Yup.string().required("Category is required"),
-  system: Yup.string().required("System is required"),
+  system: Yup.string(), //.required("System is required"),
   expandAssetClass: Yup.boolean(),
   childAssets: Yup.boolean(),
   formType: Yup.string()
     .oneOf(["pdf", "csv"], "Select a valid export format")
     .required("Export format is required"),
-  tier3: Yup.string(),
-  tier4: Yup.string(),
-  tier5: Yup.string(),
-  tier6: Yup.string(),
 });
 
 // Formik initial values
 const initialValues = {
   // costCenter: "",
-  serialNumber: "",
-  physicalLocation: "",
+  asset: "",
+  site: "",
   year: "",
-  accountingDept: "",
   category: "",
   system: "",
   expandAssetClass: false,
   childAssets: false,
   formType: "pdf", // Default to pdf for radio button
-  tier3: "",
-  tier4: "",
-  tier5: "",
-  tier6: "",
 };
 
 const AssetSummaryPopup = ({
@@ -56,17 +43,16 @@ const AssetSummaryPopup = ({
   setVisible,
   categories,
   isInventory,
+  endPoint,
 }) => {
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
+  const assets = useSelector((state) => state.assets.assets);
+
   // Form submission handler
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
-    const { status, data } = await generateReport(
-      values,
-      isInventory ? "Inventory Summary Report" : "Asset Summary Report",
-      isInventory ? "inventory" : "asset"
-    );
+    const { status, data } = await generateReport(values, endPoint);
     if (status === 200) {
       window.open(data.data);
       message.success(data.message || "Report generated successfully");
@@ -84,7 +70,7 @@ const AssetSummaryPopup = ({
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, isSubmitting, submitForm }) => (
+        {({ values, isSubmitting, submitForm, errors }) => (
           <Form>
             <Modal
               maskClosable={false}
@@ -125,19 +111,28 @@ const AssetSummaryPopup = ({
                       maxLength={128}
                     />
                   </div> */}
-
                   <div className="w-full">
-                    <InputField
-                      name="serialNumber"
-                      placeholder="Asset Number"
-                      maxLength={128}
+                    <SelectField
+                      name="asset"
+                      placeholder="Select Asset"
+                      label="Asset"
+                      labelOnTop
+                      required
+                      options={assets.map((i) => ({
+                        label: i.assetID,
+                        value: i._id,
+                      }))}
+                      showSearch
                     />
                   </div>
 
                   <div className="w-full">
                     <SelectField
-                      name="physicalLocation"
-                      placeholder="Location"
+                      name="site"
+                      placeholder="Select Site"
+                      label="Site"
+                      labelOnTop
+                      required
                       options={locations.map((i) => ({
                         label: i.site,
                         value: i._id,
@@ -149,11 +144,9 @@ const AssetSummaryPopup = ({
                       name="system"
                       placeholder="System"
                       options={
-                        values.physicalLocation &&
+                        values.site &&
                         systems
-                          .filter(
-                            (i) => i?.site?._id === values.physicalLocation
-                          )
+                          .filter((i) => i?.site?._id === values.site)
                           ?.map((i) => ({
                             label: i.system,
                             value: i._id,

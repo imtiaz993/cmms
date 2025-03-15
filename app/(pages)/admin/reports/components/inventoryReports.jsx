@@ -25,11 +25,13 @@ const reportsData = [
     title: "Inventory Details",
     description:
       "This report shows the details about the inventory status, inventory class, custom attributes, maintenance information and costs related to an inventory.",
+    endPoint: "inventory-details",
   },
   {
     title: "Newly Added Inventories",
     description:
       "This report shows a list of newly added inventories defaulted to within the past 90 days or you can select a date range.",
+    endPoint: "newly-added-inventories",
   },
   {
     title: "Inventory Operational Status",
@@ -40,16 +42,19 @@ const reportsData = [
     title: "Inventory Physical Location",
     description:
       "This report shows the current and previous physical location for a particular inventory.",
+    endPoint: "inventory-physical-location",
   },
   {
     title: "Inventory Status Change",
     description:
       "This report shows how long an inventory was listed in a particular status type.",
+    endPoint: "inventory-status-update",
   },
   {
     title: "Inventory Summary",
     description:
       "This report shows the summary of the active inventories in the system.",
+    endPoint: "inventory-summary",
   },
   {
     title: "Total Cost of Ownership",
@@ -130,6 +135,7 @@ const InventoryReports = ({ categories }) => {
         title="Inventory Details Report"
         type="inventory"
         assetNumber
+        endPoint="inventory-details"
       />
       <ReportsPopup
         visible={popup === "Newly Added Inventories"}
@@ -138,6 +144,7 @@ const InventoryReports = ({ categories }) => {
         type="inventory"
         costCenter={false}
         fromToDate
+        endPoint="newly-added-inventories"
       />
       <ReportsPopup
         visible={popup === "Inventory Operational Status"}
@@ -152,6 +159,7 @@ const InventoryReports = ({ categories }) => {
         title="Inventory Physical Location Report"
         type="inventory"
         dataOnly
+        endPoint="inventory-physical-location"
       />
       <ReportsPopup
         visible={popup === "Inventory Status Change"}
@@ -160,11 +168,13 @@ const InventoryReports = ({ categories }) => {
         type="inventory"
         assetNumber
         fromToDate
+        endPoint="inventory-status-update"
       />
       <AssetSummaryPopup
         visible={popup === "Inventory Summary"}
         setVisible={setPopup}
         categories={categories}
+        endPoint="inventory-summary"
       />
       <ReportsPopup
         visible={popup === "Total Cost of Ownership"}

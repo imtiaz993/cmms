@@ -126,8 +126,8 @@ const Dashboard = () => {
           >
             <div className="h-96">
               <div className="px-6 font-medium text-sm pb-2 overflow-auto h-full">
-                <Spin spinning={loadingStats || !stats} className="w-full">
-                  {Object.keys(stats?.upcomingWorkOrders || {}).map(
+                {!loadingStats && stats ? (
+                  Object.keys(stats?.upcomingWorkOrders || {}).map(
                     (dateKey, index) => (
                       <div key={dateKey}>
                         <p
@@ -165,8 +165,12 @@ const Dashboard = () => {
                         )}
                       </div>
                     )
-                  )}
-                </Spin>
+                  )
+                ) : (
+                  <p className="text-center my-20">
+                    <Spin spinning={true} />
+                  </p>
+                )}
               </div>
             </div>
           </Card>
