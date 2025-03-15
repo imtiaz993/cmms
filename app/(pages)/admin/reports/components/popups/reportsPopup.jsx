@@ -3,9 +3,9 @@ import DatePickerField from "@/components/common/DatePickerField";
 import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
 import { rigs } from "@/constants/rigsAndSystems";
-import { Checkbox, message, Modal, Radio } from "antd";
+import { Checkbox, message, Modal, Radio, Select } from "antd";
 import { generateReport } from "app/services/reports";
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
@@ -14,7 +14,7 @@ const ReportsPopup = ({
   setVisible,
   title,
   type,
-  costCenter = true,
+  site = true,
   dataOnly,
   assetNumber,
   fromToDate,
@@ -22,15 +22,15 @@ const ReportsPopup = ({
   physicalLocation,
   date,
   year,
+  endPoint,
 }) => {
   const locations = useSelector((state) => state.location.location);
+  const assets = useSelector((state) => state.assets.assets);
   // Build the validation schema based on props
   const validationSchema = Yup.object({
-    location: costCenter
-      ? Yup.string().required("Location is required")
-      : Yup.string(),
-    assetNumber: assetNumber
-      ? Yup.string().required("Asset Number is required")
+    site: site ? Yup.string().required("Site is required") : Yup.string(),
+    asset: assetNumber
+      ? Yup.string().required("Asset is required")
       : Yup.string(),
     date: date
       ? Yup.date().required("Date is required")
@@ -59,12 +59,15 @@ const ReportsPopup = ({
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
     // Placeholder for actual report generation function
-    const { status, data } = await generateReport(values, title, type);
+    const { status, data } = endPoint
+      ? await generateReport(values, endPoint)
+      : { status: null, data: null };
     if (status === 200) {
       window.open(data.data);
-      message.success(data.message || "Report generated successfully");
+      message.success(data.message ?? "Report generated successfully");
+      resetForm();
     } else {
-      message.error(data.error || "Failed to generate report");
+      message.error(data?.error ?? "Failed to generate report");
     }
     setSubmitting(false);
     setVisible(false);
@@ -74,15 +77,14 @@ const ReportsPopup = ({
     <div>
       <Formik
         initialValues={{
-          location: "",
-          assetNumber: "",
-          physicalLocation: "",
+          site: "",
+          asset: "",
           date: null,
           year: "",
-          dataOnly: false,
+          dataOnly: "",
           fromDate: null,
           toDate: null,
-          childAssets: false,
+          childAssets: "",
           formType: "pdf", // Default value for form type
         }}
         validationSchema={validationSchema}
@@ -122,37 +124,43 @@ const ReportsPopup = ({
               title={"Generate " + title}
             >
               <div>
-                {costCenter && (
+                {site && (
                   <div className="mt-4 flex flex-col md:flex-row gap-4 w-full items-end md:items-center">
                     <div className="w-full">
                       <SelectField
-                        name="location"
-                        placeholder="Select Location"
-                        label="Location"
+                        name="site"
+                        placeholder="Select Site"
+                        label="Site"
                         labelOnTop
                         maxLength={128}
                         options={locations.map((i) => ({
                           label: i.site,
                           value: i._id,
                         }))}
+                        required
                       />
                     </div>
-
+                    {console.log("errors", errors)}
                     {assetNumber && (
                       <div className="w-full">
-                        <InputField
-                          name="assetNumber"
-                          placeholder="Asset Number"
-                          label="Asset Number"
+                        <SelectField
+                          name="asset"
+                          placeholder="Select Asset"
+                          label="Asset"
                           labelOnTop
-                          options={[]}
+                          options={assets.map((i) => ({
+                            label: i.assetID,
+                            value: i._id,
+                          }))}
+                          required
+                          showSearch
                         />
                       </div>
                     )}
 
                     {date && (
                       <div className="w-full">
-                        <DatePickerField name="date" label="Date" />
+                        <DatePickerField name="date" label="Date" required />
                       </div>
                     )}
 
@@ -171,6 +179,7 @@ const ReportsPopup = ({
                             { value: "2021", label: "2021" },
                             { value: "2020", label: "2020" },
                           ]}
+                          required
                         />
                       </div>
                     )}
@@ -206,8 +215,14 @@ const ReportsPopup = ({
                       name="fromDate"
                       label="From Date"
                       labelOnTop
+                      required
                     />
-                    <DatePickerField name="toDate" label="To Date" labelOnTop />
+                    <DatePickerField
+                      name="toDate"
+                      label="To Date"
+                      labelOnTop
+                      required
+                    />
                   </div>
                 )}
 

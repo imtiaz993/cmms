@@ -26,6 +26,7 @@ const DatePickerField = ({
   style,
   readOnly,
   labelOnTop,
+  required,
 }) => (
   <div
     className={`w-full ${!labelOnTop && label && "sm:flex items-center gap-3"}`}
@@ -33,11 +34,9 @@ const DatePickerField = ({
     {label && (
       <label
         htmlFor={name}
-        className={`text-sm ${
-          !labelOnTop && "sm:text-right sm:min-w-[115px]"
-        }`}
+        className={`text-sm ${!labelOnTop && "sm:text-right sm:min-w-[115px]"}`}
       >
-        {label}
+        {label} {required && <span className="text-red-600 text-xl">*</span>}
       </label>
     )}
     <div className="w-full">
