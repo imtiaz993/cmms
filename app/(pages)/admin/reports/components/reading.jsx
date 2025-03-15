@@ -128,7 +128,7 @@ const Readings = () => {
       setIsLoading(false);
     };
     handleFetchReadings();
-  }, []);
+  }, [activeLocation, activeSystem]);
   return (
     <div className="px-5 mt-2 h-[calc(100dvh-210px-60px)] overflow-auto lg:px-10">
       <div className="mt-3">
