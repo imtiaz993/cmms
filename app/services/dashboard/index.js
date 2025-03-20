@@ -3,9 +3,9 @@ import { authRequest } from "../requestHandler";
 export const getDashboardStats = async (activeLocation, activeSystem) => {
   try {
     const { status, data } = await authRequest({
-      url: `/dashboard/get${`${activeLocation && `?site=${activeLocation}`}${
-        activeSystem && `&system=${activeSystem}`
-      }`}`,
+      url: `/dashboard/get`,
+      //  +        `${`${activeLocation && `?site=${activeLocation}`}${
+      //   activeSystem && `&system=${activeSystem}`}`}`
     });
     return { status, data };
   } catch (e) {
@@ -23,9 +23,9 @@ export const getDashboardSchedule = async (
   try {
     if (date) {
       const { status, data } = await authRequest({
-        url: `/dashboard/schedule?date=${date}&${
-          activeLocation && `site=${activeLocation}`
-        }${activeSystem && `&system=${activeSystem}`}`,
+        url: `/dashboard/schedule?date=${date}`,
+        //  + `${activeLocation && `&site=${activeLocation}`}${
+        //     activeSystem && `&system=${activeSystem}`}`
       });
       return { status, data };
     } else {
