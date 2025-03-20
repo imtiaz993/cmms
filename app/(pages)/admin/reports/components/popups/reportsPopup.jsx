@@ -17,6 +17,7 @@ const ReportsPopup = ({
   site = true,
   dataOnly,
   assetNumber,
+  partNumber,
   fromToDate,
   includeChildAssets,
   physicalLocation,
@@ -26,11 +27,16 @@ const ReportsPopup = ({
 }) => {
   const locations = useSelector((state) => state.location.location);
   const assets = useSelector((state) => state.assets.assets);
+  const inventory = useSelector((state) => state.inventory.inventory);
+
   // Build the validation schema based on props
   const validationSchema = Yup.object({
     site: site ? Yup.string().required("Site is required") : Yup.string(),
     asset: assetNumber
       ? Yup.string().required("Asset is required")
+      : Yup.string(),
+    inventory: partNumber
+      ? Yup.string().required("Part Number is required")
       : Yup.string(),
     date: date
       ? Yup.date().required("Date is required")
@@ -79,6 +85,7 @@ const ReportsPopup = ({
         initialValues={{
           site: "",
           asset: "",
+          inventory: "",
           date: null,
           year: "",
           dataOnly: "",
@@ -148,10 +155,38 @@ const ReportsPopup = ({
                           placeholder="Select Asset"
                           label="Asset"
                           labelOnTop
-                          options={assets.map((i) => ({
-                            label: i.assetID,
-                            value: i._id,
-                          }))}
+                          options={
+                            values.site &&
+                            assets
+                              .filter((i) => i.site._id === values.site)
+                              ?.map((i) => ({
+                                label: i.assetID,
+                                value: i._id,
+                              }))
+                          }
+                          required
+                          showSearch
+                        />
+                      </div>
+                    )}
+
+                    {partNumber && (
+                      <div className="w-full">
+                        <SelectField
+                          name="inventory"
+                          placeholder="Select Part Number"
+                          label="Part Number"
+                          labelOnTop
+                          options={
+                            values.site
+                              ? inventory
+                                  .filter((i) => i.site._id === values.site)
+                                  ?.map((i) => ({
+                                    label: i.partNumber,
+                                    value: i._id,
+                                  }))
+                              : []
+                          }
                           required
                           showSearch
                         />

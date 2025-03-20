@@ -134,7 +134,7 @@ const InventoryReports = ({ categories }) => {
         setVisible={setPopup}
         title="Inventory Details Report"
         type="inventory"
-        assetNumber
+        partNumber
         endPoint="inventory-details"
       />
       <ReportsPopup
@@ -166,7 +166,7 @@ const InventoryReports = ({ categories }) => {
         setVisible={setPopup}
         title="Inventory Status Change Report"
         type="inventory"
-        assetNumber
+        partNumber
         fromToDate
         endPoint="inventory-status-update"
       />
@@ -181,7 +181,7 @@ const InventoryReports = ({ categories }) => {
         setVisible={setPopup}
         title="Total Cost of Ownership Report"
         type="inventory"
-        assetNumber
+        partNumber
         includeChildAssets
       />
       <ReportsPopup

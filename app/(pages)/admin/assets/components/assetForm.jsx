@@ -460,7 +460,7 @@ const AssetForm = () => {
                   />
                   <Button
                     text="New"
-                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                    className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
                     onClick={() => setAddSitePopup(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}
@@ -484,7 +484,7 @@ const AssetForm = () => {
                   />
                   <Button
                     text="New"
-                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                    className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
                     onClick={() => setAddSystemPopup(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}
@@ -502,7 +502,7 @@ const AssetForm = () => {
                   />
                   <Button
                     text="New"
-                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                    className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
                     onClick={() => setAddCategoryPopup(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}
@@ -525,7 +525,7 @@ const AssetForm = () => {
                   />
                   <Button
                     text="New"
-                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                    className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
                     onClick={() => setAddSubCategoryPopup(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}
