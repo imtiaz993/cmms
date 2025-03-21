@@ -87,9 +87,9 @@ const AssetFilter = ({ closeDropdown, setFilteredAssets, options }) => {
                     }))
                 }
               />
-              <InputField name="assetID" placeholder="Asset #" />
+              {/* <InputField name="assetID" placeholder="Asset #" />
               <InputField name="serialNumber" placeholder="Serial #" />
-              <InputField name="model" placeholder="Model" />
+              <InputField name="model" placeholder="Model" /> */}
               <SelectField
                 name="criticality"
                 placeholder="Priority"
@@ -105,10 +105,10 @@ const AssetFilter = ({ closeDropdown, setFilteredAssets, options }) => {
                 placeholder="Status"
                 options={options}
               />
-              <DatePickerField
+              {/* <DatePickerField
                 name="purchaseDate"
                 placeholder="Purchase Date"
-              />
+              /> */}
               <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
                 <div>
                   <Button
