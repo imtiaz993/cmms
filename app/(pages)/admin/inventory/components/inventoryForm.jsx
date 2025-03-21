@@ -180,7 +180,7 @@ const InventoryForm = () => {
     receivedDate: Yup.date(),
     partNumber: Yup.string().required("Part Number is required"),
     tagId: Yup.string(),
-    description: Yup.string(),
+    description: Yup.string().required("Description is required"),
     quantity: Yup.number().required("Quantity is required"),
     cost: Yup.number(),
     notes: Yup.string(),
@@ -446,6 +446,7 @@ const InventoryForm = () => {
                     placeholder="Description"
                     label="Description"
                     className="!h-12"
+                    required
                   />
                 </div>
                 <InputField
@@ -561,7 +562,7 @@ const InventoryForm = () => {
                 })}
                 <div className="md:col-span-2 sm:ml-32">
                   <Button
-                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-2"
+                    className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
                     onClick={() => setAddFieldPopupVisible(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}

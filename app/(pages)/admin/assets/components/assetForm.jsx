@@ -196,7 +196,7 @@ const AssetForm = () => {
     subCategory: Yup.string(),
     assetID: Yup.string().required("Asset number is required"),
     purchaseDate: Yup.date(),
-    description: Yup.string(),
+    description: Yup.string().required("Description is required"),
     brand: Yup.string(),
     model: Yup.string(),
     serialNumber: Yup.string(),
@@ -547,6 +547,7 @@ const AssetForm = () => {
                     placeholder="Description"
                     label="Description"
                     className="!h-12"
+                    required
                   />
                 </div>
                 <InputField name="brand" placeholder="Brand" label="Brand" />
@@ -708,7 +709,7 @@ const AssetForm = () => {
                 })}
                 <div className="md:col-span-2 sm:ml-32">
                   <Button
-                    className="!bg-[#4C4C51] !shadow-custom !border-white mt-2"
+                    className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
                     onClick={() => setAddFieldPopupVisible(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}

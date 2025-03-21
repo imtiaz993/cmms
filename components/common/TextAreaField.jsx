@@ -12,6 +12,7 @@ const TextAreaField = ({
   style,
   readOnly,
   labelOnTop,
+  required
 }) => {
   return (
     <div
@@ -26,7 +27,7 @@ const TextAreaField = ({
             !labelOnTop && "sm:text-right sm:min-w-[115px]"
           }`}
         >
-          {label}
+        {label} {required && <span className="text-red-600 text-xl">*</span>}
         </label>
       )}
       <div className="w-full">
