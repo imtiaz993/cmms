@@ -232,21 +232,23 @@ export default function Layout({ children }) {
           <Sidebar
             openSidebar={openSidebar}
             setOpenSidebar={setOpenSidebar}
-            params={`?location=${activeLocation || ""}&system=${
-              activeSystem || ""
-            }`}
-            site={locations.find((i) => i._id === activeLocation)?.site}
+            params={activeLocation && `?location=${activeLocation}`}
+            // &system=${activeSystem || ""}
+            // site={locations.find((i) => i._id === activeLocation)?.site}
+            activeLocation={activeLocation}
             system={systems.find((i) => i._id === activeSystem)?.system}
+            locations={locations}
           />
           <div className="w-full lg:w-[calc(100%-251px)]">
             {!["new", "profile", "change-password"].includes(currentPage) &&
               !isNewEditDetails && (
                 <>
-                  <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
+                  <h1 className="px-5 md:px-10 text-2xl font-medium capitalize mb-4">
                     {currentItem.icon} {currentItem.label}
                   </h1>
                   {currentPage !== "settings" &&
-                    currentPage !== "dashboard" && (
+                    currentPage !== "dashboard" &&
+                    false && (
                       <div className="px-5 md:px-10 flex gap-3 my-4">
                         <Select
                           value={activeLocation}

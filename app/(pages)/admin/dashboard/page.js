@@ -60,7 +60,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 h-[calc(100dvh-140px-40px-40px)] overflow-auto px-3 lg:px-6 pt-3">
+    <div className="flex flex-col gap-6 h-[calc(100dvh-170px)] overflow-auto px-3 lg:px-6">
       <div className="flex flex-col xl:flex-row gap-6">
         <Card
           className="!bg-primary xl:w-5/12 shadow-custom"

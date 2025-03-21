@@ -1,6 +1,6 @@
 import React from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Drawer, Menu } from "antd";
+import { Drawer, Menu, Select } from "antd";
 import {
   DashboardOutlined,
   AppstoreOutlined,
@@ -10,10 +10,18 @@ import {
   DatabaseOutlined,
   SwapOutlined,
   SettingOutlined,
+  EnvironmentOutlined,
 } from "@ant-design/icons";
 import { getUser } from "@/utils/index";
 
-const Sidebar = ({ openSidebar, setOpenSidebar, params, site, system }) => {
+const Sidebar = ({
+  openSidebar,
+  setOpenSidebar,
+  params,
+  activeLocation,
+  system,
+  locations,
+}) => {
   const router = useRouter();
   const pathname = usePathname();
   const currentPage = pathname.split("/")[2] || "dashboard";
@@ -65,17 +73,71 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params, site, system }) => {
 
   const onClick = ({ key }) => {
     setOpenSidebar(false);
-    router.push(`/admin/${key}${params}`);
+    router.push(`/admin/${key}${params ? params : ""}`);
   };
 
   return (
     <div className="rounded-tr-xl bg-primary overflow-hidden shadow-custom">
       <div className=" max-h-[calc(100dvh-16px-60px-16px)] min-h-[calc(100dvh-16px-60px-16px)] overflow-auto hidden lg:block lg:w-[250px] p-5 pt-7 select-none">
-        {site && (
-          <div className="mx-1 p-2 bg-[#0F0E13] rounded text-xl text-center font-medium">
-            <p className="text-[#efbf60]">{site}</p>
-          </div>
-        )}
+        <div className="mx-1">
+          {/* Display the selected location in a styled div */}
+          {activeLocation && (
+            <div className="p-2 bg-[#0F0E13] rounded text-xl text-center font-medium">
+              <p className="text-[#efbf60] flex items-center justify-center gap-2">
+                <EnvironmentOutlined />
+                {locations.find((loc) => loc._id === activeLocation)?.site ||
+                  "Unknown Site"}
+              </p>
+            </div>
+          )}
+          {/* Select component for changing the location */}
+          <Select
+            className="mt-2 mx-1 p-2 rounded text-xl text-center font-medium w-full"
+            bordered={false}
+            value={null} // Set to undefined to show placeholder instead of selected item
+            onChange={(value) => {
+              if (value === "all") {
+                router.push(`/admin/${currentPage}`);
+              } else if (value) {
+                router.push(
+                  `/admin/${currentPage}${value && `?location=${value}`}`
+                );
+              } else {
+                router.push(`/admin/${currentPage}`);
+              }
+            }}
+            allowClear={true}
+            options={[
+              {
+                label: (
+                  <div className="flex items-center gap-2 text-[#efbf60]">
+                    <EnvironmentOutlined />
+                    <span>All</span>
+                  </div>
+                ),
+                value: "all",
+              },
+              ...locations.map((i) => ({
+                label: (
+                  <div className="flex items-center gap-2 text-[#efbf60]">
+                    <EnvironmentOutlined />
+                    <span>{i.site}</span>
+                  </div>
+                ),
+                value: i._id,
+              })),
+            ]}
+            placeholder={
+              <div className="flex items-center justify-center gap-2 text-[#efbf60]">
+                <EnvironmentOutlined />
+                <span>{activeLocation ? "Change" : "Select"} Site</span>{" "}
+                {/* Updated placeholder text to indicate action */}
+              </div>
+            }
+            suffixIcon={<span className="text-[#efbf60]">▼</span>} // Custom arrow
+          />
+        </div>
+
         <Menu
           mode="inline"
           defaultSelectedKeys={[currentPage]}
@@ -106,6 +168,61 @@ const Sidebar = ({ openSidebar, setOpenSidebar, params, site, system }) => {
         key={"left"}
       >
         <div className="select-none">
+          {activeLocation && (
+            <div className="p-2 bg-[#0F0E13] rounded text-xl text-center font-medium">
+              <p className="text-[#efbf60] flex items-center justify-center gap-2">
+                <EnvironmentOutlined />
+                {locations.find((loc) => loc._id === activeLocation)?.site ||
+                  "Unknown Site"}
+              </p>
+            </div>
+          )}
+          {/* Select component for changing the location */}
+          <Select
+            className="mt-2 mx-1 p-2 rounded text-xl text-center font-medium w-full"
+            bordered={false}
+            value={null} // Set to undefined to show placeholder instead of selected item
+            onChange={(value) => {
+              if (value === "all") {
+                router.push(`/admin/${currentPage}`);
+              } else if (value) {
+                router.push(
+                  `/admin/${currentPage}${value && `?location=${value}`}`
+                );
+              } else {
+                router.push(`/admin/${currentPage}`);
+              }
+            }}
+            allowClear={true}
+            options={[
+              {
+                label: (
+                  <div className="flex items-center gap-2 text-[#efbf60]">
+                    <EnvironmentOutlined />
+                    <span>All</span>
+                  </div>
+                ),
+                value: "all",
+              },
+              ...locations.map((i) => ({
+                label: (
+                  <div className="flex items-center gap-2 text-[#efbf60]">
+                    <EnvironmentOutlined />
+                    <span>{i.site}</span>
+                  </div>
+                ),
+                value: i._id,
+              })),
+            ]}
+            placeholder={
+              <div className="flex items-center justify-center gap-2 text-[#efbf60]">
+                <EnvironmentOutlined />
+                <span>{activeLocation ? "Change" : "Select"} Site</span>{" "}
+                {/* Updated placeholder text to indicate action */}
+              </div>
+            }
+            suffixIcon={<span className="text-[#efbf60]">▼</span>} // Custom arrow
+          />
           <Menu
             mode="inline"
             defaultSelectedKeys={[currentPage]}
