@@ -16,7 +16,7 @@ import {
 import { Checkbox, Form, message, Radio, Select, Table, Upload } from "antd";
 import { getAssetDetails } from "app/services/assets";
 import { getFilteredInventory } from "app/services/inventory";
-import { Field, Formik } from "formik";
+import { ErrorMessage, Field, Formik } from "formik";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -26,7 +26,7 @@ import { addUnplannedWorkOrder } from "app/services/workOrders";
 
 const WorkOrderForm = () => {
   const router = useRouter();
-  const assetId = useSearchParams().get("Id");
+  const [assetId, setAssetId] = useState(useSearchParams().get("Id"));
   const { assets, isLoading, error } = useSelector((state) => state.assets);
   // const locations = useSelector((state) => state.location.location);
 
@@ -201,23 +201,24 @@ const WorkOrderForm = () => {
 
   useEffect(() => {
     const fetchFilteredInventory = async () => {
-      try {
-        const { status, data } = await getFilteredInventory({
-          site: assetDetails[0].site._id,
-        });
+      // try {
+      const { status, data } = await getFilteredInventory({
+        site: assetDetails[0].site._id,
+      });
 
-        if (status === 200) {
-          setFilteredInventory(data.data);
-        } else {
-          message.error(data?.error || "Failed to fetch filtered inventory");
-        }
-      } catch (error) {
-        message.error("Error fetching filtered inventory");
-      } finally {
+      if (status === 200) {
+        setFilteredInventory(data.data);
+      } else {
+        message.error(data?.error || "Failed to fetch filtered inventory");
       }
+      // } catch (error) {
+      //   message.error("Error fetching filtered inventory");
+      // } finally {
+      // }
     };
+    console.log("assetDetails", assetDetails);
 
-    assetDetails && fetchFilteredInventory();
+    assetDetails && assetDetails.length > 0 && fetchFilteredInventory();
   }, [assetDetails]);
 
   const handleSubmit = async (values) => {
@@ -301,9 +302,13 @@ const WorkOrderForm = () => {
         <p className="text-2xl font-semibold mb-5">Unplanned Work Order Form</p>
 
         <Formik
-          initialValues={{}}
+          initialValues={{
+            asset: assetId ?? "",
+          }}
           validationSchema={Yup.object().shape({
+            asset: Yup.string().required("Asset is required"),
             issueID: Yup.string().required("Issue ID is required"),
+            description: Yup.string().required("Description is required"),
             date: Yup.date(),
             completionDate: Yup.date().min(
               Yup.ref("date"),
@@ -334,22 +339,59 @@ const WorkOrderForm = () => {
                     )
                   )}
                 </>
-                <div className="grid md:grid-cols-1 gap-4 md:gap-8">
+                <div className="grid md:grid-cols-2 gap-4 md:gap-8">
                   <p className="md:col-span-2 font-semibold md:text-lg">
                     Asset Details
                   </p>
+                  <div className={`w-full sm:flex items-center gap-3`}>
+                    <label
+                      className={`text-sm flex gap-1 items-center sm:justify-end sm:min-w-[115px]`}
+                    >
+                      Asset
+                      <span className="text-red-600 text-xl">*</span>
+                    </label>
+                    <div className="w-full">
+                      <Select
+                        name="asset"
+                        placeholder="Asset"
+                        value={assetId}
+                        style={{ height: "44px", width: "100%" }}
+                        size="large"
+                        options={assets.map((i) => ({
+                          label: i.assetID,
+                          value: i._id,
+                        }))}
+                        onChange={(value) => {
+                          setAssetId(value);
+                          setFieldValue("asset", value);
+                        }}
+                        showSearch
+                        filterOption={(input, option) =>
+                          option.label
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                      />
+                      <ErrorMessage
+                        name="asset"
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
+                      />
+                    </div>
+                  </div>
+                  <div></div>
+                  {console.log("assetId ", assetId)}
                   <Table
-                    loading={!assets || !assetId || isLoading}
+                    loading={!assets || isLoading}
                     size="large"
                     scroll={{ x: 800 }}
                     columns={mainColumns}
+                    className="md:col-span-2"
                     rowKey="_id"
                     dataSource={assetDetails}
                     style={{ marginTop: 5 }}
                     pagination={false}
                   />
-                </div>
-                <div className="grid md:grid-cols-2 gap-4 md:gap-8 mt-5">
                   <p className="md:col-span-2 font-semibold md:text-lg">
                     Work Order Details
                   </p>
@@ -367,6 +409,7 @@ const WorkOrderForm = () => {
                       name="description"
                       label="Description"
                       placeholder="Enter Description..."
+                      required
                     />
                   </div>
                   <div className="md:col-span-2 sm:flex items-center">

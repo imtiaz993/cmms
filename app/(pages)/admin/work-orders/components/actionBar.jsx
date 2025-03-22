@@ -185,10 +185,19 @@ const ActionBar = ({
           />
 
           <div>
-            {!unplanned && (
+            {!unplanned ? (
               <Button
                 text={`New Maintenance Schedule`}
                 onClick={showAddWOModal}
+                // outlined
+                style={{ padding: "4px 10px" }}
+                className="!text-xs md:!text-sm"
+                prefix={<PlusOutlined />}
+              />
+            ) : (
+              <Button
+                text={`New Unplanned Work Order`}
+                onClick={() => router.push(`/admin/new/work-order`)}
                 // outlined
                 style={{ padding: "4px 10px" }}
                 className="!text-xs md:!text-sm"
