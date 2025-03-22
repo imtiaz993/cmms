@@ -150,7 +150,7 @@ const ActionBar = ({
               placement="bottomCenter"
             >
               <Button
-                text="Settings"
+                text="Columns"
                 outlined
                 style={{ padding: "4px 24px" }}
                 prefix={<SettingOutlined />}

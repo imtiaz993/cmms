@@ -20,9 +20,6 @@ const LineChart = dynamic(() => import("./components/lineChart"), {
 });
 
 const Dashboard = () => {
-  const searchParams = useSearchParams();
-  const activeLocation = searchParams.get("location") || "";
-  const activeSystem = searchParams.get("system") || "";
   const [stats, setStats] = useState();
   const [loadingStats, setLoadingStats] = useState(true);
   const [schedule, setSchedule] = useState();
@@ -30,11 +27,7 @@ const Dashboard = () => {
   const [activeManHoursTab, setActiveManHoursTab] = useState("30 Days");
 
   const getSchedule = async (date = "2025-03-05") => {
-    const { status, data } = await getDashboardSchedule(
-      date,
-      activeLocation,
-      activeSystem
-    );
+    const { status, data } = await getDashboardSchedule(date);
     if (status === 200) {
       setSchedule(data.data);
       setLoadingSchedule(false);
@@ -46,10 +39,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const getStats = async () => {
-      const { status, data } = await getDashboardStats(
-        activeLocation,
-        activeSystem
-      );
+      const { status, data } = await getDashboardStats();
       if (status === 200) {
         setStats(data.data);
         setLoadingStats(false);
@@ -60,7 +50,7 @@ const Dashboard = () => {
     };
     getStats();
     getSchedule();
-  }, [activeLocation, activeSystem]);
+  }, []);
 
   const criticalityColors = {
     critical: "#DA1E28",
@@ -70,7 +60,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 h-[calc(100dvh-140px-40px-40px)] overflow-auto px-3 lg:px-6 pt-3">
+    <div className="flex flex-col gap-6 h-[calc(100dvh-170px)] overflow-auto px-3 lg:px-6">
       <div className="flex flex-col xl:flex-row gap-6">
         <Card
           className="!bg-primary xl:w-5/12 shadow-custom"
@@ -79,11 +69,10 @@ const Dashboard = () => {
         >
           <div className="flex justify-center w-full">
             {stats ? (
-              <div>
+              <div className="w-full">
                 <ColumnChart data={stats?.assets} months={stats?.months} />
                 <p className="mt-2 text-center">
-                  Lorem ipsum dolor sit amet consectetur. Mauris nisl amet est
-                  elit eu amet cursus.
+                  Monthly chart of asset expenses.
                 </p>
               </div>
             ) : (
@@ -102,11 +91,10 @@ const Dashboard = () => {
             }
           >
             {stats ? (
-              <div>
+              <div className="w-full">
                 <LineChart data={stats?.workOrder} months={stats?.months} />
                 <p className="mt-2 text-center">
-                  Lorem ipsum dolor sit amet consectetur. Mauris nisl amet est
-                  elit eu amet cursus.
+                  Monthly chart comparing planned and unplanned work orders.
                 </p>
               </div>
             ) : (
@@ -145,20 +133,29 @@ const Dashboard = () => {
                         {(stats.upcomingWorkOrders[dateKey] || []).length >
                         0 ? (
                           stats.upcomingWorkOrders[dateKey].map((wo) => (
-                            <div key={wo._id} className="flex gap-1 my-1 px-2">
-                              <span className="mt-1">
-                                <Octagon
-                                  color={
-                                    criticalityColors[wo.criticality] ||
-                                    "#B3B3B3"
-                                  }
-                                />
-                              </span>
-                              <p>
-                                {wo.site?.site} - {wo.system?.system}
-                                <p>Asset ID: {wo.assetID}</p>
-                              </p>
-                            </div>
+                            <Link
+                              key={wo._id}
+                              href={`/admin/work-orders/${wo._id}`}
+                              target="_blank"
+                            >
+                              <div
+                                key={wo._id}
+                                className="flex gap-1 my-1 px-2"
+                              >
+                                <span className="mt-1">
+                                  <Octagon
+                                    color={
+                                      criticalityColors[wo.criticality] ||
+                                      "#B3B3B3"
+                                    }
+                                  />
+                                </span>
+                                <p>
+                                  {wo.site?.site} - {wo.system?.system}
+                                  <p>Asset ID: {wo.assetID}</p>
+                                </p>
+                              </div>
+                            </Link>
                           ))
                         ) : (
                           <p className="text-center my-3">No work orders</p>
@@ -185,12 +182,9 @@ const Dashboard = () => {
           >
             <div className="flex justify-center">
               {stats ? (
-                <div>
+                <div className="w-full">
                   <ColumnChart data={stats?.inventory} months={stats?.months} />
-                  <p className="mt-2">
-                    Lorem ipsum dolor sit amet consectetur. Mauris nisl amet est
-                    elit eu amet cursus.
-                  </p>
+                  <p className="mt-2">Monthly chart of inventory expenses.</p>
                 </div>
               ) : (
                 <p className="text-center my-20">

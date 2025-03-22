@@ -2,6 +2,7 @@
 import { Badge, Calendar, Spin } from "antd";
 import { useState, useRef } from "react";
 import DailyBatchPopup from "./scheduleComponents/dailyBatchPopup";
+import { Octagon } from "@/icons/index";
 
 const Schedule = ({ schedule, setLoadingSchedule, getSchedule }) => {
   const [selectedDate, setSelectedDate] = useState("");
@@ -31,35 +32,51 @@ const Schedule = ({ schedule, setLoadingSchedule, getSchedule }) => {
     if (info.type === "date") {
       const data = getScheduleData(current);
       if (data) {
-        return (
-          <div className="m-0 p-0">
-            <Badge
-              status={"error"}
-              className="!flex items-center h-5"
-              text={<p className="inline text-xs">{data.critical} Critical</p>}
-            />
-            <Badge
-              status={"warning"}
-              className="!flex items-center h-5"
-              text={<p className="inline text-xs">{data.high} High</p>}
-            />
-            <Badge
-              status={"processing"}
-              className="!flex items-center h-5"
-              text={<p className="inline text-xs">{data.medium} Medium</p>}
-            />
-            <Badge
-              status={"default"}
-              className="!flex items-center h-5"
-              text={<p className="inline text-xs">{data.low} Low</p>}
-            />
+        return data.critical > 0 ||
+          data.high > 0 ||
+          data.medium > 0 ||
+          data.low > 0 ? (
+          <div className="m-0 p-0 flex flex-col">
+            {data.critical > 0 && (
+              <div className="flex items-center gap-2">
+                <Octagon color="#ff4d4f" size="16" />
+                <p className="inline text-sm font-medium text-gray-700 m-0">
+                  {data.critical} Critical
+                </p>
+              </div>
+            )}
+            {data.high > 0 && (
+              <div className="flex items-center gap-2">
+                <Octagon color="#fa8c16" size="16" />
+                <p className="inline text-sm font-medium text-gray-700 m-0">
+                  {data.high} High
+                </p>
+              </div>
+            )}
+            {data.medium > 0 && (
+              <div className="flex items-center gap-2">
+                <Octagon color="#fadb14" size="16" />
+                <p className="inline text-sm font-medium text-gray-700 m-0">
+                  {data.medium} Medium
+                </p>
+              </div>
+            )}
+            {data.low > 0 && (
+              <div className="flex items-center gap-2">
+                <Octagon color="#52c41a" size="16" />
+                <p className="inline text-sm font-medium text-gray-700 m-0">
+                  {data.low} Low
+                </p>
+              </div>
+            )}
           </div>
+        ) : (
+          <div className="m-0 p-2 h-full"> - </div>
         );
       }
     }
     return info.originNode;
   };
-
   return (
     <div className="schedule">
       {selectedDate && (

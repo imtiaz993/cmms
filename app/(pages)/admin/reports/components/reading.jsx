@@ -130,7 +130,7 @@ const Readings = () => {
     handleFetchReadings();
   }, [activeLocation, activeSystem]);
   return (
-    <div className="px-5 mt-2 h-[calc(100dvh-210px-60px)] overflow-auto lg:px-10">
+    <div className="px-5 mt-2 h-[calc(100dvh-230px)] overflow-auto lg:px-10">
       <div className="mt-3">
         <Input
           placeholder="Search"

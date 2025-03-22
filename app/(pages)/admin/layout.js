@@ -232,86 +232,45 @@ export default function Layout({ children }) {
           <Sidebar
             openSidebar={openSidebar}
             setOpenSidebar={setOpenSidebar}
-            params={`?location=${activeLocation || ""}&system=${
-              activeSystem || ""
-            }`}
-            site={locations.find((i) => i._id === activeLocation)?.site}
+            params={activeLocation && `?location=${activeLocation}`}
+            // &system=${activeSystem || ""}
+            // site={locations.find((i) => i._id === activeLocation)?.site}
+            activeLocation={activeLocation}
             system={systems.find((i) => i._id === activeSystem)?.system}
+            locations={locations}
           />
           <div className="w-full lg:w-[calc(100%-251px)]">
             {!["new", "profile", "change-password"].includes(currentPage) &&
               !isNewEditDetails && (
                 <>
-                  <h1 className="px-5 md:px-10 text-2xl font-medium capitalize">
+                  <h1 className="px-5 md:px-10 text-2xl font-medium capitalize mb-4">
                     {currentItem.icon} {currentItem.label}
                   </h1>
-                  {currentPage !== "settings" && (
-                    <div className="px-5 md:px-10 flex gap-3 my-4">
-                      <Select
-                        value={activeLocation}
-                        onChange={(value) => {
-                          if (value) {
-                            router.push(
-                              `/admin/${currentPage}${
-                                value && `?location=${value}`
-                              } `
-                            );
-                          } else {
-                            router.push(`/admin/${currentPage}`);
-                          }
-                        }}
-                        allowClear={true}
-                        options={locations.map((i) => ({
-                          label: i.site,
-                          value: i._id,
-                        }))}
-                        placeholder={
-                          <p>
-                            <EnvironmentOutlined /> Site
-                          </p>
-                        }
-                        className="w-full sm:w-44 !h-10 shadow-custom"
-                        dropdownRender={(menu) => (
-                          <div>
-                            <div
-                              style={{
-                                padding: "8px",
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <EnvironmentOutlined
-                                style={{ marginRight: "8px", fontSize: "16px" }}
-                              />
-                              <span>Sites</span>
-                            </div>
-                            {menu}
-                          </div>
-                        )}
-                      />
-                      {activeLocation !== "12" && activeLocation !== "13" && (
+                  {currentPage !== "settings" &&
+                    currentPage !== "dashboard" &&
+                    false && (
+                      <div className="px-5 md:px-10 flex gap-3 my-4">
                         <Select
-                          value={activeSystem}
+                          value={activeLocation}
+                          onChange={(value) => {
+                            if (value) {
+                              router.push(
+                                `/admin/${currentPage}${
+                                  value && `?location=${value}`
+                                } `
+                              );
+                            } else {
+                              router.push(`/admin/${currentPage}`);
+                            }
+                          }}
                           allowClear={true}
-                          onChange={(value) =>
-                            router.push(
-                              `/admin/${currentPage}?location=${activeLocation}${
-                                value ? `&system=${value}` : ""
-                              }`
-                            )
-                          }
-                          options={
-                            activeLocation &&
-                            systems
-                              .filter((i) => i?.site?._id === activeLocation)
-                              ?.map((i) => ({
-                                label: i.system,
-                                value: i._id,
-                              }))
-                          }
+                          options={locations.map((i) => ({
+                            label: i.site,
+                            value: i._id,
+                          }))}
                           placeholder={
                             <p>
-                              <ShareAltOutlined /> System
+                              <EnvironmentOutlined /> Site
                             </p>
                           }
                           className="w-full sm:w-44 !h-10 shadow-custom"
@@ -324,21 +283,68 @@ export default function Layout({ children }) {
                                   alignItems: "center",
                                 }}
                               >
-                                <ShareAltOutlined
+                                <EnvironmentOutlined
                                   style={{
                                     marginRight: "8px",
                                     fontSize: "16px",
                                   }}
                                 />
-                                <span>Systems</span>
+                                <span>Sites</span>
                               </div>
                               {menu}
                             </div>
                           )}
                         />
-                      )}
-                    </div>
-                  )}
+                        {activeLocation !== "12" && activeLocation !== "13" && (
+                          <Select
+                            value={activeSystem}
+                            allowClear={true}
+                            onChange={(value) =>
+                              router.push(
+                                `/admin/${currentPage}?location=${activeLocation}${
+                                  value ? `&system=${value}` : ""
+                                }`
+                              )
+                            }
+                            options={
+                              activeLocation &&
+                              systems
+                                .filter((i) => i?.site?._id === activeLocation)
+                                ?.map((i) => ({
+                                  label: i.system,
+                                  value: i._id,
+                                }))
+                            }
+                            placeholder={
+                              <p>
+                                <ShareAltOutlined /> System
+                              </p>
+                            }
+                            className="w-full sm:w-44 !h-10 shadow-custom"
+                            dropdownRender={(menu) => (
+                              <div>
+                                <div
+                                  style={{
+                                    padding: "8px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <ShareAltOutlined
+                                    style={{
+                                      marginRight: "8px",
+                                      fontSize: "16px",
+                                    }}
+                                  />
+                                  <span>Systems</span>
+                                </div>
+                                {menu}
+                              </div>
+                            )}
+                          />
+                        )}
+                      </div>
+                    )}
                 </>
               )}
             {children}

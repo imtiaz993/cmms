@@ -31,6 +31,9 @@ const SelectField = ({
         size="large"
         mode={mode}
         showSearch={showSearch}
+        filterOption={(input, option) =>
+          option.label.toLowerCase().includes(input.toLowerCase())
+        }
       />
     );
   };

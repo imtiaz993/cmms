@@ -169,7 +169,7 @@ const EarlyMaintenancePopup = ({ visible, setVisible }) => {
                     placement="bottomCenter"
                   >
                     <Button
-                      text="Settings"
+                      text="Columns"
                       outlined
                       style={{ padding: "0px 15px" }}
                       prefix={<SettingOutlined />}

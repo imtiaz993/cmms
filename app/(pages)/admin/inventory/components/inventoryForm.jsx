@@ -25,6 +25,8 @@ import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
 import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
 import ImagePreview from "@/components/imagePreviewPopup";
+import { getVendors } from "app/services/common";
+import AddVendorPopup from "../../settings/vendors/addVendorPopup";
 
 const columns = [
   {
@@ -78,8 +80,9 @@ const InventoryForm = () => {
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
   const [addSitePopup, setAddSitePopup] = useState(false);
-  const [addSystemPopup, setAddSystemPopup] = useState(false);
+  const [addVendorPopup, setAddVendorPopup] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
+  const [vendors, setVendors] = useState();
 
   const rowSelection = {
     selectedRowKeys,
@@ -103,6 +106,7 @@ const InventoryForm = () => {
 
   useEffect(() => {
     const handleFetchFields = async () => {
+      setLoading(true);
       const { status, data } = await getFields("inventory");
       if (status === 200) {
         setFields(data.data);
@@ -111,7 +115,18 @@ const InventoryForm = () => {
       }
       setLoading(false);
     };
+    const handleFetchVendors = async () => {
+      setLoading(true);
+      const { status, data } = await getVendors();
+      if (status === 200) {
+        setVendors(data.vendors);
+      } else {
+        message.error(data.error);
+      }
+      setLoading(false);
+    };
     handleFetchFields();
+    handleFetchVendors();
   }, []);
 
   const customFieldInitialValues = useMemo(() => {
@@ -160,12 +175,12 @@ const InventoryForm = () => {
 
   const validationSchema = Yup.object().shape({
     site: Yup.string().required("Site is required"),
-    system: Yup.string().required("System is required"),
+    vendor: Yup.string().required("Vendor is required"),
     invoiceNumber: Yup.string(),
     receivedDate: Yup.date(),
     partNumber: Yup.string().required("Part Number is required"),
     tagId: Yup.string(),
-    description: Yup.string(),
+    description: Yup.string().required("Description is required"),
     quantity: Yup.number().required("Quantity is required"),
     cost: Yup.number(),
     notes: Yup.string(),
@@ -262,7 +277,7 @@ const InventoryForm = () => {
     setSubmitting(false);
   };
 
-  if ((slug && loading) || (slug && !details))
+  if ((slug && loading) || (slug && !details) || loading)
     return (
       <Spin
         size="large"
@@ -285,7 +300,11 @@ const InventoryForm = () => {
         setFields={setFields}
       />
       <AddSitePopup visible={addSitePopup} setVisible={setAddSitePopup} />
-      <AddSystemPopup visible={addSystemPopup} setVisible={setAddSystemPopup} />
+      <AddVendorPopup
+        visible={addVendorPopup}
+        setVisible={setAddVendorPopup}
+        setVendors={setVendors}
+      />
       <p className="text-sm text-[#828282]">
         Inventory {" > "} {slug ? slug + " > Edit" : "Add New Inventory"}
       </p>
@@ -307,7 +326,7 @@ const InventoryForm = () => {
         <Formik
           initialValues={{
             site: details?.site?._id || "",
-            system: details?.system?._id || "",
+            vendor: details?.vendor || "",
             invoiceNumber: details?.invoiceNumber || "",
             receivedDate: details?.receivedDate || null,
             partNumber: details?.partNumber || "",
@@ -352,7 +371,7 @@ const InventoryForm = () => {
                   />
                   <Button
                     text="New"
-                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
+                    className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
                     onClick={() => setAddSitePopup(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}
@@ -360,24 +379,19 @@ const InventoryForm = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <SelectField
-                    name="system"
-                    placeholder="System"
-                    label="System"
-                    options={
-                      values.site &&
-                      systems
-                        .filter((i) => i?.site?._id === values.site)
-                        ?.map((i) => ({
-                          label: i.system,
-                          value: i._id,
-                        }))
-                    }
+                    name="vendor"
+                    placeholder="Vendor"
+                    label="Vendor"
+                    options={vendors?.map((i) => ({
+                      label: i.name,
+                      value: i._id,
+                    }))}
                     required
                   />
                   <Button
                     text="New"
-                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
-                    onClick={() => setAddSystemPopup(true)}
+                    className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
+                    onClick={() => setAddVendorPopup(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}
                   />
@@ -432,6 +446,7 @@ const InventoryForm = () => {
                     placeholder="Description"
                     label="Description"
                     className="!h-12"
+                    required
                   />
                 </div>
                 <InputField
@@ -547,7 +562,7 @@ const InventoryForm = () => {
                 })}
                 <div className="md:col-span-2 sm:ml-32">
                   <Button
-                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-2"
+                    className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
                     onClick={() => setAddFieldPopupVisible(true)}
                     fullWidth={false}
                     prefix={<PlusOutlined />}

@@ -107,11 +107,11 @@ export const LinkBroken = () => {
   );
 };
 
-export const Octagon = ({ color }) => {
+export const Octagon = ({ color, size }) => {
   return (
     <svg
-      width="12"
-      height="12"
+      width={size || "12"}
+      height={size || "12"}
       viewBox="0 0 12 12"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

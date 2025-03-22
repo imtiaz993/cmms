@@ -2,10 +2,10 @@ import Button from "@/components/common/Button";
 import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
 import { DeleteOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
-import { message, Table } from "antd";
+import { Input, message, Spin, Table } from "antd";
 import { Form, Formik } from "formik";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
 import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
@@ -13,6 +13,8 @@ import * as Yup from "yup";
 import { setShippingCart as setAssetsShippingCart } from "app/redux/slices/assetsShippingCartSlice";
 import { setShippingCart as setInventoryShippingCart } from "app/redux/slices/inventoryShippingCartSlice";
 import { addMaterialTransfer } from "app/services/materialTransfer";
+import InputField from "@/components/common/InputField";
+import { getAdminsManagers } from "app/services/common";
 
 const NewMaterialTransfer = () => {
   const dispatch = useDispatch();
@@ -22,12 +24,25 @@ const NewMaterialTransfer = () => {
   const systems = useSelector((state) => state.system.system);
   const [addSitePopup, setAddSitePopup] = useState(false);
   const [addSystemPopup, setAddSystemPopup] = useState(false);
-  const assetsMaterialTransfer = useSelector((state) =>
+  const materialTransferList = useSelector((state) =>
     materialType === "asset"
       ? state.assetsShippingCart?.assetsShippingCart
       : state.inventoryShippingCart?.inventoryShippingCart
   );
-  console.log(" assetsMaterialTransfer", assetsMaterialTransfer);
+  console.log(" assetsMaterialTransfer", materialTransferList);
+
+  const [superUsers, setSuperUsers] = useState();
+  useEffect(() => {
+    const handleFetchSuperUsers = async () => {
+      const { status, data } = await getAdminsManagers();
+      if (status === 200) {
+        setSuperUsers(data.data);
+      } else {
+        message.error(data.error);
+      }
+    };
+    handleFetchSuperUsers();
+  }, []);
 
   const columns = [
     {
@@ -63,7 +78,7 @@ const NewMaterialTransfer = () => {
                   text="-"
                   onClick={() => {
                     if (record.selectedQuantity > 1) {
-                      const updatedData = assetsMaterialTransfer.map((item) =>
+                      const updatedData = materialTransferList.map((item) =>
                         item._id == record._id
                           ? {
                               ...item,
@@ -88,7 +103,7 @@ const NewMaterialTransfer = () => {
                   text="+"
                   onClick={() => {
                     if (record.quantity > record.selectedQuantity) {
-                      const updatedData = assetsMaterialTransfer.map((item) =>
+                      const updatedData = materialTransferList.map((item) =>
                         item._id == record._id
                           ? {
                               ...item,
@@ -113,13 +128,45 @@ const NewMaterialTransfer = () => {
         ]
       : []),
     {
+      title: "Reason",
+      dataIndex: "reason",
+      key: "reason",
+      render: (_, record) => (
+        <Input
+          name="reason"
+          placeholder="Reason"
+          className="mt-2 sm:mt-0"
+          style={{
+            height: "44px",
+            width: "100%",
+            fontSize: "16px",
+          }}
+          onChange={(e) => {
+            const updatedData = materialTransferList.map((item) =>
+              item._id == record._id
+                ? {
+                    ...item,
+                    reason: e.target.value,
+                  }
+                : item
+            );
+            if (materialType === "inventory") {
+              dispatch(setInventoryShippingCart(updatedData));
+            } else {
+              dispatch(setAssetsShippingCart(updatedData));
+            }
+          }}
+        />
+      ),
+    },
+    {
       title: "Remove",
       dataIndex: "_id",
       key: "remove",
       render: (_, record) => (
         <DeleteOutlined
           onClick={() => {
-            const updatedData = assetsMaterialTransfer.filter(
+            const updatedData = materialTransferList.filter(
               (item) => item._id !== record._id
             );
             if (materialType === "inventory") {
@@ -133,43 +180,24 @@ const NewMaterialTransfer = () => {
     },
   ];
 
-  console.log(assetsMaterialTransfer, materialType);
-
-  const data = [
-    {
-      id: 1,
-      part: "Part #1",
-      location: "Location 1",
-      description: "Description 1",
-      quantity: 10,
-      selectedQuantity: 5,
-    },
-    {
-      id: 2,
-      part: "Part #2",
-      location: "Location 2",
-      description: "Description 2",
-      quantity: 20,
-      selectedQuantity: 10,
-    },
-  ];
-
   const handleSubmit = async (values, { setSubmitting }) => {
     setSubmitting(true);
     const { status, data } = await addMaterialTransfer({
       ...values,
       inventories:
         materialType === "inventory"
-          ? assetsMaterialTransfer.map((i) => ({
+          ? materialTransferList.map((i) => ({
               id: i._id,
               quantity: i.selectedQuantity,
+              reason: i.reason ?? "",
             }))
           : [],
       assets:
         materialType === "asset"
-          ? assetsMaterialTransfer.map((i) => ({
+          ? materialTransferList.map((i) => ({
               id: i._id,
               quantity: i.selectedQuantity,
+              reason: i.reason,
             }))
           : [],
     });
@@ -197,120 +225,148 @@ const NewMaterialTransfer = () => {
         fullWidth={false}
         prefix={<LeftOutlined />}
       />
-      <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto mt-5 bg-primary shadow-custom rounded-lg p-4">
-        <p className="text-2xl font-semibold mb-5">New Material Transfer</p>
-        <Table
-          loading={false}
-          scroll={{ x: 700 }}
-          columns={columns}
-          dataSource={assetsMaterialTransfer}
-          pagination={false}
-          style={{
-            marginTop: 32,
-            overflow: "auto",
-          }}
-        />
+      {superUsers ? (
+        <div className="h-[calc(100dvh-140px-16px-60px)] overflow-auto mt-5 bg-primary shadow-custom rounded-lg p-4">
+          <p className="text-2xl font-semibold mb-5">New Material Transfer</p>
 
-        <Formik
-          initialValues={{
-            destinationSite: "",
-            destinationSystem: "",
-            comments: "",
-          }}
-          validationSchema={Yup.object().shape({
-            destinationSite: Yup.string().required(
-              "Destination Site is required"
-            ),
-            destinationSystem: Yup.string().required(
-              "Destination System is required"
-            ),
-            comments: Yup.string(),
-          })}
-          onSubmit={handleSubmit}
-        >
-          {({ values, handleSubmit, isSubmitting }) => (
-            <Form onSubmit={handleSubmit}>
-              <div className="mt-8 grid md:grid-cols-2 gap-4 md:gap-8">
-                <p className="md:col-span-2 font-semibold md:text-lg">
-                  Move to
-                </p>
-                <div className="flex items-center gap-3">
+          <Formik
+            initialValues={{
+              destinationSite: "",
+              destinationSystem: "",
+              companyName: "",
+              personTransporting: "",
+              comments: "",
+            }}
+            validationSchema={Yup.object().shape({
+              destinationSite: Yup.string().required(
+                "Destination Site is required"
+              ),
+              destinationSystem: Yup.string().required(
+                "Destination System is required"
+              ),
+              companyName: Yup.string(),
+              personTransporting: Yup.string(),
+              comments: Yup.string(),
+            })}
+            onSubmit={handleSubmit}
+          >
+            {({ values, handleSubmit, isSubmitting }) => (
+              <Form onSubmit={handleSubmit}>
+                <Table
+                  loading={false}
+                  scroll={{ x: 700 }}
+                  columns={columns}
+                  dataSource={materialTransferList}
+                  pagination={false}
+                  style={{
+                    marginTop: 32,
+                    overflow: "auto",
+                  }}
+                />
+                <div className="mt-8 grid md:grid-cols-2 gap-4 md:gap-8">
+                  <p className="md:col-span-2 font-semibold md:text-lg">
+                    Move to
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <SelectField
+                      name="destinationSite"
+                      placeholder="Site"
+                      className="!w-full"
+                      label="Site"
+                      options={locations.map((i) => ({
+                        label: i.site,
+                        value: i._id,
+                      }))}
+                      required={true}
+                    />
+                    <Button
+                      text="New"
+                      className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
+                      onClick={() => setAddSitePopup(true)}
+                      fullWidth={false}
+                      prefix={<PlusOutlined />}
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <SelectField
+                      name="destinationSystem"
+                      placeholder="System"
+                      label="System"
+                      options={
+                        values.destinationSite &&
+                        systems
+                          .filter(
+                            (i) => i?.site?._id === values.destinationSite
+                          )
+                          ?.map((i) => ({
+                            label: i.system,
+                            value: i._id,
+                          }))
+                      }
+                      required={true}
+                    />
+                    <Button
+                      text="New"
+                      className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
+                      onClick={() => setAddSystemPopup(true)}
+                      fullWidth={false}
+                      prefix={<PlusOutlined />}
+                    />
+                  </div>
+                  <InputField
+                    name="companyName"
+                    placeholder="Company"
+                    label="Company"
+                  />
                   <SelectField
-                    name="destinationSite"
-                    placeholder="Site"
-                    className="!w-full"
-                    label="Site"
-                    options={locations.map((i) => ({
-                      label: i.site,
+                    name="personTransporting"
+                    label="Person Transporting"
+                    placeholder="Person Transporting"
+                    options={superUsers.map((i) => ({
+                      label: i.name,
                       value: i._id,
                     }))}
-                    required={true}
+                  />
+                  <div className="md:col-span-2">
+                    <TextAreaField
+                      name="comments"
+                      placeholder="Add notes..."
+                      label="Notes"
+                    />
+                  </div>
+                </div>
+                <div className="text-right mt-5 mb-5">
+                  <Button
+                    className="mr-2"
+                    onClick={() => router.push("/admin/assets")}
+                    outlined
+                    size="small"
+                    text="Cancel"
+                    fullWidth={false}
+                    disabled={isSubmitting}
                   />
                   <Button
-                    text="New"
-                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
-                    onClick={() => setAddSitePopup(true)}
+                    className="mr-2 !text-base"
+                    htmlType="submit"
+                    isLoading={isSubmitting}
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    size="small"
+                    text="Create Material Transfer"
                     fullWidth={false}
-                    prefix={<PlusOutlined />}
                   />
                 </div>
-                <div className="flex items-center gap-3">
-                  <SelectField
-                    name="destinationSystem"
-                    placeholder="System"
-                    label="System"
-                    options={
-                      values.destinationSite &&
-                      systems
-                        .filter((i) => i?.site?._id === values.destinationSite)
-                        ?.map((i) => ({
-                          label: i.system,
-                          value: i._id,
-                        }))
-                    }
-                    required={true}
-                  />
-                  <Button
-                    text="New"
-                    className="!bg-[#4C4C51] !shadow-custom !border-white !h-11 mt-5 sm:mt-0"
-                    onClick={() => setAddSystemPopup(true)}
-                    fullWidth={false}
-                    prefix={<PlusOutlined />}
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <TextAreaField
-                    name="comments"
-                    placeholder="Add notes..."
-                    label="Notes"
-                  />
-                </div>
-              </div>
-              <div className="text-right mt-5 mb-5">
-                <Button
-                  className="mr-2"
-                  onClick={() => router.push("/admin/assets")}
-                  outlined
-                  size="small"
-                  text="Cancel"
-                  fullWidth={false}
-                  disabled={isSubmitting}
-                />
-                <Button
-                  className="mr-2 !text-base"
-                  htmlType="submit"
-                  isLoading={isSubmitting}
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  size="small"
-                  text="Create Material Transfer"
-                  fullWidth={false}
-                />
-              </div>
-            </Form>
-          )}
-        </Formik>
-      </div>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      ) : (
+        <Spin
+          size="large"
+          spinning={true}
+          className="text-center w-full !mt-80"
+        />
+      )}
     </div>
   );
 };

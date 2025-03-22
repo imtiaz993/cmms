@@ -189,7 +189,7 @@ const Inventory = () => {
         message="Are you sure you want to delete this inventory?"
         onConfirm={() => handleDelete(deleteConfirmation)}
       />
-      <div className="text-right m-5 sm:m-0 sm:absolute top-[135px] right-5 md:right-10 lg:right-[90px]">
+      <div className="text-right absolute top-[85px] right-5 md:right-10 lg:right-[90px]">
         <Button
           text={
             inventoryShippingCart.length > 0
@@ -203,7 +203,7 @@ const Inventory = () => {
           }
         />
       </div>
-      <div className="max-h-[calc(100dvh-220px-50px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
+      <div className="max-h-[calc(100dvh-170px)] overflow-auto px-3 lg:px-6 pb-4 pt-5 bg-primary mx-5 md:mx-10 rounded-lg shadow-custom">
         {console.log("selected inventory", selectedRowKeys)}
         <InventoryDetailsPopup
           visible={detailsPopup}
