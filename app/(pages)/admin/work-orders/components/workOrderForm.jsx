@@ -309,7 +309,7 @@ const WorkOrderForm = () => {
             asset: Yup.string().required("Asset is required"),
             issueID: Yup.string().required("Issue ID is required"),
             description: Yup.string().required("Description is required"),
-            date: Yup.date(),
+            date: Yup.date().required("Date is required"),
             completionDate: Yup.date().min(
               Yup.ref("date"),
               "Completion Date must be after Date"
@@ -379,7 +379,7 @@ const WorkOrderForm = () => {
                       />
                     </div>
                   </div>
-                  <div></div>
+                  <div className="hidden md:block"></div>
                   {console.log("assetId ", assetId)}
                   <Table
                     loading={!assets || isLoading}
@@ -389,8 +389,11 @@ const WorkOrderForm = () => {
                     className="md:col-span-2"
                     rowKey="_id"
                     dataSource={assetDetails}
-                    style={{ marginTop: 5 }}
                     pagination={false}
+                    style={{
+                      overflow: "auto",
+                      marginTop: 5,
+                    }}
                   />
                   <p className="md:col-span-2 font-semibold md:text-lg">
                     Work Order Details
@@ -401,8 +404,8 @@ const WorkOrderForm = () => {
                     placeholder="Issue ID"
                     label="Issue ID"
                   />
-                  <div></div>
-                  <DatePickerField name="date" label="Date" />
+                  <div className="hidden md:block"></div>
+                  <DatePickerField name="date" label="Date" required />
                   <TimePickerField name="time" label="Time" />
                   <div className="md:col-span-2">
                     <TextAreaField
@@ -441,7 +444,11 @@ const WorkOrderForm = () => {
                     label="Technician"
                     placeholder="Select Technician..."
                   />
-                  <DatePickerField name="completionDate" label="Completion" />
+                  <InputField
+                    name="equipment"
+                    label="Equipment"
+                    placeholder="Enter equipment..."
+                  />
                   <div className="w-full sm:flex items-center gap-3">
                     <label
                       className={`text-sm flex gap-1 items-center ${"sm:justify-end sm:min-w-[115px]"}`}
@@ -498,21 +505,19 @@ const WorkOrderForm = () => {
                       placeholder="Repair Action Taken..."
                     />
                   </div>
-                  <InputField
+                  {/* <InputField
                     name="partsReplaced"
                     label="Parts Replaced"
                     placeholder="Enter Parts..."
-                  />
-                  <InputField
-                    name="equipment"
-                    label="Equipment"
-                    placeholder="Enter equipment..."
-                  />
+                  /> */}
+
                   <InputField
                     name="finalStatus"
                     label="Final Status"
                     placeholder="Select Status..."
                   />
+                  <DatePickerField name="completionDate" label="Completion" />
+
                   {/* <SelectField
                     name="site"
                     label="Site"
@@ -523,13 +528,13 @@ const WorkOrderForm = () => {
                       value: i._id,
                     }))}
                   /> */}
-                  <div className="md:col-span-2">
+                  {/* <div className="md:col-span-2">
                     <TextAreaField
                       name="summary"
                       label="Summary"
                       placeholder="Enter Summary..."
                     />
-                  </div>
+                  </div> */}
                   <div className="md:col-span-2 sm:flex items-center">
                     <label className="text-sm sm:text-right sm:min-w-[115px]">
                       Maint. Status
@@ -554,6 +559,12 @@ const WorkOrderForm = () => {
                           </Radio>
                           <Radio value="disposed" className="sm:!ml-7">
                             Disposed
+                          </Radio>
+                          <Radio value="sell" className="sm:!ml-7">
+                            Sell
+                          </Radio>
+                          <Radio value="broken" className="sm:!ml-7">
+                            Broken
                           </Radio>
                         </Radio.Group>
                       )}

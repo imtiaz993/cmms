@@ -651,6 +651,12 @@ const AssetForm = () => {
                         <Radio value="disposed" className="sm:!ml-7">
                           Disposed
                         </Radio>
+                        <Radio value="sell" className="sm:!ml-7">
+                          Sell
+                        </Radio>
+                        <Radio value="broken" className="sm:!ml-7">
+                          Broken
+                        </Radio>
                       </Radio.Group>
                     )}
                   </Field>

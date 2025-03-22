@@ -50,12 +50,8 @@ const AssetFilter = ({ closeDropdown, setFilteredAssets, options }) => {
         initialValues={{
           site: "",
           system: "",
-          assetID: "",
-          serialNumber: "",
-          model: "",
           criticality: "",
           maintStatus: "",
-          purchaseDate: "",
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
@@ -64,7 +60,7 @@ const AssetFilter = ({ closeDropdown, setFilteredAssets, options }) => {
       >
         {({ values, isSubmitting, handleSubmit, resetForm, setSubmitting }) => (
           <Form onSubmit={handleSubmit}>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 gap-4">
               <SelectField
                 name="site"
                 placeholder="Site"
@@ -100,16 +96,18 @@ const AssetFilter = ({ closeDropdown, setFilteredAssets, options }) => {
                   { value: "Low", label: "Low" },
                 ]}
               />
-              <SelectField
-                name="maintStatus"
-                placeholder="Status"
-                options={options}
-              />
+              <div className="w-52">
+                <SelectField
+                  name="maintStatus"
+                  placeholder="Status"
+                  options={options}
+                />
+              </div>
               {/* <DatePickerField
                 name="purchaseDate"
                 placeholder="Purchase Date"
               /> */}
-              <div className="sm:col-span-2 md:col-span-3 flex justify-end gap-4">
+              <div className="sm:col-span-2 flex justify-end gap-4">
                 <div>
                   <Button
                     outlined
