@@ -5,12 +5,16 @@ import InputField from "@/components/common/InputField";
 import SelectField from "@/components/common/SelectField";
 import TextAreaField from "@/components/common/TextAreaField";
 import TimePickerField from "@/components/common/TimePickerField";
-import { EditPagePencil } from "@/icons/index";
+import { EditPagePencil, LinkBroken } from "@/icons/index";
 import * as Yup from "yup";
 import {
+  CheckCircleOutlined,
   DeleteOutlined,
+  DollarOutlined,
+  ExclamationCircleFilled,
   EyeOutlined,
   LeftOutlined,
+  TruckOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
 import { Checkbox, Form, message, Radio, Select, Table, Upload } from "antd";
@@ -191,6 +195,57 @@ const WorkOrderForm = () => {
       location: "Location 3",
       quantity: 10,
       selectedQuantity: 0,
+    },
+  ];
+
+  const finalStatusOptions = [
+    {
+      label: (
+        <p>
+          <CheckCircleOutlined /> Active
+        </p>
+      ),
+      value: "active",
+    },
+    {
+      label: (
+        <p>
+          <ExclamationCircleFilled /> Damaged beyond repair
+        </p>
+      ),
+      value: "damagedBeyondRepair",
+    },
+    {
+      label: (
+        <p className="flex items-center gap-1">
+          <LinkBroken /> Broken
+        </p>
+      ),
+      value: "broken",
+    },
+    {
+      label: (
+        <p>
+          <DeleteOutlined /> Disposed
+        </p>
+      ),
+      value: "disposed",
+    },
+    {
+      label: (
+        <p>
+          <TruckOutlined /> Out for Repair
+        </p>
+      ),
+      value: "outForRepair",
+    },
+    {
+      label: (
+        <p>
+          <DollarOutlined /> Sell
+        </p>
+      ),
+      value: "sell",
     },
   ];
 
@@ -511,11 +566,6 @@ const WorkOrderForm = () => {
                     placeholder="Enter Parts..."
                   /> */}
 
-                  <InputField
-                    name="finalStatus"
-                    label="Final Status"
-                    placeholder="Select Status..."
-                  />
                   <DatePickerField name="completionDate" label="Completion" />
 
                   {/* <SelectField
@@ -535,11 +585,17 @@ const WorkOrderForm = () => {
                       placeholder="Enter Summary..."
                     />
                   </div> */}
-                  <div className="md:col-span-2 sm:flex items-center">
+                  <SelectField
+                    name="maintStatus"
+                    label="Final Status"
+                    options={finalStatusOptions}
+                    placeholder="Select Status"
+                  />
+                  {/* <div className="md:col-span-2 sm:flex items-center">
                     <label className="text-sm sm:text-right sm:min-w-[115px]">
-                      Maint. Status
+                      Final Status
                     </label>
-                    <Field name="status">
+                    <Field name="finalStatus">
                       {({ field, form }) => (
                         <Radio.Group {...field} className="">
                           <Radio value="active" className="!ml-3">
@@ -569,7 +625,7 @@ const WorkOrderForm = () => {
                         </Radio.Group>
                       )}
                     </Field>
-                  </div>
+                  </div> */}
                   <p className="md:col-span-2 font-semibold md:text-lg">
                     Upload Image
                   </p>

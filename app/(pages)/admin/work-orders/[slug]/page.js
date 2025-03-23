@@ -259,8 +259,8 @@ const WorkOrdersDetail = () => {
         slug={slug}
       />
       <div className="mx-5 md:mx-10">
-        <p className="text-sm text-[#828282]">
-          Work Order {" > "} Planned Work Order
+        <p className="text-sm text-[#828282] capitalize">
+          Work Order {" > "} {workOrder?.type} Work Order
         </p>
         <div className="flex justify-between mt-4">
           <Button
