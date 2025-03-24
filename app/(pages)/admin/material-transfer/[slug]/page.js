@@ -1,32 +1,16 @@
 "use client";
 import Button from "@/components/common/Button";
 import {
-  ArrowLeftOutlined,
-  DownloadOutlined,
-  ExclamationCircleOutlined,
-  ExportOutlined,
   FolderFilled,
   LeftOutlined,
   MailOutlined,
   PrinterFilled,
 } from "@ant-design/icons";
-import {
-  Badge,
-  Card,
-  Dropdown,
-  Menu,
-  message,
-  Spin,
-  Steps,
-  Table,
-  Tabs,
-} from "antd";
-import ViewAssetsDetailsPopup from "./viewAssetsDetailsPopup";
+import { Badge, Card, message, Spin, Steps, Table } from "antd";
 import { useEffect, useState } from "react";
 import UploadLinkDocPopup from "../../../../../components/uploadLinkDocPopup";
 import UploadDocPopup from "../../../../../components/uploadDocPopup";
 import { usePathname, useRouter } from "next/navigation";
-import AddAssetPopupMT from "@/components/addAssetPopupInMT";
 import {
   completeMaterialTransfer,
   cancelMaterialTransfer,
@@ -34,46 +18,10 @@ import {
   getMaterialTransferDetails,
   printMaterialTransferDetails,
 } from "app/services/materialTransfer";
-import AddInventoryPopupMT from "@/components/addInventoryPopupInMT";
 import dayjs from "dayjs";
 import Documents from "./documents";
 import { getAdminsManagers } from "app/services/common";
-
-import { Input } from "antd";
 import { useSelector } from "react-redux";
-import { rigs } from "@/constants/rigsAndSystems";
-
-const { TextArea } = Input;
-
-const data = [
-  {
-    asset: "RGE9214051001",
-    description: "HPU Motor 125HP",
-    make: "N/A",
-    modal: "N/A",
-    serialNumber: "RGE9214051001",
-    condition: "Like New",
-    transReason: "Not Selected",
-  },
-  {
-    asset: "RGE9214051001",
-    description: "HPU Motor 125HP",
-    make: "N/A",
-    modal: "N/A",
-    serialNumber: "RGE9214051001",
-    condition: "Like New",
-    transReason: "Not Selected",
-  },
-  {
-    asset: "RGE9214051001",
-    description: "HPU Motor 125HP",
-    make: "N/A",
-    modal: "N/A",
-    serialNumber: "RGE9214051001",
-    condition: "Like New",
-    transReason: "Not Selected",
-  },
-];
 
 const MaterialTransferDetail = () => {
   const [details, setDetails] = useState();
@@ -82,9 +30,6 @@ const MaterialTransferDetail = () => {
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
   const [uploadLinkDocVisible, setUploadLinkDocVisible] = useState(false);
   const [uploadDocVisible, setUploadDocVisible] = useState(false);
-  const [addAssetPopup, setAddAssetPopup] = useState(false);
-  const [addInventoryPopup, setAddInventoryPopup] = useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [superUsers, setSuperUsers] = useState([]);
   const router = useRouter();
   // Extract the slug from the URL
@@ -347,6 +292,22 @@ const MaterialTransferDetail = () => {
                   {details?.materialTransfer.materialTransferType}
                 </span>
               </div> */}
+              <div>
+                <span className="opacity-70 mr-3">Company</span>
+                <span className="">
+                  {details?.materialTransfer.companyName}
+                </span>
+              </div>
+              <div>
+                <span className="opacity-70 mr-3">Person Transporting</span>
+                <span className="">
+                  {" "}
+                  {superUsers.find(
+                    (user) =>
+                      user._id === details?.materialTransfer.personTransporting
+                  )?.name || ""}
+                </span>
+              </div>
               <div className="md:col-span-2">
                 <span className="opacity-70 mr-3">Comments</span>
                 <span className="">{details?.materialTransfer.comments}</span>

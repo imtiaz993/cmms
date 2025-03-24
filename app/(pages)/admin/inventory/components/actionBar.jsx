@@ -29,7 +29,7 @@ import ChangeToAssetPopup from "./changeToAssetPopup";
 import Link from "next/link";
 import { LinkBroken, SearchIcon } from "@/icons/index";
 import ConfirmationPopup from "@/components/confirmationPopup";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const ActionBar = ({
   columns,
@@ -46,6 +46,8 @@ const ActionBar = ({
   const [actionPopup, setActionPopup] = useState(false);
   const [actionError, setActionError] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || null;
 
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
@@ -333,7 +335,11 @@ const ActionBar = ({
               style={{ padding: "4px 0px" }}
               prefix={<ExportOutlined />}
             />
-            <Link href="/admin/new/inventory">
+            <Link
+              href={`/admin/new/inventory${
+                activeLocation ? "?location=" + activeLocation : ""
+              }`}
+            >
               <Button
                 text="Add New Inventory"
                 style={{ padding: "4px 30px" }}

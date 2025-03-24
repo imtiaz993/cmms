@@ -49,10 +49,13 @@ const AssetForm = () => {
   const [subCategories, setSubCategories] = useState([]);
   const [previewImage, setPreviewImage] = useState(null);
   const dispatch = useDispatch();
-  const [workOrdersSaved, setWorkOrdersSaved] = useState([]);
+  const [assetsSaved, setAssetsSaved] = useState([]);
 
   const searchParams = useSearchParams();
   const inventory = searchParams.get("inventory");
+  const activeLocation = searchParams.get("location") || "";
+  const params =
+    activeLocation && activeLocation !== null && "?location=" + activeLocation;
 
   const columns = [
     {
@@ -80,7 +83,7 @@ const AssetForm = () => {
       render: (_, record, index) => (
         <DeleteOutlined
           onClick={() =>
-            setWorkOrdersSaved((prev) => prev.filter((item, i) => i !== index))
+            setAssetsSaved((prev) => prev.filter((item, i) => i !== index))
           }
         />
       ),
@@ -231,7 +234,7 @@ const AssetForm = () => {
       )
       .test(
         "min-7-days",
-        "Start date cannot be before today + 7 days",
+        "Start date needs to be at least 7 days from today",
         function (value) {
           if (!value) return false; // If value is null/undefined, fail (required will handle this)
           const today = new Date();
@@ -261,9 +264,9 @@ const AssetForm = () => {
     }
 
     // Add the current form values to workOrdersSaved
-    setWorkOrdersSaved((prev) => [...prev, values]);
-    console.log("Added to workOrdersSaved:", values);
-    console.log("Current workOrdersSaved:", [...workOrdersSaved, values]);
+    setAssetsSaved((prev) => [...prev, values]);
+    console.log("Added to saved assets:", values);
+    console.log("Current saved assets:", [...assetsSaved, values]);
 
     // Reset the form to allow adding another asset
     resetForm();
@@ -330,14 +333,14 @@ const AssetForm = () => {
             message.success("Asset added successfully");
             dispatch(updateAssets(data.data));
           }
-          router.push("/admin/assets");
+          router.push("/admin/assets" + params);
           resetForm();
         } else {
           message.error(data.error || "Failed to process request");
         }
       } else {
         // For adding new assets: combine current form values with workOrdersSaved
-        const allAssets = [...workOrdersSaved, values];
+        const allAssets = [...assetsSaved, values];
         console.log("Submitting all assets:", allAssets);
 
         // Process each asset one by one
@@ -383,6 +386,9 @@ const AssetForm = () => {
 
           if (status === 200) {
             dispatch(updateAssets(data.data));
+            setAssetsSaved((prev) =>
+              prev.filter((asset) => asset !== assetValues)
+            );
           } else {
             message.error(data.error || "Failed to process request");
             setSubmitting(false);
@@ -391,8 +397,8 @@ const AssetForm = () => {
         }
 
         message.success("All assets added successfully");
-        setWorkOrdersSaved([]); // Clear the saved assets
-        router.push("/admin/assets");
+        setAssetsSaved([]); // Clear the saved assets
+        router.push("/admin/assets" + params);
         resetForm();
       }
     } catch (error) {
@@ -481,7 +487,7 @@ const AssetForm = () => {
       </p>
       <Button
         text="Back to Assets"
-        onClick={() => router.push("/admin/assets")}
+        onClick={() => router.push("/admin/assets" + params)}
         className="mt-4 !bg-[#3F3F3F] !border-none"
         fullWidth={false}
         prefix={<LeftOutlined />}
@@ -844,9 +850,9 @@ const AssetForm = () => {
                   rowSelection={rowSelection}
                   rowKey="_id"
                   dataSource={
-                    workOrdersSaved &&
-                    workOrdersSaved.length > 0 &&
-                    workOrdersSaved.map((i, index) => ({
+                    assetsSaved &&
+                    assetsSaved.length > 0 &&
+                    assetsSaved.map((i, index) => ({
                       ...i,
                       key: index,
                     }))
@@ -861,7 +867,6 @@ const AssetForm = () => {
                 <div className="md:col-span-2 sm:ml-32">
                   <Button
                     className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
-                    htmlType="submit"
                     onClick={() =>
                       handleAddMore(values, { resetForm, validateForm })
                     }
@@ -874,7 +879,7 @@ const AssetForm = () => {
               <div className="text-right mt-5 mb-5">
                 <Button
                   className="mr-2"
-                  onClick={() => router.push("/admin/assets")}
+                  onClick={() => router.push("/admin/assets" + params)}
                   outlined
                   size="small"
                   text="Cancel"

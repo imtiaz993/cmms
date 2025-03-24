@@ -39,8 +39,10 @@ const ActionBar = ({
   const router = useRouter();
   const [filterDropdown, setFilterDropdown] = useState(null);
   const searchParams = useSearchParams();
-  const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
+  const activeLocation = searchParams.get("location") || "";
+  const params =
+    activeLocation && activeLocation !== null && "?location=" + activeLocation;
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
     value: key,
@@ -197,7 +199,7 @@ const ActionBar = ({
             ) : (
               <Button
                 text={`New Unplanned Work Order`}
-                onClick={() => router.push(`/admin/new/work-order`)}
+                onClick={() => router.push(`/admin/new/work-order${params}`)}
                 // outlined
                 style={{ padding: "4px 10px" }}
                 className="!text-xs md:!text-sm"

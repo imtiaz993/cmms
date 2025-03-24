@@ -49,6 +49,8 @@ const Assets = () => {
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
+  const params =
+    activeLocation && activeLocation !== null && "&location=" + activeLocation;
   // const [assets, setAssets] = useState();
   const { assets, isLoading, error } = useSelector((state) => state.assets);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
@@ -305,7 +307,9 @@ const Assets = () => {
           fullWidth={false}
           prefix={<ShoppingCartOutlined />}
           onClick={() =>
-            router.push("/admin/new/material-transfer?materialType=asset")
+            router.push(
+              "/admin/new/material-transfer?materialType=asset" + params
+            )
           }
         />
       </div>

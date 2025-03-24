@@ -29,7 +29,7 @@ import { exportAssets, updateStatus } from "app/services/assets";
 import Link from "next/link";
 import { LinkBroken, SearchIcon } from "@/icons/index";
 import ConfirmationPopup from "@/components/confirmationPopup";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const ActionBar = ({
   showAddAssetModal,
@@ -49,6 +49,8 @@ const ActionBar = ({
   const [filterDropdown, setFilterDropdown] = useState(null);
   const [actionPopup, setActionPopup] = useState(false);
   const [actionError, setActionError] = useState(false);
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || null;
 
   const options = columns.slice(0, -1).map(({ key, title }, index) => ({
     label: title,
@@ -153,7 +155,12 @@ const ActionBar = ({
     if (actionPopup === "workorder") {
       let Id = selectedRowsData[0]._id;
 
-      router.push(`/admin/new/work-order?Id=${Id}`);
+      router.push(
+        `/admin/new/work-order?Id=${Id}` + activeLocation &&
+          activeLocation !== null
+          ? "?location=" + activeLocation
+          : ""
+      );
     } else if (actionPopup === "shippingCart") {
       addToShippingCart(selectedRowKeys);
     } else {
@@ -344,7 +351,14 @@ const ActionBar = ({
           >
             <Button text="Export" outlined prefix={<ExportOutlined />} />
           </Dropdown>
-          <Link href="/admin/new/asset" className="w-full">
+          <Link
+            href={
+              "/admin/new/asset" + activeLocation && activeLocation !== null
+                ? "?location=" + activeLocation
+                : ""
+            }
+            className="w-full"
+          >
             <Button
               text="New Asset"
               style={{ padding: "4px 24px" }}

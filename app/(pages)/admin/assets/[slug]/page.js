@@ -17,7 +17,7 @@ import {
   WarningOutlined,
 } from "@ant-design/icons";
 import { message, Select, Spin } from "antd";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getAssetDetails, updateStatus } from "app/services/assets";
 import CreateAssetPopup from "../components/createAssetPopup";
@@ -39,6 +39,10 @@ const AssetDetail = () => {
   const { assetsShippingCart } = useSelector(
     (state) => state.assetsShippingCart
   );
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+  const params =
+    activeLocation && activeLocation !== null && "&location=" + activeLocation;
 
   useEffect(() => {
     const getAsset = async () => {
@@ -151,7 +155,7 @@ const AssetDetail = () => {
 
   const handleActionConfirm = async () => {
     if (actionPopup === "workorder") {
-      router.push(`/admin/new/work-order?Id=${slug}`);
+      router.push(`/admin/new/work-order?Id=${slug}` + params);
     } else if (actionPopup === "shippingCart") {
       addToShippingCart();
     } else {
@@ -206,7 +210,13 @@ const AssetDetail = () => {
             <div className="mt-4 mr-5 flex justify-between">
               <Button
                 text="Back to Assets"
-                onClick={() => router.push("/admin/assets")}
+                onClick={() =>
+                  router.push(
+                    "/admin/assets" + activeLocation && activeLocation !== null
+                      ? "?location=" + activeLocation
+                      : ""
+                  )
+                }
                 className="!bg-[#3F3F3F] !border-none"
                 fullWidth={false}
                 prefix={<LeftOutlined />}
@@ -220,7 +230,9 @@ const AssetDetail = () => {
                 fullWidth={false}
                 prefix={<ShoppingCartOutlined />}
                 onClick={() =>
-                  router.push("/admin/new/material-transfer?materialType=asset")
+                  router.push(
+                    "/admin/new/material-transfer?materialType=asset" + params
+                  )
                 }
               />
             </div>
@@ -247,7 +259,14 @@ const AssetDetail = () => {
                     prefix={<EditOutlined />}
                     fullWidth={false}
                     className="!h-11"
-                    onClick={() => router.push(`/admin/assets/${slug}/edit`)}
+                    onClick={() =>
+                      router.push(
+                        `/admin/assets/${slug}/edit` + activeLocation &&
+                          activeLocation !== null
+                          ? "?location=" + activeLocation
+                          : ""
+                      )
+                    }
                     outlined
                   />
                   <div className="md:hidden"></div>
