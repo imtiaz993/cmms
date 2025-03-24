@@ -21,46 +21,17 @@ import {
   updateInventory,
 } from "app/redux/slices/inventoriesSlice";
 import { useParams, useRouter } from "next/navigation";
-import { LeftOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  LeftOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import AddSitePopup from "../../settings/sites/components/addSitePopup";
 import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
 import ImagePreview from "@/components/imagePreviewPopup";
 import { getVendors } from "app/services/common";
 import AddVendorPopup from "../../settings/vendors/addVendorPopup";
-
-const columns = [
-  {
-    title: "Part #",
-    dataIndex: "partItem",
-    key: "partItem",
-  },
-  {
-    title: "Description",
-    dataIndex: "details",
-    key: "details",
-  },
-  {
-    title: "Received Date",
-    dataIndex: "receivedDate",
-    key: "receivedDate",
-  },
-  {
-    title: "Quantity",
-    dataIndex: "quantity",
-    key: "quantity",
-  },
-  {
-    title: "tag ID",
-    dataIndex: "tagId",
-    key: "tagId",
-  },
-  {
-    title: "Location",
-    dataIndex: "location",
-    key: "location",
-  },
-];
-const defaultCheckedList = columns.map((item) => item.key);
 
 const InventoryForm = () => {
   const { slug } = useParams();
@@ -76,13 +47,58 @@ const InventoryForm = () => {
     error,
   } = useSelector((state) => state.inventory); // Get inventory from store
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
   const [addSitePopup, setAddSitePopup] = useState(false);
   const [addVendorPopup, setAddVendorPopup] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const [vendors, setVendors] = useState();
+  const [inventoriesSaved, setInventoriesSaved] = useState([]);
+
+  const columns = [
+    {
+      title: "Part #",
+      dataIndex: "partItem",
+      key: "partItem",
+    },
+    {
+      title: "Description",
+      dataIndex: "details",
+      key: "details",
+    },
+    {
+      title: "Received Date",
+      dataIndex: "receivedDate",
+      key: "receivedDate",
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
+      title: "tag ID",
+      dataIndex: "tagId",
+      key: "tagId",
+    },
+    {
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
+    },
+    {
+      title: "",
+      dataIndex: "",
+      key: "delete",
+      render: (_, record, index) => (
+        <DeleteOutlined
+          onClick={() =>
+            setInventoriesSaved((prev) => prev.filter((item, i) => i !== index))
+          }
+        />
+      ),
+    },
+  ];
 
   const rowSelection = {
     selectedRowKeys,
@@ -175,9 +191,9 @@ const InventoryForm = () => {
 
   const validationSchema = Yup.object().shape({
     site: Yup.string().required("Site is required"),
-    vendor: Yup.string().required("Vendor is required"),
+    vendor: Yup.string(),
     invoiceNumber: Yup.string(),
-    receivedDate: Yup.date(),
+    receivedDate: Yup.date().nullable(),
     partNumber: Yup.string().required("Part Number is required"),
     tagId: Yup.string(),
     description: Yup.string().required("Description is required"),
@@ -188,86 +204,160 @@ const InventoryForm = () => {
     // ...customFieldValidations,
   });
 
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+  const handleAddMore = async (values, { resetForm, validateForm }) => {
+    // Validate the form before adding to inventoriesSaved
+    const errors = await validateForm(values);
+    if (Object.keys(errors).length > 0) {
+      message.error("Please fill all required fields correctly.");
+      console.log(errors);
+      return;
+    }
+
+    // Add the current form values to inventoriesSaved
+    setInventoriesSaved((prev) => [...prev, values]);
+    console.log("Added to saved inventory:", values);
+    console.log("Current saved inventory:", [...inventoriesSaved, values]);
+
+    // Reset the form to allow adding another inventory
+    resetForm();
+    message.success("Inventory added to queue. Add more or submit to save.");
+  };
+
+  const handleSubmit = async (
+    values,
+    { setSubmitting, resetForm, validateForm }
+  ) => {
     try {
-      const formData = new FormData();
+      // Validate the current form values
+      const errors = await validateForm(values);
+      if (Object.keys(errors).length > 0) {
+        message.error("Please fill all required fields correctly.");
+        setSubmitting(false);
+        return;
+      }
 
-      // Extract custom field values
-      const customFields = fields.map((field) => ({
-        uniqueKey: field.uniqueKey,
-        value: values[field.uniqueKey],
-      }));
+      if (slug) {
+        // Update inventory (same as before)
+        const formData = new FormData();
 
-      // Remove custom fields from values to get standard fields
-      const standardValues = { ...values };
-      fields.forEach((field) => delete standardValues[field.uniqueKey]);
+        const customFields = fields.map((field) => ({
+          uniqueKey: field.uniqueKey,
+          value: values[field.uniqueKey],
+        }));
 
-      // Append standard form values
-      Object.entries(standardValues).forEach(([key, value]) => {
-        if (value && key !== "customFields" && key !== "image") {
-          formData.append(key, value);
-        }
-      });
+        const standardValues = { ...values };
+        fields.forEach((field) => delete standardValues[field.uniqueKey]);
 
-      // Append the image if it exists and is a File object
-      values.image.length > 0 &&
-        values.image.forEach((image) => {
-          if (image.originFileObj instanceof File)
-            formData.append("image", image.originFileObj);
-          else {
-            formData.append(
-              "prevImage",
-              JSON.stringify({
-                url: image.uniqueName,
-                name: image.name,
-                _id: image._id,
-              })
-            );
-            console.log("prevImage", {
-              url: image.uniqueName,
-              name: image.name,
-              _id: image._id,
-            });
+        Object.entries(standardValues).forEach(([key, value]) => {
+          if (value && key !== "customFields" && key !== "image") {
+            formData.append(key, value);
           }
         });
 
-      // Append custom fields in the correct format
-      if (customFields.length > 0) {
-        formData.append("customFields", JSON.stringify(customFields));
-      }
-      // // Append the image if it exists and is a File object
-      // if (values.image instanceof File) {
-      //   formData.append("image", values.image);
-      // }
+        values.image.length > 0 &&
+          values.image.forEach((image) => {
+            if (image.originFileObj instanceof File)
+              formData.append("image", image.originFileObj);
+            else {
+              formData.append(
+                "prevImage",
+                JSON.stringify({
+                  url: image.uniqueName,
+                  name: image.name,
+                  _id: image._id,
+                })
+              );
+              console.log("prevImage", {
+                url: image.uniqueName,
+                name: image.name,
+                _id: image._id,
+              });
+            }
+          });
 
-      // formData.append("childInventory", selectedRowKeys);
+        if (customFields.length > 0) {
+          formData.append("customFields", JSON.stringify(customFields));
+        }
 
-      let response;
-      if (slug) {
-        // Update inventory
         formData.append("inventory", slug);
-        response = await updateInventoryApi(formData);
-      } else {
-        // Add new inventory
-        response = await addInventory(formData);
-      }
+        const response = await updateInventoryApi(formData);
+        const { status, data } = response;
 
-      const { status, data } = response;
-
-      if (status === 200) {
-        // Update Redux store accordingly
-        if (slug) {
-          // setDetails((prev) => ({ ...prev, dashboard: data.data }));
+        if (status === 200) {
           dispatch(editInventory(data.data));
           message.success("Inventory Updated successfully");
+          router.push("/admin/inventory");
+          resetForm();
         } else {
-          message.success("Inventory Added successfully");
-          dispatch(updateInventory(data.data));
+          message.error(data.error || "Failed to process request");
         }
+      } else {
+        // For adding new inventories: combine current form values with inventoriesSaved
+        const allInventories = [...inventoriesSaved, values];
+        console.log("Submitting all inventories:", allInventories);
+
+        // Process each inventory one by one
+        for (const inventoryValues of allInventories) {
+          const formData = new FormData();
+
+          const customFields = fields.map((field) => ({
+            uniqueKey: field.uniqueKey,
+            value: inventoryValues[field.uniqueKey],
+          }));
+
+          const standardValues = { ...inventoryValues };
+          fields.forEach((field) => delete standardValues[field.uniqueKey]);
+
+          Object.entries(standardValues).forEach(([key, value]) => {
+            if (value && key !== "customFields" && key !== "image") {
+              formData.append(key, value);
+            }
+          });
+
+          inventoryValues.image.length > 0 &&
+            inventoryValues.image.forEach((image) => {
+              if (image.originFileObj instanceof File)
+                formData.append("image", image.originFileObj);
+              else {
+                formData.append(
+                  "prevImage",
+                  JSON.stringify({
+                    url: image.uniqueName,
+                    name: image.name,
+                    _id: image._id,
+                  })
+                );
+                console.log("prevImage", {
+                  url: image.uniqueName,
+                  name: image.name,
+                  _id: image._id,
+                });
+              }
+            });
+
+          if (customFields.length > 0) {
+            formData.append("customFields", JSON.stringify(customFields));
+          }
+
+          const response = await addInventory(formData);
+          const { status, data } = response;
+
+          if (status === 200) {
+            dispatch(updateInventory(data.data));
+            setInventoriesSaved((prev) =>
+              prev.filter((item) => item !== values)
+            );
+          } else {
+            message.error(data.error || "Failed to process request");
+            setSubmitting(false);
+            return; // Stop processing if one inventory fails
+          }
+        }
+
+        message.success("All inventories added successfully");
+        setInventoriesSaved([]); // Clear the saved inventories
         router.push("/admin/inventory");
         resetForm();
-      } else {
-        message.error(data.error || "Failed to process request");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -350,7 +440,13 @@ const InventoryForm = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values, isSubmitting, setFieldValue }) => (
+          {({
+            values,
+            isSubmitting,
+            setFieldValue,
+            resetForm,
+            validateForm,
+          }) => (
             <Form>
               {console.log("values", values)}
               <div className="grid md:grid-cols-2 gap-4 md:gap-8">
@@ -386,7 +482,6 @@ const InventoryForm = () => {
                       label: i.name,
                       value: i._id,
                     }))}
-                    required
                   />
                   <Button
                     text="New"
@@ -403,32 +498,6 @@ const InventoryForm = () => {
                   label="Invoice/PO #"
                 />
                 <DatePickerField name="receivedDate" label="Date Received" />
-
-                {/* <p className="md:col-span-2 font-semibold md:text-lg">
-                  Inventory Added
-                </p>
-
-                <Table
-                  loading={isLoading}
-                  size={"large"}
-                  scroll={{ x: 1000 }}
-                  columns={columns}
-                  rowSelection={rowSelection}
-                  rowKey="_id"
-                  dataSource={
-                    inventory &&
-                    inventory.length > 0 &&
-                    inventory.map((i, index) => ({
-                      ...i,
-                      key: index,
-                    }))
-                  }
-                  style={{
-                    marginTop: 16,
-                    overflow: "auto",
-                  }}
-                  className="md:col-span-2"
-                /> */}
 
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Inventory Information
@@ -511,7 +580,7 @@ const InventoryForm = () => {
                     />
                   </div>
                 </div>
-                <p className="md:col-span-2 font-semibold md:text-lg">
+                {/* <p className="md:col-span-2 font-semibold md:text-lg">
                   Custom Fields:
                 </p>
                 {fields.map((field) => {
@@ -559,11 +628,42 @@ const InventoryForm = () => {
                     default:
                       return null;
                   }
-                })}
+                })} */}
+
+                <p className="md:col-span-2 font-semibold md:text-lg">
+                  Inventory Added
+                </p>
+
+                {inventoriesSaved && inventoriesSaved.length > 0 && (
+                  <Table
+                    loading={isLoading}
+                    size={"large"}
+                    scroll={{ x: 1000 }}
+                    columns={columns}
+                    rowSelection={rowSelection}
+                    rowKey="_id"
+                    dataSource={
+                      inventoriesSaved &&
+                      inventoriesSaved.length > 0 &&
+                      inventoriesSaved.map((i, index) => ({
+                        ...i,
+                        key: index,
+                      }))
+                    }
+                    style={{
+                      marginTop: 16,
+                      overflow: "auto",
+                    }}
+                    className="md:col-span-2"
+                  />
+                )}
+
                 <div className="md:col-span-2 sm:ml-32">
                   <Button
                     className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
-                    onClick={() => setAddFieldPopupVisible(true)}
+                    onClick={() =>
+                      handleAddMore(values, { resetForm, validateForm })
+                    }
                     fullWidth={false}
                     prefix={<PlusOutlined />}
                     text="Add More"

@@ -199,7 +199,12 @@ const Inventory = () => {
           fullWidth={false}
           prefix={<ShoppingCartOutlined />}
           onClick={() =>
-            router.push("/admin/new/material-transfer?materialType=inventory")
+            router.push(
+              "/admin/new/material-transfer?materialType=inventory" +
+                activeLocation && activeLocation !== null
+                ? "&location=" + activeLocation
+                : ""
+            )
           }
         />
       </div>

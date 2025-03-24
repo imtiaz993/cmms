@@ -184,7 +184,9 @@ const Dashboard = () => {
               {stats ? (
                 <div className="w-full">
                   <ColumnChart data={stats?.inventory} months={stats?.months} />
-                  <p className="mt-2">Monthly chart of inventory expenses.</p>
+                  <p className="mt-2 text-center">
+                    Monthly chart of inventory expenses.
+                  </p>
                 </div>
               ) : (
                 <p className="text-center my-20">

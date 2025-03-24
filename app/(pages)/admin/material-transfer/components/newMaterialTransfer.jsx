@@ -203,6 +203,9 @@ const NewMaterialTransfer = () => {
     });
     if (status === 200) {
       message.success(data?.message || "Material Trasnfer Added Successfully");
+      materialType === "inventory"
+        ? dispatch(setInventoryShippingCart([]))
+        : dispatch(setAssetsShippingCart([]));
       router.push("/admin/material-transfer");
       setSubmitting(false);
     } else {

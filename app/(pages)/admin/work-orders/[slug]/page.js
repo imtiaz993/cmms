@@ -2,6 +2,7 @@
 import Button from "@/components/common/Button";
 import {
   CloseCircleOutlined,
+  ExportOutlined,
   LeftOutlined,
   LoginOutlined,
   LogoutOutlined,
@@ -208,6 +209,16 @@ const WorkOrdersDetail = () => {
     setSubmitting(false);
   };
 
+  const handlePrint = async () => {
+    const { status, data } = await printWorkOrder(slug);
+    if (status === 200) {
+      window.open(data.data);
+      message.success("Print initiated ");
+    } else {
+      message.error(data.error);
+    }
+  };
+
   const handleStart = async () => {
     const currentTime = dayjs();
     const { status, data } = await startWorkOrder({
@@ -259,8 +270,8 @@ const WorkOrdersDetail = () => {
         slug={slug}
       />
       <div className="mx-5 md:mx-10">
-        <p className="text-sm text-[#828282]">
-          Work Order {" > "} Planned Work Order
+        <p className="text-sm text-[#828282] capitalize">
+          Work Order {" > "} {workOrder?.type} Work Order
         </p>
         <div className="flex justify-between mt-4">
           <Button
@@ -283,6 +294,13 @@ const WorkOrdersDetail = () => {
               <div className="flex justify-end gap-3 mb-5">
                 {!["cancelled", "completed"].includes(workOrder?.status) && (
                   <>
+                    <Button
+                      text="Print"
+                      prefix={<ExportOutlined />}
+                      fullWidth={false}
+                      onClick={handlePrint}
+                      outlined
+                    />
                     {workOrder?.timeStart === null && (
                       <Button
                         text="Start"

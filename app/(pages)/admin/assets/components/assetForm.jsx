@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { getFields } from "app/services/customFields";
 import {
+  DeleteOutlined,
   LeftOutlined,
   LoadingOutlined,
   PlusOutlined,
@@ -28,19 +29,6 @@ import { getSubCategories } from "app/services/setUp/subCategories";
 import { editAsset, updateAssets } from "app/redux/slices/assetsSlice";
 import ImagePreview from "@/components/imagePreviewPopup";
 import { assignToAsset, getInventoryDetails } from "app/services/inventory";
-
-const columns = [
-  {
-    title: "Asset #",
-    dataIndex: "assetID",
-    key: "assetNumber",
-    render: (assetID) => <a className="text-[#017BFE] underline">{assetID}</a>,
-  },
-  { title: "Category", dataIndex: "category", key: "category" },
-  { title: "Start Date", dataIndex: "startDate", key: "startDate" },
-  { title: "Criticality", dataIndex: "criticality", key: "criticality" },
-  { title: "Status", dataIndex: "maintStatus", key: "maintStatus" },
-];
 
 const AssetForm = () => {
   const { slug } = useParams();
@@ -61,9 +49,46 @@ const AssetForm = () => {
   const [subCategories, setSubCategories] = useState([]);
   const [previewImage, setPreviewImage] = useState(null);
   const dispatch = useDispatch();
+  const [assetsSaved, setAssetsSaved] = useState([]);
 
   const searchParams = useSearchParams();
   const inventory = searchParams.get("inventory");
+  const activeLocation = searchParams.get("location") || "";
+  const params =
+    activeLocation && activeLocation !== null && "?location=" + activeLocation;
+
+  const columns = [
+    {
+      title: "Asset #",
+      dataIndex: "assetID",
+      key: "assetNumber",
+      render: (assetID) => (
+        <a className="text-[#017BFE] underline">{assetID}</a>
+      ),
+    },
+    {
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
+      render: (category) =>
+        categories.find((c) => c._id === category)?.category,
+    },
+    { title: "Start Date", dataIndex: "startDate", key: "startDate" },
+    { title: "Criticality", dataIndex: "criticality", key: "criticality" },
+    { title: "Status", dataIndex: "maintStatus", key: "maintStatus" },
+    {
+      title: "",
+      dataIndex: "",
+      key: "delete",
+      render: (_, record, index) => (
+        <DeleteOutlined
+          onClick={() =>
+            setAssetsSaved((prev) => prev.filter((item, i) => i !== index))
+          }
+        />
+      ),
+    },
+  ];
 
   useEffect(() => {
     const getInventory = async () => {
@@ -207,6 +232,18 @@ const AssetForm = () => {
         new Date(new Date().setHours(0, 0, 0, 0)),
         "Start date cannot be before today"
       )
+      .test(
+        "min-7-days",
+        "Start date needs to be at least 7 days from today",
+        function (value) {
+          if (!value) return false; // If value is null/undefined, fail (required will handle this)
+          const today = new Date();
+          today.setHours(0, 0, 0, 0); // Normalize to start of day
+          const minDate = new Date(today);
+          minDate.setDate(today.getDate() + 7); // Today + 7 days
+          return value >= minDate;
+        }
+      )
       .required("Start date is required"),
     dueDate: Yup.date().min(
       Yup.ref("startDate"),
@@ -218,91 +255,151 @@ const AssetForm = () => {
     // ...customFieldValidations,
   });
 
+  const handleAddMore = async (values, { resetForm, validateForm }) => {
+    // Validate the form before adding to workOrdersSaved
+    const errors = await validateForm(values);
+    if (Object.keys(errors).length > 0) {
+      message.error("Please fill all required fields correctly.");
+      return;
+    }
+
+    // Add the current form values to workOrdersSaved
+    setAssetsSaved((prev) => [...prev, values]);
+    console.log("Added to saved assets:", values);
+    console.log("Current saved assets:", [...assetsSaved, values]);
+
+    // Reset the form to allow adding another asset
+    resetForm();
+    message.success("Asset added to queue. Add more or submit to save.");
+  };
+
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      const formData = new FormData();
+      // If slug or inventory exists, handle as before (update or assign)
+      if (slug || inventory) {
+        const formData = new FormData();
 
-      // Extract custom field values
-      const customFields = fields.map((field) => ({
-        uniqueKey: field.uniqueKey,
-        value: values[field.uniqueKey],
-      }));
+        const customFields = fields.map((field) => ({
+          uniqueKey: field.uniqueKey,
+          value: values[field.uniqueKey],
+        }));
 
-      // Remove custom fields from values to get standard fields
-      const standardValues = { ...values };
-      fields.forEach((field) => delete standardValues[field.uniqueKey]);
+        const standardValues = { ...values };
+        fields.forEach((field) => delete standardValues[field.uniqueKey]);
 
-      // Append standard form values
-      Object.entries(standardValues).forEach(([key, value]) => {
-        if (value && key !== "customFields" && key !== "assetImages") {
-          formData.append(key, value);
-        }
-      });
-
-      // Append the image if it exists and is a File object
-      values.assetImages.length > 0 &&
-        values.assetImages.forEach((image) => {
-          if (image.originFileObj instanceof File)
-            formData.append("assetImages", image.originFileObj);
-          else {
-            formData.append(
-              "prevImage",
-              JSON.stringify({
-                url: image.uniqueName,
-                name: image.name,
-                _id: image._id,
-              })
-            );
-            console.log("prevImage", {
-              url: image.uniqueName,
-              name: image.name,
-              _id: image._id,
-            });
+        Object.entries(standardValues).forEach(([key, value]) => {
+          if (value && key !== "customFields" && key !== "assetImages") {
+            formData.append(key, value);
           }
         });
 
-      // Append custom fields in the correct format
-      if (customFields.length > 0) {
-        formData.append("customFields", JSON.stringify(customFields));
-      }
+        values.assetImages.length > 0 &&
+          values.assetImages.forEach((image) => {
+            if (image.originFileObj instanceof File)
+              formData.append("assetImages", image.originFileObj);
+            else {
+              formData.append(
+                "prevImage",
+                JSON.stringify({
+                  url: image.uniqueName,
+                  name: image.name,
+                  _id: image._id,
+                })
+              );
+            }
+          });
 
-      // Append the image if it exists and is a File object
-      // if (values.assetImage instanceof File) {
-      //   formData.append("assetImage", values.assetImage);
-      // }
-
-      // formData.append("childAssets", selectedRowKeys);
-
-      let response;
-      if (slug) {
-        // Update asset
-        formData.append("asset", slug);
-        response = await updateAsset(formData);
-      } else if (inventory) {
-        //convert Iventory to asset
-        formData.append("inventory", inventory);
-        response = await assignToAsset(formData);
-      } else {
-        // Add new asset
-        response = await addAsset(formData);
-      }
-
-      const { status, data } = response;
-
-      if (status === 200) {
-        // Update Redux store accordingly
-        if (slug) {
-          dispatch(editAsset(data.data));
-          setDetails((prev) => ({ ...prev, dashboard: data.data }));
-          message.success("Asset updated successfully");
-        } else {
-          message.success("Asset added successfully");
-          dispatch(updateAssets(data.data));
+        if (customFields.length > 0) {
+          formData.append("customFields", JSON.stringify(customFields));
         }
-        router.push("/admin/assets");
-        resetForm();
+
+        let response;
+        if (slug) {
+          formData.append("asset", slug);
+          response = await updateAsset(formData);
+        } else if (inventory) {
+          formData.append("inventory", inventory);
+          response = await assignToAsset(formData);
+        }
+
+        const { status, data } = response;
+
+        if (status === 200) {
+          if (slug) {
+            dispatch(editAsset(data.data));
+            setDetails((prev) => ({ ...prev, dashboard: data.data }));
+            message.success("Asset updated successfully");
+          } else {
+            message.success("Asset added successfully");
+            dispatch(updateAssets(data.data));
+          }
+          router.push("/admin/assets" + params);
+          resetForm();
+        } else {
+          message.error(data.error || "Failed to process request");
+        }
       } else {
-        message.error(data.error || "Failed to process request");
+        // For adding new assets: combine current form values with workOrdersSaved
+        const allAssets = [...assetsSaved, values];
+        console.log("Submitting all assets:", allAssets);
+
+        // Process each asset one by one
+        for (const assetValues of allAssets) {
+          const formData = new FormData();
+
+          const customFields = fields.map((field) => ({
+            uniqueKey: field.uniqueKey,
+            value: assetValues[field.uniqueKey],
+          }));
+
+          const standardValues = { ...assetValues };
+          fields.forEach((field) => delete standardValues[field.uniqueKey]);
+
+          Object.entries(standardValues).forEach(([key, value]) => {
+            if (value && key !== "customFields" && key !== "assetImages") {
+              formData.append(key, value);
+            }
+          });
+
+          assetValues.assetImages.length > 0 &&
+            assetValues.assetImages.forEach((image) => {
+              if (image.originFileObj instanceof File)
+                formData.append("assetImages", image.originFileObj);
+              else {
+                formData.append(
+                  "prevImage",
+                  JSON.stringify({
+                    url: image.uniqueName,
+                    name: image.name,
+                    _id: image._id,
+                  })
+                );
+              }
+            });
+
+          if (customFields.length > 0) {
+            formData.append("customFields", JSON.stringify(customFields));
+          }
+
+          const response = await addAsset(formData);
+          const { status, data } = response;
+
+          if (status === 200) {
+            dispatch(updateAssets(data.data));
+            setAssetsSaved((prev) =>
+              prev.filter((asset) => asset !== assetValues)
+            );
+          } else {
+            message.error(data.error || "Failed to process request");
+            setSubmitting(false);
+            return; // Stop processing if one asset fails
+          }
+        }
+
+        message.success("All assets added successfully");
+        setAssetsSaved([]); // Clear the saved assets
+        router.push("/admin/assets" + params);
+        resetForm();
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -390,7 +487,7 @@ const AssetForm = () => {
       </p>
       <Button
         text="Back to Assets"
-        onClick={() => router.push("/admin/assets")}
+        onClick={() => router.push("/admin/assets" + params)}
         className="mt-4 !bg-[#3F3F3F] !border-none"
         fullWidth={false}
         prefix={<LeftOutlined />}
@@ -439,7 +536,15 @@ const AssetForm = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values, isSubmitting, handleSubmit, setFieldValue, errors }) => (
+          {({
+            values,
+            isSubmitting,
+            handleSubmit,
+            setFieldValue,
+            resetForm,
+            validateForm,
+            errors,
+          }) => (
             <Form onSubmit={handleSubmit}>
               {console.log("values", values)}
               <div className="grid md:grid-cols-2 gap-4 md:gap-8">
@@ -566,28 +671,6 @@ const AssetForm = () => {
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Asset Maintenance
                 </p>
-                {/* <Table
-                  loading={isLoading}
-                  size={"large"}
-                  scroll={{ x: 700 }}
-                  columns={columns}
-                  rowSelection={rowSelection}
-                  rowKey="_id"
-                  dataSource={
-                    assets &&
-                    assets.length > 0 &&
-                    assets.map((i, index) => ({
-                      ...i,
-                      key: index,
-                    }))
-                  }
-                  style={{
-                    marginTop: 16,
-                    overflow: "auto",
-                  }}
-                  className="md:col-span-2"
-                  pagination={false}
-                /> */}
                 <SelectField
                   name="maintCategory"
                   placeholder="Category"
@@ -598,11 +681,12 @@ const AssetForm = () => {
                   }))}
                 />
                 <DatePickerField name="startDate" label="Start Date" required />
-                <DatePickerField name="dueDate" label="Completion Date" />
+                <DatePickerField name="dueDate" label="Completion" required />
                 <div className="md:col-span-2">
                   <div className="sm:flex items-center">
                     <label className="text-sm sm:text-right sm:min-w-[115px]">
-                      Criticality
+                      Criticality{" "}
+                      <span className="text-red-600 text-xl">*</span>
                     </label>
                     <Field name="criticality">
                       {({ field, form }) => (
@@ -713,15 +797,7 @@ const AssetForm = () => {
                       return null;
                   }
                 })}
-                <div className="md:col-span-2 sm:ml-32">
-                  <Button
-                    className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
-                    onClick={() => setAddFieldPopupVisible(true)}
-                    fullWidth={false}
-                    prefix={<PlusOutlined />}
-                    text="Add More"
-                  />
-                </div>
+
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Asset Image
                 </p>
@@ -761,19 +837,49 @@ const AssetForm = () => {
                     />
                   </Upload>
                 </div>
+                <ErrorMessage
+                  name="assetImages"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+                <Table
+                  loading={isLoading}
+                  size={"large"}
+                  scroll={{ x: 700 }}
+                  columns={columns}
+                  rowSelection={rowSelection}
+                  rowKey="_id"
+                  dataSource={
+                    assetsSaved &&
+                    assetsSaved.length > 0 &&
+                    assetsSaved.map((i, index) => ({
+                      ...i,
+                      key: index,
+                    }))
+                  }
+                  style={{
+                    marginTop: 16,
+                    overflow: "auto",
+                  }}
+                  className="md:col-span-2"
+                  pagination={false}
+                />
+                <div className="md:col-span-2 sm:ml-32">
+                  <Button
+                    className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
+                    onClick={() =>
+                      handleAddMore(values, { resetForm, validateForm })
+                    }
+                    fullWidth={false}
+                    prefix={<PlusOutlined />}
+                    text="Add More"
+                  />
+                </div>
               </div>
-              {values.assetImage && typeof values.assetImage === "string" && (
-                <span className="">{values.assetImage.split("/").pop()}</span>
-              )}
-              <ErrorMessage
-                name="assetImages"
-                component="div"
-                className="text-red-500 text-sm mt-1"
-              />
               <div className="text-right mt-5 mb-5">
                 <Button
                   className="mr-2"
-                  onClick={() => router.push("/admin/assets")}
+                  onClick={() => router.push("/admin/assets" + params)}
                   outlined
                   size="small"
                   text="Cancel"
