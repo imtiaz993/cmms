@@ -58,14 +58,14 @@ const AssetForm = () => {
     activeLocation && activeLocation !== null && "?location=" + activeLocation;
 
   const columns = [
-    {
-      title: "Asset #",
-      dataIndex: "assetID",
-      key: "assetNumber",
-      render: (assetID) => (
-        <a className="text-[#017BFE] underline">{assetID}</a>
-      ),
-    },
+    // {
+    //   title: "Asset #",
+    //   dataIndex: "assetID",
+    //   key: "assetNumber",
+    //   render: (assetID) => (
+    //     <a className="text-[#017BFE] underline">{assetID}</a>
+    //   ),
+    // },
     {
       title: "Category",
       dataIndex: "category",
@@ -219,7 +219,6 @@ const AssetForm = () => {
     system: Yup.string().required("System is required"),
     category: Yup.string(),
     subCategory: Yup.string(),
-    assetID: Yup.string().required("Asset number is required"),
     purchaseDate: Yup.date(),
     description: Yup.string().required("Description is required"),
     brand: Yup.string(),
@@ -260,6 +259,9 @@ const AssetForm = () => {
     const errors = await validateForm(values);
     if (Object.keys(errors).length > 0) {
       message.error("Please fill all required fields correctly.");
+      for (const [key, value] of Object.entries(errors)) {
+        message.error(value);
+      }
       return;
     }
 
@@ -502,7 +504,6 @@ const AssetForm = () => {
             system: details?.dashboard?.system?._id || "",
             category: details?.dashboard?.category?._id || "",
             subCategory: details?.dashboard?.subCategory?._id || "",
-            assetID: details?.dashboard?.assetID || "",
             purchaseDate: details?.dashboard?.purchaseDate || "",
             description: details?.dashboard?.description || "",
             brand: details?.dashboard?.brand || "",
@@ -639,12 +640,7 @@ const AssetForm = () => {
                 <p className="md:col-span-2 font-semibold md:text-lg">
                   Asset Details
                 </p>
-                <InputField
-                  name="assetID"
-                  placeholder="Asset ID"
-                  label="Asset ID"
-                  required
-                />
+
                 <DatePickerField name="purchaseDate" label="Purchase Date" />
                 <div className="md:col-span-2">
                   <TextAreaField
