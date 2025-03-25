@@ -292,15 +292,15 @@ const WorkOrdersDetail = () => {
                 Asset: {workOrder?.asset.assetID}
               </h1>
               <div className="flex justify-end gap-3 mb-5">
+                <Button
+                  text="Print"
+                  prefix={<ExportOutlined />}
+                  fullWidth={false}
+                  onClick={handlePrint}
+                  outlined
+                />
                 {!["cancelled", "completed"].includes(workOrder?.status) && (
                   <>
-                    <Button
-                      text="Print"
-                      prefix={<ExportOutlined />}
-                      fullWidth={false}
-                      onClick={handlePrint}
-                      outlined
-                    />
                     {workOrder?.timeStart === null && (
                       <Button
                         text="Start"

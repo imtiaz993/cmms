@@ -280,7 +280,7 @@ const WorkOrderForm = () => {
     console.log("Values1", values);
 
     const formData = new FormData();
-    formData.append("asset", assetId);
+    // formData.append("asset", assetId);
 
     Object.entries(values).forEach(([key, value]) => {
       if (key !== "workOrderDocuments" && key !== "workOrderImages") {

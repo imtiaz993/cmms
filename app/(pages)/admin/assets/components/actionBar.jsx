@@ -156,10 +156,11 @@ const ActionBar = ({
       let Id = selectedRowsData[0]._id;
 
       router.push(
-        `/admin/new/work-order?Id=${Id}` + activeLocation &&
-          activeLocation !== null
-          ? "?location=" + activeLocation
-          : ""
+        `/admin/new/work-order?Id=${Id}`
+        //  + activeLocation &&
+        //   activeLocation !== null
+        //   ? "?location=" + activeLocation
+        //   : ""
       );
     } else if (actionPopup === "shippingCart") {
       addToShippingCart(selectedRowKeys);
@@ -352,11 +353,9 @@ const ActionBar = ({
             <Button text="Export" outlined prefix={<ExportOutlined />} />
           </Dropdown>
           <Link
-            href={
-              "/admin/new/asset" + activeLocation && activeLocation !== null
-                ? "?location=" + activeLocation
-                : ""
-            }
+            href={`/admin/new/asset${
+              activeLocation ? "?location=" + activeLocation : ""
+            }`}
             className="w-full"
           >
             <Button
