@@ -6,6 +6,7 @@ import systemsReducer from "./slices/systemsSlice";
 import categoriesReducer from "./slices/categoriesSlice";
 import assetsShippingCartReducer from "./slices/assetsShippingCartSlice";
 import inventoryShippingCartReducer from "./slices/inventoryShippingCartSlice";
+import assignToAssetReducer from "./slices/assignToAssetSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     categories: categoriesReducer,
     assetsShippingCart: assetsShippingCartReducer,
     inventoryShippingCart: inventoryShippingCartReducer,
+    assignToAsset: assignToAssetReducer,
   },
 });

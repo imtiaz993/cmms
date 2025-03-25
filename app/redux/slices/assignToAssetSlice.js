@@ -1,34 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  inventoryShippingCart: [], // Array to store inventory Shipping Cart items
+  inventories: [], // Array to store inventory items which will be assigned to asset
   isLoading: false, // Boolean to track loading state
   error: null, // Store any error that occurs during fetching Shipping Cart
 };
 
-const inventoryShippingCartSlice = createSlice({
+const assignToAssetSlice = createSlice({
   name: "assignToAsset",
   initialState,
   reducers: {
     // Action to set all
-    setShippingCart(state, action) {
-      state.inventoryShippingCart = action.payload;
+    setAssignToAsset(state, action) {
+      state.inventories = action.payload;
     },
     // Action to add a single inventory item to the list
-    updateShippingCart(state, action) {
-      const exists = state.inventoryShippingCart.some(
+    updateAssignToAsset(state, action) {
+      const exists = state.inventories.some(
         (item) => item._id === action.payload._id
       );
       if (!exists) {
-        state.inventoryShippingCart.push(action.payload);
+        state.inventories.push(action.payload);
       }
     },
     // Action to set the loading state
-    setShippingCartLoading(state, action) {
+    setAssignToAssetLoading(state, action) {
       state.isLoading = action.payload;
     },
     // Action to set any error state
-    setShippingCartError(state, action) {
+    setAssignToAssetError(state, action) {
       state.error = action.payload;
     },
   },
@@ -36,11 +36,11 @@ const inventoryShippingCartSlice = createSlice({
 
 // Export the actions for dispatching
 export const {
-  setShippingCart,
-  updateShippingCart,
-  setShippingCartLoading,
-  setShippingCartError,
-} = inventoryShippingCartSlice.actions;
+  setAssignToAsset,
+  updateAssignToAsset,
+  setAssignToAssetLoading,
+  setAssignToAssetError,
+} = assignToAssetSlice.actions;
 
 // Export the reducer for integration into the store
-export default inventoryShippingCartSlice.reducer;
+export default assignToAssetSlice.reducer;

@@ -40,6 +40,7 @@ const ActionBar = ({
   setSearchText,
   setFilteredInventory,
   addToShippingCart,
+  handleAssignToAsset,
 }) => {
   const [changeToAssetVisible, setChangeToAssetVisible] = useState(false);
   const [filterDropdown, setFilterDropdown] = useState(null);
@@ -154,7 +155,7 @@ const ActionBar = ({
     if (actionPopup === "shippingCart") {
       addToShippingCart(selectedRowKeys);
     } else if (actionPopup === "assignToAsset") {
-      router.push(`/admin/new/asset?inventory=${selectedRowKeys[0]}`);
+      handleAssignToAsset();
     } else {
       const { status, data } = await updateStatus({
         inventory: [...selectedRowKeys],
@@ -176,14 +177,10 @@ const ActionBar = ({
   };
 
   const modalMessage = () => {
-    let isMultipleRows =
-      selectedRowKeys.length > 1 && actionPopup === "assignToAsset";
-    let message = isMultipleRows
-      ? "Please select only one inventory"
-      : `Are you sure you want to perform this action on selected ${
-          selectedRowKeys.length > 1 ? "Inventories" : "Inventory"
-        }`;
-    return { message, onConfirm: isMultipleRows ? false : handleActionConfirm };
+    let message = `Are you sure you want to perform this action on selected ${
+      selectedRowKeys.length > 1 ? "Inventories" : "Inventory"
+    }`;
+    return { message, onConfirm: handleActionConfirm };
   };
 
   return (
