@@ -31,7 +31,7 @@ import AddSitePopup from "../../settings/sites/components/addSitePopup";
 import AddSystemPopup from "../../settings/locations/components/addSystemPopup";
 import ImagePreview from "@/components/imagePreviewPopup";
 import { getVendors } from "app/services/common";
-import AddVendorPopup from "../../settings/vendors/addVendorPopup";
+import AddVendorPopup from "../../settings/vendors/components/addVendorPopup";
 
 const InventoryForm = () => {
   const { slug } = useParams();
