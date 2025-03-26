@@ -18,6 +18,7 @@ import ConfirmationPopup from "@/components/confirmationPopup";
 import Link from "next/link";
 import { setInventory } from "app/redux/slices/inventoriesSlice";
 import { updateShippingCart } from "app/redux/slices/inventoryShippingCartSlice";
+import { setAssignToAsset } from "app/redux/slices/assignToAssetSlice";
 
 const Inventory = () => {
   const searchParams = useSearchParams();
@@ -168,6 +169,22 @@ const Inventory = () => {
     setSelectedRowKeys([]);
   };
 
+  const handleAssignToAsset = async () => {
+    const matchedInventory = filteredInventory.filter((i) =>
+      selectedRowKeys.includes(i._id)
+    );
+
+    dispatch(
+      setAssignToAsset(
+        matchedInventory.map((i) => {
+          return { ...i, selectedQuantity: 1 };
+        })
+      )
+    );
+    message.success("Inventory added");
+    setSelectedRowKeys([]);
+    router.push("/admin/inventory/assign-to-asset");
+  };
   const handleDelete = async (id) => {
     const { status, data } = await deleteInventory(id);
     if (status === 200) {
@@ -200,10 +217,11 @@ const Inventory = () => {
           prefix={<ShoppingCartOutlined />}
           onClick={() =>
             router.push(
-              "/admin/new/material-transfer?materialType=inventory" +
+              `/admin/new/material-transfer?materialType=inventory${
                 activeLocation && activeLocation !== null
-                ? "&location=" + activeLocation
-                : ""
+                  ? "&location=" + activeLocation
+                  : ""
+              }`
             )
           }
         />
@@ -225,6 +243,7 @@ const Inventory = () => {
             setSearchText={setSearchText}
             setFilteredInventory={setFilteredInventory}
             addToShippingCart={addToShippingCart}
+            handleAssignToAsset={handleAssignToAsset}
             // setInventory={setInventory}
           />
           {/* <div className="flex gap-3 justify-end">

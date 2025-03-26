@@ -212,9 +212,11 @@ const AssetDetail = () => {
                 text="Back to Assets"
                 onClick={() =>
                   router.push(
-                    "/admin/assets" + activeLocation && activeLocation !== null
-                      ? "?location=" + activeLocation
-                      : ""
+                    `/admin/assets${
+                      activeLocation && activeLocation !== null
+                        ? "?location=" + activeLocation
+                        : ""
+                    }`
                   )
                 }
                 className="!bg-[#3F3F3F] !border-none"
@@ -328,25 +330,25 @@ const AssetDetail = () => {
                     Site
                   </p>
                   <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                    {details?.site.site || "-"}
+                    {details?.site?.site || "-"}
                   </p>
                   <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                     System
                   </p>
                   <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                    {details?.system.system || "-"}
+                    {details?.system?.system || "-"}
                   </p>
                   <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                     Category
                   </p>
                   <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                    {details?.category.category || "-"}
+                    {details?.category?.category || "-"}
                   </p>
                   <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                     Sub-Category
                   </p>
                   <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                    {details?.subCategory.subCategory || "-"}
+                    {details?.subCategory?.subCategory || "-"}
                   </p>
                   <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border">
                     Status

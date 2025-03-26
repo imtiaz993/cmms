@@ -131,6 +131,8 @@ const InventoryDetails = () => {
   ];
 
   const addToShippingCart = async () => {
+    if (details.isAvailable === false)
+      return message.error("This inventory can not be added to shipping cart");
     dispatch(updateShippingCart({ ...details, selectedQuantity: 1 }));
     message.success("Inventory added to shipping cart");
   };

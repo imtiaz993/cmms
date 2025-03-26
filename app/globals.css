@@ -276,6 +276,13 @@ h6 {
   color: #fff !important;
 }
 
+.sidebar-select span {
+  color: #efbf60 !important;
+  font-size: 20px !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
 .rounded-checkbox .ant-checkbox-inner {
   height: 24px !important;
   width: 24px !important;

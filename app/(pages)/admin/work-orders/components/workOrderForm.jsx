@@ -276,11 +276,11 @@ const WorkOrderForm = () => {
     assetDetails && assetDetails.length > 0 && fetchFilteredInventory();
   }, [assetDetails]);
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     console.log("Values1", values);
 
     const formData = new FormData();
-    formData.append("asset", assetId);
+    // formData.append("asset", assetId);
 
     Object.entries(values).forEach(([key, value]) => {
       if (key !== "workOrderDocuments" && key !== "workOrderImages") {
@@ -334,6 +334,7 @@ const WorkOrderForm = () => {
     } else {
       message.error(data.error ?? "Failed to add work order");
     }
+    setSubmitting(false);
   };
 
   return (
@@ -362,7 +363,6 @@ const WorkOrderForm = () => {
           }}
           validationSchema={Yup.object().shape({
             asset: Yup.string().required("Asset is required"),
-            issueID: Yup.string().required("Issue ID is required"),
             description: Yup.string().required("Description is required"),
             date: Yup.date().required("Date is required"),
             completionDate: Yup.date().min(
@@ -453,13 +453,6 @@ const WorkOrderForm = () => {
                   <p className="md:col-span-2 font-semibold md:text-lg">
                     Work Order Details
                   </p>
-                  <InputField
-                    required
-                    name="issueID"
-                    placeholder="Issue ID"
-                    label="Issue ID"
-                  />
-                  <div className="hidden md:block"></div>
                   <DatePickerField name="date" label="Date" required />
                   <TimePickerField name="time" label="Time" />
                   <div className="md:col-span-2">
@@ -714,9 +707,9 @@ const WorkOrderForm = () => {
                   <Button
                     className="mr-2 !text-base"
                     htmlType="submit"
-                    // isLoading={isSubmitting}
+                    isLoading={isSubmitting}
                     onClick={submitForm}
-                    // disabled={isSubmitting}
+                    disabled={isSubmitting}
                     size="small"
                     text="Create Work order"
                     fullWidth={false}
