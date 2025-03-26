@@ -96,7 +96,7 @@ const Sidebar = ({
               <Select
                 className="mt-2 mx-1 p-2 rounded text-xl text-center font-medium w-full sidebar-select"
                 bordered={false}
-                value={activeLocation} // Set to undefined to show placeholder instead of selected item
+                value={activeLocation ?? "all"} // Set to undefined to show placeholder instead of selected item
                 onChange={(value) => {
                   if (value === "all") {
                     router.push(`/admin/${currentPage}`);
@@ -112,18 +112,36 @@ const Sidebar = ({
                 options={[
                   {
                     label: (
-                      <div className="flex items-center gap-2 text-[#efbf60]">
+                      <div
+                        className={`flex items-center gap-2 ${
+                          !activeLocation ? "!text-black" : "text-[#efbf60]"
+                        }`}
+                      >
                         <EnvironmentOutlined />
-                        <span>All</span>
+                        <span className={!activeLocation ? "text-black" : ""}>
+                          All
+                        </span>
                       </div>
                     ),
                     value: "all",
                   },
                   ...locations.map((i) => ({
                     label: (
-                      <div className="flex items-center gap-2 text-[#efbf60]">
+                      <div
+                        className={`flex items-center gap-2 ${
+                          i._id === activeLocation
+                            ? "!text-black"
+                            : "text-[#efbf60]"
+                        }`}
+                      >
                         <EnvironmentOutlined />
-                        <span>{i.site}</span>
+                        <span
+                          className={
+                            activeLocation === i._id ? "text-black" : ""
+                          }
+                        >
+                          {i.site}
+                        </span>
                       </div>
                     ),
                     value: i._id,
