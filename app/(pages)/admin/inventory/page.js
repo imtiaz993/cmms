@@ -66,10 +66,10 @@ const Inventory = () => {
       render: (site) => site?.site,
     },
     {
-      title: "System",
-      dataIndex: "system",
-      key: "system",
-      render: (system) => system?.system,
+      title: "Vendor",
+      dataIndex: "vendor",
+      key: "vendor",
+      render: (vendor) => vendor?.name,
     },
     {
       title: "",

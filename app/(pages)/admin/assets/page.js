@@ -11,7 +11,6 @@ import {
   updateAsset,
 } from "app/services/assets";
 import { useDispatch, useSelector } from "react-redux";
-import { rigs, systems } from "@/constants/rigsAndSystems";
 import { EditPagePencil } from "@/icons/index";
 import {
   DeleteOutlined,
@@ -24,54 +23,30 @@ import Button from "@/components/common/Button";
 import { setAssets } from "app/redux/slices/assetsSlice";
 import ConfirmationPopup from "@/components/confirmationPopup";
 import { updateShippingCart } from "app/redux/slices/assetsShippingCartSlice";
+import InventoryDetailsPopup from "../inventory/components/inventoryDetailsPopup";
 
-// Common column structure
-// const baseColumns = [
-//   { title: "Asset #", dataIndex: "assetNumber", key: "assetNumber" },
-//   // { title: "Description", dataIndex: "description", key: "description" },
-//   // {
-//   //   title: "Physical Location",
-//   //   dataIndex: "physicalLocation",
-//   //   key: "physicalLocation",
-//   //   render: (physicalLocation) =>
-//   //     rigs.find((i) => i.id === physicalLocation).name,
-//   // },
-//   { title: "Serial #", dataIndex: "serialNumber", key: "serialNumber" },
-//   // { title: "Part #", dataIndex: "part", key: "part" },
-//   // { title: "Make", dataIndex: "make", key: "make" },
-//   { title: "Model", dataIndex: "model", key: "model" },
-//   { title: "Priority", dataIndex: "criticality", key: "criticality" },
-//   { title: "Status", dataIndex: "maintStatus", key: "maintStatus" },
-//   { title: "Installed Date", dataIndex: "installedDate", key: "installedDate" },
-// ];
+// System Columns
+const systemColumns = [{ title: "System", dataIndex: "system", key: "system" }];
 
 const Assets = () => {
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "";
   const activeSystem = searchParams.get("system") || "";
-  const params =
-    activeLocation && activeLocation !== null && "&location=" + activeLocation;
-  // const [assets, setAssets] = useState();
-  const { assets, isLoading, error } = useSelector((state) => state.assets);
+  const params = activeLocation ? "&location=" + activeLocation : "";
+  const { assets, isLoading } = useSelector((state) => state.assets);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
-  const [searchText, setSearchText] = useState(""); // State for search text
+  const [searchText, setSearchText] = useState("");
   const router = useRouter();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [selectedRowsData, setselectedRowsData] = useState([]);
-  const [filteredAssets, setFilteredAssets] = useState([]);
+  const [selectedRowsData, setSelectedRowsData] = useState([]);
+  const [filteredSystems, setFilteredSystems] = useState([]);
   const [isFiltering, setIsFiltering] = useState(false);
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
-  const dispatch = useDispatch();
-  const { assetsShippingCart } = useSelector(
-    (state) => state.assetsShippingCart
-  );
 
-  console.log("assetsShippingCart", assetsShippingCart);
-
-  // Filter columns dynamically based on checkedList
-  const mainColumns = [
+  // Asset Columns
+  const assetColumns = [
     {
       title: "Asset #",
       dataIndex: "assetID",
@@ -85,12 +60,6 @@ const Assets = () => {
         </Link>
       ),
     },
-    {
-      title: "Main System",
-      dataIndex: "system",
-      key: "mainSystem",
-      render: (system) => system.system,
-    },
     { title: "Serial #", dataIndex: "serialNumber", key: "serialNumber" },
     { title: "Model", dataIndex: "model", key: "model" },
     { title: "Priority", dataIndex: "criticality", key: "criticality" },
@@ -99,20 +68,12 @@ const Assets = () => {
       dataIndex: "maintStatus",
       key: "maintStatus",
       render: (status) => {
-        if (status === "damagedBeyondRepair") {
-          return "Damaged Beyond Repair";
-        } else if (status === "outForRepair") {
-          return "Out for repair";
-        } else {
-          return status.charAt(0).toUpperCase() + status.slice(1);
-        }
+        if (status === "damagedBeyondRepair") return "Damaged Beyond Repair";
+        if (status === "outForRepair") return "Out for Repair";
+        return status ? status.charAt(0).toUpperCase() + status.slice(1) : "";
       },
     },
-    {
-      title: "Purchase Date",
-      dataIndex: "purchaseDate",
-      key: "purchaseDate",
-    },
+    { title: "Purchase Date", dataIndex: "purchaseDate", key: "purchaseDate" },
     {
       title: "",
       dataIndex: "_id",
@@ -128,147 +89,141 @@ const Assets = () => {
           </Link>
           <DeleteOutlined
             style={{ fontSize: "20px", cursor: "pointer" }}
-            onClick={() => {
-              setDeleteConfirmation(id);
-            }}
+            onClick={() => setDeleteConfirmation(id)}
           />
         </p>
       ),
     },
-    // ...baseColumns.filter((col) => checkedList.includes(col.key)),
   ];
-  console.log("assets", assets);
-  const parentColumns = [
-    // { title: "Parent Asset", dataIndex: "parentAsset", key: "parentAsset" },
-    // ...baseColumns.filter((col) => checkedList.includes(col.key)),
-    {
-      title: "Part Name",
-      dataIndex: "partName",
-      key: "partName",
-    },
-    {
-      title: "Part #",
-      dataIndex: "part",
-      key: "part",
-    },
-    {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-    },
-    {
-      title: "Details",
-      dataIndex: "details",
-      key: "details",
-    },
-    {
-      title: "Installed Date",
-      dataIndex: "installedDate",
-      key: "installedDate",
-    },
-  ];
-
-  // const childColumns = [
-  //   { title: "Child Asset", dataIndex: "childAsset", key: "childAsset" },
-  //   ...baseColumns.filter((col) => checkedList.includes(col.key)),
-  // ];
-
-  const defaultCheckedList = mainColumns.map((item) => item.key);
+  const defaultCheckedList = assetColumns.map((item) => item.key); // Default to asset columns
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
-  const newMainColumns = mainColumns.filter((item) =>
+
+  const [inventoryDetailsPopup, setInventoryDetailsPopup] = useState();
+  // Assigned Inventory Columns
+  const inventoryColumns = [
+    {
+      title: "Part Number",
+      dataIndex: "partNumber",
+      key: "partNumber",
+      render: (_, record) => (
+        <Link
+          href={"/admin/inventory/" + record._id}
+          className="text-[#017BFE] underline"
+        >
+          {record.partNumber}
+        </Link>
+      ),
+    },
+    { title: "Description", dataIndex: "description", key: "description" },
+    { title: "Quantity", dataIndex: "quantity", key: "quantity" },
+    { title: "Cost", dataIndex: "cost", key: "cost" },
+
+    {
+      title: "Vendor",
+      dataIndex: "vendor",
+      key: "vendor",
+      render: (vendor) => vendor?.name,
+    },
+    {
+      title: "",
+      dataIndex: "_id",
+      key: "actions",
+      render: (id, record) => (
+        <EyeOutlined
+          style={{ fontSize: "20px", cursor: "pointer" }}
+          onClick={() => setInventoryDetailsPopup(record)}
+        />
+      ),
+    },
+  ];
+
+  // Filter asset columns dynamically
+  const newAssetColumns = assetColumns.filter((item) =>
     checkedList.includes(item.key)
+  );
+  const dispatch = useDispatch();
+  const { assetsShippingCart } = useSelector(
+    (state) => state.assetsShippingCart
   );
 
   const rowSelection = {
     selectedRowKeys,
     onChange: (keys, rows) => {
-      setselectedRowsData(rows);
+      setSelectedRowsData(rows);
       setSelectedRowKeys(keys);
     },
   };
 
-  const showAddAssetModal = () => {
-    setAddAssetVisible(true);
+  // Flatten assets for filtering and searching
+  const flattenAssets = (systems) => {
+    return systems.map((system) => ({
+      ...system,
+      key: system._id,
+      assets: system.assets.map((asset) => ({
+        ...asset,
+        key: asset._id,
+        systemId: system._id,
+        assignedInventories: asset.assignedInventories.map((inv) => ({
+          ...inv,
+          key: inv._id,
+        })),
+      })),
+    }));
   };
 
-  // Function to filter assets based on search text
-  const displayedAssets = useMemo(() => {
-    if (!searchText) return filteredAssets;
-    return filteredAssets?.filter((asset) =>
-      checkedList.some((key) =>
-        asset[key]
-          ?.toString()
-          ?.toLowerCase()
-          ?.includes(searchText.toLowerCase())
-      )
-    );
-  }, [searchText, filteredAssets, checkedList]);
+  // Filter systems based on search text
+  const displayedSystems = useMemo(() => {
+    const flattenedSystems = flattenAssets(filteredSystems);
+    if (!searchText) return flattenedSystems;
 
-  // Render expanded row content<
-  const expandedRowRender = (record) => (
-    <Table
-      columns={newMainColumns}
-      dataSource={[record]} // Single parent data for nested table
-      pagination={false}
-      size="small"
-      rowKey="_id"
-      rowSelection={rowSelection}
-      // expandable={{
-      //   expandedRowRender: (parentRecord) => (
-      //     <Table
-      //       columns={childColumns}
-      //       dataSource={[parentRecord]} // Single child data for further nesting
-      //       pagination={false}
-      //       size="small"
-      //       rowKey="key"
-      //     />
-      //   ),
-      // }}
-    />
-  );
+    return flattenedSystems
+      .map((system) => {
+        const filteredAssets = system.assets.filter((asset) =>
+          newAssetColumns.some((col) =>
+            asset[col.dataIndex]
+              ?.toString()
+              ?.toLowerCase()
+              ?.includes(searchText.toLowerCase())
+          )
+        );
+        return { ...system, assets: filteredAssets };
+      })
+      .filter(
+        (system) =>
+          system.assets.length > 0 ||
+          system.system.toLowerCase().includes(searchText.toLowerCase())
+      );
+  }, [searchText, filteredSystems]);
 
-  // Handle row expand/collapse
-  const handleRowExpand = (expanded, record) => {
-    const newExpandedRowKeys = expanded
-      ? [...expandedRowKeys, record._id]
-      : expandedRowKeys.filter((key) => key !== record._id);
-    setExpandedRowKeys(newExpandedRowKeys);
-  };
-
+  // Fetch and filter assets
   useEffect(() => {
-    if (activeLocation || activeLocation === "") {
-      const fetchFilteredAssets = async () => {
-        setIsFiltering(true);
-        try {
-          const { status, data } = await getFilteredAssets({
-            site: activeLocation ? activeLocation : null,
-            system: activeSystem ? activeSystem : null,
-          });
-
-          if (status === 200) {
-            setFilteredAssets(data.data);
-          } else {
-            message.error(data?.message || "Failed to fetch filtered assets");
-          }
-        } catch (error) {
-          message.error("Error fetching filtered assets");
-        } finally {
-          setIsFiltering(false);
+    const fetchFilteredAssets = async () => {
+      setIsFiltering(true);
+      try {
+        const { status, data } = await getFilteredAssets({
+          site: activeLocation || null,
+          system: activeSystem || null,
+        });
+        if (status === 200) {
+          setFilteredSystems(data.data); // Assuming data.data is the array of systems
+        } else {
+          message.error(data?.message || "Failed to fetch filtered assets");
         }
-      };
+      } catch (error) {
+        message.error("Error fetching filtered assets");
+      } finally {
+        setIsFiltering(false);
+      }
+    };
 
-      fetchFilteredAssets();
-    } else {
-      setFilteredAssets(assets); // If no filters, use full assets list
-    }
+    fetchFilteredAssets();
   }, [activeLocation, activeSystem]);
 
-  const addToShippingCart = async (assetsData) => {
-    const matchedAssets = filteredAssets.filter((asset) =>
-      assetsData.includes(asset._id)
-    );
+  const addToShippingCart = (assetsData) => {
+    const matchedAssets = filteredSystems
+      .flatMap((system) => system.assets)
+      .filter((asset) => assetsData.includes(asset._id));
 
-    // Dispatch updateShippingCart for each matched asset
     matchedAssets.forEach((asset) => {
       dispatch(updateShippingCart(asset));
     });
@@ -279,14 +234,44 @@ const Assets = () => {
   const handleDelete = async (id) => {
     const { status, data } = await deleteAsset(id);
     if (status === 200) {
-      dispatch(setAssets(assets.filter((asset) => asset._id !== id)));
-      setFilteredAssets((prev) => prev.filter((asset) => asset._id !== id));
+      const updatedSystems = filteredSystems.map((system) => ({
+        ...system,
+        assets: system.assets.filter((asset) => asset._id !== id),
+      }));
+      setFilteredSystems(updatedSystems);
+      dispatch(setAssets(updatedSystems.flatMap((system) => system.assets)));
       message.success(data?.message || "Asset deleted successfully");
     } else {
       message.error(data?.message || "Failed to delete asset");
     }
     setDeleteConfirmation(false);
   };
+
+  // Nested table for assigned inventories
+  const expandedAssetRowRender = (asset) => (
+    <Table
+      columns={inventoryColumns}
+      dataSource={asset.assignedInventories}
+      pagination={false}
+      size="small"
+      rowKey="key"
+    />
+  );
+
+  // Nested table for assets within a system
+  const expandedSystemRowRender = (system) => (
+    <Table
+      columns={newAssetColumns}
+      dataSource={system.assets}
+      pagination={false}
+      size="small"
+      rowKey="key"
+      rowSelection={rowSelection}
+      expandable={{
+        expandedRowRender: expandedAssetRowRender,
+      }}
+    />
+  );
 
   return (
     <>
@@ -297,11 +282,16 @@ const Assets = () => {
         message="Are you sure you want to delete this asset?"
         onConfirm={() => handleDelete(deleteConfirmation)}
       />
+      <InventoryDetailsPopup
+        visible={inventoryDetailsPopup}
+        setVisible={setInventoryDetailsPopup}
+        inventory={inventoryDetailsPopup}
+      />
       <div className="text-right absolute top-[85px] right-5 md:right-10 lg:right-[90px]">
         <Button
           text={
             assetsShippingCart.length > 0
-              ? "Shipping Cart (" + assetsShippingCart.length + ")"
+              ? `Shipping Cart (${assetsShippingCart.length})`
               : "Shipping Cart"
           }
           fullWidth={false}
@@ -321,39 +311,39 @@ const Assets = () => {
         />
         <ActionBar
           showAddAssetModal={() => setAddAssetVisible(true)}
-          checkedList={checkedList}
-          setCheckedList={setCheckedList}
-          columns={mainColumns}
           setSearchText={setSearchText}
-          setFilteredAssets={setFilteredAssets}
           selectedRowKeys={selectedRowKeys}
           selectedRowsData={selectedRowsData}
           addToShippingCart={addToShippingCart}
+          columns={assetColumns}
+          checkedList={checkedList}
+          setCheckedList={setCheckedList}
         />
-        {console.log("displayedAssets", filteredAssets, displayedAssets)}
         <Table
           loading={isFiltering || isLoading}
           size="large"
           scroll={{ x: 1100 }}
-          columns={newMainColumns}
-          rowSelection={rowSelection}
-          rowKey="_id"
-          dataSource={displayedAssets}
+          columns={systemColumns}
+          dataSource={displayedSystems}
+          rowKey="key"
           pagination={{
-            total: displayedAssets?.length,
-            // pageSize: 10,
+            total: displayedSystems.length,
             showSizeChanger: true,
             showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} items`,
+              `${range[0]}-${range[1]} of ${total} systems`,
             className: "custom-pagination",
           }}
+          expandable={{
+            expandedRowRender: expandedSystemRowRender,
+            expandedRowKeys,
+            onExpand: (expanded, record) => {
+              const newExpandedRowKeys = expanded
+                ? [...expandedRowKeys, record.key]
+                : expandedRowKeys.filter((key) => key !== record.key);
+              setExpandedRowKeys(newExpandedRowKeys);
+            },
+          }}
           style={{ marginTop: 16 }}
-          // rowKey="key"
-          // expandable={{
-          //   expandedRowRender,
-          //   expandedRowKeys,
-          //   onExpand: handleRowExpand,
-          // }}
         />
       </div>
     </>

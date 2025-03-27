@@ -54,7 +54,7 @@ const NewMaterialTransfer = () => {
       title: "Location",
       dataIndex: "site",
       key: "site",
-      render: (_, record) => <span>{record?.site.site}</span>,
+      render: (_, record) => <span>{record?.site?.site}</span>,
     },
     {
       title: "Description",

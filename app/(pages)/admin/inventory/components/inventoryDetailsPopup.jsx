@@ -11,7 +11,7 @@ const InventoryDetailsPopup = ({ visible, setVisible, inventory }) => {
           maskClosable={false}
           title={
             <h1 className="text-lg md:text-2xl">
-             Part # {inventory && inventory?.partNumber}
+              Part # {inventory && inventory?.partNumber}
             </h1>
           }
           open={visible}
@@ -37,13 +37,13 @@ const InventoryDetailsPopup = ({ visible, setVisible, inventory }) => {
                 Site
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                {inventory?.site.site}
+                {inventory?.site?.site}
               </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
-                System
+                Vendor
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                {inventory?.system.system}
+                {inventory?.vendor?.name}
               </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
                 Date Received
@@ -78,9 +78,7 @@ const InventoryDetailsPopup = ({ visible, setVisible, inventory }) => {
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0">
                 Notes
               </p>
-              <p className="p-2 md:px-3 md:py-2 border">
-                {inventory?.notes}
-              </p>
+              <p className="p-2 md:px-3 md:py-2 border">{inventory?.notes}</p>
             </div>
           )}
         </Modal>

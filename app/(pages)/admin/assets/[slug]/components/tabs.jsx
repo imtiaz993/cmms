@@ -9,6 +9,7 @@ import Details from "./details";
 import History from "./history";
 import ManHours from "./man-hours";
 import Photos from "./photos";
+import Parts from "./parts";
 
 const Tabs = ({ data, setData, slug, superUsers }) => {
   const router = useRouter();
@@ -78,6 +79,13 @@ const Tabs = ({ data, setData, slug, superUsers }) => {
       key: "history",
       label: "History",
       children: <History historyData={data?.history} setData={setData} />,
+    },
+    {
+      key: "parts",
+      label: "Parts",
+      children: (
+        <Parts partsData={data?.assignedInventories} setData={setData} />
+      ),
     },
   ];
   return (

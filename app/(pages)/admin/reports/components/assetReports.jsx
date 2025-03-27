@@ -12,22 +12,18 @@ const reportsData = [
     description: "This report lists all assets that are currently down.",
     endPoint: "asset-down",
   },
-  {
-    title: "Asset Class Assignment",
-    description:
-      "This report shows the active asset classes and the asset assigned to each asset class at the selected facility.",
-  },
-  {
-    title: "Asset Classes by Entity",
-    description:
-      "This report shows the active asset classes that are currently tied to an asset at a cost center. It excludes the asset classes that exist in the system but are not associated with any asset found currently at the selected cost center.",
-  },
-  {
-    title: "Asset Details",
-    description:
-      "This report shows the details about the asset status, asset class, custom attributes, maintenance information and costs related to an asset.",
-    endPoint: "asset-details",
-  },
+
+  // { removed because it was not in the screenshot of brandons doc
+  //   title: "Asset Classes by Entity",
+  //   description:
+  //     "This report shows the active asset classes that are currently tied to an asset at a cost center. It excludes the asset classes that exist in the system but are not associated with any asset found currently at the selected cost center.",
+  // },
+  // {
+  //   title: "Asset Details",
+  //   description:
+  //     "This report shows the details about the asset status, asset class, custom attributes, maintenance information and costs related to an asset.",
+  //   endPoint: "asset-details",
+  // },
   {
     title: "Newly Added Assets",
     description:
@@ -44,6 +40,7 @@ const reportsData = [
     title: "Asset Physical Location",
     description:
       "This report shows the current and previous physical location for a particular asset.",
+    endPoint: "asset-physical-location",
   },
   {
     title: "Asset Status Change",
@@ -62,11 +59,6 @@ const reportsData = [
     description:
       "This report provides the total cost of ownership of assets assigned to a cost center/zone. The report provides a summary of planned and unplanned work order counts along with the labor hours and parts costs. It also takes into account any assigned contract costs. The conclusion provides details about current costs and estimated future costs based on the estimated life of the asset.",
     endPoint: "asset-cost",
-  },
-  {
-    title: "Custom Attributes",
-    description:
-      "This report displays assets of a particular asset class that have specific custom attribute values.",
   },
 ];
 const AssetReports = ({ categories }) => {
@@ -119,27 +111,14 @@ const AssetReports = ({ categories }) => {
         type="asset"
         endPoint="asset-down"
       />
-      <ReportsPopup
-        visible={popup === "Asset Class Assignment"}
-        setVisible={setPopup}
-        title="Asset Class Assignment Report"
-        type="asset"
-      />
-      <ReportsPopup
-        visible={popup === "Asset Classes by Entity"}
-        setVisible={setPopup}
-        title="Asset Classes by Entity Report"
-        type="asset"
-        dataOnly
-      />
-      <ReportsPopup
+      {/* <ReportsPopup
         visible={popup === "Asset Details"}
         setVisible={setPopup}
         title="Asset Details Report"
         type="asset"
         assetNumber
         endPoint="asset-details"
-      />
+      /> */}
       <ReportsPopup
         visible={popup === "Newly Added Assets"}
         setVisible={setPopup}
@@ -163,6 +142,7 @@ const AssetReports = ({ categories }) => {
         title="Asset Physical Location Report"
         type="asset"
         dataOnly
+        endPoint="asset-physical-location"
       />
       <ReportsPopup
         visible={popup === "Asset Status Change"}
@@ -189,12 +169,7 @@ const AssetReports = ({ categories }) => {
         includeChildAssets
         endPoint="asset-cost"
       />
-      <ReportsPopup
-        visible={popup === "Custom Attributes"}
-        setVisible={setPopup}
-        title="Custom Attributes Report"
-        type="asset"
-      />
+
       <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {filteredData.length > 0 &&
           filteredData.map((item, index) => (
