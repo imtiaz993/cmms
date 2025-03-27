@@ -10,41 +10,33 @@ import * as Yup from "yup";
 import { generateReport } from "app/services/reports";
 import { useSelector } from "react-redux";
 
-const WOProcedurePopup = ({ visible, setVisible, categories }) => {
+const WOProcedurePopup = ({ visible, setVisible, categories, endPoint }) => {
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
+  const assets = useSelector((state) => state.assets.assets);
+
   // Validation schema using Yup
   const validationSchema = Yup.object({
-    location: Yup.string().required("Location is required"),
-    assetNumber: Yup.string().required("Asset Number is required"),
+    site: Yup.string().required("Site is required"),
+    asset: Yup.string().required("Asset is required"),
     createdFrom: Yup.date().required("Created Between From is required"),
     createdTo: Yup.date().required("Created Between To is required"),
     closesdFrom: Yup.date().required("Closed Between From is required"),
     closedTo: Yup.date().required("Closed Between To is required"),
-    assignedTo: Yup.string().required("Person Doing Work is required"),
     category: Yup.string().required("Category is required"),
     system: Yup.string().required("System is required"),
-    tier3: Yup.string().required("Tier 3 is required"),
-    tier4: Yup.string().required("Tier 4 is required"),
-    tier5: Yup.string().required("Tier 5 is required"),
-    tier6: Yup.string().required("Tier 6 is required"),
-    status: Yup.string().required("Status is required"),
-    craft: Yup.string().required("Craft is required"),
-    priority: Yup.string().required("Priority is required"),
-    formType: Yup.string()
-      .oneOf(["pdf", "csv"], "Select a valid export format")
-      .required("Export format is required"),
+    // assignedTo: Yup.string().required("Person Doing Work is required"),
+    // priority: Yup.string().required("Priority is required"),
+    // formType: Yup.string()
+    //   .oneOf(["pdf", "csv"], "Select a valid export format")
+    //   .required("Export format is required"),
   });
 
   // Handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
     // Example of generating a report, replace with actual API call
-    const { status, data } = await generateReport(
-      values,
-      "Work Order Procedure Report",
-      "maintenance"
-    );
+    const { status, data } = await generateReport(values, endPoint);
     if (status === 200) {
       window.open(data.data);
       message.success(data.message || "Report generated successfully");
@@ -59,23 +51,18 @@ const WOProcedurePopup = ({ visible, setVisible, categories }) => {
     <div>
       <Formik
         initialValues={{
-          location: "",
-          assetNumber: "",
+          site: "",
+          asset: "",
           createdFrom: null,
           createdTo: null,
           closesdFrom: null,
           closedTo: null,
-          assignedTo: "",
           category: "",
           system: "",
-          tier3: "",
-          tier4: "",
-          tier5: "",
-          tier6: "",
-          status: "Open", // default value for status
-          craft: "",
-          priority: "High", // default value for priority
           formType: "pdf", // default export format
+          // assignedTo: "",
+          // status: "Open", // default value for status
+          // priority: "High", // default value for priority
         }}
         validationSchema={validationSchema} // Use validation schema
         onSubmit={handleSubmit}
@@ -119,8 +106,8 @@ const WOProcedurePopup = ({ visible, setVisible, categories }) => {
                   </div> */}
                   <div className="w-full">
                     <SelectField
-                      name="location"
-                      placeholder="Location"
+                      name="site"
+                      placeholder="Site"
                       options={locations.map((i) => ({
                         label: i.site,
                         value: i._id,
@@ -129,13 +116,19 @@ const WOProcedurePopup = ({ visible, setVisible, categories }) => {
                   </div>
 
                   <div className="w-full">
-                    <InputField
-                      name="assetNumber"
-                      placeholder="Asset Number"
-                      maxLength={128}
+                    <SelectField
+                      name="asset"
+                      placeholder="Select Asset"
+                      label="Asset"
+                      labelOnTop
+                      options={assets.map((i) => ({
+                        label: i.assetID,
+                        value: i._id,
+                      }))}
+                      required
+                      showSearch
                     />
                   </div>
-
                   <div className="w-full">
                     <DatePickerField
                       name="createdFrom"
@@ -182,15 +175,10 @@ const WOProcedurePopup = ({ visible, setVisible, categories }) => {
                     <SelectField
                       name="system"
                       placeholder="System"
-                      options={
-                        values.location &&
-                        systems
-                          .filter((i) => i?.site?._id === values.location)
-                          ?.map((i) => ({
-                            label: i.system,
-                            value: i._id,
-                          }))
-                      }
+                      options={systems?.map((i) => ({
+                        label: i.system,
+                        value: i._id,
+                      }))}
                     />
                   </div>
                 </div>

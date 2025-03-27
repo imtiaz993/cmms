@@ -73,15 +73,10 @@ const AssetFilter = ({ closeDropdown, setFilteredAssets, options }) => {
               <SelectField
                 name="system"
                 placeholder="System"
-                options={
-                  values.site &&
-                  systems
-                    .filter((i) => i?.site?._id === values.site)
-                    ?.map((i) => ({
-                      label: i.system,
-                      value: i._id,
-                    }))
-                }
+                options={systems?.map((i) => ({
+                  label: i.system,
+                  value: i._id,
+                }))}
               />
               {/* <InputField name="assetID" placeholder="Asset #" />
               <InputField name="serialNumber" placeholder="Serial #" />

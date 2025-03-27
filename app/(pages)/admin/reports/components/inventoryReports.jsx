@@ -8,20 +8,6 @@ import { SearchIcon } from "@/icons/index";
 
 const reportsData = [
   {
-    title: "Inventory is Currently Down",
-    description: "This report lists all inventories that are currently down.",
-  },
-  {
-    title: "Inventory Class Assignment",
-    description:
-      "This report shows the active inventory classes and the inventory assigned to each inventory class at the selected facility.",
-  },
-  {
-    title: "Inventory Classes by Entity",
-    description:
-      "This report shows the active inventory classes that are currently tied to an inventory at a cost center. It excludes the inventory classes that exist in the system but are not associated with any inventory found currently at the selected cost center.",
-  },
-  {
     title: "Inventory Details",
     description:
       "This report shows the details about the inventory status, inventory class, custom attributes, maintenance information and costs related to an inventory.",
@@ -32,11 +18,6 @@ const reportsData = [
     description:
       "This report shows a list of newly added inventories defaulted to within the past 90 days or you can select a date range.",
     endPoint: "newly-added-inventories",
-  },
-  {
-    title: "Inventory Operational Status",
-    description:
-      "This is a summary report of the inventory’s current operating status at a cost center. It shows a color-coded representation for easy and quick recognition of the inventory state as it stands today.",
   },
   {
     title: "Inventory Physical Location",
@@ -57,14 +38,40 @@ const reportsData = [
     endPoint: "inventory-summary",
   },
   {
-    title: "Total Cost of Ownership",
+    title: "Inventory in Stock",
     description:
-      "This report provides the total cost of ownership of inventories assigned to a cost center/zone. The report provides a summary of planned and unplanned work order counts along with the labor hours and parts costs. It also takes into account any assigned contract costs. The conclusion provides details about current costs and estimated future costs based on the estimated life of the inventory.",
+      "This report shows the summary of the active inventories in the system.",
+    endPoint: "inventory-instock",
   },
   {
-    title: "Custom Attributes",
+    title: "Inventory Disposed",
     description:
-      "This report displays inventories of a particular inventory class that have specific custom attribute values.",
+      "This report shows the summary of the active inventories in the system.",
+    endPoint: "inventory-disposed",
+  },
+  {
+    title: "Inventory Broken",
+    description:
+      "This report shows the summary of the active inventories in the system.",
+    endPoint: "inventory-broken",
+  },
+  {
+    title: "Inventory Sold",
+    description:
+      "This report shows the summary of the active inventories in the system.",
+    endPoint: "inventory-sold",
+  },
+  {
+    title: "Inventory Received",
+    description:
+      "This report shows the summary of the active inventories in the system.",
+    endPoint: "inventory-received",
+  },
+  {
+    title: "Inventory Shipped",
+    description:
+      "This report shows the summary of the active inventories in the system.",
+    endPoint: "inventory-shipped",
   },
 ];
 const InventoryReports = ({ categories }) => {
@@ -110,25 +117,7 @@ const InventoryReports = ({ categories }) => {
           allowClear
         />
       </div>
-      <ReportsPopup
-        visible={popup === "Inventory is Currently Down"}
-        setVisible={setPopup}
-        title="Inventory is Currently Down Report"
-        type="inventory"
-      />
-      <ReportsPopup
-        visible={popup === "Inventory Class Assignment"}
-        setVisible={setPopup}
-        title="Inventory Class Assignment Report"
-        type="inventory"
-      />
-      <ReportsPopup
-        visible={popup === "Inventory Classes by Entity"}
-        setVisible={setPopup}
-        title="Inventory Classes by Entity Report"
-        type="inventory"
-        dataOnly
-      />
+
       <ReportsPopup
         visible={popup === "Inventory Details"}
         setVisible={setPopup}
@@ -145,13 +134,6 @@ const InventoryReports = ({ categories }) => {
         costCenter={false}
         fromToDate
         endPoint="newly-added-inventories"
-      />
-      <ReportsPopup
-        visible={popup === "Inventory Operational Status"}
-        setVisible={setPopup}
-        title="Inventory Operational Status Report"
-        type="inventory"
-        dataOnly
       />
       <ReportsPopup
         visible={popup === "Inventory Physical Location"}
@@ -177,19 +159,48 @@ const InventoryReports = ({ categories }) => {
         endPoint="inventory-summary"
       />
       <ReportsPopup
-        visible={popup === "Total Cost of Ownership"}
+        visible={popup === "Inventory in Stock"}
         setVisible={setPopup}
-        title="Total Cost of Ownership Report"
+        title="Inventory in Stock Report"
         type="inventory"
-        partNumber
-        includeChildAssets
+        endPoint="inventory-instock"
       />
       <ReportsPopup
-        visible={popup === "Custom Attributes"}
+        visible={popup === "Inventory Disposed"}
         setVisible={setPopup}
-        title="Custom Attributes Report"
+        title="Inventory Disposed Report"
         type="inventory"
+        endPoint="inventory-disposed"
       />
+      <ReportsPopup
+        visible={popup === "Inventory Broken"}
+        setVisible={setPopup}
+        title="Inventory Broken Report"
+        type="inventory"
+        endPoint="inventory-broken"
+      />
+      <ReportsPopup
+        visible={popup === "Inventory Sold"}
+        setVisible={setPopup}
+        title="Inventory Sold Report"
+        type="inventory"
+        endPoint="inventory-sold"
+      />
+      <ReportsPopup
+        visible={popup === "Inventory Received"}
+        setVisible={setPopup}
+        title="Inventory Received Report"
+        type="inventory"
+        endPoint="inventory-received"
+      />
+      <ReportsPopup
+        visible={popup === "Inventory Shipped"}
+        setVisible={setPopup}
+        title="Inventory Shipped Report"
+        type="inventory"
+        endPoint="inventory-shipped"
+      />
+
       <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {filteredData.length > 0 &&
           filteredData.map((item, index) => (

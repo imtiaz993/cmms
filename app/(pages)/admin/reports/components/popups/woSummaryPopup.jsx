@@ -10,38 +10,31 @@ import { useSelector } from "react-redux";
 
 // Validation Schema
 const validationSchema = Yup.object().shape({
-  location: Yup.string().required("Location is required"),
+  site: Yup.string().required("Site is required"),
   assetNumber: Yup.string().required("Asset Number is required"),
   createdFrom: Yup.date().required("Created From is required"),
   createdTo: Yup.date().required("Created To is required"),
   closesdFrom: Yup.date().required("Closed From is required"),
   closedTo: Yup.date().required("Closed To is required"),
-  assignedTo: Yup.string().required("Person Doing Work is required"),
   category: Yup.string().required("Category is required"),
   system: Yup.string().required("System is required"),
-  tier3: Yup.string(),
-  tier4: Yup.string(),
-  tier5: Yup.string(),
-  tier6: Yup.string(),
-  type: Yup.string().required("Type is required"),
-  status: Yup.string().required("Status is required"),
-  craft: Yup.string().required("Craft is required"),
-  priority: Yup.string().required("Priority is required"),
-  cause: Yup.string().required("Cause is required"),
+  // assignedTo: Yup.string().required("Person Doing Work is required"),
+  // type: Yup.string().required("Type is required"),
+  // status: Yup.string().required("Status is required"),
+  // craft: Yup.string().required("Craft is required"),
+  // priority: Yup.string().required("Priority is required"),
+  // cause: Yup.string().required("Cause is required"),
 });
 
-const WOSummaryPopup = ({ visible, setVisible, categories }) => {
+const WOSummaryPopup = ({ visible, setVisible, categories, endPoint }) => {
+  // not using this file for wosummary***********************************************************************************
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
   // Handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
     // Placeholder for actual report generation function
-    const { status, data } = await generateReport(
-      values,
-      "Work Order Summary Report",
-      "maintenance"
-    );
+    const { status, data } = await generateReport(values, endPoint);
     if (status === 200) {
       window.open(data.data);
       message.success(data.message || "Report generated successfully");
@@ -56,25 +49,21 @@ const WOSummaryPopup = ({ visible, setVisible, categories }) => {
     <div>
       <Formik
         initialValues={{
-          location: "",
+          site: "",
           assetNumber: "",
           createdFrom: "",
           createdTo: "",
           closesdFrom: "",
           closedTo: "",
-          assignedTo: "",
           category: "",
           system: "",
-          tier3: "",
-          tier4: "",
-          tier5: "",
-          tier6: "",
-          type: "",
-          status: "",
-          craft: "",
-          priority: "",
-          cause: "",
           formType: "pdf", // Default form type as pdf
+          // assignedTo: "",
+          // type: "",
+          // status: "",
+          // craft: "",
+          // priority: "",
+          // cause: "",
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
@@ -118,8 +107,8 @@ const WOSummaryPopup = ({ visible, setVisible, categories }) => {
                   </div> */}
                   <div className="w-full">
                     <SelectField
-                      name="location"
-                      placeholder="Location"
+                      name="site"
+                      placeholder="Site"
                       options={
                         locations &&
                         locations?.map((i) => ({
@@ -185,15 +174,10 @@ const WOSummaryPopup = ({ visible, setVisible, categories }) => {
                     <SelectField
                       name="system"
                       placeholder="System"
-                      options={
-                        values.location &&
-                        systems
-                          .filter((i) => i?.site?._id === values.location)
-                          ?.map((i) => ({
-                            label: i.system,
-                            value: i._id,
-                          }))
-                      }
+                      options={systems?.map((i) => ({
+                        label: i.system,
+                        value: i._id,
+                      }))}
                     />
                   </div>
                 </div>

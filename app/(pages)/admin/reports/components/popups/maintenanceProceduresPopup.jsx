@@ -9,11 +9,9 @@ import * as Yup from "yup";
 
 // Yup validation schema for Maintenance Procedures
 const validationSchema = Yup.object({
-  location: Yup.string().required("Location is required"),
+  site: Yup.string().required("Site is required"),
   category: Yup.string().required("Category is required"),
   system: Yup.string().required("System is required"),
-  tier3: Yup.string(),
-  tier4: Yup.string(),
   formType: Yup.string()
     .oneOf(["pdf", "csv"], "Select a valid export format")
     .required("Export format is required"),
@@ -21,15 +19,18 @@ const validationSchema = Yup.object({
 
 // Formik initial values for Maintenance Procedures
 const initialValues = {
-  location: "",
+  site: "",
   category: "",
   system: "",
-  tier3: "",
-  tier4: "",
   formType: "pdf", // Default to pdf for radio button
 };
 
-const MaintenanceProceduresPopup = ({ visible, setVisible, categories }) => {
+const MaintenanceProceduresPopup = ({
+  visible,
+  setVisible,
+  categories,
+  endPoint,
+}) => {
   const locations = useSelector((state) => state.location.location);
   const systems = useSelector((state) => state.system.system);
   // Form submission handler
@@ -37,11 +38,8 @@ const MaintenanceProceduresPopup = ({ visible, setVisible, categories }) => {
     setSubmitting(true);
 
     // Placeholder for actual report generation function
-    const { status, data } = await generateReport(
-      values,
-      "Maintenance Procedures Report",
-      "maintenance"
-    );
+    const { status, data } = await generateReport(values, endPoint);
+
     if (status === 200) {
       window.open(data.data);
       message.success(data.message || "Report generated successfully");
@@ -91,8 +89,8 @@ const MaintenanceProceduresPopup = ({ visible, setVisible, categories }) => {
                 <div className="mt-4 grid md:grid-cols-2 gap-4 w-full items-end md:items-center">
                   <div className="w-full">
                     <SelectField
-                      name="location"
-                      placeholder="Location"
+                      name="site"
+                      placeholder="Site"
                       options={locations.map((i) => ({
                         label: i.site,
                         value: i._id,
@@ -103,15 +101,10 @@ const MaintenanceProceduresPopup = ({ visible, setVisible, categories }) => {
                     <SelectField
                       name="system"
                       placeholder="System"
-                      options={
-                        values.location &&
-                        systems
-                          .filter((i) => i?.site?._id === values.location)
-                          ?.map((i) => ({
-                            label: i.system,
-                            value: i._id,
-                          }))
-                      }
+                      options={systems?.map((i) => ({
+                        label: i.system,
+                        value: i._id,
+                      }))}
                     />
                   </div>
                   <div className="w-full">

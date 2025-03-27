@@ -143,15 +143,10 @@ const AssetSummaryPopup = ({
                     <SelectField
                       name="system"
                       placeholder="System"
-                      options={
-                        values.site &&
-                        systems
-                          .filter((i) => i?.site?._id === values.site)
-                          ?.map((i) => ({
-                            label: i.system,
-                            value: i._id,
-                          }))
-                      }
+                      options={systems?.map((i) => ({
+                        label: i.system,
+                        value: i._id,
+                      }))}
                     />
                   </div>
 

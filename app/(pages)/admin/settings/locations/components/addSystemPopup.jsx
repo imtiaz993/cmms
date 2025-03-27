@@ -13,11 +13,9 @@ const AddSystemPopup = ({ visible, setSystems, setVisible }) => {
   const dispatch = useDispatch();
   const locations = useSelector((state) => state.location.location);
   const initialValues = {
-    site: "",
     system: "",
   };
   const validationSchema = Yup.object({
-    site: Yup.string().required("Site is required"),
     system: Yup.string().required("System name is required"),
   });
   const handleSubmit = async (values, setSubmitting, resetForm) => {
@@ -46,9 +44,7 @@ const AddSystemPopup = ({ visible, setSystems, setVisible }) => {
           <Form onSubmit={handleSubmit}>
             <Modal
               maskClosable={false}
-              title={
-                <h1 className="text-lg md:text-2xl mb-5">Add a System</h1>
-              }
+              title={<h1 className="text-lg md:text-2xl mb-5">Add a System</h1>}
               open={visible}
               onCancel={() => {
                 if (!isSubmitting) {
@@ -84,16 +80,6 @@ const AddSystemPopup = ({ visible, setSystems, setVisible }) => {
               }
               width={600}
             >
-              <SelectField
-                name="site"
-                placeholder="Select site"
-                label="Site"
-                required
-                options={locations.map((i) => ({
-                  label: i.site,
-                  value: i._id,
-                }))}
-              />
               <div className="mt-5">
                 <InputField
                   name="system"

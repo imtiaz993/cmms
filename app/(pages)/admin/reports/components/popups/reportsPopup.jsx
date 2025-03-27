@@ -20,7 +20,6 @@ const ReportsPopup = ({
   partNumber,
   fromToDate,
   includeChildAssets,
-  physicalLocation,
   date,
   year,
   endPoint,
@@ -43,9 +42,6 @@ const ReportsPopup = ({
       : Yup.date().notRequired(),
     year: year ? Yup.string().required("Year is required") : Yup.string(),
     dataOnly: dataOnly ? Yup.boolean() : Yup.boolean(),
-    // physicalLocation: physicalLocation
-    //   ? Yup.string().required("Physical Location is required")
-    //   : Yup.string(),
 
     // Only apply validation for `fromDate` and `toDate` if `fromToDate` prop is true
     fromDate: fromToDate
@@ -73,7 +69,7 @@ const ReportsPopup = ({
       message.success(data.message ?? "Report generated successfully");
       resetForm();
     } else {
-      message.error(data?.error ?? "Failed to generate report");
+      message.error(data?.message ?? "Failed to generate report");
     }
     setSubmitting(false);
     setVisible(false);
@@ -147,7 +143,6 @@ const ReportsPopup = ({
                         required
                       />
                     </div>
-                    {console.log("errors", errors)}
                     {assetNumber && (
                       <div className="w-full">
                         <SelectField
@@ -226,21 +221,6 @@ const ReportsPopup = ({
                         </Field>
                       </div>
                     )}
-                  </div>
-                )}
-
-                {physicalLocation && (
-                  <div className="mt-4 w-full">
-                    {/* <SelectField
-                      name="physicalLocation"
-                      placeholder="Select Physical Location"
-                      label="Physical Location"
-                      labelOnTop
-                      options={locations.map((i) => ({
-                        label: i.name,
-                        value: i.id,
-                      }))}
-                    /> */}
                   </div>
                 )}
 
