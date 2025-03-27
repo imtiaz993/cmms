@@ -69,7 +69,7 @@ const Inventory = () => {
       title: "Vendor",
       dataIndex: "vendor",
       key: "vendor",
-      render: (vendor) => vendor?.vendor,
+      render: (vendor) => vendor?.name,
     },
     {
       title: "",

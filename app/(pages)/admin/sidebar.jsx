@@ -118,8 +118,14 @@ const Sidebar = ({
                             !activeLocation ? "!text-black" : "text-[#efbf60]"
                           }`}
                         >
-                          <EnvironmentOutlined />
-                          <span className={!activeLocation ? "text-black" : ""}>
+                          {/* <EnvironmentOutlined /> */}
+                          <span
+                            className={
+                              !activeLocation
+                                ? "text-black !xxxshadow-[0px_5px_20px_0px_#D8A444]"
+                                : ""
+                            }
+                          >
                             All
                           </span>
                         </div>
@@ -135,7 +141,7 @@ const Sidebar = ({
                               : "text-[#efbf60]"
                           }`}
                         >
-                          <EnvironmentOutlined />
+                          {/* <EnvironmentOutlined /> */}
                           <span
                             className={
                               activeLocation === i._id ? "text-black" : ""
@@ -150,7 +156,7 @@ const Sidebar = ({
                   ]}
                   placeholder={
                     <div className="flex items-center justify-center gap-2 text-[#efbf60]">
-                      <EnvironmentOutlined />
+                      {/* <EnvironmentOutlined /> */}
                       <span>All Sites</span>
                     </div>
                   }
@@ -176,7 +182,7 @@ const Sidebar = ({
           }
           onClick={onClick}
           items={items}
-          className="[&_.ant-menu-item]:!pl-3 !border-none"
+          className="[&_.ant-menu-item]:!pl-3 !border-none sidebar-menu"
         />
       </div>
       <Drawer
@@ -216,7 +222,7 @@ const Sidebar = ({
                         !activeLocation ? "!text-black" : "text-[#efbf60]"
                       }`}
                     >
-                      <EnvironmentOutlined />
+                      {/* <EnvironmentOutlined /> */}
                       <span className={!activeLocation ? "text-black" : ""}>
                         All
                       </span>
@@ -233,7 +239,7 @@ const Sidebar = ({
                           : "text-[#efbf60]"
                       }`}
                     >
-                      <EnvironmentOutlined />
+                      {/* <EnvironmentOutlined /> */}
                       <span
                         className={activeLocation === i._id ? "text-black" : ""}
                       >
@@ -246,7 +252,7 @@ const Sidebar = ({
               ]}
               placeholder={
                 <div className="flex items-center justify-center gap-2 text-[#efbf60]">
-                  <EnvironmentOutlined />
+                  {/* <EnvironmentOutlined /> */}
                   <span>All Sites</span>
                 </div>
               }
@@ -270,6 +276,7 @@ const Sidebar = ({
             onClick={onClick}
             items={items}
             style={{ border: "none" }}
+            className="sidebar-menu"
           />
         </div>
       </Drawer>
