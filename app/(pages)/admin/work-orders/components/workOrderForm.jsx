@@ -129,7 +129,7 @@ const WorkOrderForm = () => {
       title: "Location",
       dataIndex: "site",
       key: "site",
-      render: (site) => site.site,
+      render: (site) => site?.site,
     },
     {
       title: "Quantity",

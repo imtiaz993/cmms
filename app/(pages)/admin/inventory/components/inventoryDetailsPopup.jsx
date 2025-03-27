@@ -37,7 +37,7 @@ const InventoryDetailsPopup = ({ visible, setVisible, inventory }) => {
                 Site
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                {inventory?.site.site}
+                {inventory?.site?.site}
               </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
                 Vendor

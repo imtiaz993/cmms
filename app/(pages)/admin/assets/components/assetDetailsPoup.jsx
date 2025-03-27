@@ -34,7 +34,7 @@ const AssetDetailsPopup = ({ visible, setVisible, asset }) => {
               Site
             </p>
             <p className="p-2 md:px-3 md:py-2 border border-b-0">
-              {asset?.site.site}
+              {asset?.site?.site}
             </p>
             <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border border-r-0 border-b-0">
               System

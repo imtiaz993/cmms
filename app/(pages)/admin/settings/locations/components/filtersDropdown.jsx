@@ -58,7 +58,7 @@ const FilterDropdown = ({
                 placeholder="Site"
                 options={sites.map((site) => ({
                   value: site._id,
-                  label: site.site,
+                  label: site?.site,
                 }))}
               />
 

@@ -283,7 +283,7 @@ const InventoryDetails = () => {
                 Site
               </p>
               <p className="p-2 md:px-3 md:py-2 border border-b-0">
-                {details?.site.site || "-"}
+                {details?.site?.site || "-"}
               </p>
               <p className="p-2 md:px-3 md:py-2 bg-bg_secondary border-r-0 border border-b-0">
                 Vendor

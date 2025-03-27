@@ -120,11 +120,7 @@ const Sidebar = ({
                         >
                           {/* <EnvironmentOutlined /> */}
                           <span
-                            className={
-                              !activeLocation
-                                ? "text-black !xxxshadow-[0px_5px_20px_0px_#D8A444]"
-                                : ""
-                            }
+                            className={!activeLocation ? "text-black " : ""}
                           >
                             All
                           </span>
