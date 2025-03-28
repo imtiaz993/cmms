@@ -108,7 +108,7 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
     <div
       className={`bg-primary h-16 flex justify-between items-center px-3 md:px-11 shadow-custom`}
     >
-      <Link href="/admin/dashboard" className="">
+      <Link href="/admin/dashboard" className="h-16 p-1">
         {/* <Image src="/images/hive-logo.png" alt="logo" width={50} height={50} /> */}
         {/* <h1 className="text-2xl md:text-3xl headerLogo text-[#0F0E13] dark:text-[#D8A444]">
           Hive Solutions
