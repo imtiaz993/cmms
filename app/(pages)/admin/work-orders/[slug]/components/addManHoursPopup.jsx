@@ -76,10 +76,10 @@ const AddManHoursPopup = ({
     });
     if (status === 200) {
       console.log(data);
-      // setWorkOrder((prev) => ({
-      //   ...prev,
-      //   manHours: [...prev.manHours, data?.data],
-      // }));
+      setWorkOrder((prev) => ({
+        ...prev,
+        manHours: [...prev.manHours, data?.data],
+      }));
       message.success(data?.message || "Work order added successfully");
     } else {
       message.error(data?.message || "Failed to add work order");
@@ -153,6 +153,7 @@ const AddManHoursPopup = ({
                     name="manHours"
                     placeholder="Man Hours"
                     className="w-full"
+                    type="number"
                   />
                 )}
 

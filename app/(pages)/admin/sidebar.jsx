@@ -122,7 +122,7 @@ const Sidebar = ({
                           <span
                             className={!activeLocation ? "text-black " : ""}
                           >
-                            All
+                            All Sites
                           </span>
                         </div>
                       ),
@@ -220,7 +220,7 @@ const Sidebar = ({
                     >
                       {/* <EnvironmentOutlined /> */}
                       <span className={!activeLocation ? "text-black" : ""}>
-                        All
+                        All Sites
                       </span>
                     </div>
                   ),

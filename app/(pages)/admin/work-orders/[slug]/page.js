@@ -288,10 +288,13 @@ const WorkOrdersDetail = () => {
         <div className="bg-primary shadow-custom rounded-lg p-4">
           <div className="flex flex-col gap-5">
             <div className="flex justify-between">
-              <h1 className="text-xl md:text-2xl font-bold">
+              <h1 className="text-xl md:text-2xl font-bold hidden xl:block">
                 Asset: {workOrder?.asset.assetID}
               </h1>
-              <div className="flex justify-end gap-3 mb-5">
+              <div className="w-full xl:w-auto grid grid-cols-2 sm:grid-cols-3 xl:flex justify-end gap-3 mb-5">
+                <h1 className="text-xl md:text-2xl font-bold xl:hidden">
+                  Asset: {workOrder?.asset.assetID}
+                </h1>
                 <Button
                   text="Print"
                   prefix={<ExportOutlined />}
