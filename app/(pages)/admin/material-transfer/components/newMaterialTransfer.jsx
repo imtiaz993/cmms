@@ -244,9 +244,7 @@ const NewMaterialTransfer = () => {
               destinationSite: Yup.string().required(
                 "Destination Site is required"
               ),
-              destinationSystem: Yup.string().required(
-                "Destination System is required"
-              ),
+              destinationSystem: Yup.string(),
               companyName: Yup.string(),
               personTransporting: Yup.string(),
               comments: Yup.string(),
@@ -306,7 +304,6 @@ const NewMaterialTransfer = () => {
                             value: i._id,
                           }))
                       }
-                      required={true}
                     />
                     <Button
                       text="New"
