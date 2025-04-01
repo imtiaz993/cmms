@@ -40,7 +40,7 @@ const Assets = () => {
   const router = useRouter();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRowsData, setSelectedRowsData] = useState([]);
-  const [filteredSystems, setFilteredSystems] = useState([]);
+  const [filteredAssets, setFilteredAssets] = useState([]);
   const [isFiltering, setIsFiltering] = useState(false);
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
@@ -173,7 +173,7 @@ const Assets = () => {
 
   // Filter systems based on search text
   const displayedSystems = useMemo(() => {
-    const flattenedSystems = flattenAssets(filteredSystems);
+    const flattenedSystems = flattenAssets(filteredAssets);
     if (!searchText) return flattenedSystems;
 
     return flattenedSystems
@@ -193,7 +193,7 @@ const Assets = () => {
           system.assets.length > 0 ||
           system.system.toLowerCase().includes(searchText.toLowerCase())
       );
-  }, [searchText, filteredSystems]);
+  }, [searchText, filteredAssets]);
 
   // Fetch and filter assets
   useEffect(() => {
@@ -205,7 +205,7 @@ const Assets = () => {
           system: activeSystem || null,
         });
         if (status === 200) {
-          setFilteredSystems(data.data); // Assuming data.data is the array of systems
+          setFilteredAssets(data.data); // Assuming data.data is the array of systems
         } else {
           message.error(data?.message || "Failed to fetch filtered assets");
         }
@@ -220,7 +220,7 @@ const Assets = () => {
   }, [activeLocation, activeSystem]);
 
   const addToShippingCart = (assetsData) => {
-    const matchedAssets = filteredSystems
+    const matchedAssets = filteredAssets
       .flatMap((system) => system.assets)
       .filter((asset) => assetsData.includes(asset._id));
 
@@ -234,11 +234,11 @@ const Assets = () => {
   const handleDelete = async (id) => {
     const { status, data } = await deleteAsset(id);
     if (status === 200) {
-      const updatedSystems = filteredSystems.map((system) => ({
+      const updatedSystems = filteredAssets.map((system) => ({
         ...system,
         assets: system.assets.filter((asset) => asset._id !== id),
       }));
-      setFilteredSystems(updatedSystems);
+      setFilteredAssets(updatedSystems);
       dispatch(setAssets(updatedSystems.flatMap((system) => system.assets)));
       message.success(data?.message || "Asset deleted successfully");
     } else {
@@ -318,6 +318,7 @@ const Assets = () => {
           columns={assetColumns}
           checkedList={checkedList}
           setCheckedList={setCheckedList}
+          setFilteredAssets={setFilteredAssets}
         />
         <Table
           loading={isFiltering || isLoading}
