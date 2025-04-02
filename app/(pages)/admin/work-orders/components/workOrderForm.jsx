@@ -507,14 +507,14 @@ const WorkOrderForm = () => {
                       name="parts"
                       // label="Parts"
                       placeholder="Select Parts..."
-                      mode="multiple"
+                      // mode="multiple"
                       options={filteredInventory.map((i) => ({
-                        value: i.partNumber,
+                        value: i._id,
                         label: `part # ${i.partNumber}`,
                       }))}
                       onChange={(values) => {
                         const filtered = filteredInventory
-                          .filter((item) => values.includes(item.partNumber))
+                          .filter((item) => values.includes(item._id))
                           .map((item) => ({
                             ...item,
                             selectedQuantity: item.selectedQuantity ?? 1,
