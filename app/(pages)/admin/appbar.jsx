@@ -114,7 +114,7 @@ const Appbar = ({ setOpenSidebar, isDarkMode, setIsDarkMode }) => {
           Hive Solutions
         </h1> */}
         <Image
-          src={`/images/logo-with-text-${isDarkMode ? "dark" : "light"}.png`}
+          src={`/images/logo-with-text-${isDarkMode ? "dark" : "light"}.svg`}
           alt="logo"
           width={1000}
           height={1000}
