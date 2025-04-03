@@ -507,7 +507,7 @@ const WorkOrderForm = () => {
                       name="parts"
                       // label="Parts"
                       placeholder="Select Parts..."
-                      // mode="multiple"
+                      mode="multiple"
                       options={filteredInventory.map((i) => ({
                         value: i._id,
                         label: `part # ${i.partNumber}`,
