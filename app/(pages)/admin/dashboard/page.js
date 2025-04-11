@@ -26,6 +26,9 @@ const Dashboard = () => {
   const [loadingSchedule, setLoadingSchedule] = useState(true);
   const [activeManHoursTab, setActiveManHoursTab] = useState("30 Days");
 
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+
   const getSchedule = async (date = "2025-03-05") => {
     const { status, data } = await getDashboardSchedule(date);
     if (status === 200) {
@@ -39,7 +42,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const getStats = async () => {
-      const { status, data } = await getDashboardStats();
+      const { status, data } = await getDashboardStats(activeLocation);
       if (status === 200) {
         setStats(data.data);
         setLoadingStats(false);
@@ -50,7 +53,7 @@ const Dashboard = () => {
     };
     getStats();
     getSchedule();
-  }, []);
+  }, [activeLocation]);
 
   const criticalityColors = {
     critical: "#DA1E28",

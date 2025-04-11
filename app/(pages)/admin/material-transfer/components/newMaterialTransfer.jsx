@@ -235,7 +235,7 @@ const NewMaterialTransfer = () => {
           <Formik
             initialValues={{
               destinationSite: "",
-              destinationSystem: "",
+              destinationSystem: null,
               companyName: "",
               personTransporting: "",
               comments: "",
@@ -244,7 +244,7 @@ const NewMaterialTransfer = () => {
               destinationSite: Yup.string().required(
                 "Destination Site is required"
               ),
-              destinationSystem: Yup.string(),
+              destinationSystem: Yup.string().nullable(),
               companyName: Yup.string(),
               personTransporting: Yup.string(),
               comments: Yup.string(),
@@ -293,17 +293,10 @@ const NewMaterialTransfer = () => {
                       name="destinationSystem"
                       placeholder="System"
                       label="System"
-                      options={
-                        values.destinationSite &&
-                        systems
-                          .filter(
-                            (i) => i?.site?._id === values.destinationSite
-                          )
-                          ?.map((i) => ({
-                            label: i.system,
-                            value: i._id,
-                          }))
-                      }
+                      options={systems?.map((i) => ({
+                        label: i.system,
+                        value: i._id,
+                      }))}
                     />
                     <Button
                       text="New"
@@ -318,14 +311,10 @@ const NewMaterialTransfer = () => {
                     placeholder="Company"
                     label="Company"
                   />
-                  <SelectField
+                  <InputField
                     name="personTransporting"
                     label="Person Transporting"
                     placeholder="Person Transporting"
-                    options={superUsers.map((i) => ({
-                      label: i.name,
-                      value: i._id,
-                    }))}
                   />
                   <div className="md:col-span-2">
                     <TextAreaField
