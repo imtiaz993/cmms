@@ -26,7 +26,9 @@ import { updateShippingCart } from "app/redux/slices/assetsShippingCartSlice";
 import InventoryDetailsPopup from "../inventory/components/inventoryDetailsPopup";
 
 // System Columns
-const systemColumns = [{ title: "System", dataIndex: "system", key: "system" }];
+const systemColumns = [
+  { title: "System", dataIndex: "system", key: "system", width: 250 },
+];
 
 const Assets = () => {
   const searchParams = useSearchParams();
@@ -35,7 +37,8 @@ const Assets = () => {
   const params = activeLocation ? "&location=" + activeLocation : "";
   const { assets, isLoading } = useSelector((state) => state.assets);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
-  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+  const [expandedSystemKeys, setExpandedSystemKeys] = useState([]);
+  const [expandedAssetKeys, setExpandedAssetKeys] = useState([]);
   const [searchText, setSearchText] = useState("");
   const router = useRouter();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -43,6 +46,7 @@ const Assets = () => {
   const [filteredAssets, setFilteredAssets] = useState([]);
   const [isFiltering, setIsFiltering] = useState(false);
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
+  const [inventoryDetailsPopup, setInventoryDetailsPopup] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   // Asset Columns
@@ -95,11 +99,8 @@ const Assets = () => {
       ),
     },
   ];
-  const defaultCheckedList = assetColumns.map((item) => item.key); // Default to asset columns
-  const [checkedList, setCheckedList] = useState(defaultCheckedList);
 
-  const [inventoryDetailsPopup, setInventoryDetailsPopup] = useState();
-  // Assigned Inventory Columns
+  // Parts (Inventory) Columns
   const inventoryColumns = [
     {
       title: "Part Number",
@@ -117,7 +118,6 @@ const Assets = () => {
     { title: "Description", dataIndex: "description", key: "description" },
     { title: "Quantity", dataIndex: "quantity", key: "quantity" },
     { title: "Cost", dataIndex: "cost", key: "cost" },
-
     {
       title: "Vendor",
       dataIndex: "vendor",
@@ -137,10 +137,13 @@ const Assets = () => {
     },
   ];
 
-  // Filter asset columns dynamically
+  // Column filtering state
+  const defaultCheckedList = assetColumns.map((item) => item.key);
+  const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const newAssetColumns = assetColumns.filter((item) =>
     checkedList.includes(item.key)
   );
+
   const dispatch = useDispatch();
   const { assetsShippingCart } = useSelector(
     (state) => state.assetsShippingCart
@@ -153,6 +156,18 @@ const Assets = () => {
       setSelectedRowKeys(keys);
     },
   };
+
+  // Combined columns for system and asset headers, excluding actions
+  const combinedColumns = [
+    ...systemColumns,
+    ...newAssetColumns.filter((col) => col.key !== "actions"),
+    {
+      name: "withForActions",
+      dataIndex: "",
+      key: "withForActions",
+      width: 250,
+    },
+  ];
 
   // Flatten assets for filtering and searching
   const flattenAssets = (systems) => {
@@ -171,29 +186,58 @@ const Assets = () => {
     }));
   };
 
-  // Filter systems based on search text
+  // Filter systems based on search text and determine expansions
   const displayedSystems = useMemo(() => {
     const flattenedSystems = flattenAssets(filteredAssets);
-    if (!searchText) return flattenedSystems;
 
-    return flattenedSystems
-      .map((system) => {
-        const filteredAssets = system.assets.filter((asset) =>
-          newAssetColumns.some((col) =>
-            asset[col.dataIndex]
+    if (!searchText) {
+      // When search is cleared, expand all systems and collapse all assets
+      setExpandedSystemKeys(flattenedSystems.map((system) => system._id));
+      setExpandedAssetKeys([]);
+      return flattenedSystems;
+    }
+
+    const matchedSystemKeys = new Set();
+    const matchedAssetKeys = new Set();
+
+    flattenedSystems.forEach((system) => {
+      let systemHasMatches = false;
+      system.assets.forEach((asset) => {
+        const assetMatches = newAssetColumns.some((col) =>
+          asset[col.dataIndex]
+            ?.toString()
+            ?.toLowerCase()
+            ?.includes(searchText.toLowerCase())
+        );
+        const partsMatch = asset.assignedInventories.some((part) =>
+          inventoryColumns.some((col) =>
+            part[col.dataIndex]
               ?.toString()
               ?.toLowerCase()
               ?.includes(searchText.toLowerCase())
           )
         );
-        return { ...system, assets: filteredAssets };
-      })
-      .filter(
-        (system) =>
-          system.assets.length > 0 ||
-          system.system.toLowerCase().includes(searchText.toLowerCase())
-      );
-  }, [searchText, filteredAssets]);
+        if (assetMatches || partsMatch) {
+          systemHasMatches = true;
+          if (partsMatch) matchedAssetKeys.add(asset._id);
+        }
+      });
+      const systemMatches = system.system
+        .toLowerCase()
+        .includes(searchText.toLowerCase());
+      if (systemMatches || systemHasMatches) {
+        matchedSystemKeys.add(system._id);
+      }
+    });
+
+    // Expand only matched systems and assets if search text is 3+ characters
+    if (searchText.length >= 3) {
+      setExpandedSystemKeys([...matchedSystemKeys]);
+      setExpandedAssetKeys([...matchedAssetKeys]);
+    }
+
+    return flattenedSystems;
+  }, [searchText, filteredAssets, checkedList]);
 
   // Fetch and filter assets
   useEffect(() => {
@@ -205,7 +249,9 @@ const Assets = () => {
           system: activeSystem || null,
         });
         if (status === 200) {
-          setFilteredAssets(data.data); // Assuming data.data is the array of systems
+          setFilteredAssets(data.data);
+          // Expand all systems by default
+          setExpandedSystemKeys(data.data.map((system) => system._id));
         } else {
           message.error(data?.message || "Failed to fetch filtered assets");
         }
@@ -247,14 +293,16 @@ const Assets = () => {
     setDeleteConfirmation(false);
   };
 
-  // Nested table for assigned inventories
-  const expandedAssetRowRender = (asset) => (
+  // Nested table for parts (assigned inventories)
+  const expandedAssetRowRender = (asset, assetIndex, indent, expanded) => (
     <Table
       columns={inventoryColumns}
       dataSource={asset.assignedInventories}
       pagination={false}
       size="small"
       rowKey="key"
+      // showHeader={expandedAssetKeys.indexOf(asset.key) === 0} // Headers for first expanded asset
+      style={{ paddingLeft: 40 }} // Indent parts table
     />
   );
 
@@ -267,8 +315,18 @@ const Assets = () => {
       size="small"
       rowKey="key"
       rowSelection={rowSelection}
+      showHeader={false} // No headers in expanded asset tables
+      style={{ paddingLeft: 20 }} // Indent asset table
       expandable={{
         expandedRowRender: expandedAssetRowRender,
+        expandedRowKeys: expandedAssetKeys,
+        onExpand: (expanded, record) => {
+          const newExpandedAssetKeys = expanded
+            ? [...expandedAssetKeys, record.key]
+            : expandedAssetKeys.filter((key) => key !== record.key);
+          setExpandedAssetKeys(newExpandedAssetKeys);
+        },
+        rowExpandable: (record) => record.assignedInventories.length > 0,
       }}
     />
   );
@@ -324,7 +382,7 @@ const Assets = () => {
           loading={isFiltering || isLoading}
           size="large"
           scroll={{ x: 1100 }}
-          columns={systemColumns}
+          columns={combinedColumns}
           dataSource={displayedSystems}
           rowKey="key"
           pagination={{
@@ -336,15 +394,17 @@ const Assets = () => {
           }}
           expandable={{
             expandedRowRender: expandedSystemRowRender,
-            expandedRowKeys,
+            expandedRowKeys: expandedSystemKeys,
             onExpand: (expanded, record) => {
-              const newExpandedRowKeys = expanded
-                ? [...expandedRowKeys, record.key]
-                : expandedRowKeys.filter((key) => key !== record.key);
-              setExpandedRowKeys(newExpandedRowKeys);
+              const newExpandedSystemKeys = expanded
+                ? [...expandedSystemKeys, record.key]
+                : expandedSystemKeys.filter((key) => key !== record.key);
+              setExpandedSystemKeys(newExpandedSystemKeys);
             },
+            rowExpandable: (record) => record.assets.length > 0,
           }}
           style={{ marginTop: 16 }}
+          showHeader={true}
         />
       </div>
     </>
