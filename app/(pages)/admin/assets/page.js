@@ -27,7 +27,7 @@ import InventoryDetailsPopup from "../inventory/components/inventoryDetailsPopup
 
 // System Columns
 const systemColumns = [
-  { title: "System", dataIndex: "system", key: "system", width: 250 },
+  { title: "System", dataIndex: "system", key: "system", width: 150 },
 ];
 
 const Assets = () => {
@@ -63,10 +63,21 @@ const Assets = () => {
           {record.assetID}
         </Link>
       ),
+      width: 250,
     },
-    { title: "Serial #", dataIndex: "serialNumber", key: "serialNumber" },
-    { title: "Model", dataIndex: "model", key: "model" },
-    { title: "Priority", dataIndex: "criticality", key: "criticality" },
+    {
+      title: "Serial #",
+      dataIndex: "serialNumber",
+      key: "serialNumber",
+      width: 100,
+    },
+    { title: "Model", dataIndex: "model", key: "model", width: 200 },
+    {
+      title: "Priority",
+      dataIndex: "criticality",
+      key: "criticality",
+      width: 100,
+    },
     {
       title: "Status",
       dataIndex: "maintStatus",
@@ -76,8 +87,14 @@ const Assets = () => {
         if (status === "outForRepair") return "Out for Repair";
         return status ? status.charAt(0).toUpperCase() + status.slice(1) : "";
       },
+      width: 130,
     },
-    { title: "Purchase Date", dataIndex: "purchaseDate", key: "purchaseDate" },
+    {
+      title: "Purchase Date",
+      dataIndex: "purchaseDate",
+      key: "purchaseDate",
+      width: 200,
+    },
     {
       title: "",
       dataIndex: "_id",
@@ -97,6 +114,7 @@ const Assets = () => {
           />
         </p>
       ),
+      width: 200,
     },
   ];
 
@@ -316,7 +334,7 @@ const Assets = () => {
       rowKey="key"
       rowSelection={rowSelection}
       showHeader={false} // No headers in expanded asset tables
-      style={{ paddingLeft: 20 }} // Indent asset table
+      style={{ paddingLeft: 80 }} // Indent asset table
       expandable={{
         expandedRowRender: expandedAssetRowRender,
         expandedRowKeys: expandedAssetKeys,
