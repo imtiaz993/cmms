@@ -79,14 +79,21 @@ const Inventory = () => {
         <p className="flex gap-5 text-tertiary">
           <EyeOutlined
             style={{ fontSize: "20px", cursor: "pointer" }}
-            onClick={() => setDetailsPopup(record)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setDetailsPopup(record);
+            }}
           />
-          <Link href={`/admin/inventory/${id}/edit`}>
+          <Link
+            href={`/admin/inventory/${id}/edit`}
+            onClick={(e) => e.stopPropagation()}
+          >
             <EditPagePencil />
           </Link>
           <DeleteOutlined
             style={{ fontSize: "20px", cursor: "pointer" }}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               setDeleteConfirmation(id);
             }}
           />
@@ -259,6 +266,10 @@ const Inventory = () => {
             size={"large"}
             scroll={{ x: 1400 }}
             columns={newColumns}
+            onRow={(record) => ({
+              onClick: () => router.push(`/admin/inventory/${record._id}`),
+              style: { cursor: "pointer" },
+            })}
             rowSelection={rowSelection}
             rowKey="_id"
             dataSource={

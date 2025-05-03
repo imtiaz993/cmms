@@ -103,14 +103,23 @@ const Assets = () => {
         <p className="flex gap-5 text-tertiary">
           <EyeOutlined
             style={{ fontSize: "20px", cursor: "pointer" }}
-            onClick={() => setAssetDetailsPopup(record)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setAssetDetailsPopup(record);
+            }}
           />
-          <Link href={"/admin/assets/" + id + "/edit"}>
+          <Link
+            href={"/admin/assets/" + id + "/edit"}
+            onClick={(e) => e.stopPropagation()}
+          >
             <EditPagePencil />
           </Link>
           <DeleteOutlined
             style={{ fontSize: "20px", cursor: "pointer" }}
-            onClick={() => setDeleteConfirmation(id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setDeleteConfirmation(id);
+            }}
           />
         </p>
       ),
@@ -332,6 +341,12 @@ const Assets = () => {
       pagination={false}
       size="small"
       rowKey="key"
+      onRow={(record) => ({
+        onClick: () => {
+          router.push("/admin/assets/" + record._id);
+        },
+        style: { cursor: "pointer" },
+      })}
       rowSelection={rowSelection}
       showHeader={false} // No headers in expanded asset tables
       style={{ paddingLeft: 80 }} // Indent asset table
