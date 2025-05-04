@@ -25,11 +25,6 @@ import ConfirmationPopup from "@/components/confirmationPopup";
 import { updateShippingCart } from "app/redux/slices/assetsShippingCartSlice";
 import InventoryDetailsPopup from "../inventory/components/inventoryDetailsPopup";
 
-// System Columns
-const systemColumns = [
-  { title: "System", dataIndex: "system", key: "system", width: 150 },
-];
-
 const Assets = () => {
   const searchParams = useSearchParams();
   const activeLocation = searchParams.get("location") || "";
@@ -37,7 +32,6 @@ const Assets = () => {
   const params = activeLocation ? "&location=" + activeLocation : "";
   const { assets, isLoading } = useSelector((state) => state.assets);
   const [addAssetVisible, setAddAssetVisible] = useState(false);
-  const [expandedSystemKeys, setExpandedSystemKeys] = useState([]);
   const [expandedAssetKeys, setExpandedAssetKeys] = useState([]);
   const [searchText, setSearchText] = useState("");
   const router = useRouter();
@@ -48,6 +42,10 @@ const Assets = () => {
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
   const [inventoryDetailsPopup, setInventoryDetailsPopup] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+  const dispatch = useDispatch();
+  const { assetsShippingCart } = useSelector(
+    (state) => state.assetsShippingCart
+  );
 
   // Asset Columns
   const assetColumns = [
@@ -63,20 +61,24 @@ const Assets = () => {
           {record.assetID}
         </Link>
       ),
-      width: 250,
+    },
+    {
+      title: "System",
+      dataIndex: "system",
+      key: "system",
+      render: (system) => system.system,
     },
     {
       title: "Serial #",
       dataIndex: "serialNumber",
       key: "serialNumber",
-      width: 100,
     },
-    { title: "Model", dataIndex: "model", key: "model", width: 200 },
+    { title: "Model", dataIndex: "model", key: "model"},
     {
       title: "Priority",
       dataIndex: "criticality",
       key: "criticality",
-      width: 100,
+      
     },
     {
       title: "Status",
@@ -87,13 +89,12 @@ const Assets = () => {
         if (status === "outForRepair") return "Out for Repair";
         return status ? status.charAt(0).toUpperCase() + status.slice(1) : "";
       },
-      width: 130,
+     
     },
     {
       title: "Purchase Date",
       dataIndex: "purchaseDate",
       key: "purchaseDate",
-      width: 200,
     },
     {
       title: "",
@@ -108,10 +109,7 @@ const Assets = () => {
               setAssetDetailsPopup(record);
             }}
           />
-          <Link
-            href={"/admin/assets/" + id + "/edit"}
-            onClick={(e) => e.stopPropagation()}
-          >
+          <Link href={"/admin/assets/" + id + "/edit"}>
             <EditPagePencil />
           </Link>
           <DeleteOutlined
@@ -123,7 +121,6 @@ const Assets = () => {
           />
         </p>
       ),
-      width: 200,
     },
   ];
 
@@ -158,7 +155,10 @@ const Assets = () => {
       render: (id, record) => (
         <EyeOutlined
           style={{ fontSize: "20px", cursor: "pointer" }}
-          onClick={() => setInventoryDetailsPopup(record)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setInventoryDetailsPopup(record);
+          }}
         />
       ),
     },
@@ -171,11 +171,6 @@ const Assets = () => {
     checkedList.includes(item.key)
   );
 
-  const dispatch = useDispatch();
-  const { assetsShippingCart } = useSelector(
-    (state) => state.assetsShippingCart
-  );
-
   const rowSelection = {
     selectedRowKeys,
     onChange: (keys, rows) => {
@@ -184,86 +179,51 @@ const Assets = () => {
     },
   };
 
-  // Combined columns for system and asset headers, excluding actions
-  const combinedColumns = [
-    ...systemColumns,
-    ...newAssetColumns.filter((col) => col.key !== "actions"),
-    {
-      name: "withForActions",
-      dataIndex: "",
-      key: "withForActions",
-      width: 250,
-    },
-  ];
-
-  // Flatten assets for filtering and searching
-  const flattenAssets = (systems) => {
-    return systems.map((system) => ({
-      ...system,
-      key: system._id,
-      assets: system.assets.map((asset) => ({
-        ...asset,
-        key: asset._id,
-        systemId: system._id,
-        assignedInventories: asset.assignedInventories.map((inv) => ({
-          ...inv,
-          key: inv._id,
-        })),
+  // Prepare assets for display
+  const displayedAssets = useMemo(() => {
+    const preparedAssets = filteredAssets.map((asset) => ({
+      ...asset,
+      key: asset._id,
+      assignedInventories: asset.assignedInventories.map((inv) => ({
+        ...inv,
+        key: inv._id,
       })),
     }));
-  };
-
-  // Filter systems based on search text and determine expansions
-  const displayedSystems = useMemo(() => {
-    const flattenedSystems = flattenAssets(filteredAssets);
 
     if (!searchText) {
-      // When search is cleared, expand all systems and collapse all assets
-      setExpandedSystemKeys(flattenedSystems.map((system) => system._id));
+      // When search is cleared, collapse all assets
       setExpandedAssetKeys([]);
-      return flattenedSystems;
+      return preparedAssets;
     }
 
-    const matchedSystemKeys = new Set();
     const matchedAssetKeys = new Set();
 
-    flattenedSystems.forEach((system) => {
-      let systemHasMatches = false;
-      system.assets.forEach((asset) => {
-        const assetMatches = newAssetColumns.some((col) =>
-          asset[col.dataIndex]
+    preparedAssets.forEach((asset) => {
+      const assetMatches = newAssetColumns.some((col) =>
+        asset[col.dataIndex]
+          ?.toString()
+          ?.toLowerCase()
+          ?.includes(searchText.toLowerCase())
+      );
+      const partsMatch = asset.assignedInventories.some((part) =>
+        inventoryColumns.some((col) =>
+          part[col.dataIndex]
             ?.toString()
             ?.toLowerCase()
             ?.includes(searchText.toLowerCase())
-        );
-        const partsMatch = asset.assignedInventories.some((part) =>
-          inventoryColumns.some((col) =>
-            part[col.dataIndex]
-              ?.toString()
-              ?.toLowerCase()
-              ?.includes(searchText.toLowerCase())
-          )
-        );
-        if (assetMatches || partsMatch) {
-          systemHasMatches = true;
-          if (partsMatch) matchedAssetKeys.add(asset._id);
-        }
-      });
-      const systemMatches = system.system
-        .toLowerCase()
-        .includes(searchText.toLowerCase());
-      if (systemMatches || systemHasMatches) {
-        matchedSystemKeys.add(system._id);
+        )
+      );
+      if (assetMatches || partsMatch) {
+        matchedAssetKeys.add(asset._id);
       }
     });
 
-    // Expand only matched systems and assets if search text is 3+ characters
+    // Expand only matched assets if search text is 3+ characters
     if (searchText.length >= 3) {
-      setExpandedSystemKeys([...matchedSystemKeys]);
       setExpandedAssetKeys([...matchedAssetKeys]);
     }
 
-    return flattenedSystems;
+    return preparedAssets;
   }, [searchText, filteredAssets, checkedList]);
 
   // Fetch and filter assets
@@ -276,9 +236,8 @@ const Assets = () => {
           system: activeSystem || null,
         });
         if (status === 200) {
+          // Assuming API returns a flat array of assets
           setFilteredAssets(data.data);
-          // Expand all systems by default
-          setExpandedSystemKeys(data.data.map((system) => system._id));
         } else {
           message.error(data?.message || "Failed to fetch filtered assets");
         }
@@ -293,9 +252,9 @@ const Assets = () => {
   }, [activeLocation, activeSystem]);
 
   const addToShippingCart = (assetsData) => {
-    const matchedAssets = filteredAssets
-      .flatMap((system) => system.assets)
-      .filter((asset) => assetsData.includes(asset._id));
+    const matchedAssets = filteredAssets.filter((asset) =>
+      assetsData.includes(asset._id)
+    );
 
     matchedAssets.forEach((asset) => {
       dispatch(updateShippingCart(asset));
@@ -307,12 +266,9 @@ const Assets = () => {
   const handleDelete = async (id) => {
     const { status, data } = await deleteAsset(id);
     if (status === 200) {
-      const updatedSystems = filteredAssets.map((system) => ({
-        ...system,
-        assets: system.assets.filter((asset) => asset._id !== id),
-      }));
-      setFilteredAssets(updatedSystems);
-      dispatch(setAssets(updatedSystems.flatMap((system) => system.assets)));
+      const updatedAssets = filteredAssets.filter((asset) => asset._id !== id);
+      setFilteredAssets(updatedAssets);
+      dispatch(setAssets(updatedAssets));
       message.success(data?.message || "Asset deleted successfully");
     } else {
       message.error(data?.message || "Failed to delete asset");
@@ -321,46 +277,20 @@ const Assets = () => {
   };
 
   // Nested table for parts (assigned inventories)
-  const expandedAssetRowRender = (asset, assetIndex, indent, expanded) => (
+  const expandedRowRender = (asset) => (
     <Table
       columns={inventoryColumns}
       dataSource={asset.assignedInventories}
       pagination={false}
       size="small"
       rowKey="key"
-      // showHeader={expandedAssetKeys.indexOf(asset.key) === 0} // Headers for first expanded asset
-      style={{ paddingLeft: 40 }} // Indent parts table
-    />
-  );
-
-  // Nested table for assets within a system
-  const expandedSystemRowRender = (system) => (
-    <Table
-      columns={newAssetColumns}
-      dataSource={system.assets}
-      pagination={false}
-      size="small"
-      rowKey="key"
       onRow={(record) => ({
         onClick: () => {
-          router.push("/admin/assets/" + record._id);
+          router.push(`/admin/inventory/${record._id}`);
         },
         style: { cursor: "pointer" },
       })}
-      rowSelection={rowSelection}
-      showHeader={false} // No headers in expanded asset tables
-      style={{ paddingLeft: 80 }} // Indent asset table
-      expandable={{
-        expandedRowRender: expandedAssetRowRender,
-        expandedRowKeys: expandedAssetKeys,
-        onExpand: (expanded, record) => {
-          const newExpandedAssetKeys = expanded
-            ? [...expandedAssetKeys, record.key]
-            : expandedAssetKeys.filter((key) => key !== record.key);
-          setExpandedAssetKeys(newExpandedAssetKeys);
-        },
-        rowExpandable: (record) => record.assignedInventories.length > 0,
-      }}
+      style={{ paddingLeft: 40 }} // Indent parts table
     />
   );
 
@@ -415,26 +345,33 @@ const Assets = () => {
           loading={isFiltering || isLoading}
           size="large"
           scroll={{ x: 1100 }}
-          columns={combinedColumns}
-          dataSource={displayedSystems}
+          columns={newAssetColumns}
+          dataSource={displayedAssets}
           rowKey="key"
+          rowSelection={rowSelection}
+          onRow={(row) => ({
+            onClick: () => {
+              router.push(`/admin/assets/${row._id}`);
+            },
+            style: { cursor: "pointer" },
+          })}
           pagination={{
-            total: displayedSystems.length,
+            total: displayedAssets.length,
             showSizeChanger: true,
             showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} systems`,
+              `${range[0]}-${range[1]} of ${total} assets`,
             className: "custom-pagination",
           }}
           expandable={{
-            expandedRowRender: expandedSystemRowRender,
-            expandedRowKeys: expandedSystemKeys,
+            expandedRowRender,
+            expandedRowKeys: expandedAssetKeys,
             onExpand: (expanded, record) => {
-              const newExpandedSystemKeys = expanded
-                ? [...expandedSystemKeys, record.key]
-                : expandedSystemKeys.filter((key) => key !== record.key);
-              setExpandedSystemKeys(newExpandedSystemKeys);
+              const newExpandedAssetKeys = expanded
+                ? [...expandedAssetKeys, record.key]
+                : expandedAssetKeys.filter((key) => key !== record.key);
+              setExpandedAssetKeys(newExpandedAssetKeys);
             },
-            rowExpandable: (record) => record.assets.length > 0,
+            rowExpandable: (record) => record.assignedInventories.length > 0,
           }}
           style={{ marginTop: 16 }}
           showHeader={true}
