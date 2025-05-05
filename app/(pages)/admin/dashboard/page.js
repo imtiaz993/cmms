@@ -65,47 +65,7 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col gap-6 h-[calc(100dvh-170px)] overflow-auto px-3 lg:px-6">
       <div className="flex flex-col xl:flex-row gap-6">
-        <Card
-          className="!bg-primary xl:w-5/12 shadow-custom"
-          loading={false}
-          title={<h2 className="text-center">Asset Costs</h2>}
-        >
-          <div className="flex justify-center w-full">
-            {stats ? (
-              <div className="w-full">
-                <ColumnChart data={stats?.assets} months={stats?.months} />
-                <p className="mt-2 text-center">
-                  Monthly chart of asset expenses.
-                </p>
-              </div>
-            ) : (
-              <p className="text-center my-20">
-                <Spin spinning={true} />
-              </p>
-            )}
-          </div>
-        </Card>
         <div className="xl:w-7/12 flex flex-col xl:flex-row gap-6">
-          <Card
-            loading={false}
-            className="!bg-primary xl:w-3/5 shadow-custom"
-            title={
-              <h2 className="text-center">Planned & Unplanned Work Orders</h2>
-            }
-          >
-            {stats ? (
-              <div className="w-full">
-                <LineChart data={stats?.workOrder} months={stats?.months} />
-                <p className="mt-2 text-center">
-                  Monthly chart comparing planned and unplanned work orders.
-                </p>
-              </div>
-            ) : (
-              <p className="text-center my-20">
-                <Spin spinning={true} />
-              </p>
-            )}
-          </Card>
           <Card
             loading={false}
             className="!bg-primary xl:w-2/5 shadow-custom"
@@ -174,9 +134,65 @@ const Dashboard = () => {
               </div>
             </div>
           </Card>
+          <Card
+            loading={false}
+            className="!bg-primary xl:w-3/5 shadow-custom"
+            title={
+              <h2 className="text-center">Planned & Unplanned Work Orders</h2>
+            }
+          >
+            {stats ? (
+              <div className="w-full">
+                <LineChart data={stats?.workOrder} months={stats?.months} />
+                <p className="mt-2 text-center">
+                  Monthly chart comparing planned and unplanned work orders.
+                </p>
+              </div>
+            ) : (
+              <p className="text-center my-20">
+                <Spin spinning={true} />
+              </p>
+            )}
+          </Card>
         </div>
+        <Card
+          className="!bg-primary xl:w-5/12 shadow-custom"
+          loading={false}
+          title={<h2 className="text-center">Asset Costs</h2>}
+        >
+          <div className="flex justify-center w-full">
+            {stats ? (
+              <div className="w-full">
+                <ColumnChart data={stats?.assets} months={stats?.months} />
+                <p className="mt-2 text-center">
+                  Monthly chart of asset expenses.
+                </p>
+              </div>
+            ) : (
+              <p className="text-center my-20">
+                <Spin spinning={true} />
+              </p>
+            )}
+          </div>
+        </Card>
       </div>
       <div className="flex flex-col xl:flex-row gap-6">
+        <div className="grid gap-6 xl:w-7/12">
+          <Card
+            loading={false}
+            className="!bg-primary shadow-custom"
+            style={{ overflow: "hidden" }}
+          >
+            <Spin spinning={!schedule && loadingSchedule}>
+              <Schedule
+                schedule={schedule}
+                setLoadingSchedule={setLoadingSchedule}
+                getSchedule={getSchedule}
+                setSchedule={setSchedule}
+              />
+            </Spin>
+          </Card>
+        </div>
         <div className="xl:w-5/12">
           <Card
             loading={false}
@@ -197,22 +213,6 @@ const Dashboard = () => {
                 </p>
               )}
             </div>
-          </Card>
-        </div>
-        <div className="grid gap-6 xl:w-7/12">
-          <Card
-            loading={false}
-            className="!bg-primary shadow-custom"
-            style={{ overflow: "hidden" }}
-          >
-            <Spin spinning={!schedule && loadingSchedule}>
-              <Schedule
-                schedule={schedule}
-                setLoadingSchedule={setLoadingSchedule}
-                getSchedule={getSchedule}
-                setSchedule={setSchedule}
-              />
-            </Spin>
           </Card>
         </div>
       </div>
