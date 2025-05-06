@@ -14,6 +14,7 @@ import {
   ExclamationCircleFilled,
   EyeOutlined,
   LeftOutlined,
+  PlusOutlined,
   TruckOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
@@ -27,6 +28,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AssetDetailsPopup from "../../assets/components/assetDetailsPoup";
 import { addUnplannedWorkOrder } from "app/services/workOrders";
+import AddCustomPartPopup from "./addCustomPartPopup";
 
 const WorkOrderForm = () => {
   const router = useRouter();
@@ -40,6 +42,8 @@ const WorkOrderForm = () => {
   const [assetDetails, setAssetDetails] = useState();
   const [assetDetailsPopup, setAssetDetailsPopup] = useState(false);
   const [selectedParts, setSelectedParts] = useState([]);
+  const [customParts, setCustomParts] = useState([]);
+  const [addCustomPartPopup, setAddCustomPartPopup] = useState(false);
   const handleIncrease = (record) => {
     setSelectedParts((prevData) =>
       prevData.map((item) =>
@@ -142,34 +146,58 @@ const WorkOrderForm = () => {
       key: "selectedQuantity",
       render: (_, record) => (
         <span className="flex items-center">
-          <Button
-            text="-"
-            onClick={() => handleDecrease(record)}
-            className="!text-black"
-            style={{
-              height: "26px",
-              fontSize: "18px",
-              minWidth: "10px",
-              width: "10px",
-            }}
-          />
+          {record._id && (
+            <Button
+              text="-"
+              onClick={() => handleDecrease(record)}
+              className="!text-black"
+              style={{
+                height: "26px",
+                fontSize: "18px",
+                minWidth: "10px",
+                width: "10px",
+              }}
+            />
+          )}
           <p className="font-bold mx-3">{record.selectedQuantity || 0}</p>
-          <Button
-            text="+"
-            onClick={() => {
-              if (record.quantity > record.selectedQuantity) {
-                handleIncrease(record);
-              }
-            }}
-            className="!text-black"
-            style={{
-              height: "26px",
-              fontSize: "18px",
-              minWidth: "10px",
-              width: "10px",
-            }}
-          />
+          {record._id && (
+            <Button
+              text="+"
+              onClick={() => {
+                if (record.quantity > record.selectedQuantity) {
+                  handleIncrease(record);
+                }
+              }}
+              className="!text-black"
+              style={{
+                height: "26px",
+                fontSize: "18px",
+                minWidth: "10px",
+                width: "10px",
+              }}
+            />
+          )}
         </span>
+      ),
+    },
+    {
+      title: "",
+      dataIndex: "action",
+      key: "action",
+      render: (_, record) => (
+        <DeleteOutlined
+          onClick={() => {
+            record._id
+              ? setSelectedParts((prevData) =>
+                  prevData.filter((item) => item._id !== record._id)
+                )
+              : setCustomParts((prevData) =>
+                  prevData.filter(
+                    (item) => item.partNumber !== record.partNumber
+                  )
+                );
+          }}
+        />
       ),
     },
   ];
@@ -312,6 +340,19 @@ const WorkOrderForm = () => {
         })
       )
     );
+    formData.append(
+      "selectedPartsCustom",
+      JSON.stringify(
+        customParts.map((item) => {
+          return {
+            _id: item._id,
+            partNumber: item.partNumber,
+            selectedQuantity: item.selectedQuantity,
+            description: item.description,
+          };
+        })
+      )
+    );
 
     values.workOrderDocuments?.length > 0 &&
       values.workOrderDocuments.forEach((file) => {
@@ -339,6 +380,11 @@ const WorkOrderForm = () => {
 
   return (
     <div className="px-5 md:px-10">
+      <AddCustomPartPopup
+        visible={addCustomPartPopup}
+        setVisible={setAddCustomPartPopup}
+        setCustomParts={setCustomParts}
+      />
       <p className="text-sm text-[#828282]">
         Work Order {" > "} Unplanned Work Order
       </p>
@@ -497,35 +543,50 @@ const WorkOrderForm = () => {
                     label="Equipment"
                     placeholder="Enter equipment..."
                   />
-                  <div className="w-full sm:flex items-center gap-3">
-                    <label
-                      className={`text-sm flex gap-1 items-center ${"sm:justify-end sm:min-w-[115px]"}`}
-                    >
-                      Parts
-                    </label>
-                    <Select
-                      name="parts"
-                      // label="Parts"
-                      placeholder="Select Parts..."
-                      mode="multiple"
-                      options={filteredInventory.map((i) => ({
-                        value: i._id,
-                        label: `part # ${i.partNumber}`,
-                      }))}
-                      onChange={(values) => {
-                        const filtered = filteredInventory
-                          .filter((item) => values.includes(item._id))
-                          .map((item) => ({
-                            ...item,
-                            selectedQuantity: item.selectedQuantity ?? 1,
-                          }));
+                  <div className="flex items-center gap-3">
+                    <div className="w-full sm:flex items-center gap-3">
+                      <label
+                        className={`text-sm flex gap-1 items-center ${"sm:justify-end sm:min-w-[115px]"}`}
+                      >
+                        Parts
+                      </label>
+                      <Select
+                        name="parts"
+                        value={selectedParts.map((i) => i._id)}
+                        // label="Parts"
+                        placeholder="Select Parts..."
+                        mode="multiple"
+                        options={filteredInventory.map((i) => ({
+                          value: i._id,
+                          label: `${i.partNumber}`,
+                        }))}
+                        onChange={(values) => {
+                          const filtered = filteredInventory
+                            .filter((item) => values.includes(item._id))
+                            .map((item) => ({
+                              ...item,
+                              selectedQuantity: item.selectedQuantity ?? 1,
+                            }));
 
-                        setSelectedParts(filtered);
-                      }}
-                      style={{
-                        height: "44px",
-                        width: "100%",
-                      }}
+                          setSelectedParts(filtered);
+                        }}
+                        filterOption={(input, option) =>
+                          option.label
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                        style={{
+                          height: "44px",
+                          width: "100%",
+                        }}
+                      />
+                    </div>
+                    <Button
+                      text="New"
+                      className="!bg-transparent dark:!bg-[#4C4C51] !shadow-[0px_0px_20px_0px_#EFBF6080] dark:!border-white !text-tertiary !dark:text-white !h-11 mt-5 sm:mt-0"
+                      onClick={() => setAddCustomPartPopup(true)}
+                      fullWidth={false}
+                      prefix={<PlusOutlined />}
                     />
                   </div>
                   <></>
@@ -536,7 +597,7 @@ const WorkOrderForm = () => {
                     scroll={{ x: 700 }}
                     columns={columns}
                     rowKey="_id"
-                    dataSource={selectedParts}
+                    dataSource={[...selectedParts, ...customParts]}
                     style={{
                       overflow: "auto",
                     }}
