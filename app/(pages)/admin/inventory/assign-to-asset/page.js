@@ -3,7 +3,7 @@ import Button from "@/components/common/Button";
 import { DeleteOutlined, LeftOutlined } from "@ant-design/icons";
 import { Input, message, Table } from "antd";
 import { Form, Formik } from "formik";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { assignToAsset } from "app/services/inventory";
@@ -13,6 +13,9 @@ import SelectField from "@/components/common/SelectField";
 const AssignToAsset = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
+
   const assignToAssetList = useSelector(
     (state) => state.assignToAsset.inventories
   );
@@ -144,7 +147,15 @@ const AssignToAsset = () => {
       </p>
       <Button
         text="Back to Inventory"
-        onClick={() => router.push("/admin/inventory")}
+        onClick={() =>
+          router.push(
+            `/admin/inventory${
+              activeLocation && activeLocation !== null
+                ? "?location=" + activeLocation
+                : ""
+            }`
+          )
+        }
         className="mt-4 !bg-[#3F3F3F] !border-none"
         fullWidth={false}
         prefix={<LeftOutlined />}

@@ -12,7 +12,7 @@ import {
 import { Checkbox, message, Spin, Table, Tabs } from "antd";
 import { Form, Formik } from "formik";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import TextAreaField from "@/components/common/TextAreaField";
 import { rigs } from "@/constants/rigsAndSystems";
@@ -42,6 +42,8 @@ const WorkOrdersDetail = () => {
   const [isSubmitting, setSubmitting] = useState(false);
   const [inspections, setInspections] = useState([]);
   const [manHoursPopup, setManHoursPopup] = useState(false);
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
 
   const tabs = [
     {
@@ -276,7 +278,15 @@ const WorkOrdersDetail = () => {
         <div className="flex justify-between mt-4">
           <Button
             text="Back to Work Orders"
-            onClick={() => router.push("/admin/work-orders")}
+            onClick={() =>
+              router.push(
+                `/admin/work-orders${
+                  activeLocation && activeLocation !== null
+                    ? "?location=" + activeLocation
+                    : ""
+                }`
+              )
+            }
             className="!bg-[#3F3F3F] !border-none"
             fullWidth={false}
             prefix={<LeftOutlined />}
