@@ -10,7 +10,7 @@ import { Badge, Card, message, Spin, Steps, Table } from "antd";
 import { useEffect, useState } from "react";
 import UploadLinkDocPopup from "../../../../../components/uploadLinkDocPopup";
 import UploadDocPopup from "../../../../../components/uploadDocPopup";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   completeMaterialTransfer,
   cancelMaterialTransfer,
@@ -36,6 +36,9 @@ const MaterialTransferDetail = () => {
   const pathname = usePathname();
   const urlParts = pathname.split("/");
   const slug = urlParts[urlParts.length - 1];
+
+  const searchParams = useSearchParams();
+  const activeLocation = searchParams.get("location") || "";
 
   const { Step } = Steps;
 
@@ -178,7 +181,15 @@ const MaterialTransferDetail = () => {
         <div>
           <Button
             text="Back to Material Transfer"
-            onClick={() => router.push("/admin/material-transfer")}
+            onClick={() =>
+              router.push(
+                `/admin/material-transfer${
+                  activeLocation && activeLocation !== null
+                    ? "?location=" + activeLocation
+                    : ""
+                }`
+              )
+            }
             className="!bg-[#3F3F3F] !border-none"
             fullWidth={false}
             prefix={<LeftOutlined />}

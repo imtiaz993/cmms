@@ -18,7 +18,7 @@ import {
   WarningOutlined,
 } from "@ant-design/icons";
 import { message, Select, Spin } from "antd";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { updateStatus } from "app/services/assets";
 import ConfirmationPopup from "@/components/confirmationPopup";
@@ -34,6 +34,7 @@ const InventoryDetails = () => {
   const [actionPopup, setActionPopup] = useState(false);
   const router = useRouter();
   const { slug } = useParams();
+  const activeLocation = useSearchParams().get("location") || "";
   const [superUsers, setSuperUsers] = useState([]);
   const dispatch = useDispatch();
   const { inventoryShippingCart } = useSelector(
@@ -178,7 +179,15 @@ const InventoryDetails = () => {
         <div className="mt-4 mr-5 flex justify-between">
           <Button
             text="Back to Inventory"
-            onClick={() => router.push("/admin/inventory")}
+            onClick={() =>
+              router.push(
+                `/admin/inventory${
+                  activeLocation && activeLocation !== null
+                    ? "?location=" + activeLocation
+                    : ""
+                }`
+              )
+            }
             className="!bg-[#3F3F3F] !border-none"
             fullWidth={false}
             prefix={<LeftOutlined />}

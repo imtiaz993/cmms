@@ -79,11 +79,11 @@ const Sidebar = ({
   return (
     <div className="rounded-tr-xl bg-primary overflow-hidden shadow-custom">
       <div className=" max-h-[calc(100dvh-16px-60px-16px)] min-h-[calc(100dvh-16px-60px-16px)] overflow-auto hidden lg:block lg:w-[250px] p-5 pt-7 select-none">
-        {!["new", "profile", "change-password"].includes(currentPage) &&
-          !slashNewPages && (
-            <div className="mx-1">
-              {/* Display the selected location in a styled div */}
-              {/* {activeLocation && (
+        {!["new", "profile", "change-password"].includes(currentPage) && (
+          // !slashNewPages &&
+          <div className="mx-1">
+            {/* Display the selected location in a styled div */}
+            {/* {activeLocation && (
                 <div className="p-2 bg-[#0F0E13] rounded text-xl text-center font-medium">
                   <p className="text-[#efbf60] flex items-center justify-center gap-2">
                     <EnvironmentOutlined />
@@ -92,75 +92,71 @@ const Sidebar = ({
                   </p>
                 </div>
               )} */}
-              {/* Select component for changing the location */}
-              {locations && (
-                <Select
-                  className="mt-2 mx-1 p-2 rounded text-xl text-center font-medium w-full sidebar-select"
-                  bordered={false}
-                  value={activeLocation ?? "all"}
-                  onChange={(value) => {
-                    if (value === "all") {
-                      router.push(`/admin/${currentPage}`);
-                    } else if (value) {
-                      router.push(
-                        `/admin/${currentPage}${value && `?location=${value}`}`
-                      );
-                    } else {
-                      router.push(`/admin/${currentPage}`);
-                    }
-                  }}
-                  // allowClear={true}
-                  options={[
-                    {
-                      label: (
-                        <div
-                          className={`flex items-center gap-2 ${
-                            !activeLocation ? "!text-black" : "text-[#efbf60]"
-                          }`}
-                        >
-                          {/* <EnvironmentOutlined /> */}
-                          <span
-                            className={!activeLocation ? "text-black " : ""}
-                          >
-                            All Sites
-                          </span>
-                        </div>
-                      ),
-                      value: "all",
-                    },
-                    ...locations.map((i) => ({
-                      label: (
-                        <div
-                          className={`flex items-center gap-2 ${
-                            i._id === activeLocation
-                              ? "!text-black"
-                              : "text-[#efbf60]"
-                          }`}
-                        >
-                          {/* <EnvironmentOutlined /> */}
-                          <span
-                            className={
-                              activeLocation === i._id ? "text-black" : ""
-                            }
-                          >
-                            {i.site}
-                          </span>
-                        </div>
-                      ),
-                      value: i._id,
-                    })),
-                  ]}
-                  placeholder={
-                    <div className="flex items-center justify-center gap-2 text-[#efbf60]">
-                      {/* <EnvironmentOutlined /> */}
-                      <span>All Sites</span>
-                    </div>
+            {/* Select component for changing the location */}
+            {locations && (
+              <Select
+                className="mt-2 mx-1 p-2 rounded text-xl text-center font-medium w-full sidebar-select"
+                bordered={false}
+                value={activeLocation ?? "all"}
+                onChange={(value) => {
+                  if (value === "all") {
+                    router.push(pathname);
+                  } else if (value) {
+                    router.push(`${pathname}${value && `?location=${value}`}`);
+                  } else {
+                    router.push(pathname);
                   }
-                  suffixIcon={<span className="text-[#efbf60]">▼</span>} // Custom arrow
-                />
-              )}
-            </div>
-          )}
+                }}
+                // allowClear={true}
+                options={[
+                  {
+                    label: (
+                      <div
+                        className={`flex items-center gap-2 ${
+                          !activeLocation ? "!text-black" : "text-[#efbf60]"
+                        }`}
+                      >
+                        {/* <EnvironmentOutlined /> */}
+                        <span className={!activeLocation ? "text-black " : ""}>
+                          All Sites
+                        </span>
+                      </div>
+                    ),
+                    value: "all",
+                  },
+                  ...locations.map((i) => ({
+                    label: (
+                      <div
+                        className={`flex items-center gap-2 ${
+                          i._id === activeLocation
+                            ? "!text-black"
+                            : "text-[#efbf60]"
+                        }`}
+                      >
+                        {/* <EnvironmentOutlined /> */}
+                        <span
+                          className={
+                            activeLocation === i._id ? "text-black" : ""
+                          }
+                        >
+                          {i.site}
+                        </span>
+                      </div>
+                    ),
+                    value: i._id,
+                  })),
+                ]}
+                placeholder={
+                  <div className="flex items-center justify-center gap-2 text-[#efbf60]">
+                    {/* <EnvironmentOutlined /> */}
+                    <span>All Sites</span>
+                  </div>
+                }
+                suffixIcon={<span className="text-[#efbf60]">▼</span>} // Custom arrow
+              />
+            )}
+          </div>
+        )}
 
         <Menu
           mode="inline"
@@ -200,13 +196,11 @@ const Sidebar = ({
               value={activeLocation ?? "all"}
               onChange={(value) => {
                 if (value === "all") {
-                  router.push(`/admin/${currentPage}`);
+                  router.push(pathname);
                 } else if (value) {
-                  router.push(
-                    `/admin/${currentPage}${value && `?location=${value}`}`
-                  );
+                  router.push(`${pathname}${value && `?location=${value}`}`);
                 } else {
-                  router.push(`/admin/${currentPage}`);
+                  router.push(pathname);
                 }
               }}
               // allowClear={true}
