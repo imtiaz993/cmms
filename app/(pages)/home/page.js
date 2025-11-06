@@ -69,7 +69,7 @@ const Home = () => {
 
           <div className="group w-[350px] h-[350px] hover:w-[500px] absolute -left-[570px] top-20 overflow-visible z-[1] hover:z-50">
             <div className="relative">
-              <div className="absolute inset-x-[-50px]"></div>
+              <div className="absolute inset-[-50px]"></div>
               <Image
                 src="/saad/home-1.png"
                 width={1000}
@@ -121,7 +121,6 @@ const Home = () => {
 
           <div className="group w-[350px] h-[350px] hover:w-[500px] absolute -left-[350px] overflow-visible z-[2] hover:z-50">
             <div className="relative">
-              <div className="absolute inset-x-[-50px]"></div>
               <Image
                 src="/saad/home-2.png"
                 width={1000}
@@ -173,7 +172,6 @@ const Home = () => {
           {/* Image 3 */}
           <div className="group w-[350px] h-[350px] hover:w-[500px] absolute -left-[166px] overflow-visible z-[3] hover:z-50">
             <div className="relative">
-              <div className="absolute inset-x-[-50px]"></div>
               <Image
                 src="/saad/home-3.png"
                 width={1000}
@@ -225,7 +223,6 @@ const Home = () => {
           {/* Image 4 */}
           <div className="group w-[350px] h-[350px] hover:w-[500px] absolute left-24 overflow-visible z-[4] hover:z-50">
             <div className="relative">
-              <div className="absolute inset-x-[-50px]"></div>
               <Image
                 src="/saad/home-4.png"
                 width={1000}
@@ -277,7 +274,6 @@ const Home = () => {
           {/* Image 5 */}
           <div className="group w-[350px] h-[350px] hover:w-[500px] absolute left-[344px] overflow-visible z-[5] hover:z-50">
             <div className="relative">
-              <div className="absolute inset-x-[-50px]"></div>
               <Image
                 src="/saad/home-5.png"
                 width={1000}
@@ -329,7 +325,6 @@ const Home = () => {
           {/* Image 6 */}
           <div className="group w-[350px] h-[350px] hover:w-[500px] absolute left-[570px] top-14 overflow-visible z-[6] hover:z-50">
             <div className="relative">
-              <div className="absolute inset-x-[-50px]"></div>
               <Image
                 src="/saad/home-6.png"
                 width={1000}
