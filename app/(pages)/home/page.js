@@ -147,7 +147,7 @@ const Home = () => {
                       fontFamily: `${poppins.style.fontFamily} !important`,
                     }}
                   >
-                    Branding Masterclass
+                    Design Thinking for Innovators
                   </span>
                   <span
                     className="text-white text-[28px] font-semibold"
@@ -155,7 +155,7 @@ const Home = () => {
                       fontFamily: `${quicksand.style.fontFamily} !important`,
                     }}
                   >
-                    $199
+                    $249
                   </span>
                 </p>
                 <button
@@ -201,7 +201,7 @@ const Home = () => {
                       fontFamily: `${poppins.style.fontFamily} !important`,
                     }}
                   >
-                    UI/UX for Beginners
+                    Design Thinking for Innovators
                   </span>
                   <span
                     className="text-white text-[28px] font-semibold"
@@ -255,7 +255,7 @@ const Home = () => {
                       fontFamily: `${poppins.style.fontFamily} !important`,
                     }}
                   >
-                    Creative Animation Course
+                    Advanced Product Design Class
                   </span>
                   <span
                     className="text-white text-[28px] font-semibold"
@@ -263,7 +263,7 @@ const Home = () => {
                       fontFamily: `${quicksand.style.fontFamily} !important`,
                     }}
                   >
-                    $179
+                    $299
                   </span>
                 </p>
                 <button
@@ -289,7 +289,7 @@ const Home = () => {
                 alt="home"
                 className="w-[350px] h-[350px] rounded-3xl object-cover 
                   rotate-[12.52deg] transition-all duration-300 ease-in-out
-                  group-hover:rotate-0 group-hover:!w-[500px] group-hover:!h-[500px]"
+                  group-hover:rotate-0 group-hover:!w-[500px] group-hover:!h-[500px] "
                 style={{
                   boxShadow:
                     "-12px 4px 24px 0px #00000040, 12px 4px 24px 0px #00000040",
@@ -309,7 +309,7 @@ const Home = () => {
                       fontFamily: `${poppins.style.fontFamily} !important`,
                     }}
                   >
-                    Photography Essentials
+                    Advanced Product Design Class
                   </span>
                   <span
                     className="text-white text-[28px] font-semibold"
@@ -317,7 +317,7 @@ const Home = () => {
                       fontFamily: `${quicksand.style.fontFamily} !important`,
                     }}
                   >
-                    $149
+                    $299
                   </span>
                 </p>
                 <button
@@ -361,7 +361,7 @@ const Home = () => {
                       fontFamily: `${poppins.style.fontFamily} !important`,
                     }}
                   >
-                    Motion Design Pro
+                    Advanced Product Design Class
                   </span>
                   <span
                     className="text-black text-[28px] font-semibold"
@@ -369,7 +369,7 @@ const Home = () => {
                       fontFamily: `${quicksand.style.fontFamily} !important`,
                     }}
                   >
-                    $279
+                    $299
                   </span>
                 </p>
                 <button
