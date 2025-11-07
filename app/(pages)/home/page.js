@@ -134,6 +134,8 @@ const Home = () => {
                     "-12px 4px 24px 0px #00000040, 12px 4px 24px 0px #00000040",
                 }}
               />
+              {/* Dark Overlay */}
+              <div className="absolute inset-0 rounded-3xl bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
               <div
                 className="w-72 h-fit absolute inset-0 hidden group-hover:flex flex-col 
             bg-[#ffffff2a] backdrop-blur-[20.100000381469727px] transition-opacity rounded-3xl m-auto p-6"
@@ -185,6 +187,9 @@ const Home = () => {
                     "-12px 4px 24px 0px #00000040, 12px 4px 24px 0px #00000040",
                 }}
               />
+              {/* Dark Overlay */}
+              <div className="absolute inset-0 rounded-3xl bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+
               <div
                 className="w-72 h-fit absolute inset-0 hidden group-hover:flex flex-col 
             bg-[#ffffff2a] backdrop-blur-[20.100000381469727px] transition-opacity rounded-3xl m-auto p-6"
@@ -236,6 +241,9 @@ const Home = () => {
                     "-12px 4px 24px 0px #00000040, 12px 4px 24px 0px #00000040",
                 }}
               />
+              {/* Dark Overlay */}
+              <div className="absolute inset-0 rounded-3xl bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+
               <div
                 className="w-72 h-fit absolute inset-0 hidden group-hover:flex flex-col 
             bg-[#ffffff2a] backdrop-blur-[20.100000381469727px] transition-opacity rounded-3xl m-auto p-6"
@@ -287,6 +295,9 @@ const Home = () => {
                     "-12px 4px 24px 0px #00000040, 12px 4px 24px 0px #00000040",
                 }}
               />
+              {/* Dark Overlay */}
+              <div className="absolute inset-0 rounded-3xl bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+
               <div
                 className="w-72 h-fit absolute inset-0 hidden group-hover:flex flex-col 
             bg-[#ffffff2a] backdrop-blur-[20.100000381469727px] transition-opacity rounded-3xl m-auto p-6"
@@ -338,13 +349,14 @@ const Home = () => {
                     "-12px 4px 24px 0px #00000040, 12px 4px 24px 0px #00000040",
                 }}
               />
+
               <div
                 className="w-72 h-fit absolute inset-0 hidden group-hover:flex flex-col 
             bg-[#ffffff2a] backdrop-blur-[20.100000381469727px] transition-opacity rounded-3xl m-auto p-6"
               >
                 <p className="flex justify-between">
                   <span
-                    className="text-white font-medium mb-2"
+                    className="text-black font-medium mb-2"
                     style={{
                       fontFamily: `${poppins.style.fontFamily} !important`,
                     }}
@@ -352,7 +364,7 @@ const Home = () => {
                     Motion Design Pro
                   </span>
                   <span
-                    className="text-white text-[28px] font-semibold"
+                    className="text-black text-[28px] font-semibold"
                     style={{
                       fontFamily: `${quicksand.style.fontFamily} !important`,
                     }}
